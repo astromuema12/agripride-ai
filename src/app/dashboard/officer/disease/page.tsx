@@ -1,0 +1,404 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getDiseaseReports, getUsers } from '@/lib/db';
+import type { DiseaseReport, User } from '@/types';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+} from '@/components/ui/dialog';
+import {
+  AlertTriangle, Search, MapPin, Clock, Calendar, CheckCircle,
+  FileSearch, Activity, Shield, FlaskConical,
+} from 'lucide-react';
+import { toast } from 'sonner';
+
+type StatusTab = 'all' | 'submitted' | 'reviewed' | 'resolved';
+
+const riskBadgeClass = (level?: string) => {
+  switch (level) {
+    case 'low': return 'border-transparent bg-emerald-100 text-emerald-800';
+    case 'medium': return 'border-transparent bg-amber-100 text-amber-800';
+    case 'high': return 'border-transparent bg-red-100 text-red-800';
+    case 'critical': return 'border-transparent bg-purple-100 text-purple-800';
+    default: return 'border-transparent bg-gray-100 text-gray-800';
+  }
+};
+
+const statusBadgeClass = (status: string) => {
+  switch (status) {
+    case 'resolved': return 'border-transparent bg-emerald-100 text-emerald-800';
+    case 'reviewed': return 'border-transparent bg-blue-100 text-blue-800';
+    case 'submitted': return 'border-transparent bg-amber-100 text-amber-800';
+    default: return '';
+  }
+};
+
+export default function DiseasePage() {
+  const [loading, setLoading] = useState(true);
+  const [reports, setReports] = useState<DiseaseReport[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [search, setSearch] = useState('');
+  const [tab, setTab] = useState<StatusTab>('all');
+  const [selectedReport, setSelectedReport] = useState<DiseaseReport | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [r, u] = await Promise.all([getDiseaseReports(), getUsers()]);
+        setReports(r);
+        setUsers(u);
+      } catch (err) {
+        console.error('Failed to load disease reports:', err);
+        toast.error('Failed to load disease reports');
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const getFarmerName = (userId: string) =>
+    users.find((u) => u.id === userId)?.name || 'Unknown Farmer';
+
+  const getFarmLocation = (farmId: string) => {
+    const store = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agripride_demo_data') || '{}') : {};
+    const farm = store.farms?.find((f: { id: string }) => f.id === farmId);
+    return farm?.location || 'Unknown Region';
+  };
+
+  const filtered = reports.filter((r) => {
+    if (tab !== 'all' && r.status !== tab) return false;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      const farmerName = getFarmerName(r.user_id).toLowerCase();
+      return farmerName.includes(q) || r.crop_type.toLowerCase().includes(q) || (r.disease_prediction?.toLowerCase().includes(q) ?? false);
+    }
+    return true;
+  });
+
+  const statusCounts = {
+    total: reports.length,
+    submitted: reports.filter((r) => r.status === 'submitted').length,
+    reviewed: reports.filter((r) => r.status === 'reviewed').length,
+    resolved: reports.filter((r) => r.status === 'resolved').length,
+  };
+
+  const handleMarkReviewed = async () => {
+    if (!selectedReport) return;
+    try {
+      const store = JSON.parse(localStorage.getItem('agripride_demo_data') || '{}');
+      const idx = store.diseaseReports.findIndex((r: DiseaseReport) => r.id === selectedReport.id);
+      if (idx !== -1) {
+        store.diseaseReports[idx] = {
+          ...store.diseaseReports[idx],
+          status: 'reviewed',
+          reviewed_at: new Date().toISOString(),
+        };
+        localStorage.setItem('agripride_demo_data', JSON.stringify(store));
+        setReports((prev) =>
+          prev.map((r) =>
+            r.id === selectedReport.id
+              ? { ...r, status: 'reviewed' as const, reviewed_at: new Date().toISOString() }
+              : r
+          )
+        );
+        setSelectedReport((prev) =>
+          prev ? { ...prev, status: 'reviewed', reviewed_at: new Date().toISOString() } : null
+        );
+        toast.success('Report marked as reviewed');
+      }
+    } catch (err) {
+      console.error('Failed to update report:', err);
+      toast.error('Failed to update report');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
+          <p className="text-sm text-gray-500">Loading disease reports...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Disease Monitoring</h1>
+          <p className="text-sm text-gray-500 mt-1">Track and manage disease reports from farmers</p>
+        </div>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            placeholder="Search crop or disease..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 w-72"
+          />
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Total Reports</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.total}</p>
+              </div>
+              <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
+                <FileSearch className="h-6 w-6 text-emerald-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Submitted</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.submitted}</p>
+              </div>
+              <div className="h-12 w-12 rounded-lg bg-amber-100 flex items-center justify-center">
+                <Activity className="h-6 w-6 text-amber-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Reviewed</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.reviewed}</p>
+              </div>
+              <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                <Shield className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Resolved</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.resolved}</p>
+              </div>
+              <div className="h-12 w-12 rounded-lg bg-green-100 flex items-center justify-center">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Tabs */}
+      <Tabs value={tab} onValueChange={(v) => setTab(v as StatusTab)}>
+        <TabsList>
+          <TabsTrigger value="all">All ({statusCounts.total})</TabsTrigger>
+          <TabsTrigger value="submitted">Submitted ({statusCounts.submitted})</TabsTrigger>
+          <TabsTrigger value="reviewed">Reviewed ({statusCounts.reviewed})</TabsTrigger>
+          <TabsTrigger value="resolved">Resolved ({statusCounts.resolved})</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={tab} className="mt-4">
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <AlertTriangle className="h-12 w-12 text-gray-300 mb-3" />
+              <p className="text-sm font-medium text-gray-500">
+                {search.trim() ? 'No reports match your search' : 'No disease reports'}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {search.trim() ? 'Try a different search term' : 'Reports will appear here once submitted by farmers'}
+              </p>
+            </div>
+          ) : (
+            <div className="border border-gray-200 rounded-xl overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Farmer</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Crop Type</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Disease Prediction</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Confidence</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Risk Level</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
+                    <th className="text-left px-4 py-3 font-medium text-gray-600">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((report) => (
+                    <tr
+                      key={report.id}
+                      className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => {
+                        setSelectedReport(report);
+                        setDialogOpen(true);
+                      }}
+                    >
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                            <span className="text-xs font-bold text-emerald-700">
+                              {getFarmerName(report.user_id).split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
+                            </span>
+                          </div>
+                          <span className="font-medium text-gray-800">{getFarmerName(report.user_id)}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-gray-700">{report.crop_type}</td>
+                      <td className="px-4 py-3 text-gray-700">{report.disease_prediction || '-'}</td>
+                      <td className="px-4 py-3">
+                        {report.confidence_score !== undefined ? (
+                          <span className="font-medium text-gray-800">{Math.round(report.confidence_score * 100)}%</span>
+                        ) : '-'}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className={riskBadgeClass(report.risk_level)}>
+                          {report.risk_level || 'unknown'}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className={statusBadgeClass(report.status)}>
+                          {report.status}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3 shrink-0" />
+                          <span>{new Date(report.created_at).toLocaleDateString()}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Detail Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Disease Report Details</DialogTitle>
+            <DialogDescription>
+              Submitted by {selectedReport ? getFarmerName(selectedReport.user_id) : ''}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedReport && (
+            <div className="space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <FlaskConical className="h-3 w-3" />
+                    Crop Type
+                  </p>
+                  <p className="text-sm font-medium text-gray-900">{selectedReport.crop_type}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3" />
+                    Risk Level
+                  </p>
+                  <Badge className={riskBadgeClass(selectedReport.risk_level)}>
+                    {selectedReport.risk_level || 'unknown'}
+                  </Badge>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <MapPin className="h-3 w-3" />
+                    Location
+                  </p>
+                  <p className="text-sm text-gray-900">{getFarmLocation(selectedReport.farm_id)}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Status
+                  </p>
+                  <Badge className={statusBadgeClass(selectedReport.status)}>
+                    {selectedReport.status}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Disease Prediction</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {selectedReport.disease_prediction || 'Not specified'}
+                </p>
+                {selectedReport.confidence_score !== undefined && (
+                  <p className="text-xs text-gray-500">
+                    Confidence: {Math.round(selectedReport.confidence_score * 100)}%
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Symptoms</p>
+                <p className="text-sm text-gray-700">{selectedReport.symptoms}</p>
+              </div>
+
+              {selectedReport.explanation && (
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">AI Explanation</p>
+                  <p className="text-sm text-gray-700">{selectedReport.explanation}</p>
+                </div>
+              )}
+
+              {selectedReport.treatment && (
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment</p>
+                  <p className="text-sm text-gray-700">{selectedReport.treatment}</p>
+                </div>
+              )}
+
+              {selectedReport.prevention && (
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Prevention</p>
+                  <p className="text-sm text-gray-700">{selectedReport.prevention}</p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <Calendar className="h-3 w-3" />
+                  <span>Reported: {new Date(selectedReport.created_at).toLocaleString()}</span>
+                  {selectedReport.reviewed_at && (
+                    <>
+                      <span className="mx-1">·</span>
+                      <CheckCircle className="h-3 w-3" />
+                      <span>Reviewed: {new Date(selectedReport.reviewed_at).toLocaleString()}</span>
+                    </>
+                  )}
+                </div>
+                {selectedReport.status === 'submitted' && (
+                  <Button size="sm" onClick={handleMarkReviewed}>
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Mark as Reviewed
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
