@@ -162,10 +162,10 @@ export default function FarmerDashboard() {
   ];
 
   const quickActions = [
-    { label: 'Add Farm', icon: Plus, href: '/dashboard/farmer/farms/new', variant: 'default' as const },
-    { label: 'Diagnose Disease', icon: FileSearch, href: '/dashboard/farmer/diagnose', variant: 'secondary' as const },
+    { label: 'Add Farm', icon: Plus, href: '/dashboard/farmer/farms', variant: 'default' as const },
+    { label: 'Diagnose Disease', icon: FileSearch, href: '/dashboard/farmer/disease', variant: 'secondary' as const },
     { label: 'View Weather', icon: CloudSun, href: '/dashboard/farmer/weather', variant: 'outline' as const },
-    { label: 'Get AI Advice', icon: TrendingUp, href: '/dashboard/farmer/advice', variant: 'outline' as const },
+    { label: 'Get AI Advice', icon: TrendingUp, href: '/dashboard/farmer/recommendations', variant: 'outline' as const },
   ];
 
   return (
@@ -180,7 +180,7 @@ export default function FarmerDashboard() {
             Here&apos;s an overview of your farming operations
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => router.push('/dashboard/farmer/notifications')}>
+        <Button variant="outline" size="sm" onClick={() => router.push('/dashboard/farmer')}>
           <Bell className="mr-2 h-4 w-4" />
           Notifications
         </Button>
@@ -233,7 +233,7 @@ export default function FarmerDashboard() {
               <div className="flex flex-col items-center py-8 text-center">
                 <ScrollText className="mb-2 h-8 w-8 text-gray-300" />
                 <p className="text-sm text-gray-500">No recommendations yet</p>
-                <Button variant="link" size="sm" className="mt-1" onClick={() => router.push('/dashboard/farmer/advice')}>
+                <Button variant="link" size="sm" className="mt-1" onClick={() => router.push('/dashboard/farmer/recommendations')}>
                   Get AI Advice
                 </Button>
               </div>
@@ -335,7 +335,7 @@ export default function FarmerDashboard() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Recent Disease Reports</CardTitle>
-          <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/diseases')}>
+          <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/disease')}>
             View All
             <ArrowRight className="ml-1 h-4 w-4" />
           </Button>
@@ -345,7 +345,7 @@ export default function FarmerDashboard() {
             <div className="flex flex-col items-center py-8 text-center">
               <FileSearch className="mb-2 h-8 w-8 text-gray-300" />
               <p className="text-sm text-gray-500">No disease reports yet</p>
-              <Button variant="link" size="sm" className="mt-1" onClick={() => router.push('/dashboard/farmer/diagnose')}>
+              <Button variant="link" size="sm" className="mt-1" onClick={() => router.push('/dashboard/farmer/disease')}>
                 Diagnose a Crop
               </Button>
             </div>
