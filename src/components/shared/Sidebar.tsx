@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Sprout, FileSearch, CloudSun, ScrollText,
-  BarChart3, Settings, Users, TreePine, Shield, AlertTriangle,
+  BarChart3, Users, TreePine, Shield, AlertTriangle,
   Leaf, LineChart, Menu, X, Building2, UserCheck,
 } from 'lucide-react';
 import { useState } from 'react';

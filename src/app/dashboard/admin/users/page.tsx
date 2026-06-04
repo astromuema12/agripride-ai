@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getUsers, updateFarm } from '@/lib/db';
+import { getUsers } from '@/lib/db';
 import type { User, UserRole } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Search, Users as UsersIcon, Shield, UserCog, User as UserIcon, AlertTriangle, Loader2,
-  Pencil, Ban, CheckCircle, XCircle, MoreHorizontal, Clock,
+  Search, Users as UsersIcon, Shield, UserCog, User as UserIcon,
+  Pencil, Ban, CheckCircle, Clock,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -33,19 +33,17 @@ export default function UsersPage() {
   const [editRole, setEditRole] = useState<UserRole>('farmer');
 
   useEffect(() => {
-    loadUsers();
+    (async () => {
+      try {
+        const data = await getUsers();
+        setUsers(data);
+      } catch {
+        toast.error('Failed to load users');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
-
-  async function loadUsers() {
-    try {
-      const data = await getUsers();
-      setUsers(data);
-    } catch {
-      toast.error('Failed to load users');
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const filtered = users.filter(
     (u) =>

@@ -49,20 +49,18 @@ export default function FarmsPage() {
   const [cropsGrown, setCropsGrown] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const loadFarms = async () => {
-    if (!user) return;
-    try {
-      const data = await getFarms(user.id);
-      setFarms(data);
-    } catch {
-      toast.error('Failed to load farms');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadFarms();
+    if (!user) return;
+    (async () => {
+      try {
+        const data = await getFarms(user.id);
+        setFarms(data);
+      } catch {
+        toast.error('Failed to load farms');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [user]);
 
   const handleCreateFarm = async () => {

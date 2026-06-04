@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, Leaf, CloudSun, Shield, BarChart3, Users,
-  Sprout, FileSearch, ScrollText, TreePine, TrendingUp,
-  Globe, BookOpen, CheckCircle, Quote,
+  ArrowRight, Leaf, CloudSun, Shield, BarChart3,
+  Sprout, FileSearch, ScrollText, TreePine,
+  Globe, CheckCircle, Quote,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';

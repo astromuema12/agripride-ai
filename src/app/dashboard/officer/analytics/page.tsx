@@ -22,8 +22,6 @@ interface RegionData {
   sustainabilityAvg: number;
 }
 
-const CHART_COLORS = ['#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5', '#047857'];
-
 function extractRegion(location: string): string {
   const parts = location.split(' Region,');
   return parts[0].trim();

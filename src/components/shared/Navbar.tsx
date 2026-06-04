@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Leaf, Menu, X, Bell, LogOut, User, Settings, Shield } from 'lucide-react';
-import { useState } from 'react';
+import { Leaf, Menu, X, Bell, LogOut, Settings, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { getNotifications } from '@/lib/db';
-import { useEffect } from 'react';
 import { Notification } from '@/types';
 
 const navLinks = [
@@ -66,9 +65,11 @@ export function Navbar() {
               <Leaf className="h-5 w-5 text-white" />
             </div>
             <span className="text-lg font-bold text-gray-900">AgriPride AI</span>
-            {isDemoMode && (
-              <Badge variant="warning" className="ml-1 text-[10px]">DEMO</Badge>
-            )}
+            <span suppressHydrationWarning>
+              {isDemoMode && (
+                <Badge variant="warning" className="ml-1 text-[10px]">DEMO</Badge>
+              )}
+            </span>
           </Link>
           <div className="hidden md:flex md:items-center md:gap-6">
             {navLinks.map((link) => (

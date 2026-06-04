@@ -1,17 +1,17 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { getStore } from '@/lib/db';
 import type { ConsentRecord, User } from '@/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Shield, Search, Download, CheckCircle, XCircle, Clock,
-  Mail, User as UserIcon, FileText, Loader2,
+  Mail, FileText,
 } from 'lucide-react';
 
 type ConsentType = ConsentRecord['type'];
@@ -25,24 +25,28 @@ const CONSENT_TYPES: { value: ConsentType; label: string }[] = [
 ];
 
 export default function ConsentPage() {
-  const [records, setRecords] = useState<ConsentRecord[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [records] = useState<ConsentRecord[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const store = getStore();
+      return store.consentRecords || [];
+    } catch {
+      return [];
+    }
+  });
+  const [users] = useState<User[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const store = getStore();
+      return store.users || [];
+    } catch {
+      return [];
+    }
+  });
+  const [loading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<ConsentType | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<ConsentStatus>('all');
-
-  useEffect(() => {
-    try {
-      const store = getStore();
-      setRecords(store.consentRecords || []);
-      setUsers(store.users || []);
-    } catch {
-      // silent
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   const userMap = useMemo(() => {
     const map = new Map<string, User>();

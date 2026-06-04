@@ -243,7 +243,7 @@ export function generateRecommendations(userIds: string[]): Recommendation[] {
 export function generateConsentRecords(userIds: string[]): ConsentRecord[] {
   const types: ConsentRecord['type'][] = ['data_collection', 'ai_processing', 'disease_diagnosis', 'weather_monitoring'];
   return userIds.slice(0, 30).flatMap((uid) =>
-    types.map((type, i) => ({
+    types.map((type) => ({
       id: `consent-${uid}-${type}`,
       user_id: uid,
       type,

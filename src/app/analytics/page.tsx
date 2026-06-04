@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import {
-  BarChart3, TrendingUp, TrendingDown, Leaf, AlertTriangle,
+  BarChart3, TrendingUp, Leaf, AlertTriangle,
   Users, Sprout, Download, LineChart, PieChart, Activity,
 } from 'lucide-react';
 import {

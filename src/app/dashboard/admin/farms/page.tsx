@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Search, Building2, CheckCircle, Archive, AlertTriangle,
-  Loader2, Clock, MapPin, Ruler, User as UserIcon,
+  Search, Building2, CheckCircle, Archive,
+  Clock, MapPin, Ruler,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';

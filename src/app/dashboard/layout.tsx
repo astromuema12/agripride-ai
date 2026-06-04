@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user, loading, isDemoMode } = useAuth();

@@ -3,14 +3,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getAuditLogs, getUsers } from '@/lib/db';
 import type { AuditLog, User } from '@/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Search, Shield, Users, Activity, AlertTriangle, Loader2,
+  Search, Shield, Users, Activity,
   Clock, Globe, User as UserIcon, Bot,
 } from 'lucide-react';
 import { toast } from 'sonner';

@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Shield, Eye, Lock, GitBranch, BookOpen, CheckCircle,
-  AlertTriangle, UserCheck, FileSearch, Clock, BrainCircuit,
+  Shield, Eye, Lock, GitBranch, CheckCircle,
+  AlertTriangle, FileSearch, Clock, BrainCircuit,
   ScrollText, Server, Key, Users, Split,
 } from 'lucide-react';
 import {

@@ -6,7 +6,6 @@ import { getWeatherData } from '@/lib/db';
 import type { WeatherData } from '@/types';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -36,21 +35,21 @@ export default function WeatherPage() {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const loadWeather = async () => {
-    try {
-      const data = await getWeatherData();
-      setWeatherList(data);
-      if (data.length > 0 && !selectedLocation) {
-        setSelectedLocation(data[0].location);
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getWeatherData();
+        setWeatherList(data);
+        if (data.length > 0 && !selectedLocation) {
+          setSelectedLocation(data[0].location);
+        }
+      } catch {
+        toast.error('Failed to load weather data');
+      } finally {
+        setLoading(false);
       }
-    } catch {
-      toast.error('Failed to load weather data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadWeather(); }, []);
+    })();
+  }, [selectedLocation]);
 
   if (!user) return null;
 

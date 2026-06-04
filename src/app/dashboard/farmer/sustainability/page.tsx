@@ -5,11 +5,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getFarms, getSustainabilityScores } from '@/lib/db';
 import type { SustainabilityScore } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
-  Leaf, Droplets, Bug, Wind, TrendingUp, Info, Lightbulb,
+  Leaf, Droplets, Bug, Wind, Lightbulb,
   ArrowUp, ArrowDown, Minus,
 } from 'lucide-react';
 import {

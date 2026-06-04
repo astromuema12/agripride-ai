@@ -17,7 +17,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import {
-  FileSearch, AlertTriangle, Shield, Clock, BrainCircuit, Upload, Save, History,
+  FileSearch, AlertTriangle, Shield, Clock, BrainCircuit, Save, History,
 } from 'lucide-react';
 
 const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Coffee', 'Tea', 'Cotton', 'Sorghum', 'Millet', 'Groundnuts', 'Sunflower', 'Sugarcane', 'Sweet Potato'];
@@ -98,7 +98,7 @@ export default function DiseaseDiagnosisPage() {
     setResult(null);
 
     try {
-      const response = diagnoseDisease(cropType, symptoms);
+      const response = diagnoseDisease(cropType);
       if (response.success && response.data) {
         setResult({
           data: response.data as DiagnosisResult,

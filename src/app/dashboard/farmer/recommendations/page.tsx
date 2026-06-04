@@ -35,19 +35,19 @@ export default function RecommendationsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
 
-  const loadRecommendations = async () => {
+  useEffect(() => {
     if (!user) return;
-    try {
-      const data = await getRecommendations(user.id);
-      setRecommendations(data);
-    } catch {
-      toast.error('Failed to load recommendations');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadRecommendations(); }, [user]);
+    (async () => {
+      try {
+        const data = await getRecommendations(user.id);
+        setRecommendations(data);
+      } catch {
+        toast.error('Failed to load recommendations');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [user]);
 
   if (!user) return null;
 

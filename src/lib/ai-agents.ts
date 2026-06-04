@@ -1,9 +1,5 @@
 import { AIAgentResponse } from '@/types';
 
-function generateId(): string {
-  return `ai-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-}
-
 const diseaseDatabase: Record<string, {
   disease: string;
   confidence: number;
@@ -55,8 +51,7 @@ const diseaseDatabase: Record<string, {
 };
 
 export function diagnoseDisease(
-  cropType: string,
-  symptoms: string
+  cropType: string
 ): AIAgentResponse {
   const lowerCrop = cropType.toLowerCase();
   const match = diseaseDatabase[lowerCrop];

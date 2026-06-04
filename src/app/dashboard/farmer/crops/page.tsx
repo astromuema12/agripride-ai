@@ -50,21 +50,21 @@ export default function CropsPage() {
   const [expectedYield, setExpectedYield] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const loadData = async () => {
+  useEffect(() => {
     if (!user) return;
-    try {
-      const [userFarms, allCrops] = await Promise.all([getFarms(user.id), getCrops()]);
-      const farmIds = userFarms.map((f) => f.id);
-      setFarms(userFarms);
-      setCrops(allCrops.filter((c) => farmIds.includes(c.farm_id)));
-    } catch {
-      toast.error('Failed to load crop records');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadData(); }, [user]);
+    (async () => {
+      try {
+        const [userFarms, allCrops] = await Promise.all([getFarms(user.id), getCrops()]);
+        const farmIds = userFarms.map((f) => f.id);
+        setFarms(userFarms);
+        setCrops(allCrops.filter((c) => farmIds.includes(c.farm_id)));
+      } catch {
+        toast.error('Failed to load crop records');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [user]);
 
   const handleCreateCrop = async () => {
     if (!user) return;

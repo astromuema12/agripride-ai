@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { getDashboardStats, getUsers, getAuditLogs } from '@/lib/db';
-import type { DashboardStats, User, AuditLog } from '@/types';
+import { getDashboardStats, getAuditLogs } from '@/lib/db';
+import type { DashboardStats, AuditLog } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import {
   Users, Building2, Sprout, FileSearch, CloudSun, ScrollText,
   Shield, Leaf, TrendingUp, AlertTriangle, Activity, BarChart3,
-  CheckCircle, XCircle, Clock, Loader2,
+  CheckCircle, Clock, Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 

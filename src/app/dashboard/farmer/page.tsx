@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   getFarms, getCrops, getDiseaseReports,
-  getRecommendations, getWeatherData, getNotifications,
+  getRecommendations, getWeatherData,
 } from '@/lib/db';
 import type {
   Farm, Crop, DiseaseReport, Recommendation, WeatherData,
@@ -21,7 +21,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Sprout, CloudSun, FileSearch, ScrollText, Leaf,
-  Bell, ArrowRight, AlertTriangle, ThermometerSun,
+  Bell, ArrowRight, ThermometerSun,
   Droplets, Wind, TrendingUp, Plus,
 } from 'lucide-react';
 

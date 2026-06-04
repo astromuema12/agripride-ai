@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { User, UserRole } from '@/types';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { demoLogin, demoRegister } from '@/lib/demo-auth';
@@ -17,48 +17,102 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+async function fetchUserProfile(userId: string): Promise<User | null> {
+  if (!isSupabaseConfigured) return null;
+  const { data } = await supabase!
+    .from('users')
+    .select('*')
+    .eq('id', userId)
+    .single();
+  return data as User | null;
+}
+
+async function ensureUserProfile(authUser: { id: string; email?: string; user_metadata?: { name?: string; role?: string } }): Promise<User | null> {
+  let profile = await fetchUserProfile(authUser.id);
+  if (!profile) {
+    const newProfile = {
+      id: authUser.id,
+      email: authUser.email ?? '',
+      name: authUser.user_metadata?.name ?? authUser.email?.split('@')[0] ?? 'User',
+      role: (authUser.user_metadata?.role ?? 'farmer') as UserRole,
+      is_suspended: false,
+    };
+    const { data } = await supabase!
+      .from('users')
+      .insert(newProfile)
+      .select()
+      .single();
+    profile = data as User | null;
+  }
+  return profile;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const stored = localStorage.getItem('agripride_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      localStorage.removeItem('agripride_user');
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('agripride_demo_mode') === 'true';
+  });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('agripride_user');
-    const storedMode = localStorage.getItem('agripride_demo_mode');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-        setIsDemoMode(storedMode === 'true');
-      } catch {
+    if (!isSupabaseConfigured) return;
+
+    supabase!.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        const profile = await ensureUserProfile(session.user);
+        if (profile) {
+          setUser(profile);
+          localStorage.setItem('agripride_user', JSON.stringify(profile));
+          localStorage.removeItem('agripride_demo_mode');
+          setIsDemoMode(false);
+        }
+      }
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase!.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const profile = await ensureUserProfile(session.user);
+        if (profile) {
+          setUser(profile);
+          localStorage.setItem('agripride_user', JSON.stringify(profile));
+          localStorage.removeItem('agripride_demo_mode');
+          setIsDemoMode(false);
+        }
+      } else {
+        setUser(null);
         localStorage.removeItem('agripride_user');
       }
-    }
-    setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = useCallback(async (email: string, password: string): Promise<{ error?: string }> => {
     if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase!.auth.signInWithPassword({ email, password });
-        if (!error && data.user) {
-          const userData: User = {
-            id: data.user.id,
-            email: data.user.email!,
-            name: data.user.user_metadata?.name || email.split('@')[0],
-            role: data.user.user_metadata?.role || 'farmer',
-            created_at: data.user.created_at,
-            updated_at: data.user.updated_at || data.user.created_at,
-            is_suspended: false,
-          };
-          setUser(userData);
-          localStorage.setItem('agripride_user', JSON.stringify(userData));
+      const { data, error } = await supabase!.auth.signInWithPassword({ email, password });
+      if (!error && data.user) {
+        const profile = await ensureUserProfile(data.user);
+        if (profile) {
+          setUser(profile);
+          localStorage.setItem('agripride_user', JSON.stringify(profile));
           localStorage.removeItem('agripride_demo_mode');
           setIsDemoMode(false);
           return {};
         }
-      } catch {
-        // Fall through to demo mode
       }
+      if (error) return { error: error.message };
+      return { error: 'Failed to load user profile' };
     }
 
     const demoUser = demoLogin(email, password);
@@ -75,32 +129,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(async (email: string, password: string, name: string, role: UserRole): Promise<{ error?: string }> => {
     if (isSupabaseConfigured) {
-      try {
-        const { data, error } = await supabase!.auth.signUp({
-          email,
-          password,
-          options: { data: { name, role } },
-        });
-        if (!error && data.user) {
-          const userData: User = {
-            id: data.user.id,
-            email: data.user.email!,
-            name,
-            role,
-            created_at: data.user.created_at,
-            updated_at: data.user.created_at,
-            is_suspended: false,
-          };
-          setUser(userData);
-          localStorage.setItem('agripride_user', JSON.stringify(userData));
+      const { data, error } = await supabase!.auth.signUp({
+        email,
+        password,
+        options: { data: { name, role } },
+      });
+      if (!error && data.user) {
+        const profile = await ensureUserProfile(data.user);
+        if (profile) {
+          setUser(profile);
+          localStorage.setItem('agripride_user', JSON.stringify(profile));
           localStorage.removeItem('agripride_demo_mode');
           setIsDemoMode(false);
           return {};
         }
-        if (error) return { error: error.message };
-      } catch {
-        // Fall through to demo mode
       }
+      if (error) return { error: error.message };
+      return { error: 'Registration succeeded but profile creation failed' };
     }
 
     const newUser = demoRegister(email, password, name, role);
@@ -113,11 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     if (isSupabaseConfigured && !isDemoMode) {
-      try {
-        await supabase!.auth.signOut();
-      } catch {
-        // ignore
-      }
+      await supabase!.auth.signOut();
     }
     setUser(null);
     localStorage.removeItem('agripride_user');
@@ -127,13 +168,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = useCallback(async (email: string): Promise<{ error?: string }> => {
     if (isSupabaseConfigured) {
-      try {
-        const { error } = await supabase!.auth.resetPasswordForEmail(email);
-        if (error) return { error: error.message };
-        return {};
-      } catch {
-        return { error: 'Password reset unavailable in demo mode' };
-      }
+      const { error } = await supabase!.auth.resetPasswordForEmail(email);
+      if (error) return { error: error.message };
+      return {};
     }
     return { error: 'Password reset unavailable in demo mode' };
   }, []);
