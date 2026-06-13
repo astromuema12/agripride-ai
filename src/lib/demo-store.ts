@@ -21,6 +21,14 @@ function openDB(key: string): Promise<IDBDatabase> {
 }
 
 export async function getDemoDataKey(): Promise<string> {
+  if (typeof window === 'undefined') return 'default';
+  try {
+    const userStr = localStorage.getItem('agripride_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      return `demo_${user.id}`;
+    }
+  } catch {}
   return 'default';
 }
 

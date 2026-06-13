@@ -5,9 +5,10 @@ import { User, UserRole } from '@/types';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { demoLogin, demoRegister } from '@/lib/demo-auth';
 
-const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const SESSION_TIMEOUT_MS = 10 * 60 * 1000;
 const ACTIVITY_CHECK_INTERVAL_MS = 10 * 1000;
 const STORAGE_KEYS = {
+  user: 'agripride_user',
   demoMode: 'agripride_demo_mode',
   lastActivity: 'agripride_last_activity',
 };
@@ -55,7 +56,22 @@ async function ensureUserProfile(authUser: { id: string; email?: string; user_me
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const last = localStorage.getItem(STORAGE_KEYS.lastActivity);
+      if (last && Date.now() - Number(last) > SESSION_TIMEOUT_MS) {
+        localStorage.removeItem(STORAGE_KEYS.user);
+        localStorage.removeItem(STORAGE_KEYS.lastActivity);
+        return null;
+      }
+      const stored = localStorage.getItem(STORAGE_KEYS.user);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      localStorage.removeItem(STORAGE_KEYS.user);
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -115,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const profile = await ensureUserProfile(data.user);
         if (profile) {
           setUser(profile);
+          localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
           localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
           touchActivity();
@@ -128,6 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const demoUser = demoLogin(email, password);
     if (demoUser) {
       setUser(demoUser);
+      localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(demoUser));
       localStorage.setItem(STORAGE_KEYS.demoMode, 'true');
       setIsDemoMode(true);
       touchActivity();
@@ -149,6 +167,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const profile = await ensureUserProfile(data.user);
         if (profile) {
           setUser(profile);
+          localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
           localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
           touchActivity();
@@ -161,6 +180,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const newUser = demoRegister(email, password, name, forcedRole);
     setUser(newUser);
+    localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(newUser));
     localStorage.setItem(STORAGE_KEYS.demoMode, 'true');
     setIsDemoMode(true);
     touchActivity();
@@ -172,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase!.auth.signOut();
     }
     setUser(null);
+    localStorage.removeItem(STORAGE_KEYS.user);
     localStorage.removeItem(STORAGE_KEYS.demoMode);
     localStorage.removeItem(STORAGE_KEYS.lastActivity);
     setIsDemoMode(false);
