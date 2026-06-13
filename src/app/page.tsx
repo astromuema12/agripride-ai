@@ -7,7 +7,8 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, Leaf, CloudSun, Shield, BarChart3,
   Sprout, FileSearch, ScrollText, TreePine,
-  Globe, CheckCircle, Quote,
+  Globe, CheckCircle, Quote, Mail, MapPin,
+  MessageCircle, Briefcase, ThumbsUp, Camera,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -354,12 +355,12 @@ export default function HomePage() {
             <div>
               <h4 className="mb-4 text-sm font-semibold text-white">Contact & Social</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="mailto:musauedwin2004@gmail.com" className="hover:text-emerald-400 transition-colors">musauedwin2004@gmail.com</a></li>
-                <li>Nairobi, Kenya</li>
-                <li><a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">WhatsApp</a></li>
-                <li><a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">LinkedIn</a></li>
-                <li><a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Facebook</a></li>
-                <li><a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Instagram</a></li>
+                <li><a href="mailto:musauedwin2004@gmail.com" className="hover:text-emerald-400 transition-colors flex items-center gap-2"><Mail className="h-4 w-4 text-emerald-400" /> musauedwin2004@gmail.com</a></li>
+                <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-400" /> Nairobi, Kenya</li>
+                <li><a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-2"><MessageCircle className="h-4 w-4 text-green-400" /> WhatsApp</a></li>
+                <li><a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-2"><Briefcase className="h-4 w-4 text-blue-400" /> LinkedIn</a></li>
+                <li><a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-2"><ThumbsUp className="h-4 w-4 text-blue-400" /> Facebook</a></li>
+                <li><a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-2"><Camera className="h-4 w-4 text-pink-400" /> Instagram</a></li>
               </ul>
             </div>
           </div>

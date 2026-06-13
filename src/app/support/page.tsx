@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     q: 'How do I contact support?',
-    a: 'You can reach us via the Contact page, email us at hello@agripride.ai, or chat with us on WhatsApp for quick responses.',
+    a: 'You can reach us via the Contact page, email us at musauedwin2004@gmail.com, or chat with us on WhatsApp for quick responses.',
   },
 ];
 
@@ -109,7 +109,7 @@ export default function SupportPage() {
         </motion.div>
 
         <div className="mb-8 flex flex-wrap justify-center gap-4">
-          <a href="mailto:hello@agripride.ai">
+          <a href="mailto:musauedwin2004@gmail.com">
             <Button variant="outline" className="gap-2">
               <Mail className="h-4 w-4" />
               Email Support

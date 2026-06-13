@@ -39,7 +39,7 @@ const sections = [
   },
   {
     title: 'Contact Us',
-    content: `For privacy-related inquiries, contact us at: hello@agripride.ai. We are committed to resolving any privacy concerns promptly.`,
+    content: `For privacy-related inquiries, contact us at: musauedwin2004@gmail.com. We are committed to resolving any privacy concerns promptly.`,
   },
   {
     title: 'Changes to This Policy',

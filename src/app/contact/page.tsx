@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 const contactInfo = [
   { icon: Mail, label: 'Email', value: 'musauedwin2004@gmail.com', href: 'mailto:musauedwin2004@gmail.com' },
-  { icon: Phone, label: 'Phone', value: '+254 ...', href: 'tel:+254...' },
+  { icon: Phone, label: 'Phone', value: '+254 7 ...', href: 'tel:+2547...' },
   { icon: MapPin, label: 'Location', value: 'Nairobi, Kenya' },
   { icon: MessageCircle, label: 'WhatsApp', value: 'Chat on WhatsApp', href: 'https://whatsapp.com/dl/' },
 ];
