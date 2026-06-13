@@ -18,11 +18,22 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     return stored || preferred;
   });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(theme);
-  }, [theme]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    if (mounted) {
+      root.style.setProperty('transition', 'background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease');
+      const timer = setTimeout(() => root.style.removeProperty('transition'), 400);
+      return () => clearTimeout(timer);
+    }
+  }, [theme, mounted]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

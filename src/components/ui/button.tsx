@@ -4,23 +4,29 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]',
   {
     variants: {
       variant: {
-        default: 'bg-emerald-600 text-white shadow hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600',
-        destructive: 'bg-red-600 text-white shadow-sm hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600',
-        outline: 'border border-gray-300 bg-white shadow-sm hover:bg-gray-50 text-gray-700 dark:border-gray-600 dark:bg-[var(--card)] dark:hover:bg-[var(--muted)] dark:text-[var(--foreground)]',
-        secondary: 'bg-emerald-100 text-emerald-800 shadow-sm hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:hover:bg-emerald-800',
-        ghost: 'hover:bg-gray-100 text-gray-700 dark:hover:bg-[var(--muted)] dark:text-[var(--foreground)]',
-        link: 'text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400',
+        default:
+          'bg-gradient-to-br from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:from-emerald-500 hover:to-emerald-400 dark:from-emerald-500 dark:to-emerald-400 dark:hover:from-emerald-400 dark:hover:to-emerald-300 dark:shadow-emerald-500/20',
+        destructive:
+          'bg-gradient-to-br from-red-600 to-red-500 text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/30 hover:from-red-500 hover:to-red-400 dark:from-red-500 dark:to-red-400',
+        outline:
+          'border border-gray-200 bg-white text-gray-700 shadow-sm hover:bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-[var(--card)] dark:text-[var(--foreground)] dark:hover:border-gray-600 dark:hover:bg-[var(--muted)]',
+        secondary:
+          'bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700 shadow-sm hover:from-emerald-100 hover:to-emerald-200 hover:shadow-md hover:shadow-emerald-500/10 dark:from-emerald-900 dark:to-emerald-800 dark:text-emerald-200 dark:hover:from-emerald-800 dark:hover:to-emerald-700',
+        ghost:
+          'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[var(--muted)] dark:hover:text-[var(--foreground)]',
+        link:
+          'text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400',
       },
       size: {
-        default: 'h-9 px-4 py-2',
-        sm: 'h-8 rounded-md px-3 text-xs',
-        lg: 'h-10 rounded-md px-8',
-        xl: 'h-12 rounded-lg px-10 text-base',
-        icon: 'h-9 w-9',
+        default: 'h-10 px-5 py-2',
+        sm: 'h-9 rounded-lg px-4 text-xs',
+        lg: 'h-11 rounded-xl px-8',
+        xl: 'h-13 rounded-xl px-10 text-base',
+        icon: 'h-10 w-10',
       },
     },
     defaultVariants: { variant: 'default', size: 'default' },
