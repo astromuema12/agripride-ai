@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { speakText, stopSpeaking } from '@/lib/tts';
 
-const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Sorghum', 'Millet', 'Sweet Potato', 'Potato', 'Banana', 'Coffee', 'Tea', 'Sugarcane', 'Cotton', 'Tomato', 'Onion', 'Kale', 'Mango', 'Avocado', 'Groundnut', 'Sunflower', 'Cowpea'];
+const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Sorghum', 'Millet', 'Sweet Potato', 'Potato', 'Banana', 'Coffee', 'Tea', 'Sugarcane', 'Cotton', 'Tomato', 'Onion', 'Kale', 'Mango', 'Avocado', 'Groundnut', 'Sunflower', 'Cowpea', 'Pineapple', 'Passion Fruit', 'Orange', 'Coconut', 'Cashew', 'Macadamia', 'Sesame', 'Green Grams', 'Pigeon Peas', 'Cabbage', 'Spinach', 'Carrot', 'Watermelon', 'Pawpaw', 'Barley', 'French Beans', 'Capsicum', 'Arrow Roots', 'Yam', 'Pyrethrum', 'Sisal'];
 
 interface DiagnosisResult {
   disease: string;

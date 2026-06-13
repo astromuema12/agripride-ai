@@ -158,6 +158,78 @@ const DISEASE_DB: Record<string, {
     explanation: 'Mosaic pattern on leaves with vein banding and stunted growth indicate Cowpea Aphid-Borne Mosaic Virus.',
     emoji: '🫘',
   },
+  pineapple: {
+    disease: 'Pineapple Fusariosis', confidence: 0.82, risk: 'medium',
+    treatment: 'Remove infected fruits. Apply systemic fungicides. Use disease-free planting materials.',
+    prevention: 'Use certified disease-free suckers. Practice crop rotation. Ensure field sanitation.',
+    explanation: 'Gum exudation on fruits with internal rot indicates Pineapple Fusariosis.', emoji: '🍍',
+  },
+  'passion fruit': {
+    disease: 'Passion Fruit Woodiness Virus', confidence: 0.84, risk: 'high',
+    treatment: 'Remove infected vines. Control aphid vectors. Use virus-free seedlings.',
+    prevention: 'Plant certified virus-free seedlings. Control aphids. Remove alternative hosts.',
+    explanation: 'Leaf mottling and fruit distortion indicate Passion Fruit Woodiness Virus.', emoji: '💜',
+  },
+  orange: {
+    disease: 'Citrus Greening', confidence: 0.88, risk: 'critical',
+    treatment: 'Remove infected trees. Control Asian citrus psyllid. Use certified nursery stock.',
+    prevention: 'Plant certified seedlings. Monitor psyllid populations. Remove infected trees promptly.',
+    explanation: 'Blotchy leaf mottling and lopsided bitter fruits indicate Citrus Greening.', emoji: '🍊',
+  },
+  coconut: {
+    disease: 'Coconut Lethal Yellowing', confidence: 0.85, risk: 'critical',
+    treatment: 'Remove infected palms. Apply oxytetracycline injections. Control planthopper vectors.',
+    prevention: 'Plant resistant varieties. Maintain field sanitation. Control planthoppers.',
+    explanation: 'Premature nut fall and yellowing fronds indicate Coconut Lethal Yellowing.', emoji: '🥥',
+  },
+  cashew: {
+    disease: 'Cashew Powdery Mildew', confidence: 0.83, risk: 'medium',
+    treatment: 'Apply sulphur-based fungicides during flowering. Prune affected branches.',
+    prevention: 'Plant resistant varieties. Prune for open canopy. Avoid dense planting.',
+    explanation: 'White powdery growth on leaves and inflorescence indicates Cashew Powdery Mildew.', emoji: '🥜',
+  },
+  macadamia: {
+    disease: 'Macadamia Husk Spot', confidence: 0.82, risk: 'medium',
+    treatment: 'Apply copper fungicides during nut development. Remove fallen nuts. Prune for air circulation.',
+    prevention: 'Plant resistant varieties. Practice orchard sanitation. Prune for open canopy.',
+    explanation: 'Dark sunken spots on husks causing premature nut drop indicate Macadamia Husk Spot.', emoji: '🌰',
+  },
+  sesame: {
+    disease: 'Sesame Bacterial Leaf Spot', confidence: 0.81, risk: 'low',
+    treatment: 'Apply copper-based bactericides. Remove infected debris. Use disease-free seed.',
+    prevention: 'Use certified seed. Practice crop rotation. Remove crop residues after harvest.',
+    explanation: 'Water-soaked angular lesions on leaves turning brown indicate Bacterial Leaf Spot.', emoji: '🌿',
+  },
+  cabbage: {
+    disease: 'Cabbage Black Rot', confidence: 0.86, risk: 'high',
+    treatment: 'Remove infected plants. Apply copper bactericides. Disinfect farm tools.',
+    prevention: 'Use certified seeds. Practice crop rotation. Avoid overhead irrigation.',
+    explanation: 'V-shaped yellow lesions at leaf margins with blackened veins indicate Black Rot.', emoji: '🥬',
+  },
+  spinach: {
+    disease: 'Spinach Downy Mildew', confidence: 0.84, risk: 'medium',
+    treatment: 'Apply metalaxyl or mancozeb. Remove infected leaves. Improve air circulation.',
+    prevention: 'Use resistant varieties. Practice crop rotation. Avoid overhead irrigation.',
+    explanation: 'Yellow patches with purple-gray fuzzy growth on leaf undersides indicate Downy Mildew.', emoji: '🌿',
+  },
+  carrot: {
+    disease: 'Carrot Alternaria Leaf Blight', confidence: 0.83, risk: 'medium',
+    treatment: 'Apply chlorothalonil or azoxystrobin. Remove infected debris. Practice crop rotation.',
+    prevention: 'Use disease-free seed. Practice crop rotation. Remove crop residues.',
+    explanation: 'Dark brown lesions with yellow halos on leaf margins indicate Alternaria Leaf Blight.', emoji: '🥕',
+  },
+  watermelon: {
+    disease: 'Watermelon Anthracnose', confidence: 0.85, risk: 'high',
+    treatment: 'Apply chlorothalonil or mancozeb. Remove infected fruits. Practice crop rotation.',
+    prevention: 'Use disease-free seed. Practice crop rotation. Plant resistant varieties.',
+    explanation: 'Circular sunken lesions on fruits with pink spore masses indicate Anthracnose.', emoji: '🍉',
+  },
+  pawpaw: {
+    disease: 'Papaya Ringspot Virus', confidence: 0.87, risk: 'critical',
+    treatment: 'Remove infected trees immediately. Control aphid vectors. Plant away from infected areas.',
+    prevention: 'Plant certified virus-free seedlings. Control aphid populations. Remove alternative hosts.',
+    explanation: 'Ringspot pattern on fruits and leaf mosaic distortion indicate Papaya Ringspot Virus.', emoji: '🍈',
+  },
 };
 
 const cropList = Object.keys(DISEASE_DB);
@@ -185,6 +257,18 @@ const commonSymptoms: Record<string, string[]> = {
   groundnut: ['severe stunting', 'leaf curling', 'chlorotic mottling', 'reduced pod set', 'yellow patches'],
   sunflower: ['chlorotic patches', 'white downy growth', 'stunted plants', 'head distortion', 'leaf curling'],
   cowpea: ['mosaic pattern', 'vein banding', 'leaf distortion', 'stunted growth', 'reduced podding'],
+  pineapple: ['fruit gum exudation', 'internal fruit rot', 'leaf wilting', 'plant collapse', 'stunted growth'],
+  'passion fruit': ['leaf mottling', 'fruit distortion', 'hard rind', 'stunted vines', 'leaf curling'],
+  orange: ['blotchy leaf mottling', 'bitter fruits', 'fruit drop', 'premature coloring', 'twig dieback'],
+  coconut: ['premature nut fall', 'frond yellowing', 'inflorescence blackening', 'crown rot', 'palm decline'],
+  cashew: ['white powdery growth', 'flower distortion', 'nut drop', 'leaf curling', 'inflorescence blight'],
+  macadamia: ['dark husk spots', 'premature nut drop', 'nut discoloration', 'canker on branches', 'leaf spots'],
+  sesame: ['angular leaf spots', 'leaf necrosis', 'stem lesions', 'capsule rot', 'defoliation'],
+  cabbage: ['V-shaped yellow lesions', 'blackened veins', 'leaf yellowing', 'wilting', 'head rot'],
+  spinach: ['yellow leaf patches', 'purple fuzzy growth', 'leaf curling', 'stunted growth', 'leaf drop'],
+  carrot: ['dark leaf lesions', 'yellow leaf halos', 'leaf blight', 'root lesions', 'foliar dieback'],
+  watermelon: ['sunken fruit lesions', 'pink spore masses', 'leaf spots', 'vine collapse', 'fruit rot'],
+  pawpaw: ['ringspots on fruit', 'leaf mosaic', 'leaf distortion', 'stunted tree', 'fruit deformation'],
 };
 
 export async function POST(req: NextRequest) {

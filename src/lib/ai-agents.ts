@@ -184,6 +184,110 @@ const diseaseDatabase: Record<string, {
     prevention: 'Plant resistant varieties. Use certified disease-free seed. Practice crop rotation. Avoid planting near infected fields. Control weed hosts.',
     explanation: 'The mosaic pattern on leaves with vein banding, leaf distortion, and stunted growth are characteristic of Cowpea Aphid-Borne Mosaic Virus.',
   },
+  pineapple: {
+    disease: 'Pineapple Fusariosis',
+    confidence: 0.82,
+    risk: 'medium',
+    treatment: 'Remove and destroy infected fruits and plants. Apply systemic fungicides. Improve field drainage. Use disease-free planting materials.',
+    prevention: 'Use certified disease-free suckers or crowns. Practice crop rotation. Avoid mechanical damage to fruits. Ensure proper field sanitation.',
+    explanation: 'The gum exudation on fruits with internal rot and plant wilting indicate Pineapple Fusariosis (Fusarium subglutinans).',
+  },
+  'passion fruit': {
+    disease: 'Passion Fruit Woodiness Virus',
+    confidence: 0.84,
+    risk: 'high',
+    treatment: 'Remove and destroy infected vines. Control aphid vectors with neem-based insecticides. Use virus-free planting materials.',
+    prevention: 'Plant certified virus-free seedlings. Control aphid populations. Remove alternative host plants. Practice field sanitation.',
+    explanation: 'The leaf mottling, fruit distortion with hard rind, and stunted vine growth are characteristic of Passion Fruit Woodiness Virus.',
+  },
+  orange: {
+    disease: 'Citrus Greening (Huanglongbing)',
+    confidence: 0.88,
+    risk: 'critical',
+    treatment: 'Remove and destroy infected trees. Control Asian citrus psyllid with systemic insecticides. Use certified disease-free nursery stock.',
+    prevention: 'Plant certified disease-free seedlings. Monitor and control psyllid populations. Remove infected trees promptly. Use reflective mulch to repel psyllids.',
+    explanation: 'The blotchy mottling of leaves, lopsided bitter fruits with color inversion, and premature fruit drop indicate Citrus Greening (Candidatus Liberibacter spp.).',
+  },
+  coconut: {
+    disease: 'Coconut Lethal Yellowing',
+    confidence: 0.85,
+    risk: 'critical',
+    treatment: 'Remove and destroy infected palms immediately. Apply antibiotic injections (oxytetracycline) for early-stage trees. Control planthopper vectors.',
+    prevention: 'Plant resistant/tolerant varieties. Maintain good field sanitation. Control planthopper populations. Avoid movement of infected plant material.',
+    explanation: 'The premature nut fall, yellowing of lower fronds progressing upward, and blackening of inflorescence indicate Coconut Lethal Yellowing phytoplasma.',
+  },
+  cashew: {
+    disease: 'Cashew Powdery Mildew',
+    confidence: 0.83,
+    risk: 'medium',
+    treatment: 'Apply sulphur-based or triazole fungicides during flowering. Prune affected branches. Improve air circulation through proper spacing.',
+    prevention: 'Plant resistant varieties. Prune for open canopy. Apply preventive fungicides before flowering. Avoid dense planting.',
+    explanation: 'The white powdery growth on young leaves, inflorescence, and developing nuts with distorted growth indicate Cashew Powdery Mildew.',
+  },
+  macadamia: {
+    disease: 'Macadamia Husk Spot',
+    confidence: 0.82,
+    risk: 'medium',
+    treatment: 'Apply copper-based fungicides during nut development. Remove and destroy fallen nuts. Prune for better air circulation.',
+    prevention: 'Plant resistant varieties. Practice orchard sanitation. Prune to maintain open canopy. Ensure proper drainage.',
+    explanation: 'The small dark sunken spots on husks that enlarge and cause premature nut drop indicate Macadamia Husk Spot (Pseudocercospora macadamiae).',
+  },
+  sesame: {
+    disease: 'Sesame Bacterial Leaf Spot',
+    confidence: 0.81,
+    risk: 'low',
+    treatment: 'Apply copper-based bactericides. Remove and destroy infected plant debris. Use disease-free seed.',
+    prevention: 'Use certified disease-free seed. Practice crop rotation. Avoid overhead irrigation. Remove crop residues after harvest.',
+    explanation: 'The small water-soaked angular lesions on leaves that turn brown and necrotic indicate Sesame Bacterial Leaf Spot.',
+  },
+  'pigeon peas': {
+    disease: 'Pigeon Pea Fusarium Wilt',
+    confidence: 0.84,
+    risk: 'high',
+    treatment: 'Remove and destroy wilted plants. Apply soil drench with systemic fungicides. Practice crop rotation with non-host crops.',
+    prevention: 'Plant resistant varieties. Use disease-free seed. Practice crop rotation (3-4 years). Improve soil drainage.',
+    explanation: 'The progressive yellowing and wilting of leaves with vascular discoloration in stems indicate Pigeon Pea Fusarium Wilt.',
+  },
+  cabbage: {
+    disease: 'Cabbage Black Rot',
+    confidence: 0.86,
+    risk: 'high',
+    treatment: 'Remove and destroy infected plants. Apply copper-based bactericides. Disinfect farm tools with bleach solution.',
+    prevention: 'Use certified disease-free seeds. Practice 3-4 year crop rotation. Avoid overhead irrigation. Control cruciferous weeds.',
+    explanation: 'The V-shaped yellow lesions at leaf margins with blackened veins progressing toward midrib indicate Cabbage Black Rot.',
+  },
+  spinach: {
+    disease: 'Spinach Downy Mildew',
+    confidence: 0.84,
+    risk: 'medium',
+    treatment: 'Apply fungicides (metalaxyl or mancozeb). Remove infected leaves. Improve air circulation through proper spacing.',
+    prevention: 'Use resistant varieties. Practice crop rotation. Avoid overhead irrigation. Ensure proper plant spacing.',
+    explanation: 'The yellow patches on upper leaf surfaces with purple-gray fuzzy growth on undersides indicate Spinach Downy Mildew.',
+  },
+  carrot: {
+    disease: 'Carrot Alternaria Leaf Blight',
+    confidence: 0.83,
+    risk: 'medium',
+    treatment: 'Apply fungicides (chlorothalonil or azoxystrobin). Remove infected plant debris. Practice crop rotation.',
+    prevention: 'Use disease-free seed. Practice 3-4 year crop rotation. Remove crop residues. Avoid overhead irrigation.',
+    explanation: 'The dark brown to black lesions with yellow halos on leaf margins and tips indicate Carrot Alternaria Leaf Blight.',
+  },
+  watermelon: {
+    disease: 'Watermelon Anthracnose',
+    confidence: 0.85,
+    risk: 'high',
+    treatment: 'Apply fungicides (chlorothalonil or mancozeb). Remove infected fruits and vines. Practice crop rotation.',
+    prevention: 'Use disease-free seed. Practice crop rotation (3-4 years). Plant resistant varieties. Avoid overhead irrigation.',
+    explanation: 'The circular sunken lesions on fruits with pink spore masses and leaf spots indicate Watermelon Anthracnose.',
+  },
+  pawpaw: {
+    disease: 'Papaya Ringspot Virus',
+    confidence: 0.87,
+    risk: 'critical',
+    treatment: 'Remove and destroy infected trees immediately. Control aphid vectors. Plant new trees away from infected areas.',
+    prevention: 'Plant certified virus-free seedlings. Use cross-protection with mild strain. Control aphid populations. Remove alternative hosts.',
+    explanation: 'The ringspot pattern on fruits, leaf mosaic and distortion, and stunted tree growth indicate Papaya Ringspot Virus.',
+  },
 };
 
 export function diagnoseDisease(
@@ -333,6 +437,76 @@ export function getCropAdvisorAdvice(
       fertilizer: 'Apply DAP at 60kg/ha at planting. Cowpeas fix their own nitrogen. Apply MOP at 40kg/ha for pod development. Well-decomposed manure improves yield on poor soils.',
       pest: 'Monitor for aphids, thrips, and pod borers. Use neem-based insecticides for aphid control. Practice crop rotation. Harvest pods when they turn brown and dry. Store in airtight containers.',
     },
+    Pineapple: {
+      planting: 'Plant pineapple crowns or suckers at spacing of 60cm x 30cm x 90cm (double row). Prepare raised beds in well-drained soils. Mulch with plastic or organic material. Plant at onset of rains.',
+      fertilizer: 'Apply NPK (17:17:17) at 200kg/ha at planting. Apply Urea at 100kg/ha 4-6 months after planting. Potassium is critical for fruit quality. Apply MOP at 150kg/ha at forcing.',
+      pest: 'Monitor for mealybugs and scale insects. Use clean planting materials. Practice field sanitation. Force flowering with calcium carbide or ethylene for uniform harvesting.',
+    },
+    'Passion fruit': {
+      planting: 'Plant passion fruit seedlings at spacing of 2.5m x 3m. Provide strong trellis support (T-trellis or overhead). Plant at onset of rains. Apply well-decomposed manure in planting holes.',
+      fertilizer: 'Apply NPK (17:17:17) at 150g per vine monthly. Apply well-decomposed manure at 10kg per vine twice per year. Foliar spray with zinc and boron for better fruit set.',
+      pest: 'Monitor for woodiness virus, fusarium wilt, and brown spot. Use resistant rootstocks. Prune regularly for air circulation. Remove and destroy virus-infected vines immediately.',
+    },
+    Orange: {
+      planting: 'Plant grafted citrus seedlings at spacing of 5m x 5m (400 trees/ha). Dig holes 60cm x 60cm x 60cm. Fill with topsoil mixed with well-decomposed manure. Plant at onset of rains.',
+      fertilizer: 'Apply NPK (17:17:17) at 300g per tree in first year, increasing to 1kg for mature trees. Apply well-decomposed manure at 20kg per tree annually. Zinc and iron foliar sprays prevent deficiency.',
+      pest: 'Monitor for citrus psyllid, leaf miner, and fruit fly. Use systemic insecticides for psyllid control. Install yellow sticky traps for leaf miner. Practice integrated pest management.',
+    },
+    Coconut: {
+      planting: 'Plant coconut seedlings at spacing of 8m x 8m (156 palms/ha). Dig large pits 90cm x 90cm x 90cm. Fill with topsoil and well-decomposed manure. Plant at onset of rains. Provide irrigation during dry spells.',
+      fertilizer: 'Apply NPK (17:17:17) at 500g per palm increasing to 2kg for mature palms. Apply well-decomposed manure at 15kg per palm annually. Boron foliar spray prevents leaf malformation.',
+      pest: 'Monitor for coconut mite, rhinoceros beetle, and lethal yellowing disease. Use pheromone traps for rhinoceros beetle. Practice field sanitation. Remove and destroy infected palms.',
+    },
+    Cashew: {
+      planting: 'Plant cashew seedlings at spacing of 8m x 8m (156 trees/ha). Dig holes 60cm x 60cm x 60cm. Cashew thrives in coastal areas like Kilifi, Kwale, and Lamu. Plant at onset of rains.',
+      fertilizer: 'Apply NPK (17:17:17) at 200g per tree in first year, increasing to 1kg for mature trees. Apply well-decomposed manure at 15kg per tree annually. Zinc spray improves nut yield.',
+      pest: 'Monitor for cashew powdery mildew and mosquito bug. Apply sulphur fungicides during flowering. Prune for open canopy. Practice orchard sanitation. Harvest fallen nuts regularly.',
+    },
+    Macadamia: {
+      planting: 'Plant grafted macadamia seedlings at spacing of 8m x 8m (156 trees/ha). Dig holes 60cm x 60cm x 60cm. Plant at onset of rains. Provide windbreaks in exposed areas.',
+      fertilizer: 'Apply NPK (17:17:17) at 300g per tree in first year, increasing to 1.5kg for mature trees. Apply well-decomposed manure at 20kg per tree annually. Apply zinc and boron foliar sprays.',
+      pest: 'Monitor for macadamia nut borer and husk spot. Use pheromone traps for nut borer. Practice orchard sanitation. Harvest ripe nuts from ground. Dry nuts properly before storage.',
+    },
+    Sesame: {
+      planting: 'Plant sesame at onset of rains. Seed rate: 4-6kg/ha. Depth: 1-2cm. Row spacing: 60cm x 10cm. Thrives in well-drained sandy loam soils. Common in Nyanza, Eastern, and Coastal regions.',
+      fertilizer: 'Apply DAP at 60kg/ha at planting. Top-dress with CAN at 50kg/ha at flowering. Sesame requires moderate fertilization. Avoid excessive nitrogen which causes lodging.',
+      pest: 'Monitor for aphids, leaf feeders, and capsule borers. Practice crop rotation. Harvest when lower capsules turn yellow-brown. Dry plants before threshing.',
+    },
+    'Green grams': {
+      planting: 'Plant green grams at onset of rains. Seed rate: 15-20kg/ha. Depth: 3-5cm. Spacing: 45cm x 10cm. Excellent drought tolerance for dry regions. Matures in 65-75 days.',
+      fertilizer: 'Apply DAP at 60kg/ha at planting. Green grams fix their own nitrogen. Apply MOP at 30kg/ha for pod development. Well-decomposed manure improves yield on poor soils.',
+      pest: 'Monitor for aphids, pod borers, and powdery mildew. Use neem-based insecticides. Harvest pods progressively as they mature. Dry and store in airtight containers.',
+    },
+    'Pigeon peas': {
+      planting: 'Plant pigeon peas at onset of rains. Seed rate: 10-15kg/ha. Depth: 3-5cm. Spacing: 150cm x 50cm. Deep-rooted drought-tolerant crop for semi-arid regions. Can be intercropped with maize or sorghum.',
+      fertilizer: 'Apply DAP at 80kg/ha at planting. Pigeon peas fix their own nitrogen. Apply MOP at 40kg/ha for pod development. Responds well to well-decomposed manure.',
+      pest: 'Monitor for pod borers, flower thrips, and fusarium wilt. Use neem-based sprays. Practice crop rotation. Harvest pods progressively as they mature. Store in clean dry containers.',
+    },
+    Cabbage: {
+      planting: 'Transplant cabbage seedlings at 4-6 weeks. Spacing: 60cm x 45cm. Prepare well-drained raised beds. Apply well-decomposed manure at 10 tons/ha before transplanting. Plant at onset of rains.',
+      fertilizer: 'Apply DAP at 150kg/ha at transplanting. Top-dress with CAN at 100kg/ha at 3 weeks and again at head initiation. Cabbage is a heavy feeder requiring regular fertilization.',
+      pest: 'Monitor for diamondback moth, aphids, and black rot. Use neem-based insecticides for caterpillar control. Practice crop rotation with non-brassica crops. Remove crop residues after harvest.',
+    },
+    Spinach: {
+      planting: 'Sow spinach seeds directly or transplant seedlings. Seed rate: 10-15kg/ha. Spacing: 30cm x 15cm. Prepare well-drained raised beds with fertile soil. Plant at onset of rains.',
+      fertilizer: 'Apply DAP at 80kg/ha at planting. Top-dress with CAN at 60kg/ha every 3 weeks. Spinach requires regular nitrogen for leafy growth. Apply well-decomposed manure.',
+      pest: 'Monitor for leaf miners, aphids, and downy mildew. Use neem-based insecticides. Practice crop rotation. Harvest outer leaves regularly to encourage new growth.',
+    },
+    Carrot: {
+      planting: 'Sow carrot seeds directly in well-prepared raised beds. Seed rate: 4-6kg/ha. Depth: 0.5-1cm. Spacing: 30cm x 5cm. Requires deep well-drained sandy loam soils free of stones.',
+      fertilizer: 'Apply DAP at 80kg/ha at planting. Potassium is critical for root development. Apply MOP at 100kg/ha. Avoid excessive nitrogen which causes forked roots.',
+      pest: 'Monitor for leaf blight, root knot nematodes, and carrot fly. Practice crop rotation (3-4 years). Use well-decomposed manure. Ensure soil is free of nematodes before planting.',
+    },
+    Watermelon: {
+      planting: 'Plant watermelon seeds directly at spacing of 2m x 1m. Seed rate: 2-3kg/ha. Prepare raised beds with plastic mulch for weed control. Requires well-drained sandy loam soils.',
+      fertilizer: 'Apply DAP at 100kg/ha at planting. Top-dress with CAN at 80kg/ha at vining stage. Potassium improves fruit quality. Apply MOP at 100kg/ha at fruit set.',
+      pest: 'Monitor for aphids, whiteflies, and fruit flies. Use yellow sticky traps. Practice crop rotation. Remove and destroy infected fruits. Harvest at full maturity with dried tendril.',
+    },
+    Pawpaw: {
+      planting: 'Plant pawpaw seedlings (2-3 per hole, remove males later) at spacing of 2.5m x 2.5m. Dig holes 60cm x 60cm x 60cm. Fill with topsoil and well-decomposed manure. Plant at onset of rains.',
+      fertilizer: 'Apply NPK (17:17:17) at 150g per tree every 2 months. Apply well-decomposed manure at 10kg per tree twice per year. Boron spray prevents fruit malformation.',
+      pest: 'Monitor for papaya ringspot virus, mealybugs, and fruit flies. Remove and destroy virus-infected trees. Control aphid vectors. Practice field sanitation.',
+    },
   };
 
   const advice = adviceMap[cropType]?.[question];
@@ -384,51 +558,79 @@ export function getWeatherAdvisory(
   };
 }
 
+const ALL_CROP_KEYS = ['maize', 'wheat', 'rice', 'cassava', 'beans', 'sorghum', 'millet', 'sweet potato', 'potato', 'banana', 'coffee', 'tea', 'sugarcane', 'cotton', 'tomato', 'onion', 'kale', 'mango', 'avocado', 'groundnut', 'sunflower', 'cowpea', 'pineapple', 'passion fruit', 'orange', 'lemon', 'coconut', 'cashew', 'macadamia', 'sesame', 'green grams', 'pigeon peas', 'cabbage', 'spinach', 'carrot', 'arrow roots', 'yam', 'pyrethrum', 'sisal', 'barley', 'french beans', 'capsicum', 'watermelon', 'pawpaw', 'tissue banana'];
+
+function capitalize(name: string): string {
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+function detectCropType(lower: string): string | null {
+  for (const crop of ALL_CROP_KEYS) {
+    if (lower.includes(crop)) return crop;
+  }
+  return null;
+}
+
 export function getChatResponse(query: string): AIAgentResponse {
   const lower = query.toLowerCase();
   let agentName = 'General AI Assistant';
   let frameworks = ['AIM Framework'];
   let response = '';
 
-  if (lower.includes('plant') || lower.includes('fertilizer') || lower.includes('pest') || lower.includes('crop')) {
-    const cropTypes = ['maize', 'wheat', 'rice', 'cassava', 'beans', 'sorghum', 'millet', 'sweet potato', 'potato', 'banana', 'coffee', 'tea', 'sugarcane', 'cotton', 'tomato', 'onion', 'kale', 'mango', 'avocado', 'groundnut', 'sunflower', 'cowpea'];
-    const detectedCrop = cropTypes.find((c) => lower.includes(c)) ?? 'maize';
-    const question = lower.includes('fertilizer') ? 'fertilizer' : lower.includes('pest') ? 'pest' : 'planting';
-    const advice = getCropAdvisorAdvice(detectedCrop.charAt(0).toUpperCase() + detectedCrop.slice(1), question);
-    if (advice.success) {
-      response = (advice.data as { advice: string }).advice;
-      agentName = advice.responsible_agent ?? 'Crop Advisor Agent';
-      frameworks = advice.frameworks_used ?? ['AIM Framework'];
+  const detectedCrop = detectCropType(lower);
+
+  if (detectedCrop) {
+    const isDisease = lower.includes('disease') || lower.includes('symptom') || lower.includes('diagnos') || lower.includes('blight') || lower.includes('rust') || lower.includes('mold') || lower.includes('infection') || lower.includes('treatment') || lower.includes('cure') || lower.includes('fungus') || lower.includes('bacteria') || lower.includes('virus') || lower.includes('rot') || lower.includes('wilt') || lower.includes('spot') || lower.includes('lesion');
+    const isFertilizer = lower.includes('fertilizer') || lower.includes('manure') || lower.includes('nutrient') || lower.includes('npk') || lower.includes('dap') || lower.includes('can') || lower.includes('compost') || lower.includes('feeding');
+    const isPest = lower.includes('pest') || lower.includes('insect') || lower.includes('bug') || lower.includes('weed') || lower.includes('worm') || lower.includes('caterpillar') || lower.includes('aphid') || lower.includes('mite') || lower.includes('borer') || lower.includes('weevil') || lower.includes('thrips') || lower.includes('whitefly') || lower.includes('ipm');
+
+    if (isDisease) {
+      const diag = diagnoseDisease(detectedCrop);
+      if (diag.success) {
+        const d = diag.data as { disease: string; treatment: string; prevention: string; risk: string };
+        response = `Diagnosis for ${capitalize(detectedCrop)}: ${d.disease}\nRisk Level: ${d.risk}\n\nTreatment: ${d.treatment}\n\nPrevention: ${d.prevention}`;
+        agentName = 'Crop Disease Diagnostic Agent';
+        frameworks = ['AIM Framework', 'MAP Framework', 'TRACK Framework'];
+      }
+    } else {
+      const question = isFertilizer ? 'fertilizer' : isPest ? 'pest' : 'planting';
+      const capitalizedCrop = detectedCrop.split(' ').map(capitalize).join(' ');
+      const advice = getCropAdvisorAdvice(capitalizedCrop, question);
+      if (advice.success) {
+        response = (advice.data as { advice: string }).advice;
+        agentName = advice.responsible_agent ?? 'Crop Advisor Agent';
+        frameworks = advice.frameworks_used ?? ['AIM Framework', 'RANK Framework', 'TRAIL Framework'];
+      }
     }
-  } else if (lower.includes('disease') || lower.includes('symptom') || lower.includes('diagnos') || lower.includes('blight') || lower.includes('rust')) {
-    const cropTypes = ['maize', 'wheat', 'cassava', 'rice', 'beans', 'sorghum', 'millet', 'sweet potato', 'potato', 'banana', 'coffee', 'tea', 'sugarcane', 'cotton', 'tomato', 'onion', 'kale', 'mango', 'avocado', 'groundnut', 'sunflower', 'cowpea'];
-    const detectedCrop = cropTypes.find((c) => lower.includes(c)) ?? 'maize';
-    const diag = diagnoseDisease(detectedCrop);
-    if (diag.success) {
-      const d = diag.data as { disease: string; treatment: string; prevention: string; risk: string };
-      response = `Diagnosis: ${d.disease}\nRisk Level: ${d.risk}\n\nTreatment: ${d.treatment}\n\nPrevention: ${d.prevention}`;
-      agentName = diag.responsible_agent ?? 'Crop Disease Diagnostic Agent';
-      frameworks = diag.frameworks_used ?? ['AIM Framework', 'MAP Framework'];
-    }
-  } else if (lower.includes('weather') || lower.includes('rain') || lower.includes('temperature') || lower.includes('humid')) {
+  } else if (lower.includes('weather') || lower.includes('rain') || lower.includes('temperature') || lower.includes('humid') || lower.includes('forecast') || lower.includes('drought') || lower.includes('sunny') || lower.includes('cloud')) {
     const advisory = getWeatherAdvisory('current', []);
     if (advisory.success) {
       response = (advisory.data as { advisory: string }).advisory;
       agentName = advisory.responsible_agent ?? 'Weather Intelligence Agent';
       frameworks = advisory.frameworks_used ?? ['TRAIL Framework', 'TRACK Framework'];
     }
-  } else if (lower.includes('sustainab') || lower.includes('soil') || lower.includes('carbon') || lower.includes('water')) {
-    response = 'To improve your sustainability score: 1) Practice crop rotation to maintain soil health, 2) Implement drip irrigation to reduce water usage, 3) Plant cover crops to boost biodiversity, 4) Use organic fertilizers to lower carbon footprint.';
+  } else if (lower.includes('sustainab') || lower.includes('soil') || lower.includes('carbon') || lower.includes('environment') || lower.includes('organic') || lower.includes('score') || lower.includes('footprint')) {
+    response = 'To improve your sustainability score on your Kenyan farm:\n1) Practice crop rotation to maintain soil health and break pest cycles.\n2) Use drip irrigation or alternate wetting-drying to reduce water consumption by up to 60%.\n3) Plant cover crops like cowpeas or lablab to prevent erosion and fix nitrogen.\n4) Compost crop residues to enrich soil organic matter.\n5) Plant agroforestry trees (grevillea, calliandra) for shade, fodder, and firewood.\n6) Maintain buffer zones near water bodies.\n7) Use integrated soil fertility management combining organic manure with inorganic fertilizers.\n8) Practice zero-tillage or minimum tillage to reduce soil disturbance.';
     agentName = 'Sustainability Agent';
     frameworks = ['AIM Framework', 'OASIS Framework', 'TRACK Framework'];
   } else {
-    response = `I'm your AgriPride AI assistant. I can help you with:\n• Crop planting and fertilizer advice\n• Disease diagnosis and treatment\n• Weather forecasts and advisories\n• Sustainability recommendations\n\nWhat would you like to know more about?`;
+    response = `I'm your AgriPride AI assistant for Kenyan agriculture. I can help you with over 40 crops grown in Kenya including:
+
+🌽 Cereals: Maize, Wheat, Rice, Sorghum, Millet, Barley
+🥔 Tubers: Cassava, Sweet Potato, Potato, Arrow Roots, Yams
+🫘 Legumes: Beans, Cowpeas, Green Grams, Pigeon Peas, Groundnuts
+🍌 Fruits: Banana, Mango, Avocado, Pineapple, Passion Fruit, Citrus, Watermelon, Pawpaw
+☕ Cash Crops: Coffee, Tea, Sugarcane, Cotton, Pyrethrum, Sisal
+🥬 Vegetables: Tomato, Onion, Kale, Cabbage, Spinach, French Beans, Capsicum
+🌴 Other: Coconut, Cashew, Macadamia, Sunflower, Sesame
+
+Ask me about planting techniques, fertilizer rates, pest and disease management, or weather information for any crop!`;
   }
 
   return {
     success: true,
     data: { response },
-    confidence_score: 0.9,
+    confidence_score: 0.92,
     responsible_agent: agentName,
     frameworks_used: frameworks,
     timestamp: new Date().toISOString(),
