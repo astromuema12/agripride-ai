@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, MessageCircle, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,7 +15,7 @@ const contactInfo = [
   { icon: Mail, label: 'Email', value: 'musauedwin2004@gmail.com', href: 'mailto:musauedwin2004@gmail.com' },
   { icon: Phone, label: 'Phone', value: '+254 7 ...', href: 'tel:+2547...' },
   { icon: MapPin, label: 'Location', value: 'Nairobi, Kenya' },
-  { icon: MessageCircle, label: 'WhatsApp', value: 'Chat on WhatsApp', href: 'https://whatsapp.com/dl/' },
+  { icon: FaWhatsapp, label: 'WhatsApp', value: 'Chat on WhatsApp', href: 'https://whatsapp.com/dl/' },
 ];
 
 export default function ContactPage() {
@@ -98,12 +99,12 @@ export default function ContactPage() {
 
             <Card className="bg-emerald-600 border-emerald-600">
               <CardContent className="p-5 text-center">
-                <MessageCircle className="mx-auto mb-2 h-8 w-8 text-white" />
+                <FaWhatsapp className="mx-auto mb-2 h-8 w-8 text-white" />
                 <p className="font-semibold text-white">Quick Response on WhatsApp</p>
                 <p className="mt-1 text-sm text-emerald-100">Usually responds within 1 hour</p>
                 <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer">
                   <Button variant="secondary" className="mt-3 w-full bg-white text-emerald-700 hover:bg-emerald-50">
-                    <MessageCircle className="mr-2 h-4 w-4" />
+                    <FaWhatsapp className="mr-2 h-4 w-4" />
                     Chat on WhatsApp
                   </Button>
                 </a>
