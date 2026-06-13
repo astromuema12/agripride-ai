@@ -152,3 +152,54 @@ export function getWeatherAdvisory(
     timestamp: new Date().toISOString(),
   };
 }
+
+export function getChatResponse(query: string): AIAgentResponse {
+  const lower = query.toLowerCase();
+  let agentName = 'General AI Assistant';
+  let frameworks = ['AIM Framework'];
+  let response = '';
+
+  if (lower.includes('plant') || lower.includes('fertilizer') || lower.includes('pest') || lower.includes('crop')) {
+    const cropTypes = ['maize', 'wheat', 'rice', 'cassava', 'sorghum', 'beans', 'coffee'];
+    const detectedCrop = cropTypes.find((c) => lower.includes(c)) ?? 'maize';
+    const question = lower.includes('fertilizer') ? 'fertilizer' : lower.includes('pest') ? 'pest' : 'planting';
+    const advice = getCropAdvisorAdvice(detectedCrop.charAt(0).toUpperCase() + detectedCrop.slice(1), question);
+    if (advice.success) {
+      response = (advice.data as { advice: string }).advice;
+      agentName = advice.responsible_agent ?? 'Crop Advisor Agent';
+      frameworks = advice.frameworks_used ?? ['AIM Framework'];
+    }
+  } else if (lower.includes('disease') || lower.includes('symptom') || lower.includes('diagnos') || lower.includes('blight') || lower.includes('rust')) {
+    const cropTypes = ['maize', 'wheat', 'cassava', 'rice', 'beans'];
+    const detectedCrop = cropTypes.find((c) => lower.includes(c)) ?? 'maize';
+    const diag = diagnoseDisease(detectedCrop);
+    if (diag.success) {
+      const d = diag.data as { disease: string; treatment: string; prevention: string; risk: string };
+      response = `Diagnosis: ${d.disease}\nRisk Level: ${d.risk}\n\nTreatment: ${d.treatment}\n\nPrevention: ${d.prevention}`;
+      agentName = diag.responsible_agent ?? 'Crop Disease Diagnostic Agent';
+      frameworks = diag.frameworks_used ?? ['AIM Framework', 'MAP Framework'];
+    }
+  } else if (lower.includes('weather') || lower.includes('rain') || lower.includes('temperature') || lower.includes('humid')) {
+    const advisory = getWeatherAdvisory('current', []);
+    if (advisory.success) {
+      response = (advisory.data as { advisory: string }).advisory;
+      agentName = advisory.responsible_agent ?? 'Weather Intelligence Agent';
+      frameworks = advisory.frameworks_used ?? ['TRAIL Framework', 'TRACK Framework'];
+    }
+  } else if (lower.includes('sustainab') || lower.includes('soil') || lower.includes('carbon') || lower.includes('water')) {
+    response = 'To improve your sustainability score: 1) Practice crop rotation to maintain soil health, 2) Implement drip irrigation to reduce water usage, 3) Plant cover crops to boost biodiversity, 4) Use organic fertilizers to lower carbon footprint.';
+    agentName = 'Sustainability Agent';
+    frameworks = ['AIM Framework', 'OASIS Framework', 'TRACK Framework'];
+  } else {
+    response = `I'm your AgriPride AI assistant. I can help you with:\n• Crop planting and fertilizer advice\n• Disease diagnosis and treatment\n• Weather forecasts and advisories\n• Sustainability recommendations\n\nWhat would you like to know more about?`;
+  }
+
+  return {
+    success: true,
+    data: { response },
+    confidence_score: 0.9,
+    responsible_agent: agentName,
+    frameworks_used: frameworks,
+    timestamp: new Date().toISOString(),
+  };
+}

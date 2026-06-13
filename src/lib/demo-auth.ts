@@ -1,4 +1,6 @@
 import { User, UserRole } from '@/types';
+import { generateId } from './utils';
+import { writeAuditLog } from './server-auth';
 
 export const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
   'admin@agripride.ai': {
@@ -42,6 +44,12 @@ export const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
 export function demoLogin(email: string, password: string): User | null {
   const account = DEMO_ACCOUNTS[email.toLowerCase()];
   if (account && account.password === password) {
+    writeAuditLog({
+      user_id: account.user.id,
+      action: 'login',
+      resource: 'auth',
+      details: { method: 'demo' },
+    });
     return { ...account.user };
   }
   return null;
@@ -53,8 +61,8 @@ export function demoRegister(
   name: string,
   role: UserRole = 'farmer'
 ): User {
-  return {
-    id: `demo-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+  const newUser: User = {
+    id: generateId(),
     email,
     name,
     role,
@@ -62,4 +70,13 @@ export function demoRegister(
     updated_at: new Date().toISOString(),
     is_suspended: false,
   };
+
+  writeAuditLog({
+    user_id: newUser.id,
+    action: 'register',
+    resource: 'auth',
+    details: { method: 'demo' },
+  });
+
+  return newUser;
 }

@@ -10,10 +10,31 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { UserRole } from '@/types';
+
+const PASSWORD_MIN_LENGTH = 8;
+const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+
+function validatePassword(password: string): string | null {
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    return `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
+  }
+  if (!/[A-Z]/.test(password)) {
+    return 'Password must contain an uppercase letter';
+  }
+  if (!/[a-z]/.test(password)) {
+    return 'Password must contain a lowercase letter';
+  }
+  if (!/[0-9]/.test(password)) {
+    return 'Password must contain a digit';
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return 'Password must contain a special character';
+  }
+  return null;
+}
 
 function AuthForm() {
   const router = useRouter();
@@ -30,7 +51,6 @@ function AuthForm() {
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [regRole, setRegRole] = useState<UserRole>('farmer');
 
   const [resetEmail, setResetEmail] = useState('');
   const [showReset, setShowReset] = useState(false);
@@ -72,13 +92,14 @@ function AuthForm() {
       setError('All fields are required');
       return;
     }
-    if (regPassword.length < 6) {
-      setError('Password must be at least 6 characters');
+    const passwordError = validatePassword(regPassword);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     setLoading(true);
     try {
-      const result = await register(regEmail, regPassword, regName, regRole);
+      const result = await register(regEmail, regPassword, regName, 'farmer');
       if (result.error) {
         setError(result.error);
         toast.error(result.error);
@@ -194,13 +215,9 @@ function AuthForm() {
                     </Button>
                   </form>
 
-                  <div className="mt-6 rounded-lg bg-gray-50 p-4">
-                    <p className="mb-2 text-xs font-medium text-gray-700">Demo Accounts:</p>
-                    <div className="space-y-1 text-xs text-gray-500">
-                      <p>Admin: admin@agripride.ai / Admin123!</p>
-                      <p>Officer: officer@agripride.ai / Officer123!</p>
-                      <p>Farmer: farmer@agripride.ai / Farmer123!</p>
-                    </div>
+                  <div className="mt-6 rounded-lg bg-emerald-50 p-4">
+                    <p className="mb-1 text-xs font-medium text-emerald-700">Beta Program</p>
+                    <p className="text-xs text-emerald-600">Creating an account registers you for our beta program. We are currently onboarding farmers in Kenya.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -225,24 +242,11 @@ function AuthForm() {
                     <div className="space-y-2">
                       <Label htmlFor="reg-password">Password</Label>
                       <div className="relative">
-                        <Input id="reg-password" type={showPassword ? 'text' : 'password'} placeholder="Min. 6 characters" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} />
+                        <Input id="reg-password" type={showPassword ? 'text' : 'password'} placeholder="Min. 8 characters, uppercase, lowercase, digit, special char" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} />
                         <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" onClick={() => setShowPassword(!showPassword)}>
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Role</Label>
-                      <Select value={regRole} onValueChange={(v) => setRegRole(v as UserRole)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="farmer">Farmer</SelectItem>
-                          <SelectItem value="officer">Extension Officer</SelectItem>
-                          <SelectItem value="admin">Administrator</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
                     {error && <p className="text-sm text-red-500">{error}</p>}
                     <Button type="submit" className="w-full" disabled={loading}>

@@ -1,6 +1,6 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 import {
-  DEMO_DATA_KEY, demoUsers, generateFarms, generateCrops,
+  generateUsers, generateFarms, generateCrops,
   generateDiseaseReports, generateWeatherData, generateMarketPrices,
   generateSustainabilityScores, generateNotifications, generateAuditLogs,
   generateYieldRecords, generateRecommendations, generateConsentRecords,
@@ -8,56 +8,48 @@ import {
 import type {
   Farm, Crop, DiseaseReport, Recommendation, WeatherData,
   MarketPrice, SustainabilityScore, Notification, AuditLog,
-  YieldRecord, DashboardStats, User, ConsentRecord,
+  YieldRecord, DashboardStats, User, ConsentRecord, ChatMessage,
+  YieldPrediction,
 } from '@/types';
+import { writeAuditLog } from './server-auth';
+import { getCollection, getPaginatedCollection, setCollection, getItem, putItem, deleteItem, getTotalCount, getDemoDataKey, clearAllData } from './demo-store';
 
-interface DemoStore {
-  users: User[];
-  farms: Farm[];
-  crops: Crop[];
-  diseaseReports: DiseaseReport[];
-  recommendations: Recommendation[];
-  weatherData: WeatherData[];
-  marketPrices: MarketPrice[];
-  sustainabilityScores: SustainabilityScore[];
-  notifications: Notification[];
-  auditLogs: AuditLog[];
-  yieldRecords: YieldRecord[];
-  consentRecords: ConsentRecord[];
-}
+const DEMO_USERS_COUNT = 10000;
+const FARMS_PER_USER = 1;
+const CROPS_PER_FARM = 5;
+const DISEASE_REPORTS_PER_FARM = 2;
 
-function getStore(): DemoStore {
-  if (typeof window === 'undefined') {
-    return {} as DemoStore;
-  }
-  const stored = localStorage.getItem(DEMO_DATA_KEY);
-  if (stored) return JSON.parse(stored);
+async function ensureSeeded(): Promise<void> {
+  const key = await getDemoDataKey();
+  const count = await getTotalCount('users', key).catch(() => 0);
+  if (count > 0) return;
 
-  const userIds = demoUsers.map((u) => u.id);
-  const farms = generateFarms(100, userIds);
+  const users = generateUsers(DEMO_USERS_COUNT);
+  const userIds = users.map((u) => u.id);
+
+  const farms = generateFarms(DEMO_USERS_COUNT * FARMS_PER_USER, userIds);
   const farmIds = farms.map((f) => f.id);
-  const crops = generateCrops(500, farmIds);
-  const cropIds = crops.map((c) => c.id);
-  const store: DemoStore = {
-    users: demoUsers,
-    farms,
-    crops,
-    diseaseReports: generateDiseaseReports(100, farmIds, cropIds, userIds),
-    recommendations: generateRecommendations(userIds),
-    weatherData: generateWeatherData(['Rift Valley', 'Central', 'Coastal', 'Eastern', 'Western', 'Nyanza']),
-    marketPrices: generateMarketPrices(),
-    sustainabilityScores: generateSustainabilityScores(farmIds),
-    notifications: generateNotifications(userIds),
-    auditLogs: generateAuditLogs(userIds),
-    yieldRecords: generateYieldRecords(farmIds, cropIds),
-    consentRecords: generateConsentRecords(userIds),
-  };
-  localStorage.setItem(DEMO_DATA_KEY, JSON.stringify(store));
-  return store;
-}
 
-function saveStore(store: DemoStore) {
-  localStorage.setItem(DEMO_DATA_KEY, JSON.stringify(store));
+  const sampleSize = Math.min(2000, farmIds.length);
+  const sampleFarmIds = farmIds.slice(0, sampleSize);
+  const sampleCropIds = generateCrops(sampleSize * CROPS_PER_FARM, sampleFarmIds).map((c) => c.id);
+
+  await Promise.all([
+    setCollection('users', users, key),
+    setCollection('farms', farms, key),
+    setCollection('crops', generateCrops(sampleSize * CROPS_PER_FARM, sampleFarmIds), key),
+    setCollection('diseaseReports', generateDiseaseReports(sampleSize * DISEASE_REPORTS_PER_FARM, sampleFarmIds, sampleCropIds, userIds), key),
+    setCollection('recommendations', generateRecommendations(userIds), key),
+    setCollection('weatherData', generateWeatherData(['Rift Valley', 'Central', 'Coastal', 'Eastern', 'Western', 'Nyanza']), key),
+    setCollection('marketPrices', generateMarketPrices(), key),
+    setCollection('sustainabilityScores', generateSustainabilityScores(farmIds), key),
+    setCollection('notifications', generateNotifications(userIds), key),
+    setCollection('auditLogs', generateAuditLogs(userIds), key),
+    setCollection('yieldRecords', generateYieldRecords(sampleFarmIds, sampleCropIds), key),
+    setCollection('consentRecords', generateConsentRecords(userIds), key),
+    setCollection('chatMessages', [], key),
+    setCollection('yieldPredictions', [], key),
+  ]);
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -103,31 +95,72 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     };
   }
 
-  const store = getStore();
-  const resolvedCount = store.diseaseReports.filter((r) => r.status === 'resolved').length;
+  await ensureSeeded();
+  const key = await getDemoDataKey();
+  const [
+    totalUsers, totalFarms, totalCrops, totalDiseaseReports,
+    weatherCount, recCount, auditCount,
+  ] = await Promise.all([
+    getTotalCount('users', key),
+    getTotalCount('farms', key),
+    getTotalCount('crops', key),
+    getTotalCount('diseaseReports', key),
+    getTotalCount('weatherData', key),
+    getTotalCount('recommendations', key),
+    getTotalCount('auditLogs', key),
+  ]);
+
+  const [sustainabilityScores, allReports] = await Promise.all([
+    getCollection<SustainabilityScore>('sustainabilityScores', key),
+    getCollection<DiseaseReport>('diseaseReports', key),
+  ]);
+
+  const resolvedCount = allReports.filter((r) => r.status === 'resolved').length;
   return {
-    total_users: store.users.length,
-    total_farms: store.farms.length,
-    total_crops: store.crops.length,
-    total_disease_reports: store.diseaseReports.length,
-    weather_alerts: store.weatherData.length,
-    ai_requests: store.recommendations.length,
-    audit_events: store.auditLogs.length,
-    avg_sustainability_score: store.sustainabilityScores.reduce((a, b) => a + b.overall_score, 0) / store.sustainabilityScores.length,
+    total_users: totalUsers,
+    total_farms: totalFarms,
+    total_crops: totalCrops,
+    total_disease_reports: totalDiseaseReports,
+    weather_alerts: weatherCount,
+    ai_requests: recCount,
+    audit_events: auditCount,
+    avg_sustainability_score: sustainabilityScores.length > 0
+      ? sustainabilityScores.reduce((a, b) => a + b.overall_score, 0) / sustainabilityScores.length : 0,
     user_growth: 12.5,
-    disease_resolution_rate: store.diseaseReports.length > 0 ? resolvedCount / store.diseaseReports.length : 0,
+    disease_resolution_rate: totalDiseaseReports > 0 ? resolvedCount / totalDiseaseReports : 0,
   };
 }
 
-export async function getFarms(userId?: string): Promise<Farm[]> {
+export async function getUsers(limit = 100, offset = 0): Promise<{ data: User[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('farms').select('*');
-    if (userId) query = query.eq('user_id', userId);
-    const { data } = await query.order('created_at', { ascending: false });
-    return (data ?? []) as Farm[];
+    const [{ data, count }, { count: total }] = await Promise.all([
+      supabase!.from('users').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      supabase!.from('users').select('*', { count: 'exact', head: true }),
+    ]);
+    return { data: (data ?? []) as User[], total: total ?? 0 };
   }
-  const store = getStore();
-  return userId ? store.farms.filter((f) => f.user_id === userId) : store.farms;
+  await ensureSeeded();
+  return getPaginatedCollection<User>('users', limit, offset);
+}
+
+export async function getFarms(userId?: string, limit = 100, offset = 0): Promise<{ data: Farm[]; total: number }> {
+  if (isSupabaseConfigured) {
+    let query = supabase!.from('farms').select('*', { count: 'exact' });
+    let countQuery = supabase!.from('farms').select('*', { count: 'exact', head: true });
+    if (userId) {
+      query = query.eq('user_id', userId);
+      countQuery = countQuery.eq('user_id', userId);
+    }
+    const [{ data, count }, { count: total }] = await Promise.all([
+      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      countQuery,
+    ]);
+    return { data: (data ?? []) as Farm[], total: total ?? 0 };
+  }
+  await ensureSeeded();
+  const all = await getCollection<Farm>('farms');
+  const filtered = userId ? all.filter((f) => f.user_id === userId) : all;
+  return { data: filtered.slice(offset, offset + limit), total: filtered.length };
 }
 
 export async function getFarm(id: string): Promise<Farm | undefined> {
@@ -135,8 +168,8 @@ export async function getFarm(id: string): Promise<Farm | undefined> {
     const { data } = await supabase!.from('farms').select('*').eq('id', id).single();
     return (data ?? undefined) as Farm | undefined;
   }
-  const store = getStore();
-  return store.farms.find((f) => f.id === id);
+  await ensureSeeded();
+  return getItem<Farm>('farms', id);
 }
 
 export async function createFarm(farm: Omit<Farm, 'id' | 'created_at' | 'updated_at'>): Promise<Farm> {
@@ -151,42 +184,54 @@ export async function createFarm(farm: Omit<Farm, 'id' | 'created_at' | 'updated
       status: farm.status,
     }).select().single();
     if (error) throw new Error(error.message);
+    writeAuditLog({ user_id: farm.user_id, action: 'create_farm', resource: 'farms', resource_id: data.id }).catch(() => {});
     return data as Farm;
   }
-  const store = getStore();
+  await ensureSeeded();
   const newFarm: Farm = {
     ...farm,
-    id: `farm-${Date.now()}`,
+    id: `farm-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
-  store.farms.push(newFarm);
-  saveStore(store);
+  await putItem('farms', newFarm);
+  writeAuditLog({ user_id: farm.user_id, action: 'create_farm', resource: 'farms', resource_id: newFarm.id }).catch(() => {});
   return newFarm;
 }
 
 export async function updateFarm(id: string, updates: Partial<Farm>): Promise<Farm | undefined> {
   if (isSupabaseConfigured) {
     const { data } = await supabase!.from('farms').update(updates).eq('id', id).select().single();
+    writeAuditLog({ user_id: updates.user_id || 'unknown', action: 'update_farm', resource: 'farms', resource_id: id }).catch(() => {});
     return (data ?? undefined) as Farm | undefined;
   }
-  const store = getStore();
-  const index = store.farms.findIndex((f) => f.id === id);
-  if (index === -1) return undefined;
-  store.farms[index] = { ...store.farms[index], ...updates, updated_at: new Date().toISOString() };
-  saveStore(store);
-  return store.farms[index];
+  await ensureSeeded();
+  const existing = await getItem<Farm>('farms', id);
+  if (!existing) return undefined;
+  const updated = { ...existing, ...updates, updated_at: new Date().toISOString() };
+  await putItem('farms', updated);
+  writeAuditLog({ user_id: updated.user_id, action: 'update_farm', resource: 'farms', resource_id: id }).catch(() => {});
+  return updated;
 }
 
-export async function getCrops(farmId?: string): Promise<Crop[]> {
+export async function getCrops(farmId?: string, limit = 100, offset = 0): Promise<{ data: Crop[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('crops').select('*');
-    if (farmId) query = query.eq('farm_id', farmId);
-    const { data } = await query.order('created_at', { ascending: false });
-    return (data ?? []) as Crop[];
+    let query = supabase!.from('crops').select('*', { count: 'exact' });
+    let countQuery = supabase!.from('crops').select('*', { count: 'exact', head: true });
+    if (farmId) {
+      query = query.eq('farm_id', farmId);
+      countQuery = countQuery.eq('farm_id', farmId);
+    }
+    const [{ data, count }, { count: total }] = await Promise.all([
+      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      countQuery,
+    ]);
+    return { data: (data ?? []) as Crop[], total: total ?? 0 };
   }
-  const store = getStore();
-  return farmId ? store.crops.filter((c) => c.farm_id === farmId) : store.crops;
+  await ensureSeeded();
+  const all = await getCollection<Crop>('crops');
+  const filtered = farmId ? all.filter((c) => c.farm_id === farmId) : all;
+  return { data: filtered.slice(offset, offset + limit), total: filtered.length };
 }
 
 export async function createCrop(crop: Omit<Crop, 'id' | 'created_at'>): Promise<Crop> {
@@ -201,24 +246,34 @@ export async function createCrop(crop: Omit<Crop, 'id' | 'created_at'>): Promise
       expected_yield_kg: crop.expected_yield_kg,
     }).select().single();
     if (error) throw new Error(error.message);
+    writeAuditLog({ user_id: 'unknown', action: 'create_crop', resource: 'crops', resource_id: data.id }).catch(() => {});
     return data as Crop;
   }
-  const store = getStore();
-  const newCrop: Crop = { ...crop, id: `crop-${Date.now()}`, created_at: new Date().toISOString() };
-  store.crops.push(newCrop);
-  saveStore(store);
+  await ensureSeeded();
+  const newCrop: Crop = { ...crop, id: `crop-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, created_at: new Date().toISOString() };
+  await putItem('crops', newCrop);
+  writeAuditLog({ user_id: 'unknown', action: 'create_crop', resource: 'crops', resource_id: newCrop.id }).catch(() => {});
   return newCrop;
 }
 
-export async function getDiseaseReports(farmId?: string): Promise<DiseaseReport[]> {
+export async function getDiseaseReports(farmId?: string, limit = 100, offset = 0): Promise<{ data: DiseaseReport[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('disease_reports').select('*');
-    if (farmId) query = query.eq('farm_id', farmId);
-    const { data } = await query.order('created_at', { ascending: false });
-    return (data ?? []) as DiseaseReport[];
+    let query = supabase!.from('disease_reports').select('*', { count: 'exact' });
+    let countQuery = supabase!.from('disease_reports').select('*', { count: 'exact', head: true });
+    if (farmId) {
+      query = query.eq('farm_id', farmId);
+      countQuery = countQuery.eq('farm_id', farmId);
+    }
+    const [{ data, count }, { count: total }] = await Promise.all([
+      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      countQuery,
+    ]);
+    return { data: (data ?? []) as DiseaseReport[], total: total ?? 0 };
   }
-  const store = getStore();
-  return farmId ? store.diseaseReports.filter((r) => r.farm_id === farmId) : store.diseaseReports;
+  await ensureSeeded();
+  const all = await getCollection<DiseaseReport>('diseaseReports');
+  const filtered = farmId ? all.filter((r) => r.farm_id === farmId) : all;
+  return { data: filtered.slice(offset, offset + limit), total: filtered.length };
 }
 
 export async function createDiseaseReport(report: Omit<DiseaseReport, 'id' | 'created_at'>): Promise<DiseaseReport> {
@@ -240,22 +295,30 @@ export async function createDiseaseReport(report: Omit<DiseaseReport, 'id' | 'cr
     if (error) throw new Error(error.message);
     return data as DiseaseReport;
   }
-  const store = getStore();
-  const newReport: DiseaseReport = { ...report, id: `disease-${Date.now()}`, created_at: new Date().toISOString() };
-  store.diseaseReports.push(newReport);
-  saveStore(store);
+  await ensureSeeded();
+  const newReport: DiseaseReport = { ...report, id: `disease-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, created_at: new Date().toISOString() };
+  await putItem('diseaseReports', newReport);
   return newReport;
 }
 
-export async function getRecommendations(userId?: string): Promise<Recommendation[]> {
+export async function getRecommendations(userId?: string, limit = 50, offset = 0): Promise<{ data: Recommendation[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('recommendations').select('*');
-    if (userId) query = query.eq('user_id', userId);
-    const { data } = await query.order('created_at', { ascending: false });
-    return (data ?? []) as Recommendation[];
+    let query = supabase!.from('recommendations').select('*', { count: 'exact' });
+    let countQuery = supabase!.from('recommendations').select('*', { count: 'exact', head: true });
+    if (userId) {
+      query = query.eq('user_id', userId);
+      countQuery = countQuery.eq('user_id', userId);
+    }
+    const [{ data, count }, { count: total }] = await Promise.all([
+      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      countQuery,
+    ]);
+    return { data: (data ?? []) as Recommendation[], total: total ?? 0 };
   }
-  const store = getStore();
-  return userId ? store.recommendations.filter((r) => r.user_id === userId) : store.recommendations;
+  await ensureSeeded();
+  const all = await getCollection<Recommendation>('recommendations');
+  const filtered = userId ? all.filter((r) => r.user_id === userId) : all;
+  return { data: filtered.slice(offset, offset + limit), total: filtered.length };
 }
 
 export async function getWeatherData(location?: string): Promise<WeatherData[]> {
@@ -265,8 +328,9 @@ export async function getWeatherData(location?: string): Promise<WeatherData[]> 
     const { data } = await query.order('recorded_at', { ascending: false });
     return (data ?? []) as WeatherData[];
   }
-  const store = getStore();
-  return location ? store.weatherData.filter((w) => w.location === location) : store.weatherData;
+  await ensureSeeded();
+  const all = await getCollection<WeatherData>('weatherData');
+  return location ? all.filter((w) => w.location === location) : all;
 }
 
 export async function getMarketPrices(): Promise<MarketPrice[]> {
@@ -274,8 +338,8 @@ export async function getMarketPrices(): Promise<MarketPrice[]> {
     const { data } = await supabase!.from('market_prices').select('*').order('recorded_at', { ascending: false });
     return (data ?? []) as MarketPrice[];
   }
-  const store = getStore();
-  return store.marketPrices;
+  await ensureSeeded();
+  return getCollection<MarketPrice>('marketPrices');
 }
 
 export async function getSustainabilityScores(farmId?: string): Promise<SustainabilityScore[]> {
@@ -285,19 +349,23 @@ export async function getSustainabilityScores(farmId?: string): Promise<Sustaina
     const { data } = await query.order('recorded_at', { ascending: false });
     return (data ?? []) as SustainabilityScore[];
   }
-  const store = getStore();
-  return farmId ? store.sustainabilityScores.filter((s) => s.farm_id === farmId) : store.sustainabilityScores;
+  await ensureSeeded();
+  const all = await getCollection<SustainabilityScore>('sustainabilityScores');
+  return farmId ? all.filter((s) => s.farm_id === farmId) : all;
 }
 
-export async function getNotifications(userId: string): Promise<Notification[]> {
+export async function getNotifications(userId: string, limit = 50, offset = 0): Promise<{ data: Notification[]; total: number }> {
   if (isSupabaseConfigured) {
-    const { data } = await supabase!.from('notifications').select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-    return (data ?? []) as Notification[];
+    const [{ data, count }, { count: total }] = await Promise.all([
+      supabase!.from('notifications').select('*', { count: 'exact' }).eq('user_id', userId).order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      supabase!.from('notifications').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+    ]);
+    return { data: (data ?? []) as Notification[], total: total ?? 0 };
   }
-  const store = getStore();
-  return store.notifications.filter((n) => n.user_id === userId);
+  await ensureSeeded();
+  const all = await getCollection<Notification>('notifications');
+  const filtered = all.filter((n) => n.user_id === userId);
+  return { data: filtered.slice(offset, offset + limit), total: filtered.length };
 }
 
 export async function markNotificationRead(id: string): Promise<void> {
@@ -305,41 +373,164 @@ export async function markNotificationRead(id: string): Promise<void> {
     await supabase!.from('notifications').update({ is_read: true }).eq('id', id);
     return;
   }
-  const store = getStore();
-  const notif = store.notifications.find((n) => n.id === id);
+  const notif = await getItem<Notification>('notifications', id);
   if (notif) {
     notif.is_read = true;
-    saveStore(store);
+    await putItem('notifications', notif);
   }
 }
 
-export async function getAuditLogs(): Promise<AuditLog[]> {
+export async function getAuditLogs(limit = 100, offset = 0): Promise<{ data: AuditLog[]; total: number }> {
   if (isSupabaseConfigured) {
-    const { data } = await supabase!.from('audit_logs').select('*').order('created_at', { ascending: false });
-    return (data ?? []) as AuditLog[];
+    const [{ data, count }, { count: total }] = await Promise.all([
+      supabase!.from('audit_logs').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+      supabase!.from('audit_logs').select('*', { count: 'exact', head: true }),
+    ]);
+    return { data: (data ?? []) as AuditLog[], total: total ?? 0 };
   }
-  const store = getStore();
-  return store.auditLogs;
+  await ensureSeeded();
+  return getPaginatedCollection<AuditLog>('auditLogs', limit, offset);
 }
 
-export async function getYieldRecords(farmId?: string): Promise<YieldRecord[]> {
+export async function getYieldRecords(farmId?: string, limit = 100, offset = 0): Promise<{ data: YieldRecord[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('yield_records').select('*');
+    let query = supabase!.from('yield_records').select('*', { count: 'exact' });
+    let countQuery = supabase!.from('yield_records').select('*', { count: 'exact', head: true });
+    if (farmId) {
+      query = query.eq('farm_id', farmId);
+      countQuery = countQuery.eq('farm_id', farmId);
+    }
+    const [{ data, count }, { count: total }] = await Promise.all([
+      query.order('harvest_date', { ascending: false }).range(offset, offset + limit - 1),
+      countQuery,
+    ]);
+    return { data: (data ?? []) as YieldRecord[], total: total ?? 0 };
+  }
+  await ensureSeeded();
+  const all = await getCollection<YieldRecord>('yieldRecords');
+  const filtered = farmId ? all.filter((y) => y.farm_id === farmId) : all;
+  return { data: filtered.slice(offset, offset + limit), total: filtered.length };
+}
+
+export async function getChatMessages(userId: string): Promise<ChatMessage[]> {
+  if (isSupabaseConfigured) {
+    const { data } = await supabase!.from('chat_messages').select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true });
+    return (data ?? []) as ChatMessage[];
+  }
+  await ensureSeeded();
+  const all = await getCollection<ChatMessage>('chatMessages');
+  return all.filter((m) => m.user_id === userId);
+}
+
+export async function addChatMessage(msg: Omit<ChatMessage, 'id' | 'created_at'>): Promise<ChatMessage> {
+  const newMsg: ChatMessage = {
+    ...msg,
+    id: `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    created_at: new Date().toISOString(),
+  };
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase!.from('chat_messages').insert(newMsg).select().single();
+    if (error) throw new Error(error.message);
+    return data as ChatMessage;
+  }
+  await putItem('chatMessages', newMsg);
+  return newMsg;
+}
+
+export async function getYieldPredictions(farmId?: string): Promise<YieldPrediction[]> {
+  if (isSupabaseConfigured) {
+    let query = supabase!.from('yield_predictions').select('*');
     if (farmId) query = query.eq('farm_id', farmId);
-    const { data } = await query.order('harvest_date', { ascending: false });
-    return (data ?? []) as YieldRecord[];
+    const { data } = await query.order('created_at', { ascending: false });
+    return (data ?? []) as YieldPrediction[];
   }
-  const store = getStore();
-  return farmId ? store.yieldRecords.filter((y) => y.farm_id === farmId) : store.yieldRecords;
+  await ensureSeeded();
+  const all = await getCollection<YieldPrediction>('yieldPredictions');
+  return farmId ? all.filter((p) => p.farm_id === farmId) : all;
 }
 
-export async function getUsers(): Promise<User[]> {
+export async function saveYieldPrediction(pred: Omit<YieldPrediction, 'id' | 'created_at'>): Promise<YieldPrediction> {
+  const newPred: YieldPrediction = {
+    ...pred,
+    id: `yp-${Date.now()}`,
+    created_at: new Date().toISOString(),
+  };
   if (isSupabaseConfigured) {
-    const { data } = await supabase!.from('users').select('*').order('created_at', { ascending: false });
-    return (data ?? []) as User[];
+    const { data, error } = await supabase!.from('yield_predictions').insert(newPred).select().single();
+    if (error) throw new Error(error.message);
+    return data as YieldPrediction;
   }
-  const store = getStore();
-  return store.users;
+  await putItem('yieldPredictions', newPred);
+  return newPred;
 }
 
-export { getStore };
+export async function markAllNotificationsRead(userId: string): Promise<void> {
+  if (isSupabaseConfigured) {
+    await supabase!.from('notifications').update({ is_read: true }).eq('user_id', userId);
+    return;
+  }
+  const all = await getCollection<Notification>('notifications');
+  const changed = all.filter((n) => n.user_id === userId && !n.is_read);
+  for (const n of changed) {
+    n.is_read = true;
+    await putItem('notifications', n);
+  }
+}
+
+export async function updateUserProfile(userId: string, updates: { name?: string }): Promise<void> {
+  if (isSupabaseConfigured) {
+    const { error } = await supabase!.from('users').update(updates).eq('id', userId);
+    if (error) throw new Error(error.message);
+    return;
+  }
+  const existing = await getItem<User>('users', userId);
+  if (existing) {
+    existing.name = updates.name ?? existing.name;
+    existing.updated_at = new Date().toISOString();
+    await putItem('users', existing);
+  }
+}
+
+export async function updateUserConsent(userId: string, type: ConsentRecord['type'], granted: boolean): Promise<void> {
+  if (isSupabaseConfigured) {
+    const existing = await supabase!.from('consent_records')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('type', type)
+      .single();
+    if (existing.data) {
+      await supabase!.from('consent_records')
+        .update({ granted, revoked_at: granted ? null : new Date().toISOString() })
+        .eq('id', existing.data.id);
+    } else {
+      await supabase!.from('consent_records').insert({
+        id: crypto.randomUUID(),
+        user_id: userId,
+        type,
+        granted,
+        granted_at: new Date().toISOString(),
+      });
+    }
+    return;
+  }
+  const all = await getCollection<ConsentRecord>('consentRecords');
+  const idx = all.findIndex((c) => c.user_id === userId && c.type === type);
+  if (idx !== -1) {
+    all[idx] = {
+      ...all[idx],
+      granted,
+      revoked_at: granted ? undefined : new Date().toISOString(),
+    };
+    await setCollection('consentRecords', all);
+  } else {
+    await putItem('consentRecords', {
+      id: `consent-${userId}-${type}`,
+      user_id: userId,
+      type,
+      granted,
+      granted_at: new Date().toISOString(),
+    });
+  }
+}

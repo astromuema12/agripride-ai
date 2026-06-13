@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { getStore } from '@/lib/db';
+import { useState, useMemo, useEffect } from 'react';
+import { getCollection, getDemoDataKey } from '@/lib/demo-store';
 import type { ConsentRecord, User } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,25 +25,26 @@ const CONSENT_TYPES: { value: ConsentType; label: string }[] = [
 ];
 
 export default function ConsentPage() {
-  const [records] = useState<ConsentRecord[]>(() => {
-    if (typeof window === 'undefined') return [];
-    try {
-      const store = getStore();
-      return store.consentRecords || [];
-    } catch {
-      return [];
-    }
-  });
-  const [users] = useState<User[]>(() => {
-    if (typeof window === 'undefined') return [];
-    try {
-      const store = getStore();
-      return store.users || [];
-    } catch {
-      return [];
-    }
-  });
-  const [loading] = useState(false);
+  const [records, setRecords] = useState<ConsentRecord[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [recs, usrs] = await Promise.all([
+          getCollection<ConsentRecord>('consentRecords'),
+          getCollection<User>('users'),
+        ]);
+        setRecords(recs);
+        setUsers(usrs);
+      } catch {
+        // silently fail
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<ConsentType | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<ConsentStatus>('all');

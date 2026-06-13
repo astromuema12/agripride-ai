@@ -31,14 +31,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gray-50">
       <Sidebar />
-      <div className="lg:pl-64">
+      <div className="lg:ml-64 transition-all duration-300">
         {isDemoMode && (
           <div className="flex items-center justify-center gap-2 bg-amber-50 px-4 py-2 text-sm text-amber-700 border-b border-amber-200">
-            <AlertCircle className="h-4 w-4" />
-            Demo Mode Active — Data is simulated and not persisted to the cloud
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span className="text-center">Demo Mode Active &mdash; Data is simulated and not persisted to the cloud</span>
           </div>
         )}
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className="px-3 py-4 sm:px-6 lg:px-8">
           {children}
         </div>
       </div>

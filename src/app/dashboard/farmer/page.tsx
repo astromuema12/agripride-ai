@@ -116,7 +116,7 @@ export default function FarmerDashboard() {
 
     async function load() {
       try {
-        const [userFarms, allCrops, allReports, userRecs, weatherArr] = await Promise.all([
+        const [{ data: userFarms }, { data: allCrops }, { data: allReports }, { data: userRecs }, weatherArr] = await Promise.all([
           getFarms(currentUser.id),
           getCrops(),
           getDiseaseReports(),

@@ -22,10 +22,10 @@ import { Notification } from '@/types';
 
 const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/pricing', label: 'Pricing' },
   { href: '/governance', label: 'AI Governance' },
-  { href: '/analytics', label: 'Analytics' },
-  { href: '/market', label: 'Market' },
-  { href: '/horizon', label: 'Impact' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/support', label: 'Support' },
 ];
 
 export function Navbar() {
@@ -37,7 +37,7 @@ export function Navbar() {
 
   useEffect(() => {
     if (user) {
-      getNotifications(user.id).then(setNotifications);
+      getNotifications(user.id).then(({ data }) => setNotifications(data));
     }
   }, [user]);
 
@@ -103,7 +103,7 @@ export function Navbar() {
                     )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuContent align="end" className="w-72 sm:w-80">
                   <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {notifications.slice(0, 5).map((n) => (
@@ -117,6 +117,10 @@ export function Navbar() {
                       <span className="text-xs text-gray-500">{n.message.slice(0, 60)}...</span>
                     </DropdownMenuItem>
                   ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')} className="justify-center text-sm text-emerald-600 font-medium">
+                    View All Notifications
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 

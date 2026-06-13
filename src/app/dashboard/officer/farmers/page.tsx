@@ -19,22 +19,24 @@ export default function FarmersPage() {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function load() {
       try {
-        const [u, f] = await Promise.all([getUsers(), getFarms()]);
+        const [{ data: u, total: t }, { data: f }] = await Promise.all([getUsers(50, (page - 1) * 50), getFarms()]);
         setUsers(u);
         setFarms(f);
+        setTotal(t);
       } catch (err) {
-        console.error('Failed to load farmers data:', err);
         toast.error('Failed to load farmers data');
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, []);
+  }, [page]);
 
   const farmers = users
     .filter((u) => u.role === 'farmer')
@@ -70,13 +72,13 @@ export default function FarmersPage() {
           <h1 className="text-2xl font-bold text-gray-900">Farmers Monitoring</h1>
           <p className="text-sm text-gray-500 mt-1">Monitor and manage all registered farmers</p>
         </div>
-        <div className="relative">
+        <div className="relative w-full sm:w-72">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 w-72"
+            className="pl-9 w-full"
           />
         </div>
       </div>
@@ -222,6 +224,31 @@ export default function FarmersPage() {
           })}
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between pt-2">
+        <p className="text-sm text-gray-500">
+          Page {page} of {Math.max(1, Math.ceil(total / 50))}
+        </p>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page * 50 >= total}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

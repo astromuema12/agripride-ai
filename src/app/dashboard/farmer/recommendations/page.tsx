@@ -39,7 +39,7 @@ export default function RecommendationsPage() {
     if (!user) return;
     (async () => {
       try {
-        const data = await getRecommendations(user.id);
+        const { data } = await getRecommendations(user.id);
         setRecommendations(data);
       } catch {
         toast.error('Failed to load recommendations');

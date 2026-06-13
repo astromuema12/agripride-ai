@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { getUsers, getFarms, getDiseaseReports, getSustainabilityScores } from '@/lib/db';
 import type { User, Farm, DiseaseReport, SustainabilityScore } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,7 +38,7 @@ export default function RegionalAnalyticsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [u, f, d, s] = await Promise.all([
+        const [{ data: u }, { data: f }, { data: d }, s] = await Promise.all([
           getUsers(),
           getFarms(),
           getDiseaseReports(),
@@ -48,7 +49,7 @@ export default function RegionalAnalyticsPage() {
         setDiseaseReports(d);
         setSustainabilityScores(s);
       } catch (err) {
-        console.error('Failed to load analytics data:', err);
+        toast.error('Failed to load analytics data');
       } finally {
         setLoading(false);
       }
@@ -277,8 +278,8 @@ export default function RegionalAnalyticsPage() {
               <p className="text-xs text-gray-400 mt-1">Region breakdown will appear once farms have location data</p>
             </div>
           ) : (
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="-mx-3 sm:mx-0 overflow-x-auto">
+              <table className="w-full min-w-[600px] text-sm">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Region</th>

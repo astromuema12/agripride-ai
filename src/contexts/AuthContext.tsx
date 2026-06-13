@@ -5,6 +5,14 @@ import { User, UserRole } from '@/types';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { demoLogin, demoRegister } from '@/lib/demo-auth';
 
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const ACTIVITY_CHECK_INTERVAL_MS = 10 * 1000;
+const STORAGE_KEYS = {
+  user: 'agripride_user',
+  demoMode: 'agripride_demo_mode',
+  lastActivity: 'agripride_last_activity',
+};
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -34,7 +42,7 @@ async function ensureUserProfile(authUser: { id: string; email?: string; user_me
       id: authUser.id,
       email: authUser.email ?? '',
       name: authUser.user_metadata?.name ?? authUser.email?.split('@')[0] ?? 'User',
-      role: (authUser.user_metadata?.role ?? 'farmer') as UserRole,
+      role: 'farmer' as UserRole,
       is_suspended: false,
     };
     const { data } = await supabase!
@@ -51,18 +59,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window === 'undefined') return null;
     try {
-      const stored = localStorage.getItem('agripride_user');
+      const stored = localStorage.getItem(STORAGE_KEYS.user);
       return stored ? JSON.parse(stored) : null;
     } catch {
-      localStorage.removeItem('agripride_user');
+      localStorage.removeItem(STORAGE_KEYS.user);
       return null;
     }
   });
   const [loading, setLoading] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(() => {
     if (typeof window === 'undefined') return false;
-    return localStorage.getItem('agripride_demo_mode') === 'true';
+    return localStorage.getItem(STORAGE_KEYS.demoMode) === 'true';
   });
+
+  const touchActivity = useCallback(() => {
+    localStorage.setItem(STORAGE_KEYS.lastActivity, Date.now().toString());
+  }, []);
+
+  const isSessionExpired = useCallback((): boolean => {
+    const last = localStorage.getItem(STORAGE_KEYS.lastActivity);
+    if (!last) return true;
+    return Date.now() - Number(last) > SESSION_TIMEOUT_MS;
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'] as const;
+    const handler = () => touchActivity();
+    events.forEach((e) => window.addEventListener(e, handler, { passive: true }));
+
+    touchActivity();
+
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, handler));
+    };
+  }, [touchActivity]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (isSessionExpired()) {
+      logout();
+      return;
+    }
+
+    const interval = setInterval(() => {
+      if (isSessionExpired()) {
+        logout();
+      }
+    }, ACTIVITY_CHECK_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [user, isSessionExpired]);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -72,9 +121,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const profile = await ensureUserProfile(session.user);
         if (profile) {
           setUser(profile);
-          localStorage.setItem('agripride_user', JSON.stringify(profile));
-          localStorage.removeItem('agripride_demo_mode');
+          localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+          localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
+          touchActivity();
         }
       }
       setLoading(false);
@@ -85,13 +135,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const profile = await ensureUserProfile(session.user);
         if (profile) {
           setUser(profile);
-          localStorage.setItem('agripride_user', JSON.stringify(profile));
-          localStorage.removeItem('agripride_demo_mode');
+          localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+          localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
+          touchActivity();
         }
       } else {
         setUser(null);
-        localStorage.removeItem('agripride_user');
+        localStorage.removeItem(STORAGE_KEYS.user);
       }
     });
 
@@ -105,9 +156,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const profile = await ensureUserProfile(data.user);
         if (profile) {
           setUser(profile);
-          localStorage.setItem('agripride_user', JSON.stringify(profile));
-          localStorage.removeItem('agripride_demo_mode');
+          localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+          localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
+          touchActivity();
           return {};
         }
       }
@@ -118,29 +170,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const demoUser = demoLogin(email, password);
     if (demoUser) {
       setUser(demoUser);
-      localStorage.setItem('agripride_user', JSON.stringify(demoUser));
-      localStorage.setItem('agripride_demo_mode', 'true');
+      localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(demoUser));
+      localStorage.setItem(STORAGE_KEYS.demoMode, 'true');
       setIsDemoMode(true);
+      touchActivity();
       return {};
     }
 
     return { error: 'Invalid email or password' };
-  }, []);
+  }, [touchActivity]);
 
-  const register = useCallback(async (email: string, password: string, name: string, role: UserRole): Promise<{ error?: string }> => {
+  const register = useCallback(async (email: string, password: string, name: string, _role: UserRole): Promise<{ error?: string }> => {
+    const forcedRole: UserRole = 'farmer';
     if (isSupabaseConfigured) {
       const { data, error } = await supabase!.auth.signUp({
         email,
         password,
-        options: { data: { name, role } },
+        options: { data: { name, role: forcedRole } },
       });
       if (!error && data.user) {
         const profile = await ensureUserProfile(data.user);
         if (profile) {
           setUser(profile);
-          localStorage.setItem('agripride_user', JSON.stringify(profile));
-          localStorage.removeItem('agripride_demo_mode');
+          localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+          localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
+          touchActivity();
           return {};
         }
       }
@@ -148,21 +203,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: 'Registration succeeded but profile creation failed' };
     }
 
-    const newUser = demoRegister(email, password, name, role);
+    const newUser = demoRegister(email, password, name, forcedRole);
     setUser(newUser);
-    localStorage.setItem('agripride_user', JSON.stringify(newUser));
-    localStorage.setItem('agripride_demo_mode', 'true');
+    localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(newUser));
+    localStorage.setItem(STORAGE_KEYS.demoMode, 'true');
     setIsDemoMode(true);
+    touchActivity();
     return {};
-  }, []);
+  }, [touchActivity]);
 
   const logout = useCallback(async () => {
     if (isSupabaseConfigured && !isDemoMode) {
       await supabase!.auth.signOut();
     }
     setUser(null);
-    localStorage.removeItem('agripride_user');
-    localStorage.removeItem('agripride_demo_mode');
+    localStorage.removeItem(STORAGE_KEYS.user);
+    localStorage.removeItem(STORAGE_KEYS.demoMode);
+    localStorage.removeItem(STORAGE_KEYS.lastActivity);
     setIsDemoMode(false);
   }, [isDemoMode]);
 

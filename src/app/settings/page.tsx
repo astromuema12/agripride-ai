@@ -14,6 +14,9 @@ import {
   DialogTrigger, DialogDescription,
 } from '@/components/ui/dialog';
 import { User, Shield, Bell, Key, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { writeAuditLog } from '@/lib/server-auth';
+import { updateUserProfile, updateUserConsent } from '@/lib/db';
 
 const roleLabels: Record<string, string> = {
   farmer: 'Farmer',
@@ -22,7 +25,7 @@ const roleLabels: Record<string, string> = {
 };
 
 export default function SettingsPage() {
-  const { user } = useAuth();
+  const { user, isDemoMode } = useAuth();
 
   const [name, setName] = useState(user?.name ?? '');
   const [email] = useState(user?.email ?? '');
@@ -49,17 +52,61 @@ export default function SettingsPage() {
     );
   }
 
-  function handleProfileSave(e: React.FormEvent) {
+  async function handleProfileSave(e: React.FormEvent) {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    if (!user) return;
+    try {
+      await updateUserProfile(user.id, { name });
+      toast.success('Profile updated successfully');
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+      writeAuditLog({
+        user_id: user.id,
+        action: 'update_profile',
+        resource: 'settings',
+        details: { name },
+      }).catch(() => {});
+    } catch {
+      toast.error('Failed to save profile');
+    }
   }
 
-  function handlePasswordChange(e: React.FormEvent) {
+  async function handlePasswordChange(e: React.FormEvent) {
     e.preventDefault();
+    if (!user) return;
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    if (newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
+    toast.success('Password updated (demo mode - no server-side change)');
+    writeAuditLog({
+      user_id: user.id,
+      action: 'change_password',
+      resource: 'settings',
+    }).catch(() => {});
+  }
+
+  async function handleConsentChange(type: string, granted: boolean) {
+    if (!user) return;
+    try {
+      await updateUserConsent(user.id, type as any, granted);
+      toast.success(`Consent for ${type.replace(/_/g, ' ')} ${granted ? 'granted' : 'revoked'}`);
+      writeAuditLog({
+        user_id: user.id,
+        action: granted ? 'consent_granted' : 'consent_revoked',
+        resource: 'consent',
+        details: { type },
+      }).catch(() => {});
+    } catch {
+      toast.error('Failed to update consent');
+    }
   }
 
   return (
@@ -71,7 +118,6 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      {/* Profile Section */}
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
           <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
@@ -108,7 +154,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Password Section */}
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
           <div className="rounded-lg bg-blue-50 p-2.5 text-blue-600">
@@ -160,7 +205,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Notifications Section */}
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
           <div className="rounded-lg bg-amber-50 p-2.5 text-amber-600">
@@ -196,7 +240,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Consent Management Section */}
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
           <div className="rounded-lg bg-purple-50 p-2.5 text-purple-600">
@@ -213,28 +256,27 @@ export default function SettingsPage() {
               <p className="text-sm font-medium text-gray-900">Data Collection</p>
               <p className="text-xs text-gray-500">Allow collection of farm and crop data for analytics</p>
             </div>
-            <Switch checked={dataCollection} onCheckedChange={setDataCollection} />
+            <Switch checked={dataCollection} onCheckedChange={(v) => { setDataCollection(v); handleConsentChange('data_collection', v); }} />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
               <p className="text-sm font-medium text-gray-900">AI Processing</p>
               <p className="text-xs text-gray-500">Allow AI agents to process your data for recommendations</p>
             </div>
-            <Switch checked={aiProcessing} onCheckedChange={setAiProcessing} />
+            <Switch checked={aiProcessing} onCheckedChange={(v) => { setAiProcessing(v); handleConsentChange('ai_processing', v); }} />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
               <p className="text-sm font-medium text-gray-900">Disease Diagnosis</p>
               <p className="text-xs text-gray-500">Allow AI-powered disease detection on crop images</p>
             </div>
-            <Switch checked={diseaseDiagnosis} onCheckedChange={setDiseaseDiagnosis} />
+            <Switch checked={diseaseDiagnosis} onCheckedChange={(v) => { setDiseaseDiagnosis(v); handleConsentChange('disease_diagnosis', v); }} />
           </div>
         </CardContent>
       </Card>
 
       <Separator />
 
-      {/* Danger Zone */}
       <Card className="border-red-200">
         <CardHeader className="flex flex-row items-center gap-3">
           <div className="rounded-lg bg-red-50 p-2.5 text-red-600">

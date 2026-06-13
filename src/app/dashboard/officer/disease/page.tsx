@@ -16,6 +16,8 @@ import {
   FileSearch, Activity, Shield, FlaskConical,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { writeAuditLog } from '@/lib/server-auth';
+import { useAuth } from '@/contexts/AuthContext';
 
 type StatusTab = 'all' | 'submitted' | 'reviewed' | 'resolved';
 
@@ -39,6 +41,7 @@ const statusBadgeClass = (status: string) => {
 };
 
 export default function DiseasePage() {
+  const { user: currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<DiseaseReport[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -50,11 +53,10 @@ export default function DiseasePage() {
   useEffect(() => {
     async function load() {
       try {
-        const [r, u] = await Promise.all([getDiseaseReports(), getUsers()]);
+        const [{ data: r }, { data: u }] = await Promise.all([getDiseaseReports(), getUsers()]);
         setReports(r);
         setUsers(u);
-      } catch (err) {
-        console.error('Failed to load disease reports:', err);
+      } catch {
         toast.error('Failed to load disease reports');
       } finally {
         setLoading(false);
@@ -67,9 +69,13 @@ export default function DiseasePage() {
     users.find((u) => u.id === userId)?.name || 'Unknown Farmer';
 
   const getFarmLocation = (farmId: string) => {
-    const store = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agripride_demo_data') || '{}') : {};
-    const farm = store.farms?.find((f: { id: string }) => f.id === farmId);
-    return farm?.location || 'Unknown Region';
+    try {
+      const store = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agripride_demo_data') || '{}') : {};
+      const farm = store.farms?.find((f: { id: string; location: string }) => f.id === farmId);
+      return farm?.location || 'Unknown Region';
+    } catch {
+      return 'Unknown Region';
+    }
   };
 
   const filtered = reports.filter((r) => {
@@ -112,9 +118,14 @@ export default function DiseasePage() {
           prev ? { ...prev, status: 'reviewed', reviewed_at: new Date().toISOString() } : null
         );
         toast.success('Report marked as reviewed');
+        writeAuditLog({
+          user_id: currentUser?.id || 'unknown',
+          action: 'review_disease_report',
+          resource: 'disease_reports',
+          resource_id: selectedReport.id,
+        }).catch(() => {});
       }
-    } catch (err) {
-      console.error('Failed to update report:', err);
+    } catch {
       toast.error('Failed to update report');
     }
   };
@@ -132,24 +143,22 @@ export default function DiseasePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Disease Monitoring</h1>
           <p className="text-sm text-gray-500 mt-1">Track and manage disease reports from farmers</p>
         </div>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            placeholder="Search crop or disease..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 w-72"
-          />
-        </div>
+          <div className="relative w-full sm:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search crop or disease..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 w-full"
+            />
+          </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-6">
@@ -205,7 +214,6 @@ export default function DiseasePage() {
         </Card>
       </div>
 
-      {/* Tabs */}
       <Tabs value={tab} onValueChange={(v) => setTab(v as StatusTab)}>
         <TabsList>
           <TabsTrigger value="all">All ({statusCounts.total})</TabsTrigger>
@@ -226,8 +234,8 @@ export default function DiseasePage() {
               </p>
             </div>
           ) : (
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="-mx-3 sm:mx-0 overflow-x-auto">
+              <table className="w-full min-w-[600px] text-sm">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="text-left px-4 py-3 font-medium text-gray-600">Farmer</th>
@@ -291,7 +299,6 @@ export default function DiseasePage() {
         </TabsContent>
       </Tabs>
 
-      {/* Detail Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>

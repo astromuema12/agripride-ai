@@ -54,7 +54,7 @@ export default function CropsPage() {
     if (!user) return;
     (async () => {
       try {
-        const [userFarms, allCrops] = await Promise.all([getFarms(user.id), getCrops()]);
+        const [{ data: userFarms }, { data: allCrops }] = await Promise.all([getFarms(user.id), getCrops()]);
         const farmIds = userFarms.map((f) => f.id);
         setFarms(userFarms);
         setCrops(allCrops.filter((c) => farmIds.includes(c.farm_id)));

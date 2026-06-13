@@ -206,6 +206,28 @@ export function generateYieldRecords(farmIds: string[], cropIds: string[]): Yiel
   }));
 }
 
+export function generateUsers(count: number): User[] {
+  const admins: User[] = [
+    { id: 'demo-user-1', name: 'Admin User', email: 'admin@agripride.ai', role: 'admin', created_at: randomDate(new Date('2024-01-01'), new Date('2025-06-01')), updated_at: randomDate(new Date('2025-01-01'), new Date('2026-06-01')), is_suspended: false },
+    { id: 'demo-user-2', name: 'Officer User', email: 'officer@agripride.ai', role: 'officer', created_at: randomDate(new Date('2024-01-01'), new Date('2025-06-01')), updated_at: randomDate(new Date('2025-01-01'), new Date('2026-06-01')), is_suspended: false },
+  ];
+  const users = [...admins];
+  for (let i = 3; i <= count; i++) {
+    const isOfficer = i <= 10;
+    const isSuspended = Math.random() > 0.98;
+    users.push({
+      id: `demo-user-${i}`,
+      email: isOfficer ? `officer${i}@agripride.ai` : `farmer${i}@agripride.ai`,
+      name: isOfficer ? `Officer ${i}` : `Farmer ${i}`,
+      role: isOfficer ? 'officer' : 'farmer',
+      created_at: randomDate(new Date('2024-01-01'), new Date('2025-06-01')),
+      updated_at: randomDate(new Date('2025-01-01'), new Date('2026-06-01')),
+      is_suspended: isSuspended,
+    });
+  }
+  return users;
+}
+
 export const demoUsers: User[] = Array.from({ length: 50 }, (_, i) => ({
   id: `demo-user-${i + 1}`,
   email: `farmer${i + 1}@agripride.ai`,

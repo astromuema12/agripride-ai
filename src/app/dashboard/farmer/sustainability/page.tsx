@@ -55,7 +55,7 @@ const SUB_SCORES: SubScore[] = [
   },
 ];
 
-function CircularScore({ score, size = 180 }: { score: number; size?: number }) {
+function CircularScore({ score, size = 160 }: { score: number; size?: number }) {
   const pct = Math.round(score * 100);
   const strokeWidth = 12;
   const radius = (size - strokeWidth) / 2;
@@ -110,12 +110,11 @@ export default function SustainabilityPage() {
     async function load() {
       if (!user) return;
       try {
-        const farms = await getFarms(user.id);
+        const { data: farms } = await getFarms(user.id);
         const farmIds = farms.map((f) => f.id);
         const allScores = await getSustainabilityScores();
         setScores(allScores.filter((s) => farmIds.includes(s.farm_id)));
       } catch (err) {
-        console.error('Failed to load sustainability scores', err);
         toast.error('Failed to load sustainability scores');
       } finally {
         setLoading(false);
@@ -189,7 +188,7 @@ export default function SustainabilityPage() {
       ) : (
         <>
           <div className="flex flex-col items-center py-4">
-            <CircularScore score={latestScore.overall_score} />
+            <CircularScore score={latestScore.overall_score} size={160} />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -222,7 +221,7 @@ export default function SustainabilityPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Historical Scores</CardTitle>
-                  <div className="flex items-center gap-3 text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500">
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-emerald-500" />
                       Overall

@@ -24,7 +24,7 @@ export default function FarmsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [allFarms, allUsers] = await Promise.all([getFarms(), getUsers()]);
+        const [{ data: allFarms }, { data: allUsers }] = await Promise.all([getFarms(), getUsers()]);
         setFarms(allFarms);
         setUsers(allUsers);
       } catch {

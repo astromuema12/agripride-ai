@@ -43,7 +43,7 @@ export default function AuditPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [auditLogs, allUsers] = await Promise.all([getAuditLogs(), getUsers()]);
+        const [{ data: auditLogs }, { data: allUsers }] = await Promise.all([getAuditLogs(), getUsers()]);
         setLogs(auditLogs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
         setUsers(allUsers);
       } catch {

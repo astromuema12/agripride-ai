@@ -1,0 +1,190 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { MessageCircle, Mail, BookOpen, HelpCircle, Loader2, Send, ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { toast } from 'sonner';
+
+const faqs = [
+  {
+    q: 'What is AgriPride AI?',
+    a: 'AgriPride AI is an agricultural intelligence platform that uses artificial intelligence to help farmers detect crop diseases early, get weather forecasts, access market prices, and receive personalized farming recommendations.',
+  },
+  {
+    q: 'Is AgriPride AI currently available?',
+    a: 'We are currently in our Beta Program, onboarding farmers in Kenya. Sign up to join the waitlist and we will notify you when we expand to your region.',
+  },
+  {
+    q: 'How much does it cost?',
+    a: 'We offer a Free tier with basic features. Premium plans start at KES 299/month. Cooperative and Enterprise plans are also available. See our Pricing page for details.',
+  },
+  {
+    q: 'How does the AI disease diagnosis work?',
+    a: 'Upload a photo of your crop, describe the symptoms, and our AI analyzes the image and text to provide a diagnosis, confidence score, treatment recommendations, and prevention strategies.',
+  },
+  {
+    q: 'Is my data secure?',
+    a: 'Yes. We use encryption, row-level security in our database, and follow strict data protection practices. We never share your personal data without your explicit consent.',
+  },
+  {
+    q: 'How do I become a beta tester?',
+    a: 'Create a free account on our platform and complete the onboarding process. Beta testers get early access to features and priority support.',
+  },
+  {
+    q: 'Do you offer support in local languages?',
+    a: 'Currently our platform supports English, with Swahili support coming soon. Our support team can assist in English and Swahili.',
+  },
+  {
+    q: 'How do I contact support?',
+    a: 'You can reach us via the Contact page, email us at hello@agripride.ai, or chat with us on WhatsApp for quick responses.',
+  },
+];
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-gray-100">
+      <button
+        className="flex w-full items-center justify-between py-4 text-left"
+        onClick={() => setOpen(!open)}
+      >
+        <span className="text-sm font-medium text-gray-900">{question}</span>
+        {open ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
+      </button>
+      {open && (
+        <p className="pb-4 text-sm leading-relaxed text-gray-600">{answer}</p>
+      )}
+    </div>
+  );
+}
+
+export default function SupportPage() {
+  const [loading, setLoading] = useState(false);
+  const [ticketForm, setTicketForm] = useState({ subject: '', message: '' });
+
+  const handleTicketSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!ticketForm.subject || !ticketForm.message) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Support User',
+          email: 'user@agripride.ai',
+          subject: `[SUPPORT] ${ticketForm.subject}`,
+          message: ticketForm.message,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to submit');
+      toast.success('Support ticket created! We will respond within 24 hours.');
+      setTicketForm({ subject: '', message: '' });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to submit ticket');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-center">
+          <Badge variant="primary" className="mb-4">Help Center</Badge>
+          <h1 className="text-4xl font-bold text-gray-900">How Can We Help You?</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-500">
+            Browse our FAQs, submit a support ticket, or reach out directly.
+          </p>
+        </motion.div>
+
+        <div className="mb-8 flex flex-wrap justify-center gap-4">
+          <a href="mailto:hello@agripride.ai">
+            <Button variant="outline" className="gap-2">
+              <Mail className="h-4 w-4" />
+              Email Support
+            </Button>
+          </a>
+          <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" className="gap-2">
+              <MessageCircle className="h-4 w-4" />
+              WhatsApp
+            </Button>
+          </a>
+        </div>
+
+        <Tabs defaultValue="faq" className="mx-auto max-w-4xl">
+          <TabsList className="w-full">
+            <TabsTrigger value="faq" className="flex-1 gap-2">
+              <BookOpen className="h-4 w-4" />
+              FAQs
+            </TabsTrigger>
+            <TabsTrigger value="ticket" className="flex-1 gap-2">
+              <HelpCircle className="h-4 w-4" />
+              Submit Ticket
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="faq">
+            <Card>
+              <CardContent className="p-6">
+                {faqs.map((faq, i) => (
+                  <FAQItem key={i} question={faq.q} answer={faq.a} />
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ticket">
+            <Card>
+              <CardHeader>
+                <CardTitle>Submit a Support Ticket</CardTitle>
+                <p className="text-sm text-gray-500">We typically respond within 24 hours</p>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleTicketSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ticket-subject">Subject</Label>
+                    <Input
+                      id="ticket-subject"
+                      placeholder="Brief description of your issue"
+                      value={ticketForm.subject}
+                      onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ticket-message">Description</Label>
+                    <textarea
+                      id="ticket-message"
+                      rows={6}
+                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Please describe your issue in detail..."
+                      value={ticketForm.message}
+                      onChange={(e) => setTicketForm({ ...ticketForm, message: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" disabled={loading}>
+                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+                    Submit Ticket
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}

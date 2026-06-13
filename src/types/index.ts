@@ -165,6 +165,28 @@ export interface AIAgentResponse {
   timestamp?: string;
 }
 
+export interface ChatMessage {
+  id: string;
+  user_id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  agent_name?: string;
+  confidence_score?: number;
+  frameworks_used?: string[];
+  created_at: string;
+}
+
+export interface YieldPrediction {
+  id: string;
+  farm_id: string;
+  crop_name: string;
+  planting_date: string;
+  predicted_yield_kg: number;
+  confidence_score: number;
+  factors: string[];
+  created_at: string;
+}
+
 export interface DashboardStats {
   total_users: number;
   total_farms: number;
@@ -176,4 +198,148 @@ export interface DashboardStats {
   avg_sustainability_score: number;
   user_growth: number;
   disease_resolution_rate: number;
+}
+
+export interface ContactInquiry {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'pending' | 'resolved' | 'spam';
+  admin_response?: string;
+  responded_at?: string;
+  responded_by?: string;
+  created_at: string;
+}
+
+export interface FarmerProfile {
+  id: string;
+  user_id: string;
+  name?: string;
+  phone?: string;
+  county?: string;
+  farm_size_acres?: number;
+  crop_types: string[];
+  has_livestock: boolean;
+  livestock_details?: string;
+  gps_lat?: number;
+  gps_lng?: number;
+  goals: string[];
+  ai_personalized: boolean;
+  consent_ai?: boolean;
+  onboarding_completed: boolean;
+  current_step: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  tier: 'free' | 'premium' | 'cooperative' | 'enterprise';
+  price_kes: number;
+  features: string[];
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface UserSubscription {
+  id: string;
+  user_id: string;
+  plan_id: string;
+  status: 'active' | 'cancelled' | 'expired' | 'trial';
+  mpesa_receipt?: string;
+  started_at: string;
+  expires_at?: string;
+  cancelled_at?: string;
+  created_at: string;
+}
+
+export interface Testimonial {
+  id: string;
+  user_id?: string;
+  name: string;
+  location?: string;
+  farm_type?: string;
+  photo_url?: string;
+  content: string;
+  is_approved: boolean;
+  approved_at?: string;
+  approved_by?: string;
+  created_at: string;
+}
+
+export interface SupportTicket {
+  id: string;
+  user_id: string;
+  subject: string;
+  message: string;
+  description?: string;
+  category?: string;
+  email?: string;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  assigned_to?: string;
+  created_at: string;
+  updated_at: string;
+  resolved_at?: string;
+}
+
+export interface TicketMessage {
+  id: string;
+  ticket_id: string;
+  user_id: string;
+  message: string;
+  is_internal: boolean;
+  created_at: string;
+}
+
+export interface MpesaTransaction {
+  id: string;
+  user_id?: string;
+  phone: string;
+  amount: number;
+  receipt_number?: string;
+  transaction_id?: string;
+  result_code?: number;
+  result_desc?: string;
+  status: 'pending' | 'success' | 'failed';
+  created_at: string;
+}
+
+export interface AiUsageLog {
+  id: string;
+  user_id?: string;
+  endpoint: string;
+  tokens_used: number;
+  response_time_ms: number;
+  model?: string;
+  success: boolean;
+  created_at: string;
+}
+
+export interface PlatformStat {
+  id: string;
+  metric_name: string;
+  metric_value: number;
+  updated_at: string;
+}
+
+export interface ActivityLog {
+  id: string;
+  user_id?: string;
+  event_type: string;
+  metadata?: Record<string, unknown>;
+  ip_address?: string;
+  user_agent?: string;
+  created_at: string;
+}
+
+export type AdminRole = 'super_admin' | 'support_admin' | 'finance_admin' | 'content_admin';
+
+export interface AdminUser extends User {
+  admin_role?: AdminRole;
+  permissions?: string[];
 }

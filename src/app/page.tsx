@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, Leaf, CloudSun, Shield, BarChart3,
@@ -11,6 +12,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { AiDemo } from '@/components/shared/AiDemo';
+import type { Testimonial } from '@/types';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -21,6 +24,14 @@ const fadeUp = {
 
 export default function HomePage() {
   const router = useRouter();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    fetch('/api/testimonials')
+      .then((r) => r.json())
+      .then((res) => { if (res.success) setTestimonials(res.data); })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -64,9 +75,9 @@ export default function HomePage() {
                 <div className="absolute -inset-4 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-emerald-300/20 blur-2xl" />
                 <div className="relative grid grid-cols-2 gap-4">
                   {[
-                    { icon: Sprout, label: 'Crop Health', value: '95%', color: 'from-emerald-400 to-emerald-600' },
+                    { icon: Sprout, label: 'Crop Health', value: 'AI-Powered', color: 'from-emerald-400 to-emerald-600' },
                     { icon: CloudSun, label: 'Weather Intel', value: 'Real-time', color: 'from-blue-400 to-cyan-500' },
-                    { icon: Shield, label: 'AI Governance', value: 'TRACK', color: 'from-purple-400 to-violet-500' },
+                    { icon: Shield, label: 'AI Governance', value: 'Beta', color: 'from-purple-400 to-violet-500' },
                     { icon: BarChart3, label: 'Analytics', value: 'Live', color: 'from-amber-400 to-orange-500' },
                   ].map((item, i) => (
                     <div key={i} className={`rounded-xl bg-gradient-to-br ${item.color} p-4 text-white`}>
@@ -85,16 +96,26 @@ export default function HomePage() {
       {/* Stats */}
       <section className="border-b border-gray-100 bg-gray-50">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-medium text-emerald-700">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              Beta Program — Now Recruiting
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
-              { value: '10,000+', label: 'Farmers Empowered' },
-              { value: '50,000+', label: 'Acres Monitored' },
-              { value: '95%', label: 'Disease Detection' },
-              { value: '8+', label: 'Countries Reached' },
+              { value: 'Pilot', label: 'Phase Active', sub: 'Limited farmer onboarding' },
+              { value: 'Growing', label: 'Community', sub: 'Data updates as adoption grows' },
+              { value: 'Coming', label: 'Soon — AI Diagnostics', sub: 'Being validated with partners' },
+              { value: 'Kenya', label: 'Launch Market', sub: 'Expanding region by region' },
             ].map((stat, i) => (
               <motion.div key={i} className="text-center" {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }}>
-                <div className="text-3xl font-bold text-emerald-600">{stat.value}</div>
-                <div className="mt-1 text-sm text-gray-500">{stat.label}</div>
+                <div className="text-lg font-bold tracking-tight text-emerald-600">{stat.value}</div>
+                <div className="mt-1 text-sm font-medium text-gray-700">{stat.label}</div>
+                <div className="mt-0.5 text-xs text-gray-400">{stat.sub}</div>
               </motion.div>
             ))}
           </div>
@@ -116,7 +137,7 @@ export default function HomePage() {
 
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { icon: FileSearch, title: 'Disease Diagnosis', description: 'AI-powered crop disease detection with 95% accuracy. Upload images and get instant diagnosis, treatment plans, and prevention strategies.', color: 'text-red-500 bg-red-50' },
+              { icon: FileSearch, title: 'Disease Diagnosis', description: 'AI-powered crop disease detection currently in beta validation. Upload images and get AI analysis, treatment plans, and prevention strategies.', color: 'text-red-500 bg-red-50' },
               { icon: CloudSun, title: 'Weather Intelligence', description: 'Real-time weather monitoring with 7-day forecasts, drought alerts, and rainfall predictions tailored to your farm location.', color: 'text-blue-500 bg-blue-50' },
               { icon: ScrollText, title: 'AI Crop Advisor', description: 'Personalized planting, fertilizer, and pest management recommendations based on your specific crops and growing conditions.', color: 'text-emerald-500 bg-emerald-50' },
               { icon: Shield, title: 'AI Governance Center', description: 'Transparent, accountable AI decisions with full traceability. Built on TRACK, OASIS, RANK, and TRAIL frameworks.', color: 'text-purple-500 bg-purple-50' },
@@ -218,9 +239,9 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {[
-              { icon: Sprout, title: 'SDG 2: Zero Hunger', desc: 'Increase crop yields by up to 40% through AI-driven recommendations and early disease detection.', color: 'bg-amber-50 text-amber-600', sdg: 'SDG 2' },
-              { icon: CloudSun, title: 'SDG 13: Climate Action', desc: 'Help farmers adapt to climate change with weather intelligence and sustainable farming practices.', color: 'bg-green-50 text-green-600', sdg: 'SDG 13' },
-              { icon: TreePine, title: 'SDG 15: Life on Land', desc: 'Promote sustainable agriculture, reduce chemical usage, and protect biodiversity through precision farming.', color: 'bg-emerald-50 text-emerald-600', sdg: 'SDG 15' },
+              { icon: Sprout, title: 'SDG 2: Zero Hunger', desc: 'Working toward increased crop yields through AI-driven recommendations and early disease detection in our beta program.', color: 'bg-amber-50 text-amber-600', sdg: 'SDG 2' },
+              { icon: CloudSun, title: 'SDG 13: Climate Action', desc: 'Helping farmers adapt to climate change with weather intelligence and sustainable farming recommendations.', color: 'bg-green-50 text-green-600', sdg: 'SDG 13' },
+              { icon: TreePine, title: 'SDG 15: Life on Land', desc: 'Promoting sustainable agriculture through precision farming recommendations during our pilot phase.', color: 'bg-emerald-50 text-emerald-600', sdg: 'SDG 15' },
             ].map((item, i) => (
               <motion.div key={i} {...fadeUp} transition={{ delay: i * 0.1 }}>
                 <Card className="h-full text-center">
@@ -239,30 +260,34 @@ export default function HomePage() {
         </div>
       </section>
 
+      <AiDemo />
+
       {/* Testimonials */}
       <section className="bg-gray-50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div className="text-center" {...fadeUp}>
-            <Badge variant="primary" className="mb-4">Testimonials</Badge>
+            <Badge variant="primary" className="mb-4">Beta Testimonials</Badge>
             <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              Trusted by Farmers Across Africa
+              Hear From Our Early Adopters
             </h2>
+            <p className="mx-auto mt-2 max-w-xl text-sm text-gray-500">
+              Real feedback from farmers testing AgriPride AI.
+            </p>
+            <Link href="/testimonials" className="mt-4 inline-block text-sm font-medium text-emerald-600 hover:text-emerald-700">
+              Share your experience &rarr;
+            </Link>
           </motion.div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {[
-              { name: 'Grace Mwangi', role: 'Maize Farmer, Kenya', quote: 'AgriPride AI helped me detect a maize disease early and save my entire harvest. The AI recommendations are incredibly accurate.' },
-              { name: 'Dr. James Ochieng', role: 'Extension Officer, Uganda', quote: 'This platform has transformed how we serve farmers. The disease diagnosis alone has prevented countless crop losses.' },
-              { name: 'Sarah Ndagire', role: 'Cooperative Leader, Rwanda', quote: 'Our cooperative uses AgriPride for all 500 members. The yield improvements have been remarkable.' },
-            ].map((t, i) => (
-              <motion.div key={i} {...fadeUp} transition={{ delay: i * 0.1 }}>
+            {testimonials.slice(0, 3).map((t, i) => (
+              <motion.div key={t.id || i} {...fadeUp} transition={{ delay: i * 0.1 }}>
                 <Card className="h-full">
                   <CardContent className="p-6">
                     <Quote className="mb-3 h-8 w-8 text-emerald-300" />
-                    <p className="mb-4 text-sm leading-relaxed text-gray-600">&ldquo;{t.quote}&rdquo;</p>
+                    <p className="mb-4 text-sm leading-relaxed text-gray-600">&ldquo;{t.content}&rdquo;</p>
                     <div>
                       <div className="font-semibold text-gray-900">{t.name}</div>
-                      <div className="text-xs text-gray-500">{t.role}</div>
+                      <div className="text-xs text-gray-500">{[t.location, t.farm_type].filter(Boolean).join(' · ') || 'Beta Participant'}</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -280,11 +305,11 @@ export default function HomePage() {
               Ready to Transform Your Farming?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
-              Join thousands of farmers, extension officers, and agricultural organizations already using AgriPride AI.
+              Be among the first to join our beta program. Help shape the future of AI-powered agriculture in Africa.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Button size="xl" className="bg-white text-emerald-700 hover:bg-emerald-50" onClick={() => router.push('/auth?tab=register')}>
-                Start Free Trial
+                Join Beta Program
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button size="xl" variant="outline" className="border-emerald-400/30 text-white hover:bg-emerald-600/50" onClick={() => router.push('/governance')}>
@@ -327,16 +352,25 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-4 text-sm font-semibold text-white">Contact</h4>
+              <h4 className="mb-4 text-sm font-semibold text-white">Contact & Social</h4>
               <ul className="space-y-2 text-sm">
-                <li>info@agripride.ai</li>
+                <li><a href="mailto:musauedwin2004@gmail.com" className="hover:text-emerald-400 transition-colors">musauedwin2004@gmail.com</a></li>
                 <li>Nairobi, Kenya</li>
-                <li>+254 700 000 000</li>
+                <li><a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">WhatsApp</a></li>
+                <li><a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">LinkedIn</a></li>
+                <li><a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Facebook</a></li>
+                <li><a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Instagram</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-8 border-t border-gray-800 pt-8 text-center text-sm">
-            &copy; {new Date().getFullYear()} AgriPride AI. All rights reserved. Built with responsibility for African agriculture.
+          <div className="mt-8 flex flex-col items-center gap-4 border-t border-gray-800 pt-8 text-center text-sm sm:flex-row sm:justify-between">
+            <p>&copy; {new Date().getFullYear()} AgriPride AI. All rights reserved.</p>
+            <div className="flex gap-4">
+              <Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-emerald-400 transition-colors">Terms of Service</Link>
+              <Link href="/contact" className="hover:text-emerald-400 transition-colors">Contact</Link>
+              <Link href="/support" className="hover:text-emerald-400 transition-colors">Support</Link>
+            </div>
           </div>
         </div>
       </footer>

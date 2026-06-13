@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import {
   Users, Building2, Sprout, FileSearch, CloudSun, ScrollText,
   Shield, Leaf, TrendingUp, AlertTriangle, Activity, BarChart3,
-  CheckCircle, Clock, Loader2,
+  CheckCircle, Clock, Loader2, MessageCircle, CreditCard, Star,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -40,7 +40,11 @@ const statCards: { key: string; label: string; icon: React.ComponentType<{ class
 
 const quickActions = [
   { label: 'Manage Users', section: 'users', icon: Users },
-  { label: 'View Audit Logs', section: 'audit', icon: Shield },
+  { label: 'Manage Testimonials', section: 'testimonials', icon: Star },
+  { label: 'Contact Inquiries', section: 'contacts', icon: MessageCircle },
+  { label: 'Support Tickets', section: 'tickets', icon: Shield },
+  { label: 'Subscriptions', section: 'subscriptions', icon: CreditCard },
+  { label: 'View Audit Logs', section: 'audit', icon: ScrollText },
   { label: 'Analytics Dashboard', section: 'analytics', icon: BarChart3 },
   { label: 'Consent Management', section: 'consent', icon: CheckCircle },
 ];
@@ -55,7 +59,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [s, logs] = await Promise.all([
+        const [s, { data: logs }] = await Promise.all([
           getDashboardStats(),
           getAuditLogs(),
         ]);

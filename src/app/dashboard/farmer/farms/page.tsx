@@ -53,7 +53,7 @@ export default function FarmsPage() {
     if (!user) return;
     (async () => {
       try {
-        const data = await getFarms(user.id);
+        const { data } = await getFarms(user.id);
         setFarms(data);
       } catch {
         toast.error('Failed to load farms');

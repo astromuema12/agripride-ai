@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
+import { writeAuditLog } from '@/lib/server-auth';
+import { useAuth } from '@/contexts/AuthContext';
 
 const roleColors: Record<UserRole, 'primary' | 'secondary' | 'default' | 'destructive' | 'warning' | 'outline'> = {
   admin: 'destructive',
@@ -25,7 +27,12 @@ const roleColors: Record<UserRole, 'primary' | 'secondary' | 'default' | 'destru
 };
 
 export default function UsersPage() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const pageSize = 100;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -35,15 +42,16 @@ export default function UsersPage() {
   useEffect(() => {
     (async () => {
       try {
-        const data = await getUsers();
+        const { data, total: totalUsers } = await getUsers(pageSize, (page - 1) * pageSize);
         setUsers(data);
+        setTotal(totalUsers);
       } catch {
         toast.error('Failed to load users');
       } finally {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [page]);
 
   const filtered = users.filter(
     (u) =>
@@ -62,15 +70,15 @@ export default function UsersPage() {
 
   async function handleToggleSuspend(user: User) {
     try {
-      const updated = { ...user, is_suspended: !user.is_suspended, updated_at: new Date().toISOString() };
-      const store = JSON.parse(localStorage.getItem('agripride_demo_data') || '{}');
-      const idx = store.users.findIndex((u: User) => u.id === user.id);
-      if (idx !== -1) {
-        store.users[idx] = updated;
-        localStorage.setItem('agripride_demo_data', JSON.stringify(store));
-      }
+      const updated: User = { ...user, is_suspended: !user.is_suspended, updated_at: new Date().toISOString() };
       setUsers((prev) => prev.map((u) => (u.id === user.id ? updated : u)));
       toast.success(`User ${updated.is_suspended ? 'suspended' : 'activated'} successfully`);
+      writeAuditLog({
+        user_id: currentUser?.id || 'unknown',
+        action: updated.is_suspended ? 'suspend_user' : 'activate_user',
+        resource: 'users',
+        resource_id: user.id,
+      }).catch(() => {});
     } catch {
       toast.error('Failed to update user status');
     }
@@ -85,16 +93,17 @@ export default function UsersPage() {
   async function handleSaveEdit() {
     if (!editingUser) return;
     try {
-      const updated = { ...editingUser, name: editName, role: editRole, updated_at: new Date().toISOString() };
-      const store = JSON.parse(localStorage.getItem('agripride_demo_data') || '{}');
-      const idx = store.users.findIndex((u: User) => u.id === editingUser.id);
-      if (idx !== -1) {
-        store.users[idx] = updated;
-        localStorage.setItem('agripride_demo_data', JSON.stringify(store));
-      }
+      const updated: User = { ...editingUser, name: editName, role: editRole, updated_at: new Date().toISOString() };
       setUsers((prev) => prev.map((u) => (u.id === editingUser.id ? updated : u)));
       setEditingUser(null);
       toast.success('User updated successfully');
+      writeAuditLog({
+        user_id: currentUser?.id || 'unknown',
+        action: 'update_user',
+        resource: 'users',
+        resource_id: editingUser.id,
+        details: { role: editRole },
+      }).catch(() => {});
     } catch {
       toast.error('Failed to update user');
     }
@@ -260,6 +269,20 @@ export default function UsersPage() {
           )}
         </CardContent>
       </Card>
+
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-500">
+          Showing page {page} of {Math.ceil(total / pageSize)} ({total} total users)
+        </p>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
+            Previous
+          </Button>
+          <Button variant="outline" size="sm" disabled={page >= Math.ceil(total / pageSize)} onClick={() => setPage(p => p + 1)}>
+            Next
+          </Button>
+        </div>
+      </div>
 
       <Dialog open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)}>
         <DialogContent>

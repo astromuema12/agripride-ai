@@ -6,8 +6,10 @@ import {
   LayoutDashboard, Sprout, FileSearch, CloudSun, ScrollText,
   BarChart3, Users, TreePine, Shield, AlertTriangle,
   Leaf, LineChart, Menu, X, Building2, UserCheck,
+  Bot, TrendingUp, DollarSign, Download, Bell,
+  Star, MessageCircle, CreditCard,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,9 +20,13 @@ const farmerLinks = [
   { href: '/dashboard/farmer/farms', label: 'My Farms', icon: Building2 },
   { href: '/dashboard/farmer/crops', label: 'Crop Records', icon: Sprout },
   { href: '/dashboard/farmer/disease', label: 'Disease Diagnosis', icon: FileSearch },
+  { href: '/dashboard/farmer/assistant', label: 'AI Assistant', icon: Bot },
   { href: '/dashboard/farmer/weather', label: 'Weather', icon: CloudSun },
+  { href: '/dashboard/farmer/market-prices', label: 'Market Prices', icon: DollarSign },
+  { href: '/dashboard/farmer/yield-predictor', label: 'Yield Predictor', icon: TrendingUp },
   { href: '/dashboard/farmer/recommendations', label: 'AI Recommendations', icon: ScrollText },
   { href: '/dashboard/farmer/sustainability', label: 'Sustainability', icon: Leaf },
+  { href: '/dashboard/farmer/export', label: 'Data Export', icon: Download },
 ];
 
 const officerLinks = [
@@ -30,21 +36,39 @@ const officerLinks = [
   { href: '/dashboard/officer/recommendations', label: 'Recommendations', icon: ScrollText },
   { href: '/dashboard/officer/analytics', label: 'Regional Analytics', icon: BarChart3 },
   { href: '/dashboard/officer/reports', label: 'Reports', icon: LineChart },
+  { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
+  { href: '/dashboard/officer/export', label: 'Data Export', icon: Download },
 ];
 
 const adminLinks = [
   { href: '/dashboard/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/admin/users', label: 'User Management', icon: UserCheck },
   { href: '/dashboard/admin/farms', label: 'Farm Management', icon: TreePine },
-  { href: '/dashboard/admin/audit', label: 'Audit Center', icon: Shield },
+  { href: '/dashboard/admin/testimonials', label: 'Testimonials', icon: Star },
+  { href: '/dashboard/admin/contacts', label: 'Contact Inquiries', icon: MessageCircle },
+  { href: '/dashboard/admin/tickets', label: 'Support Tickets', icon: Shield },
+  { href: '/dashboard/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { href: '/dashboard/admin/audit', label: 'Audit Center', icon: ScrollText },
   { href: '/dashboard/admin/consent', label: 'Consent Management', icon: FileSearch },
   { href: '/dashboard/admin/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
+  { href: '/dashboard/admin/export', label: 'Data Export', icon: Download },
 ];
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
   const links = user?.role === 'admin' ? adminLinks : user?.role === 'officer' ? officerLinks : farmerLinks;
 
@@ -53,16 +77,31 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-4 top-[72px] z-30 hidden lg:flex"
+        className="fixed left-3 top-[72px] z-40 lg:flex hidden"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
       </Button>
 
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed left-3 top-[72px] z-50 flex lg:hidden"
+        onClick={() => setMobileOpen(!mobileOpen)}
+      >
+        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+      </Button>
+
+      {mobileOpen && (
+        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setMobileOpen(false)} />
+      )}
+
       <aside
         className={cn(
-          'fixed left-0 top-16 z-30 flex h-[calc(100vh-4rem)] flex-col border-r border-gray-200 bg-white transition-all duration-300',
-          collapsed ? 'w-16' : 'w-64'
+          'fixed left-0 top-16 z-30 flex flex-col border-r border-gray-200 bg-white transition-all duration-300',
+          'h-[calc(100vh-4rem)]',
+          collapsed ? 'w-16' : 'w-64',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         <div className={cn('flex items-center gap-2 border-b border-gray-100 px-4 py-3', collapsed && 'justify-center')}>
@@ -83,6 +122,7 @@ export function Sidebar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={() => setMobileOpen(false)}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                   isActive

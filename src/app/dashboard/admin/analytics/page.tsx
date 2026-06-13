@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   BarChart3, TrendingUp, Leaf, AlertTriangle,
   Users, Sprout, Download, LineChart, PieChart, Activity, Shield,
@@ -45,7 +46,7 @@ export default function AdminAnalyticsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [s, y, d, u, ss] = await Promise.all([
+        const [s, { data: y }, { data: d }, { data: u }, ss] = await Promise.all([
           getDashboardStats(),
           getYieldRecords(),
           getDiseaseReports(),
@@ -58,7 +59,7 @@ export default function AdminAnalyticsPage() {
         setUsers(u);
         setSustainabilityScores(ss);
       } catch (err) {
-        console.error('Failed to load analytics data', err);
+        toast.error('Failed to load analytics data');
       } finally {
         setLoading(false);
       }
@@ -131,14 +132,14 @@ export default function AdminAnalyticsPage() {
             Platform-wide analytics and insights for administrative oversight
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5">
             <Download className="h-4 w-4" />
-            Export Report
+            <span>Export Report</span>
           </Button>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5">
             <Activity className="h-4 w-4" />
-            Live Data
+            <span>Live Data</span>
           </Button>
         </div>
       </div>

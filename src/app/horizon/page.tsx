@@ -38,7 +38,7 @@ export default function HorizonImpactPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [s, f, sc] = await Promise.all([
+        const [s, { data: f }, sc] = await Promise.all([
           getDashboardStats(),
           getFarms(),
           getSustainabilityScores(),

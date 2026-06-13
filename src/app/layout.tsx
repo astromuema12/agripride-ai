@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/shared/Navbar';
+import { CookieConsent } from '@/components/shared/CookieConsent';
 import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AuthProvider>
             <Navbar />
             <main>{children}</main>
+            <CookieConsent />
             <Toaster richColors closeButton position="top-right" />
           </AuthProvider>
         </ThemeProvider>

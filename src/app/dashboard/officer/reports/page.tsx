@@ -105,22 +105,22 @@ function ReportCard({ report }: { report: ReportType }) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap items-end gap-3">
-          <div className="space-y-1">
+          <div className="space-y-1 flex-1 min-w-[120px]">
             <Label className="text-xs text-gray-500">Start Date</Label>
             <Input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="h-8 w-40 text-xs"
+              className="h-8 w-full text-xs"
             />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 flex-1 min-w-[120px]">
             <Label className="text-xs text-gray-500">End Date</Label>
             <Input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="h-8 w-40 text-xs"
+              className="h-8 w-full text-xs"
             />
           </div>
           <Button size="sm" className="gap-1.5" onClick={handleDownload}>
@@ -179,8 +179,8 @@ export default function OfficerReportsPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-3 sm:mx-0">
+              <table className="w-full min-w-[400px] text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
                     <th className="pb-3 pr-4">Report</th>

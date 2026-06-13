@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUsers, getFarms, getDiseaseReports, getDashboardStats } from '@/lib/db';
 import type { User, Farm, DiseaseReport, DashboardStats } from '@/types';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +27,7 @@ export default function OfficerDashboard() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [statsData, usersData, farmsData, reportsData] = await Promise.all([
+        const [statsData, { data: usersData }, { data: farmsData }, { data: reportsData }] = await Promise.all([
           getDashboardStats(),
           getUsers(),
           getFarms(),
@@ -37,7 +38,7 @@ export default function OfficerDashboard() {
         setFarms(farmsData);
         setDiseaseReports(reportsData);
       } catch (error) {
-        console.error('Failed to load dashboard data:', error);
+        toast.error('Failed to load dashboard data');
       } finally {
         setLoading(false);
       }

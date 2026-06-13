@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   BarChart3, TrendingUp, Leaf, AlertTriangle,
   Users, Sprout, Download, LineChart, PieChart, Activity,
@@ -45,7 +46,7 @@ export default function AnalyticsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [s, y, d, u, ss] = await Promise.all([
+        const [s, { data: y }, { data: d }, { data: u }, ss] = await Promise.all([
           getDashboardStats(),
           getYieldRecords(),
           getDiseaseReports(),
@@ -58,7 +59,7 @@ export default function AnalyticsPage() {
         setUsers(u);
         setSustainabilityScores(ss);
       } catch (err) {
-        console.error('Failed to load analytics data', err);
+        toast.error('Failed to load analytics data');
       } finally {
         setLoading(false);
       }
