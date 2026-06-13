@@ -98,17 +98,17 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          'fixed left-0 top-16 z-30 flex flex-col border-r border-gray-200 bg-white transition-all duration-300',
+          'fixed left-0 top-16 z-30 flex flex-col border-r border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:bg-[var(--card)]',
           'h-[calc(100vh-4rem)]',
           collapsed ? 'w-16' : 'w-64',
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        <div className={cn('flex items-center gap-2 border-b border-gray-100 px-4 py-3', collapsed && 'justify-center')}>
+        <div className={cn('flex items-center gap-2 border-b border-gray-100 px-4 py-3 dark:border-gray-700', collapsed && 'justify-center')}>
           <Leaf className="h-5 w-5 text-emerald-600 shrink-0" />
           {!collapsed && (
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-gray-900 capitalize">{user?.role}</span>
+              <span className="text-sm font-semibold text-gray-900 capitalize dark:text-[var(--foreground)]">{user?.role}</span>
               <Badge variant="primary" className="text-[10px]">Dashboard</Badge>
             </div>
           )}
@@ -126,8 +126,8 @@ export function Sidebar() {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[var(--muted)] dark:hover:text-[var(--foreground)]',
                   collapsed && 'justify-center px-2'
                 )}
                 title={collapsed ? link.label : undefined}
@@ -140,8 +140,8 @@ export function Sidebar() {
         </nav>
 
         {!collapsed && (
-          <div className="border-t border-gray-100 p-4">
-            <Link href="/" className="text-xs text-gray-500 hover:text-emerald-600 transition-colors">
+          <div className="border-t border-gray-100 p-4 dark:border-gray-700">
+            <Link href="/" className="text-xs text-gray-500 hover:text-emerald-600 transition-colors dark:text-gray-400 dark:hover:text-emerald-400">
               &larr; Back to Home
             </Link>
           </div>

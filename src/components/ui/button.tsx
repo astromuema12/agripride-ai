@@ -4,16 +4,16 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-emerald-600 text-white shadow hover:bg-emerald-700',
-        destructive: 'bg-red-600 text-white shadow-sm hover:bg-red-700',
-        outline: 'border border-gray-300 bg-white shadow-sm hover:bg-gray-50 text-gray-700',
-        secondary: 'bg-emerald-100 text-emerald-800 shadow-sm hover:bg-emerald-200',
-        ghost: 'hover:bg-gray-100 text-gray-700',
-        link: 'text-emerald-600 underline-offset-4 hover:underline',
+        default: 'bg-emerald-600 text-white shadow hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600',
+        destructive: 'bg-red-600 text-white shadow-sm hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600',
+        outline: 'border border-gray-300 bg-white shadow-sm hover:bg-gray-50 text-gray-700 dark:border-gray-600 dark:bg-[var(--card)] dark:hover:bg-[var(--muted)] dark:text-[var(--foreground)]',
+        secondary: 'bg-emerald-100 text-emerald-800 shadow-sm hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:hover:bg-emerald-800',
+        ghost: 'hover:bg-gray-100 text-gray-700 dark:hover:bg-[var(--muted)] dark:text-[var(--foreground)]',
+        link: 'text-emerald-600 underline-offset-4 hover:underline dark:text-emerald-400',
       },
       size: {
         default: 'h-9 px-4 py-2',

@@ -1,9 +1,31 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --background: #ffffff;
     --foreground: #171717;
+    --muted: #f3f4f6;
+    --muted-foreground: #6b7280;
+    --border: #e5e7eb;
+    --card: #ffffff;
+    --card-foreground: #171717;
+    --popover: #ffffff;
+    --popover-foreground: #171717;
+    --ring: #10b981;
+  }
+
+  .dark {
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --border: #334155;
+    --card: #1e293b;
+    --card-foreground: #f1f5f9;
+    --popover: #1e293b;
+    --popover-foreground: #f1f5f9;
   }
 }
 
@@ -32,10 +54,13 @@
 
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-[var(--border)];
+  }
+  html {
+    @apply bg-[var(--background)] text-[var(--foreground)];
   }
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
   }
 }
 

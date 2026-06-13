@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Leaf, Menu, X, Bell, LogOut, Settings, Shield } from 'lucide-react';
+import { Leaf, Menu, X, Bell, LogOut, Settings, Shield, Sun, Moon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
+import { useTheme } from '@/components/shared/ThemeProvider';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,6 +43,7 @@ export function Navbar() {
   }, [user]);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
+  const { theme, setTheme } = useTheme();
 
   const handleLogout = async () => {
     await logout();
@@ -57,14 +59,14 @@ export function Navbar() {
     : '/auth';
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/80 backdrop-blur-xl dark:border-gray-700 dark:bg-[var(--card)]/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600">
               <Leaf className="h-5 w-5 text-white" />
             </div>
-            <span className="text-lg font-bold text-gray-900">AgriPride AI</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-[var(--foreground)]">AgriPride AI</span>
             <span suppressHydrationWarning>
               {isDemoMode && (
                 <Badge variant="warning" className="ml-1 text-[10px]">DEMO</Badge>
@@ -89,7 +91,16 @@ export function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 sm:gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
           {user ? (
             <>
               <DropdownMenu>
@@ -177,7 +188,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-gray-200 bg-white md:hidden">
+        <div className="border-t border-gray-200 bg-white dark:border-gray-700 dark:bg-[var(--card)] md:hidden">
           <div className="space-y-1 px-4 py-3">
             {navLinks.map((link) => (
               <Link
@@ -187,8 +198,8 @@ export function Navbar() {
                 className={cn(
                   'block rounded-md px-3 py-2 text-sm font-medium',
                   pathname === link.href
-                    ? 'bg-emerald-50 text-emerald-600'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-200'
+                    : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-[var(--muted)]'
                 )}
               >
                 {link.label}
