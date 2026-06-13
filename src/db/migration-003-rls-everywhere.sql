@@ -4,6 +4,141 @@
 -- policies using SECURITY DEFINER helper function.
 -- ============================================
 
+-- 0. Ensure all tables exist first
+CREATE TABLE IF NOT EXISTS contact_inquiries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50),
+  subject VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'resolved', 'spam')),
+  admin_response TEXT,
+  responded_at TIMESTAMPTZ,
+  responded_by UUID REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS farmer_profiles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(255),
+  phone VARCHAR(50),
+  county VARCHAR(255),
+  farm_size_acres DECIMAL(10,2),
+  crop_types TEXT[] DEFAULT '{}',
+  has_livestock BOOLEAN DEFAULT FALSE,
+  livestock_details TEXT,
+  gps_lat DECIMAL(10,7),
+  gps_lng DECIMAL(10,7),
+  goals TEXT[] DEFAULT '{}',
+  ai_personalized BOOLEAN DEFAULT FALSE,
+  consent_ai BOOLEAN DEFAULT FALSE,
+  onboarding_completed BOOLEAN DEFAULT FALSE,
+  current_step INTEGER DEFAULT 1,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS subscription_plans (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name VARCHAR(100) NOT NULL,
+  tier VARCHAR(50) NOT NULL CHECK (tier IN ('free', 'premium', 'cooperative', 'enterprise')),
+  price_kes DECIMAL(10,2) DEFAULT 0,
+  features JSONB NOT NULL DEFAULT '[]',
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_subscriptions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  plan_id UUID NOT NULL REFERENCES subscription_plans(id),
+  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'cancelled', 'expired', 'trial')),
+  mpesa_receipt VARCHAR(255),
+  started_at TIMESTAMPTZ DEFAULT NOW(),
+  expires_at TIMESTAMPTZ,
+  cancelled_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS testimonials (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  name VARCHAR(255) NOT NULL,
+  location VARCHAR(255),
+  farm_type VARCHAR(100),
+  photo_url TEXT,
+  content TEXT NOT NULL,
+  is_approved BOOLEAN DEFAULT FALSE,
+  approved_at TIMESTAMPTZ,
+  approved_by UUID REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS support_tickets (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  subject VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  priority VARCHAR(20) DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+  status VARCHAR(20) DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
+  assigned_to UUID REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  resolved_at TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS ticket_messages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  ticket_id UUID NOT NULL REFERENCES support_tickets(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  is_internal BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS mpesa_transactions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  phone VARCHAR(20) NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  receipt_number VARCHAR(255),
+  transaction_id VARCHAR(255),
+  result_code INTEGER,
+  result_desc TEXT,
+  status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'success', 'failed')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ai_usage_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  endpoint VARCHAR(100) NOT NULL,
+  tokens_used INTEGER DEFAULT 0,
+  response_time_ms INTEGER,
+  model VARCHAR(100),
+  success BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS activity_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  event_type VARCHAR(100) NOT NULL,
+  metadata JSONB DEFAULT '{}',
+  ip_address VARCHAR(45),
+  user_agent TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS platform_stats (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  metric_name VARCHAR(100) UNIQUE NOT NULL,
+  metric_value BIGINT NOT NULL DEFAULT 0,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- 1. Drop ALL existing policies to start clean
 DO $$ DECLARE
   pol RECORD;
@@ -210,7 +345,10 @@ CREATE POLICY sustainability_scores_read_all ON sustainability_scores FOR SELECT
   USING (true);
 
 CREATE POLICY sustainability_scores_insert_own ON sustainability_scores FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid() = (SELECT user_id FROM farms WHERE id = farm_id));
+
+CREATE POLICY sustainability_scores_update_own ON sustainability_scores FOR UPDATE
+  USING (auth.uid() = (SELECT user_id FROM farms WHERE id = farm_id));
 
 -- ---------- market_prices ----------
 CREATE POLICY market_prices_read_all ON market_prices FOR SELECT
