@@ -1,3 +1,38 @@
+export type GrowthStage = 'seedling' | 'vegetative' | 'flowering' | 'fruiting' | 'unknown';
+
+export type SymptomCategory = 'leaf' | 'flower' | 'fruit_nut' | 'stem_root' | 'environmental_stress' | 'general';
+
+export type Likelihood = 'high' | 'medium' | 'low';
+
+export type ConditionType = 'disease' | 'stress' | 'physiological' | 'nutrient_deficiency' | 'pest';
+
+export interface PossibleCause {
+  name: string;
+  type: ConditionType;
+  pathogen?: string;
+  likelihood: Likelihood;
+  confidence: number;
+  treatment?: string;
+  prevention?: string;
+}
+
+export interface DiagnosisResult {
+  primaryDiagnosis?: PossibleCause;
+  possibleCauses: PossibleCause[];
+  confidenceRange: { min: number; max: number };
+  reasoning: {
+    summary: string;
+    symptomInfluences: string[];
+    uncertainties: string[];
+    growthStageNote?: string;
+  };
+  symptomCategories: Partial<Record<SymptomCategory, string[]>>;
+  growthStage: GrowthStage;
+  uncertaintyLevel: 'low' | 'moderate' | 'high';
+  requestMoreInfo: boolean;
+  missingInfo?: string[];
+}
+
 export type UserRole = 'farmer' | 'officer' | 'admin';
 
 export interface User {
@@ -45,13 +80,17 @@ export interface DiseaseReport {
   user_id: string;
   crop_type: string;
   symptoms: string;
+  growth_stage?: GrowthStage;
   image_url?: string;
   disease_prediction?: string;
+  possible_causes?: PossibleCause[];
   confidence_score?: number;
   risk_level?: 'low' | 'medium' | 'high' | 'critical';
   treatment?: string;
   prevention?: string;
   explanation?: string;
+  reasoning?: string;
+  uncertainty_level?: 'low' | 'moderate' | 'high';
   status: 'submitted' | 'reviewed' | 'resolved';
   created_at: string;
   reviewed_at?: string;
@@ -160,6 +199,14 @@ export interface AIAgentResponse {
   data?: unknown;
   error?: string;
   confidence_score?: number;
+  possible_causes?: PossibleCause[];
+  reasoning?: {
+    summary: string;
+    symptomInfluences: string[];
+    uncertainties: string[];
+    growthStageNote?: string;
+  };
+  uncertainty_level?: 'low' | 'moderate' | 'high';
   responsible_agent?: string;
   frameworks_used?: string[];
   timestamp?: string;

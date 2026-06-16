@@ -2,16 +2,32 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Sprout, AlertTriangle, Shield, ArrowRight, Leaf, Loader2, Scan } from 'lucide-react';
+import { Sprout, AlertTriangle, Shield, ArrowRight, Leaf, Loader2, Scan, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import type { GrowthStage, PossibleCause } from '@/types';
 
-type CropOption = { id: string; name: string; emoji: string };
-type DiagnosisResult = {
-  crop: string; disease: string; confidence: number; risk: string;
-  treatment: string; prevention: string; explanation: string; emoji: string;
-  symptoms_matched: string;
+type CropOption = { id: string; name: string; emoji?: string };
+type GrowthStageOption = { value: GrowthStage; label: string };
+
+type DemoResult = {
+  crop: string;
+  primaryDiagnosis?: PossibleCause;
+  possibleCauses: PossibleCause[];
+  confidenceRange: { min: number; max: number };
+  reasoning: {
+    summary: string;
+    symptomInfluences: string[];
+    uncertainties: string[];
+    growthStageNote?: string;
+  };
+  symptomCategories: Record<string, string[]>;
+  growthStage: GrowthStage;
+  uncertaintyLevel: 'low' | 'moderate' | 'high';
+  requestMoreInfo: boolean;
+  missingInfo?: string[];
 };
 
 const riskColors: Record<string, string> = {
@@ -21,17 +37,42 @@ const riskColors: Record<string, string> = {
   critical: 'bg-red-100 text-red-700 border-red-200',
 };
 
+const likelihoodColors: Record<string, string> = {
+  high: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  medium: 'bg-amber-100 text-amber-700 border-amber-200',
+  low: 'bg-red-100 text-red-700 border-red-200',
+};
+
+const uncertaintyColors: Record<string, string> = {
+  low: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  moderate: 'bg-amber-100 text-amber-700 border-amber-200',
+  high: 'bg-red-100 text-red-700 border-red-200',
+};
+
+const GROWTH_STAGES: GrowthStageOption[] = [
+  { value: 'unknown', label: 'Not sure' },
+  { value: 'seedling', label: 'Seedling' },
+  { value: 'vegetative', label: 'Vegetative' },
+  { value: 'flowering', label: 'Flowering' },
+  { value: 'fruiting', label: 'Fruiting' },
+];
+
 export function AiDemo() {
   const [crops, setCrops] = useState<CropOption[]>([]);
+  const [growthStages, setGrowthStages] = useState<GrowthStageOption[]>(GROWTH_STAGES);
   const [selectedCrop, setSelectedCrop] = useState('');
+  const [selectedStage, setSelectedStage] = useState<GrowthStage>('unknown');
   const [symptoms, setSymptoms] = useState('');
   const [diagnosing, setDiagnosing] = useState(false);
-  const [result, setResult] = useState<DiagnosisResult | null>(null);
+  const [result, setResult] = useState<DemoResult | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     fetch('/api/ai/demo').then((r) => r.json()).then((res) => {
-      if (res.success) setCrops(res.crops);
+      if (res.success) {
+        setCrops(res.crops);
+        if (res.growthStages) setGrowthStages(res.growthStages);
+      }
     }).catch(() => {});
   }, []);
 
@@ -44,7 +85,7 @@ export function AiDemo() {
       const res = await fetch('/api/ai/demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cropType: selectedCrop, symptoms }),
+        body: JSON.stringify({ cropType: selectedCrop, symptoms, growthStage: selectedStage }),
       });
       const data = await res.json();
       if (data.success) {
@@ -76,7 +117,7 @@ export function AiDemo() {
             AI Crop Disease Diagnosis
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm text-gray-500">
-            Select your crop, describe the symptoms, and get an instant AI-powered diagnosis with treatment recommendations.
+            Select your crop and growth stage, describe the symptoms, and get an instant AI-powered diagnosis with treatment recommendations.
           </p>
         </motion.div>
 
@@ -100,12 +141,27 @@ export function AiDemo() {
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                       >
-                        <span>{crop.emoji}</span> {crop.name}
+                        {crop.emoji && <span>{crop.emoji}</span>} {crop.name}
                       </button>
                     ))}
                   </div>
                 </div>
               )}
+
+              <div className="mb-4">
+                <label className="mb-2 block text-sm font-medium text-gray-700">Growth Stage</label>
+                <select
+                  value={selectedStage}
+                  onChange={(e) => { setSelectedStage(e.target.value as GrowthStage); setResult(null); setError(''); }}
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                >
+                  {growthStages.map((gs) => (
+                    <option key={gs.value} value={gs.value}>{gs.label}</option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-gray-400">Growth stage affects diagnosis accuracy</p>
+              </div>
+
               <div className="mb-3 sm:mb-4">
                 <label className="mb-2 block text-sm font-medium text-gray-700">Describe Symptoms</label>
                 <textarea
@@ -158,48 +214,93 @@ export function AiDemo() {
               {result && (
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl sm:text-2xl">{result.emoji}</span>
-                      <div className="min-w-0">
-                        <div className="text-base sm:text-lg font-bold text-gray-900 truncate">{result.disease}</div>
-                        <div className="text-xs text-gray-500 capitalize">{result.crop}</div>
+                    <div className="min-w-0">
+                      <div className="text-base sm:text-lg font-bold text-gray-900">
+                        {result.primaryDiagnosis?.name ?? 'Uncertain'}
                       </div>
+                      <div className="text-xs text-gray-500 capitalize">{result.crop} — {result.growthStage} stage</div>
                     </div>
-                    <Badge className={`${riskColors[result.risk] || 'bg-gray-100 text-gray-600'} w-fit`}>
-                      {result.risk.toUpperCase()} Risk
+                    <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-gray-100 text-gray-600'} w-fit`}>
+                      {result.uncertaintyLevel.toUpperCase()} Uncertainty
                     </Badge>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 flex-1 rounded-full bg-gray-200">
-                      <div
-                        className="h-2 rounded-full bg-emerald-500"
-                        style={{ width: `${Math.round(result.confidence * 100)}%` }}
-                      />
+                  {result.requestMoreInfo && (
+                    <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 flex items-start gap-2">
+                      <HelpCircle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-amber-800">More information recommended</p>
+                        <p className="text-xs text-amber-700 mt-1">
+                          {result.missingInfo?.join(', ') || 'Provide more specific symptoms for accuracy.'}
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-xs font-semibold text-gray-600 shrink-0">
-                      {Math.round(result.confidence * 100)}% match
-                    </span>
+                  )}
+
+                  {result.possibleCauses.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-700 mb-2">Possible Causes</p>
+                      <div className="space-y-2">
+                        {result.possibleCauses.slice(0, 4).map((cause, idx) => (
+                          <div key={idx} className={`rounded-lg border p-2.5 ${
+                            idx === 0 && cause.likelihood === 'high' ? 'border-emerald-200 bg-emerald-50' : 'border-gray-200'
+                          }`}>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <span className="text-xs font-medium text-gray-900">{idx + 1}. {cause.name}</span>
+                                <Badge className={`${likelihoodColors[cause.likelihood] || 'bg-gray-100'} text-[10px]`}>
+                                  {cause.likelihood}
+                                </Badge>
+                              </div>
+                              <span className="text-[10px] font-semibold text-gray-500 shrink-0">
+                                {Math.round(cause.confidence * 100)}%
+                              </span>
+                            </div>
+                            <Progress value={Math.round(cause.confidence * 100)} className="h-1 mt-1.5" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <p className="text-xs font-semibold text-gray-700 mb-1">AI Reasoning</p>
+                    <p className="text-xs text-gray-600">{result.reasoning.summary}</p>
+                    {result.reasoning.uncertainties.length > 0 && (
+                      <div className="mt-1.5">
+                        {result.reasoning.uncertainties.slice(0, 2).map((u, i) => (
+                          <p key={i} className="text-[10px] text-amber-700 mt-0.5">⚠ {u}</p>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  <div className="rounded-lg bg-emerald-50 p-3">
-                    <p className="text-xs font-semibold text-emerald-700">Symptoms Detected</p>
-                    <p className="text-sm text-emerald-600">{result.symptoms_matched || result.explanation}</p>
-                  </div>
+                  {result.primaryDiagnosis?.treatment && (
+                    <div>
+                      <p className="mb-1 text-xs font-semibold text-gray-700">
+                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> Recommended Treatment
+                      </p>
+                      <p className="text-sm text-gray-600">{result.primaryDiagnosis.treatment}</p>
+                    </div>
+                  )}
 
-                  <div>
-                    <p className="mb-1 text-xs font-semibold text-gray-700">
-                      <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> Recommended Treatment
-                    </p>
-                    <p className="text-sm text-gray-600">{result.treatment}</p>
-                  </div>
+                  {result.primaryDiagnosis?.prevention && (
+                    <div>
+                      <p className="mb-1 text-xs font-semibold text-gray-700">
+                        <Shield className="mr-1 inline h-3 w-3 text-blue-500" /> Prevention
+                      </p>
+                      <p className="text-sm text-gray-600">{result.primaryDiagnosis.prevention}</p>
+                    </div>
+                  )}
 
-                  <div>
-                    <p className="mb-1 text-xs font-semibold text-gray-700">
-                      <Shield className="mr-1 inline h-3 w-3 text-blue-500" /> Prevention
-                    </p>
-                    <p className="text-sm text-gray-600">{result.prevention}</p>
-                  </div>
+                  {!result.primaryDiagnosis && result.possibleCauses[0]?.treatment && (
+                    <div>
+                      <p className="mb-1 text-xs font-semibold text-gray-700">
+                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> Suggested Treatment
+                      </p>
+                      <p className="text-sm text-gray-600">{result.possibleCauses[0].treatment}</p>
+                    </div>
+                  )}
 
                   <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
                     <p className="text-xs text-amber-700">

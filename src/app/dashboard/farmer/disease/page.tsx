@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDiseaseReports, createDiseaseReport, getFarms } from '@/lib/db';
-import type { DiseaseReport, Farm } from '@/types';
+import type { DiseaseReport, Farm, GrowthStage, PossibleCause, DiagnosisResult } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,19 +17,35 @@ import {
 import Image from 'next/image';
 import {
   FileSearch, AlertTriangle, Shield, Clock, BrainCircuit, Save, History,
-  ImagePlus, X, Volume2, VolumeX, Loader2,
+  ImagePlus, X, Volume2, VolumeX, Loader2, HelpCircle, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { speakText, stopSpeaking } from '@/lib/tts';
 
 const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Sorghum', 'Millet', 'Sweet Potato', 'Potato', 'Banana', 'Coffee', 'Tea', 'Sugarcane', 'Cotton', 'Tomato', 'Onion', 'Kale', 'Mango', 'Avocado', 'Groundnut', 'Sunflower', 'Cowpea', 'Pineapple', 'Passion Fruit', 'Orange', 'Coconut', 'Cashew', 'Macadamia', 'Sesame', 'Green Grams', 'Pigeon Peas', 'Cabbage', 'Spinach', 'Carrot', 'Watermelon', 'Pawpaw', 'Barley', 'French Beans', 'Capsicum', 'Arrow Roots', 'Yam', 'Pyrethrum', 'Sisal'];
 
-interface DiagnosisResult {
-  disease: string;
-  confidence: number;
-  risk: 'low' | 'medium' | 'high' | 'critical';
-  treatment: string;
-  prevention: string;
-  explanation: string;
+const GROWTH_STAGES: { value: GrowthStage; label: string }[] = [
+  { value: 'seedling', label: 'Seedling (first 2-4 weeks)' },
+  { value: 'vegetative', label: 'Vegetative (leaf/stem growth)' },
+  { value: 'flowering', label: 'Flowering (bloom/pollination)' },
+  { value: 'fruiting', label: 'Fruiting/Nut development' },
+  { value: 'unknown', label: 'Not sure' },
+];
+
+interface APIResponseData {
+  primaryDiagnosis?: PossibleCause;
+  possibleCauses: PossibleCause[];
+  confidenceRange: { min: number; max: number };
+  reasoning: {
+    summary: string;
+    symptomInfluences: string[];
+    uncertainties: string[];
+    growthStageNote?: string;
+  };
+  symptomCategories: Record<string, string[]>;
+  growthStage: GrowthStage;
+  uncertaintyLevel: 'low' | 'moderate' | 'high';
+  requestMoreInfo: boolean;
+  missingInfo?: string[];
 }
 
 function RiskBadge({ risk }: { risk: string }) {
@@ -53,17 +69,38 @@ function StatusBadge({ status }: { status: DiseaseReport['status'] }) {
   return <Badge variant={variant}>{label}</Badge>;
 }
 
+function UncertaintyBadge({ level }: { level: string }) {
+  const map: Record<string, { variant: 'warning' | 'secondary' | 'destructive'; label: string }> = {
+    low: { variant: 'secondary', label: 'Low Uncertainty' },
+    moderate: { variant: 'warning', label: 'Moderate Uncertainty' },
+    high: { variant: 'destructive', label: 'High Uncertainty' },
+  };
+  const { variant, label } = map[level.toLowerCase()] ?? { variant: 'warning' as const, label: level };
+  return <Badge variant={variant}>{label}</Badge>;
+}
+
+function LikelihoodBadge({ likelihood }: { likelihood: string }) {
+  const map: Record<string, { variant: 'primary' | 'warning' | 'destructive'; label: string }> = {
+    high: { variant: 'primary', label: 'High Likelihood' },
+    medium: { variant: 'warning', label: 'Medium Likelihood' },
+    low: { variant: 'destructive', label: 'Low Likelihood' },
+  };
+  const { variant, label } = map[likelihood.toLowerCase()] ?? { variant: 'warning' as const, label: likelihood };
+  return <Badge variant={variant}>{label}</Badge>;
+}
+
 export default function DiseaseDiagnosisPage() {
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [cropType, setCropType] = useState('');
+  const [growthStage, setGrowthStage] = useState<GrowthStage>('unknown');
   const [symptoms, setSymptoms] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [diagnosing, setDiagnosing] = useState(false);
   const [result, setResult] = useState<{
-    data: DiagnosisResult;
+    data: APIResponseData;
     confidence_score?: number;
     responsible_agent?: string;
     frameworks_used?: string[];
@@ -74,6 +111,7 @@ export default function DiseaseDiagnosisPage() {
   const [reports, setReports] = useState<DiseaseReport[]>([]);
   const [farms, setFarms] = useState<Farm[]>([]);
   const [selectedFarmId, setSelectedFarmId] = useState('');
+  const [showReasoning, setShowReasoning] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -129,7 +167,7 @@ export default function DiseaseDiagnosisPage() {
     setResult(null);
 
     try {
-      const body: Record<string, string> = { cropType, symptoms };
+      const body: Record<string, string> = { cropType, symptoms, growthStage };
 
       if (imageFile) {
         body.imageBase64 = await fileToBase64(imageFile);
@@ -159,10 +197,10 @@ export default function DiseaseDiagnosisPage() {
       }
     } catch {
       const { diagnoseDisease } = await import('@/lib/ai-agents');
-      const fallback = diagnoseDisease(cropType);
+      const fallback = diagnoseDisease(cropType, symptoms, growthStage);
       if (fallback.success && fallback.data) {
         setResult({
-          data: fallback.data as DiagnosisResult,
+          data: fallback.data as APIResponseData,
           confidence_score: fallback.confidence_score,
           responsible_agent: fallback.responsible_agent,
           frameworks_used: fallback.frameworks_used,
@@ -181,19 +219,25 @@ export default function DiseaseDiagnosisPage() {
     if (!user || !result) return;
     setSaving(true);
     try {
+      const d = result.data;
+      const primary = d.primaryDiagnosis;
       const report = await createDiseaseReport({
         farm_id: selectedFarmId || 'unknown',
         crop_id: 'unknown',
         user_id: user.id,
         crop_type: cropType,
         symptoms: symptoms,
+        growth_stage: growthStage,
         image_url: imagePreview ?? undefined,
-        disease_prediction: result.data.disease,
-        confidence_score: result.confidence_score ?? result.data.confidence,
-        risk_level: result.data.risk,
-        treatment: result.data.treatment,
-        prevention: result.data.prevention,
-        explanation: result.data.explanation,
+        disease_prediction: primary?.name ?? 'Uncertain - see possible causes',
+        possible_causes: d.possibleCauses,
+        confidence_score: primary?.confidence ?? d.confidenceRange.max,
+        risk_level: primary?.likelihood === 'high' ? 'high' : primary?.likelihood === 'medium' ? 'medium' : 'low',
+        treatment: primary?.treatment,
+        prevention: primary?.prevention,
+        explanation: d.reasoning.summary,
+        reasoning: JSON.stringify(d.reasoning),
+        uncertainty_level: d.uncertaintyLevel,
         status: 'submitted',
       });
       setReports((prev) => [report, ...prev]);
@@ -216,8 +260,8 @@ export default function DiseaseDiagnosisPage() {
     }
   };
 
-  const confidencePct = result
-    ? Math.round((result.confidence_score ?? result.data.confidence) * 100)
+  const primaryConfidencePct = result?.data?.primaryDiagnosis
+    ? Math.round(result.data.primaryDiagnosis.confidence * 100)
     : 0;
 
   if (!user) return null;
@@ -227,7 +271,7 @@ export default function DiseaseDiagnosisPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Disease Diagnosis</h1>
         <p className="text-xs sm:text-sm text-gray-500">
-          AI-powered diagnosis from symptoms and photos
+          AI-powered diagnosis from symptoms, growth stage, and photos
         </p>
       </div>
 
@@ -253,6 +297,23 @@ export default function DiseaseDiagnosisPage() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="growth-stage">Crop Growth Stage</Label>
+                <Select value={growthStage} onValueChange={(v) => setGrowthStage(v as GrowthStage)}>
+                  <SelectTrigger id="growth-stage">
+                    <SelectValue placeholder="Select growth stage" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GROWTH_STAGES.map((gs) => (
+                      <SelectItem key={gs.value} value={gs.value}>{gs.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-400">
+                  Growth stage affects diagnosis accuracy. Select &quot;Not sure&quot; if unknown.
+                </p>
               </div>
 
               {farms.length > 0 && (
@@ -349,12 +410,23 @@ export default function DiseaseDiagnosisPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-[10px] sm:text-xs font-medium text-emerald-600 uppercase tracking-wide">Diagnosis Result</p>
-                      <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mt-0.5 sm:mt-1 break-words">{result.data.disease}</h2>
+                      <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mt-0.5 sm:mt-1 break-words">
+                        {result.data.primaryDiagnosis?.name ?? 'Uncertain - Multiple Possibilities'}
+                      </h2>
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <UncertaintyBadge level={result.data.uncertaintyLevel} />
+                        {result.data.primaryDiagnosis && (
+                          <Badge variant="outline" className="text-xs">
+                            {result.data.primaryDiagnosis.type.replace('_', ' ')}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                       <button
                         onClick={() => {
-                          const text = result.data.disease + '. ' + result.data.treatment + '. ' + result.data.prevention;
+                          const text = result.data.possibleCauses.map(c => c.name).join(', ') + '. ' +
+                            result.data.reasoning.summary;
                           handleSpeak(text, 'diagnosis');
                         }}
                         className="rounded-full p-1.5 sm:p-2 hover:bg-emerald-100 transition-colors"
@@ -365,7 +437,6 @@ export default function DiseaseDiagnosisPage() {
                           <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600" />
                         )}
                       </button>
-                      <RiskBadge risk={result.data.risk} />
                     </div>
                   </div>
                 </CardHeader>
@@ -376,37 +447,134 @@ export default function DiseaseDiagnosisPage() {
                     </div>
                   )}
 
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-sm font-medium text-gray-700">Confidence Score</span>
-                      <span className={`text-sm font-bold ${
-                        confidencePct >= 80 ? 'text-emerald-600' : confidencePct >= 60 ? 'text-amber-600' : 'text-red-600'
-                      }`}>
-                        {confidencePct}%
-                      </span>
+                  {result.data.requestMoreInfo && (
+                    <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 flex items-start gap-2">
+                      <HelpCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-amber-800">More information needed</p>
+                        <p className="text-xs text-amber-700 mt-1">
+                          {result.data.missingInfo?.join(', ') || 'Provide more specific symptom details for a more accurate diagnosis.'}
+                        </p>
+                      </div>
                     </div>
-                    <Progress value={confidencePct} className="h-2.5" />
-                  </div>
+                  )}
 
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-amber-500" />
-                    <span className="text-sm text-gray-500">Risk Level:</span>
-                    <RiskBadge risk={result.data.risk} />
-                  </div>
+                  {result.data.possibleCauses.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-800 mb-2">
+                        Possible Causes (ranked)
+                      </h3>
+                      <div className="space-y-2">
+                        {result.data.possibleCauses.slice(0, 5).map((cause, idx) => (
+                          <div
+                            key={idx}
+                            className={`rounded-lg border p-3 ${
+                              idx === 0 && cause.likelihood === 'high'
+                                ? 'border-emerald-200 bg-emerald-50'
+                                : 'border-gray-200 bg-white'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-sm font-medium text-gray-900">
+                                    {idx + 1}. {cause.name}
+                                  </span>
+                                  <LikelihoodBadge likelihood={cause.likelihood} />
+                                </div>
+                                <p className="text-xs text-gray-500 mt-0.5 capitalize">{cause.type.replace('_', ' ')}</p>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="text-xs font-semibold text-gray-600">
+                                  {Math.round(cause.confidence * 100)}%
+                                </span>
+                              </div>
+                            </div>
+                            <div className="mt-2">
+                              <Progress
+                                value={Math.round(cause.confidence * 100)}
+                                className={`h-1.5 ${
+                                  cause.likelihood === 'high' ? 'bg-emerald-100' :
+                                  cause.likelihood === 'medium' ? 'bg-amber-100' :
+                                  'bg-red-100'
+                                }`}
+                              />
+                            </div>
+                            {cause.treatment && idx < 2 && (
+                              <div className="mt-2 text-xs text-gray-600">
+                                <span className="font-medium">Treatment: </span>
+                                {cause.treatment.slice(0, 100)}{cause.treatment.length > 100 ? '...' : ''}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-                  <div className="rounded-lg bg-emerald-50 p-4">
-                    <h3 className="text-sm font-semibold text-emerald-800 mb-1">Treatment</h3>
-                    <p className="text-sm text-emerald-700 leading-relaxed">{result.data.treatment}</p>
-                  </div>
+                  {result.data.primaryDiagnosis?.treatment && (
+                    <div className="rounded-lg bg-emerald-50 p-4">
+                      <h3 className="text-sm font-semibold text-emerald-800 mb-1">Recommended Treatment</h3>
+                      <p className="text-sm text-emerald-700 leading-relaxed">
+                        {result.data.primaryDiagnosis.treatment}
+                      </p>
+                    </div>
+                  )}
 
-                  <div className="rounded-lg bg-blue-50 p-4">
-                    <h3 className="text-sm font-semibold text-blue-800 mb-1">Prevention</h3>
-                    <p className="text-sm text-blue-700 leading-relaxed">{result.data.prevention}</p>
-                  </div>
+                  {result.data.primaryDiagnosis?.prevention && (
+                    <div className="rounded-lg bg-blue-50 p-4">
+                      <h3 className="text-sm font-semibold text-blue-800 mb-1">Prevention</h3>
+                      <p className="text-sm text-blue-700 leading-relaxed">
+                        {result.data.primaryDiagnosis.prevention}
+                      </p>
+                    </div>
+                  )}
+
+                  {!result.data.primaryDiagnosis && result.data.possibleCauses[0]?.treatment && (
+                    <div className="rounded-lg bg-emerald-50 p-4">
+                      <h3 className="text-sm font-semibold text-emerald-800 mb-1">Suggested Treatment</h3>
+                      <p className="text-sm text-emerald-700 leading-relaxed">
+                        {result.data.possibleCauses[0].treatment}
+                      </p>
+                    </div>
+                  )}
 
                   <div className="rounded-lg bg-gray-50 p-4">
-                    <h3 className="text-sm font-semibold text-gray-800 mb-1">AI Explanation</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">{result.data.explanation}</p>
+                    <button
+                      onClick={() => setShowReasoning(!showReasoning)}
+                      className="flex items-center justify-between w-full text-left"
+                    >
+                      <h3 className="text-sm font-semibold text-gray-800">AI Reasoning</h3>
+                      {showReasoning ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
+                    </button>
+                    {showReasoning && (
+                      <div className="mt-2 space-y-2 text-sm text-gray-600 leading-relaxed">
+                        <p>{result.data.reasoning.summary}</p>
+                        {result.data.reasoning.symptomInfluences.length > 0 && (
+                          <div>
+                            <p className="font-medium text-gray-700 text-xs mt-2">Symptoms detected:</p>
+                            <ul className="list-disc pl-4 text-xs space-y-0.5 mt-1">
+                              {result.data.reasoning.symptomInfluences.map((s, i) => (
+                                <li key={i}>{s}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {result.data.reasoning.uncertainties.length > 0 && (
+                          <div>
+                            <p className="font-medium text-gray-700 text-xs mt-2">Uncertainties:</p>
+                            <ul className="list-disc pl-4 text-xs space-y-0.5 mt-1 text-amber-700">
+                              {result.data.reasoning.uncertainties.map((u, i) => (
+                                <li key={i}>{u}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {result.data.reasoning.growthStageNote && (
+                          <p className="text-xs text-gray-500 mt-1 italic">{result.data.reasoning.growthStageNote}</p>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className="border-t border-gray-100 pt-4 space-y-2">
@@ -445,7 +613,7 @@ export default function DiseaseDiagnosisPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">Ready to Diagnose</h3>
                 <p className="text-sm text-gray-500 max-w-sm">
-                  Select crop type, describe symptoms, and optionally upload a photo. Click Diagnose for AI-powered analysis.
+                  Select crop type and growth stage, describe symptoms, and optionally upload a photo. Click Diagnose for AI-powered analysis.
                 </p>
               </CardContent>
             </Card>
@@ -476,6 +644,7 @@ export default function DiseaseDiagnosisPage() {
                         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                           <span className="text-xs sm:text-sm font-medium text-gray-900">{report.crop_type}</span>
                           {report.risk_level && <RiskBadge risk={report.risk_level} />}
+                          {report.uncertainty_level && <UncertaintyBadge level={report.uncertainty_level} />}
                           <StatusBadge status={report.status} />
                         </div>
                         <p className="text-[10px] sm:text-sm text-gray-600 truncate">
