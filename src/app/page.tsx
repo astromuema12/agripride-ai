@@ -609,7 +609,7 @@ export default function HomePage() {
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/20">
                   <Leaf className="h-5 w-5 text-white dark:text-white" />
                 </div>
-                <span className="text-lg font-bold text-white dark:text-white">AgriPride AI</span>
+                <span className="text-lg font-bold text-white dark:text-slate-900">AgriPride AI</span>
               </div>
               <p className="mt-4 text-sm leading-relaxed text-gray-400 dark:text-gray-400">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
             </div>
