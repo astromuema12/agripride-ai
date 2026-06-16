@@ -204,36 +204,36 @@ export default function HomePage() {
                       { label: 'Diagnosis This Month', value: '47', change: '+12', icon: FileSearch },
                       { label: 'Avg. Yield Increase', value: '35%', change: '+5%', icon: TrendingUp },
                     ].map((s, i) => (
-                      <div key={i} className="rounded-xl bg-white/[0.04] p-2 sm:p-3 border border-white/[0.04] hover:bg-white/[0.07] transition-colors">
+                      <div key={i} className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06] hover:bg-white/[0.08] transition-colors">
                         <div className="flex items-center justify-between">
                           <s.icon className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-400" />
                           <span className="text-[10px] sm:text-xs font-medium text-emerald-400">{s.change}</span>
                         </div>
                         <div className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-white">{s.value}</div>
-                        <div className="text-[10px] sm:text-xs text-white/40">{s.label}</div>
+                        <div className="text-[10px] sm:text-xs text-gray-300">{s.label}</div>
                       </div>
                     ))}
                   </div>
                   <div className="mt-2 sm:mt-3 grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
-                    <div className="rounded-xl bg-white/[0.04] p-2 sm:p-3 border border-white/[0.04]">
-                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-white/50">
+                    <div className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06]">
+                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200">
                         <span>Crop Health Index</span>
                         <span className="text-emerald-400 font-medium">92%</span>
                       </div>
-                      <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                      <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-white/[0.08]">
                         <div className="h-full w-[92%] rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
                       </div>
-                      <div className="mt-1 sm:mt-2 flex justify-between text-[10px] sm:text-xs text-white/30"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
+                      <div className="mt-1 sm:mt-2 flex justify-between text-[10px] sm:text-xs text-gray-400"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.04] p-2 sm:p-3 border border-white/[0.04]">
-                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-white/50">
+                    <div className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06]">
+                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200">
                         <span>Current Weather</span>
                         <span className="text-yellow-400"><CloudSun className="h-3 w-3 sm:h-3.5 sm:w-3.5" /></span>
                       </div>
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-white">
                         28°C · Partly Cloudy
                       </div>
-                      <div className="mt-1 text-[10px] sm:text-xs text-emerald-400/80">Rain expected in 2 days</div>
+                      <div className="mt-1 text-[10px] sm:text-xs text-emerald-400">Rain expected in 2 days</div>
                     </div>
                   </div>
                 </div>
@@ -602,7 +602,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="border-t border-gray-800 bg-gray-950 text-gray-400">
+      <footer className="border-t border-gray-800 bg-gray-950 text-gray-300">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-10">
             <div className="sm:col-span-2 lg:col-span-1">
@@ -612,7 +612,7 @@ export default function HomePage() {
                 </div>
                 <span className="text-lg font-bold text-white">AgriPride AI</span>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-gray-400/80">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-400">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
             </div>
             <div>
               <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Platform</h4>
