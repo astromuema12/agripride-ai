@@ -5,6 +5,20 @@ export type StoreName = 'users' | 'farms' | 'crops' | 'diseaseReports' | 'recomm
 
 const ALL_STORES: StoreName[] = ['users', 'farms', 'crops', 'diseaseReports', 'recommendations', 'weatherData', 'marketPrices', 'sustainabilityScores', 'notifications', 'auditLogs', 'yieldRecords', 'consentRecords', 'chatMessages', 'yieldPredictions', 'contactInquiries', 'farmerProfiles', 'subscriptionPlans', 'userSubscriptions', 'testimonials', 'supportTickets', 'ticketMessages', 'mpesaTransactions', 'aiUsageLogs', 'activityLogs', 'platformStats'];
 
+// In-memory fallback for server-side execution (API routes, SSR)
+const serverStore = new Map<string, Map<string, unknown>>();
+
+function getServerCollection<T>(storeName: StoreName): Map<string, T> {
+  if (!serverStore.has(storeName)) {
+    serverStore.set(storeName, new Map());
+  }
+  return serverStore.get(storeName) as Map<string, T>;
+}
+
+function isBrowser(): boolean {
+  return typeof window !== 'undefined' && typeof indexedDB !== 'undefined';
+}
+
 function openDB(key: string): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(`${DB_NAME}_${key}`, DB_VERSION);
@@ -33,6 +47,9 @@ export async function getDemoDataKey(): Promise<string> {
 }
 
 export async function getCollection<T extends { id: string }>(storeName: StoreName, key?: string): Promise<T[]> {
+  if (!isBrowser()) {
+    return Array.from(getServerCollection<T>(storeName).values());
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {
@@ -51,6 +68,10 @@ export async function getCollection<T extends { id: string }>(storeName: StoreNa
 }
 
 export async function getPaginatedCollection<T extends { id: string }>(storeName: StoreName, limit: number, offset: number, key?: string): Promise<{ data: T[]; total: number }> {
+  if (!isBrowser()) {
+    const all = Array.from(getServerCollection<T>(storeName).values());
+    return { data: all.slice(offset, offset + limit), total: all.length };
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {
@@ -79,6 +100,14 @@ export async function getPaginatedCollection<T extends { id: string }>(storeName
 }
 
 export async function setCollection<T extends { id: string }>(storeName: StoreName, items: T[], key?: string): Promise<void> {
+  if (!isBrowser()) {
+    const col = getServerCollection<T>(storeName);
+    col.clear();
+    for (const item of items) {
+      col.set(item.id, item);
+    }
+    return;
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {
@@ -93,6 +122,9 @@ export async function setCollection<T extends { id: string }>(storeName: StoreNa
 }
 
 export async function getItem<T extends { id: string }>(storeName: StoreName, id: string, key?: string): Promise<T | undefined> {
+  if (!isBrowser()) {
+    return getServerCollection<T>(storeName).get(id);
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {
@@ -108,6 +140,10 @@ export async function getItem<T extends { id: string }>(storeName: StoreName, id
 }
 
 export async function putItem<T extends { id: string }>(storeName: StoreName, item: T, key?: string): Promise<void> {
+  if (!isBrowser()) {
+    getServerCollection<T>(storeName).set(item.id, item);
+    return;
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {
@@ -120,6 +156,10 @@ export async function putItem<T extends { id: string }>(storeName: StoreName, it
 }
 
 export async function deleteItem(storeName: StoreName, id: string, key?: string): Promise<void> {
+  if (!isBrowser()) {
+    getServerCollection(storeName).delete(id);
+    return;
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {
@@ -132,6 +172,9 @@ export async function deleteItem(storeName: StoreName, id: string, key?: string)
 }
 
 export async function getTotalCount(storeName: StoreName, key?: string): Promise<number> {
+  if (!isBrowser()) {
+    return getServerCollection(storeName).size;
+  }
   const dbKey = key || (await getDemoDataKey());
   const db = await openDB(dbKey);
   return new Promise((resolve, reject) => {

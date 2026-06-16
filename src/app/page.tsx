@@ -38,12 +38,12 @@ const metrics = [
 ];
 
 const features = [
-  { icon: FileSearch, title: 'AI Disease Detection', description: 'Snap a photo of your crop — our AI identifies diseases in seconds with 98.5% accuracy and recommends treatment.', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-950/40', gradient: 'from-red-500 to-orange-500' },
-  { icon: CloudSun, title: 'Weather Intelligence', description: 'Hyper-local 7-day forecasts, drought alerts, and planting window predictions powered by real meteorological data.', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-950/40', gradient: 'from-blue-500 to-cyan-500' },
-  { icon: ScrollText, title: 'AI Crop Advisor', description: 'Your personal agronomist — get tailored planting, irrigation, fertilizer, and pest management advice in your local language.', color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/40', gradient: 'from-emerald-500 to-teal-500' },
-  { icon: BarChart3, title: 'Farm Analytics', description: 'Interactive dashboards with yield trends, cost tracking, profit analysis, and sustainability scoring for every farm.', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-950/40', gradient: 'from-amber-500 to-orange-500' },
-  { icon: Globe, title: 'Market Intelligence', description: 'Real-time crop prices across 47 counties. Know where to sell for the best price before you harvest.', color: 'text-cyan-500', bg: 'bg-cyan-50 dark:bg-cyan-950/40', gradient: 'from-cyan-500 to-blue-500' },
-  { icon: Shield, title: 'Responsible AI', description: 'Every decision is transparent, auditable, and governed by our TRACK framework. No black boxes — just trustworthy intelligence.', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-950/40', gradient: 'from-purple-500 to-violet-500' },
+  { icon: FileSearch, title: 'AI Disease Detection', description: 'Snap a photo of your crop — our AI identifies diseases in seconds with 98.5% accuracy and recommends treatment.', color: 'text-red-500', bg: 'bg-red-50', gradient: 'from-red-500 to-orange-500' },
+  { icon: CloudSun, title: 'Weather Intelligence', description: 'Hyper-local 7-day forecasts, drought alerts, and planting window predictions powered by real meteorological data.', color: 'text-blue-500', bg: 'bg-blue-50', gradient: 'from-blue-500 to-cyan-500' },
+  { icon: ScrollText, title: 'AI Crop Advisor', description: 'Your personal agronomist — get tailored planting, irrigation, fertilizer, and pest management advice in your local language.', color: 'text-emerald-500', bg: 'bg-emerald-50', gradient: 'from-emerald-500 to-teal-500' },
+  { icon: BarChart3, title: 'Farm Analytics', description: 'Interactive dashboards with yield trends, cost tracking, profit analysis, and sustainability scoring for every farm.', color: 'text-amber-500', bg: 'bg-amber-50', gradient: 'from-amber-500 to-orange-500' },
+  { icon: Globe, title: 'Market Intelligence', description: 'Real-time crop prices across 47 counties. Know where to sell for the best price before you harvest.', color: 'text-cyan-500', bg: 'bg-cyan-50', gradient: 'from-cyan-500 to-blue-500' },
+  { icon: Shield, title: 'Responsible AI', description: 'Every decision is transparent, auditable, and governed by our TRACK framework. No black boxes — just trustworthy intelligence.', color: 'text-purple-500', bg: 'bg-purple-50', gradient: 'from-purple-500 to-violet-500' },
 ];
 
 const testimonialsData = [
@@ -114,9 +114,9 @@ export default function HomePage() {
         <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/25">
-              <Leaf className="h-5 w-5 text-white" />
+              <Leaf className="h-5 w-5 text-white dark:text-white" />
             </div>
-            <span className="text-lg font-bold text-white">AgriPride AI</span>
+            <span className="text-lg font-bold text-white dark:text-white">AgriPride AI</span>
           </div>
           <div className="hidden items-center gap-8 md:flex">
             {['Features', 'Pricing', 'Governance', 'Contact'].map((l) => (
@@ -125,8 +125,8 @@ export default function HomePage() {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <Button variant="ghost" className="text-emerald-200 hover:text-white hover:bg-emerald-800/50 hidden xs:inline-flex" onClick={() => router.push('/auth')}>Sign In</Button>
-            <Button size="sm" className="bg-white text-emerald-900 hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 sm:hidden" onClick={() => router.push('/auth?tab=register')}>Start</Button>
-            <Button className="bg-white text-emerald-900 hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>Get Started Free</Button>
+            <Button size="sm" className="bg-white text-emerald-900 hover:bg-emerald-50 dark:bg-white dark:text-emerald-900 dark:hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 sm:hidden" onClick={() => router.push('/auth?tab=register')}>Start</Button>
+            <Button className="bg-white text-emerald-900 hover:bg-emerald-50 dark:bg-white dark:text-emerald-900 dark:hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>Get Started Free</Button>
           </div>
         </nav>
 
@@ -182,7 +182,7 @@ export default function HomePage() {
             >
               <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-emerald-300/20 blur-3xl animate-pulse-glow" />
               <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-1 backdrop-blur-xl">
-                <div className="rounded-xl bg-gray-950/80 p-3 sm:p-5">
+                <div className="rounded-xl bg-gray-950/80 dark:bg-gray-950/80 p-3 sm:p-5">
                   <div className="mb-3 sm:mb-4 flex items-center justify-between border-b border-white/[0.06] pb-2 sm:pb-3">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1.5">
@@ -190,7 +190,7 @@ export default function HomePage() {
                         <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-yellow-500/80" />
                         <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-green-500/80" />
                       </div>
-                      <span className="ml-2 sm:ml-3 text-[10px] sm:text-xs text-white/40 font-mono">agripride-dashboard</span>
+                      <span className="ml-2 sm:ml-3 text-[10px] sm:text-xs text-white/40 dark:text-white/40 font-mono">agripride-dashboard</span>
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 rounded-full bg-emerald-500/10 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs text-emerald-400">
                       <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400" /><span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" /></span>
@@ -209,28 +209,28 @@ export default function HomePage() {
                           <s.icon className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-400" />
                           <span className="text-[10px] sm:text-xs font-medium text-emerald-400">{s.change}</span>
                         </div>
-                        <div className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-white">{s.value}</div>
-                        <div className="text-[10px] sm:text-xs text-gray-300">{s.label}</div>
+                      <div className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-white dark:text-white">{s.value}</div>
+                      <div className="text-[10px] sm:text-xs text-gray-300 dark:text-gray-300">{s.label}</div>
                       </div>
                     ))}
                   </div>
                   <div className="mt-2 sm:mt-3 grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
                     <div className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06]">
-                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200">
+                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200 dark:text-gray-200">
                         <span>Crop Health Index</span>
                         <span className="text-emerald-400 font-medium">92%</span>
                       </div>
                       <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-white/[0.08]">
                         <div className="h-full w-[92%] rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
                       </div>
-                      <div className="mt-1 sm:mt-2 flex justify-between text-[10px] sm:text-xs text-gray-400"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
+                      <div className="mt-1 sm:mt-2 flex justify-between text-[10px] sm:text-xs text-gray-400 dark:text-gray-400"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
                     </div>
                     <div className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06]">
-                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200">
+                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200 dark:text-gray-200">
                         <span>Current Weather</span>
                         <span className="text-yellow-400"><CloudSun className="h-3 w-3 sm:h-3.5 sm:w-3.5" /></span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-white">
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-white dark:text-white">
                         28°C · Partly Cloudy
                       </div>
                       <div className="mt-1 text-[10px] sm:text-xs text-emerald-400">Rain expected in 2 days</div>
@@ -244,12 +244,12 @@ export default function HomePage() {
       </section>
 
       {/* ===== TRUST BAR ===== */}
-      <section className="relative border-b border-gray-100 bg-white py-12 sm:py-16 dark:border-gray-800 dark:bg-[var(--background)]">
+      <section className="relative border-b border-[var(--border)] bg-[var(--background)] py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Trusted by farmers and partners across Kenya</p>
+          <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Trusted by farmers and partners across Kenya</p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-14 gap-y-4 sm:gap-y-6">
             {['Kenya Farmers Association', 'Ministry of Agriculture', 'Safaricom', 'University of Nairobi', 'AgriFi Kenya', 'World Food Programme'].map((name) => (
-              <div key={name} className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-400 transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
+              <div key={name} className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--muted-foreground)] transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
                 <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:scale-110" /> {name}
               </div>
             ))}
@@ -258,7 +258,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== METRICS ===== */}
-      <section id="features" className="relative overflow-hidden bg-gradient-to-b from-emerald-50/80 to-white py-16 sm:py-24 dark:from-emerald-950/30 dark:to-[var(--background)]">
+      <section id="features" className="relative overflow-hidden bg-gradient-to-b from-emerald-50/80 to-[var(--background)] py-16 sm:py-24">
         <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-48 rounded-full bg-emerald-500/5 blur-3xl" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -268,8 +268,8 @@ export default function HomePage() {
             className="text-center"
           >
             <Badge variant="primary" className="mb-3 sm:mb-4">Platform Impact</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Growing Africa&apos;s Agricultural Future</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Real metrics from our growing platform deployment across Kenya.</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Growing Africa&apos;s Agricultural Future</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">Real metrics from our growing platform deployment across Kenya.</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -280,14 +280,13 @@ export default function HomePage() {
           >
             {metrics.map((m, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className="group relative rounded-2xl border border-gray-100 bg-white p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 dark:border-gray-800 dark:bg-[var(--card)] dark:hover:shadow-emerald-500/5">
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="group relative rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
                   <div className="relative">
                     <div className="mb-3 inline-flex rounded-xl bg-emerald-50 p-3 dark:bg-emerald-900/30">
                       <m.icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 dark:text-[var(--foreground)]">{m.value}</div>
-                    <div className="mt-1 text-sm text-gray-500 dark:text-[var(--muted-foreground)]">{m.label}</div>
+                    <div className="text-3xl font-bold text-[var(--foreground)]">{m.value}</div>
+                    <div className="mt-1 text-sm text-[var(--muted-foreground)]">{m.label}</div>
                   </div>
                 </div>
               </motion.div>
@@ -306,8 +305,8 @@ export default function HomePage() {
             className="text-center"
           >
             <Badge variant="primary" className="mb-3 sm:mb-4">Everything You Need</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Powerful Tools for Modern Farming</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">From disease detection to market prices — one platform for your entire farming operation.</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Powerful Tools for Modern Farming</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">From disease detection to market prices — one platform for your entire farming operation.</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -318,14 +317,14 @@ export default function HomePage() {
           >
             {features.map((f, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className="group relative h-full overflow-hidden rounded-2xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 dark:border-gray-800 dark:bg-[var(--card)]">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${f.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-[0.04]`} />
-                  <div className={`mb-5 inline-flex rounded-xl p-3 ${f.bg} ring-1 ring-gray-200/50 dark:ring-white/5`}>
+                <div className="group relative h-full overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${f.gradient} opacity-0 transition-opacity duration-150 group-hover:opacity-[0.04]`} />
+                  <div className={`mb-5 inline-flex rounded-xl p-3 ${f.bg} ring-1 ring-[var(--border)]`}>
                     <f.icon className={`h-6 w-6 ${f.color}`} />
                   </div>
-                  <h3 className="mb-3 text-xl font-bold text-gray-900 dark:text-[var(--foreground)]">{f.title}</h3>
-                  <p className="text-sm leading-relaxed text-gray-500 dark:text-[var(--muted-foreground)]">{f.description}</p>
-                  <div className="mt-6 flex items-center gap-1 text-sm font-medium text-emerald-600 opacity-0 transition-all duration-300 group-hover:opacity-100 dark:text-emerald-400">
+                  <h3 className="mb-3 text-xl font-bold text-[var(--foreground)]">{f.title}</h3>
+                  <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">{f.description}</p>
+                  <div className="mt-6 flex items-center gap-1 text-sm font-medium text-emerald-600 dark:text-emerald-400 opacity-0 transition-all duration-150 group-hover:opacity-100">
                     Learn more <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -425,8 +424,8 @@ export default function HomePage() {
             className="text-center"
           >
             <Badge variant="primary" className="mb-3 sm:mb-4">Farmer Success Stories</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Real Farmers, Real Results</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Hear from farmers who are already transforming their farms with AgriPride AI.</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Real Farmers, Real Results</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">Hear from farmers who are already transforming their farms with AgriPride AI.</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -437,24 +436,24 @@ export default function HomePage() {
           >
             {testimonialsData.map((t, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className="group relative h-full rounded-2xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 dark:border-gray-800 dark:bg-[var(--card)]">
+                <div className="group relative h-full rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
                   <Quote className="mb-4 h-8 w-8 text-emerald-200 dark:text-emerald-800" />
-                  <p className="mb-6 text-sm leading-relaxed text-gray-600 dark:text-[var(--muted-foreground)]">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="mb-4 flex items-center gap-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+                  <p className="mb-6 text-sm leading-relaxed text-[var(--muted-foreground)]">&ldquo;{t.quote}&rdquo;</p>
+                  <div className="mb-4 flex items-center gap-4 border-t border-[var(--border)] pt-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{t.avatar}</div>
                     <div>
-                      <div className="font-semibold text-gray-900 dark:text-[var(--foreground)]">{t.name}</div>
-                      <div className="text-xs text-gray-500 dark:text-[var(--muted-foreground)]">{t.location} · {t.crop}</div>
+                      <div className="font-semibold text-[var(--foreground)]">{t.name}</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">{t.location} · {t.crop}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-3 dark:from-emerald-900/30 dark:to-emerald-800/20">
                     <div className="text-center">
                       <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{t.yield}</div>
-                      <div className="text-xs text-gray-500 dark:text-[var(--muted-foreground)]">Yield Increase</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">Yield Increase</div>
                     </div>
                     <div className="text-center">
                       <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{t.revenue}</div>
-                      <div className="text-xs text-gray-500 dark:text-[var(--muted-foreground)]">Revenue Gain</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">Revenue Gain</div>
                     </div>
                   </div>
                 </div>
@@ -467,7 +466,7 @@ export default function HomePage() {
       <AiDemo />
 
       {/* ===== PRICING ===== */}
-      <section id="pricing" className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white py-16 sm:py-24 dark:from-emerald-950/20 dark:to-[var(--background)]">
+      <section id="pricing" className="relative overflow-hidden bg-gradient-to-b from-[var(--muted)] to-[var(--background)] py-16 sm:py-24">
         <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-emerald-500/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -477,18 +476,18 @@ export default function HomePage() {
             className="text-center"
           >
             <Badge variant="primary" className="mb-3 sm:mb-4">Simple Pricing</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Plans for Every Farm</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Start free, upgrade as you grow. All plans include core AI features.</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Plans for Every Farm</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">Start free, upgrade as you grow. All plans include core AI features.</p>
           </motion.div>
           <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3">
-            <span className={`text-sm font-medium transition-colors ${billing === 'monthly' ? 'text-gray-900 dark:text-[var(--foreground)]' : 'text-gray-400'}`}>Monthly</span>
+            <span className={`text-sm font-medium transition-colors ${billing === 'monthly' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>Monthly</span>
             <button
               onClick={() => setBilling(billing === 'monthly' ? 'annual' : 'monthly')}
-              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${billing === 'annual' ? 'bg-emerald-600 shadow-inner shadow-emerald-500/30' : 'bg-gray-200 dark:bg-gray-700'}`}
+              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${billing === 'annual' ? 'bg-emerald-600' : 'bg-[var(--border)]'}`}
             >
               <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${billing === 'annual' ? 'translate-x-6' : 'translate-x-0.5'}`} />
             </button>
-            <span className={`text-sm font-medium transition-colors ${billing === 'annual' ? 'text-gray-900 dark:text-[var(--foreground)]' : 'text-gray-400'}`}>Annual <span className="text-emerald-600 dark:text-emerald-400">Save 15%</span></span>
+            <span className={`text-sm font-medium transition-colors ${billing === 'annual' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>Annual <span className="text-emerald-600 dark:text-emerald-400">Save 15%</span></span>
           </div>
           <motion.div
             variants={containerVariants}
@@ -499,37 +498,37 @@ export default function HomePage() {
           >
             {pricingPlans.map((plan, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className={`relative rounded-2xl border p-8 transition-all duration-300 hover:shadow-2xl ${plan.popular ? 'border-emerald-500/50 bg-white shadow-xl shadow-emerald-500/10 dark:bg-[var(--card)] dark:border-emerald-500/30' : 'border-gray-100 bg-white hover:-translate-y-1 dark:border-gray-800 dark:bg-[var(--card)]'}`}>
+                <div className={`relative rounded-xl border p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] ${plan.popular ? 'border-emerald-500/50 bg-[var(--card)] shadow-[var(--shadow-card)] ring-1 ring-emerald-500/20' : 'border-[var(--border)] bg-[var(--card)] hover:-translate-y-0.5'}`}>
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                       <Badge variant="primary" className="px-4 py-1 text-xs shadow-lg shadow-emerald-500/20">Most Popular</Badge>
                     </div>
                   )}
                   <div className="mb-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-[var(--foreground)]">{plan.name}</h3>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-[var(--muted-foreground)]">{plan.desc}</p>
+                    <h3 className="text-xl font-bold text-[var(--foreground)]">{plan.name}</h3>
+                    <p className="mt-1 text-sm text-[var(--muted-foreground)]">{plan.desc}</p>
                     <div className="mt-4 flex items-baseline gap-1">
-                      <span className="text-4xl font-bold text-gray-900 dark:text-[var(--foreground)]">KES {billing === 'monthly' ? plan.monthly.toLocaleString() : plan.annual.toLocaleString()}</span>
-                      <span className="text-sm text-gray-400 dark:text-[var(--muted-foreground)]">/{billing === 'monthly' ? 'mo' : 'yr'}</span>
+                      <span className="text-4xl font-bold text-[var(--foreground)]">KES {billing === 'monthly' ? plan.monthly.toLocaleString() : plan.annual.toLocaleString()}</span>
+                      <span className="text-sm text-[var(--muted-foreground)]">/{billing === 'monthly' ? 'mo' : 'yr'}</span>
                     </div>
                   </div>
                   <ul className="mb-8 space-y-3">
                     {plan.features.map((f, j) => (
-                      <li key={j} className="flex items-start gap-3 text-sm text-gray-600 dark:text-[var(--muted-foreground)]">
+                      <li key={j} className="flex items-start gap-3 text-sm text-[var(--muted-foreground)]">
                         <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
                         {f}
                       </li>
                     ))}
                   </ul>
                   <Button
-                    className={`w-full ${plan.popular ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-lg shadow-emerald-500/20' : 'border-gray-200 text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:text-[var(--foreground)] dark:hover:bg-[var(--muted)]'}`}
+                    className={`w-full ${plan.popular ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-[var(--shadow-button)]' : 'border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)]'}`}
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => router.push('/auth?tab=register')}
                   >
                     {plan.monthly === 0 ? 'Get Started Free' : 'Subscribe'}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                  {plan.monthly > 0 && <p className="mt-3 text-center text-xs text-gray-400 dark:text-[var(--muted-foreground)]">M-Pesa payments coming soon</p>}
+                  {plan.monthly > 0 && <p className="mt-3 text-center text-xs text-[var(--muted-foreground)]">M-Pesa payments coming soon</p>}
                 </div>
               </motion.div>
             ))}
@@ -546,7 +545,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Frequently Asked Questions</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Frequently Asked Questions</h2>
           </motion.div>
           <div className="mt-8 sm:mt-12 space-y-4">
             {faqItems.map((item, i) => (
@@ -559,14 +558,14 @@ export default function HomePage() {
               >
                 <button
                   onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                  className={`w-full rounded-2xl border p-5 text-left transition-all duration-300 ${faqOpen === i ? 'border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-lg dark:border-emerald-800 dark:from-emerald-900/30 dark:to-[var(--card)] dark:shadow-emerald-900/20' : 'border-gray-100 bg-white hover:bg-gray-50 hover:border-gray-200 dark:border-gray-800 dark:bg-[var(--card)] dark:hover:bg-[var(--muted)] dark:hover:border-gray-700'}`}
+                  className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ${faqOpen === i ? 'border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-[var(--shadow-card-hover)] dark:border-emerald-800 dark:from-emerald-900/30 dark:to-[var(--card)]' : 'border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] hover:border-[var(--border)]'}`}
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <span className="font-semibold text-gray-900 dark:text-[var(--foreground)]">{item.q}</span>
-                    <ChevronRight className={`h-5 w-5 shrink-0 text-gray-400 transition-all duration-300 ${faqOpen === i ? 'rotate-90 text-emerald-500' : ''}`} />
+                    <span className="font-semibold text-[var(--foreground)]">{item.q}</span>
+                    <ChevronRight className={`h-5 w-5 shrink-0 text-[var(--muted-foreground)] transition-all duration-200 ${faqOpen === i ? 'rotate-90 text-emerald-500' : ''}`} />
                   </div>
-                  <div className={`overflow-hidden transition-all duration-300 ${faqOpen === i ? 'mt-3 max-h-96' : 'max-h-0'}`}>
-                    <p className="text-sm leading-relaxed text-gray-500 dark:text-[var(--muted-foreground)]">{item.a}</p>
+                  <div className={`overflow-hidden transition-all duration-200 ${faqOpen === i ? 'mt-3 max-h-96' : 'max-h-0'}`}>
+                    <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">{item.a}</p>
                   </div>
                 </button>
               </motion.div>
@@ -602,20 +601,20 @@ export default function HomePage() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="border-t border-gray-800 bg-gray-950 text-gray-300">
+      <footer className="border-t border-gray-800 dark:border-gray-800 bg-gray-950 dark:bg-gray-950 text-gray-300 dark:text-gray-300">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-10">
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/20">
-                  <Leaf className="h-5 w-5 text-white" />
+                  <Leaf className="h-5 w-5 text-white dark:text-white" />
                 </div>
-                <span className="text-lg font-bold text-white">AgriPride AI</span>
+                <span className="text-lg font-bold text-white dark:text-white">AgriPride AI</span>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-gray-400">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-400 dark:text-gray-400">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
             </div>
             <div>
-              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Platform</h4>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-white">Platform</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/governance" className="transition-colors hover:text-emerald-400">AI Governance</Link></li>
                 <li><Link href="/analytics" className="transition-colors hover:text-emerald-400">Analytics</Link></li>
@@ -625,7 +624,7 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Company</h4>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-white">Company</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/contact" className="transition-colors hover:text-emerald-400">Contact</Link></li>
                 <li><Link href="/support" className="transition-colors hover:text-emerald-400">Support</Link></li>
@@ -635,7 +634,7 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Contact & Social</h4>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-white">Contact & Social</h4>
               <ul className="space-y-2 text-sm">
                 <li><a href="mailto:musauedwin2004@gmail.com" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><Mail className="h-4 w-4 text-emerald-400 transition-transform group-hover:scale-110" /> <span className="break-all">musauedwin2004@gmail.com</span></a></li>
                 <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-400 shrink-0" /> Nairobi, Kenya</li>
@@ -646,8 +645,8 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-          <div className="mt-10 sm:mt-12 flex flex-col items-center gap-4 border-t border-gray-800 pt-8 text-center text-sm sm:flex-row sm:justify-between">
-            <p>&copy; {new Date().getFullYear()} AgriPride AI Ltd. All rights reserved.</p>
+          <div className="mt-10 sm:mt-12 flex flex-col items-center gap-4 border-t border-gray-800 dark:border-gray-800 pt-8 text-center text-sm sm:flex-row sm:justify-between">
+            <p className="text-gray-300 dark:text-gray-300">&copy; {new Date().getFullYear()} AgriPride AI Ltd. All rights reserved.</p>
           </div>
         </div>
       </footer>

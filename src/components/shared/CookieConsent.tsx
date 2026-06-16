@@ -34,13 +34,13 @@ export function CookieConsent() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white p-4 shadow-lg"
+          className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--border)] bg-[var(--card)] p-4 shadow-[var(--shadow-dialog)]"
         >
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex-1 text-xs sm:text-sm text-gray-600">
+            <div className="flex-1 text-xs sm:text-sm text-[var(--muted-foreground)]">
               We use essential cookies for authentication and security. Analytics cookies help us improve the platform.
               By continuing, you agree to our{' '}
-              <Link href="/privacy" className="text-emerald-600 underline hover:text-emerald-700">Privacy Policy</Link>.
+              <Link href="/privacy" className="text-emerald-600 dark:text-emerald-400 underline hover:text-emerald-700 dark:hover:text-emerald-300">Privacy Policy</Link>.
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Button variant="ghost" size="sm" className="text-xs sm:text-sm" onClick={reject}>
@@ -49,7 +49,7 @@ export function CookieConsent() {
               <Button size="sm" onClick={accept}>
                 Accept All
               </Button>
-              <button onClick={reject} className="ml-1 rounded-full p-1 text-gray-400 hover:text-gray-600">
+              <button onClick={reject} className="ml-1 rounded-full p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
                 <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
             </div>
