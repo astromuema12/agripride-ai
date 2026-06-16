@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/shared/Navbar';
 import { CookieConsent } from '@/components/shared/CookieConsent';
 import { Toaster } from 'sonner';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: 'AgriPride AI - Agricultural Intelligence Platform',
@@ -15,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={inter.variable}>
         <ThemeProvider>
           <AuthProvider>
             <Navbar />
