@@ -614,7 +614,7 @@ export default function HomePage() {
               <p className="mt-4 text-sm leading-relaxed text-gray-400 dark:text-gray-400">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
             </div>
             <div>
-              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-white">Platform</h4>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">Platform</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/governance" className="transition-colors hover:text-emerald-400">AI Governance</Link></li>
                 <li><Link href="/analytics" className="transition-colors hover:text-emerald-400">Analytics</Link></li>
@@ -624,7 +624,7 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-white">Company</h4>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">Company</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/contact" className="transition-colors hover:text-emerald-400">Contact</Link></li>
                 <li><Link href="/support" className="transition-colors hover:text-emerald-400">Support</Link></li>
@@ -634,7 +634,7 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-white">Contact & Social</h4>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">Contact & Social</h4>
               <ul className="space-y-2 text-sm">
                 <li><a href="mailto:musauedwin2004@gmail.com" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><Mail className="h-4 w-4 text-emerald-400 transition-transform group-hover:scale-110" /> <span className="break-all">musauedwin2004@gmail.com</span></a></li>
                 <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-400 shrink-0" /> Nairobi, Kenya</li>
