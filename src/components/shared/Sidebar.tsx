@@ -77,7 +77,7 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-3 top-[72px] z-40 lg:flex hidden"
+        className="fixed left-3 top-[60px] sm:top-[68px] z-40 hidden lg:flex"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -86,7 +86,7 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-3 top-[72px] z-50 flex lg:hidden"
+        className="fixed left-3 top-[60px] sm:top-[68px] z-50 flex lg:hidden"
         onClick={() => setMobileOpen(!mobileOpen)}
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -98,8 +98,8 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          'fixed left-0 top-16 z-30 flex flex-col border-r border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:bg-[var(--card)]',
-          'h-[calc(100vh-4rem)]',
+          'fixed left-0 top-14 sm:top-16 z-30 flex flex-col border-r border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:bg-[var(--card)]',
+          'h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)]',
           collapsed ? 'w-16' : 'w-64',
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
@@ -107,14 +107,14 @@ export function Sidebar() {
         <div className={cn('flex items-center gap-2 border-b border-gray-100 px-4 py-3 dark:border-gray-700', collapsed && 'justify-center')}>
           <Leaf className="h-5 w-5 text-emerald-600 shrink-0" />
           {!collapsed && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-gray-900 capitalize dark:text-[var(--foreground)]">{user?.role}</span>
-              <Badge variant="primary" className="text-[10px]">Dashboard</Badge>
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-sm font-semibold text-gray-900 capitalize dark:text-[var(--foreground)] truncate">{user?.role}</span>
+              <Badge variant="primary" className="text-[10px] shrink-0">Dashboard</Badge>
             </div>
           )}
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto p-2">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-2 scrollbar-hide">
           {links.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -124,23 +124,23 @@ export function Sidebar() {
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors touch-manipulation',
                   isActive
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200'
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-[var(--muted)] dark:hover:text-[var(--foreground)]',
                   collapsed && 'justify-center px-2'
                 )}
                 title={collapsed ? link.label : undefined}
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                {!collapsed && <span>{link.label}</span>}
+                {!collapsed && <span className="truncate">{link.label}</span>}
               </Link>
             );
           })}
         </nav>
 
         {!collapsed && (
-          <div className="border-t border-gray-100 p-4 dark:border-gray-700">
+          <div className="border-t border-gray-100 p-3 sm:p-4 dark:border-gray-700">
             <Link href="/" className="text-xs text-gray-500 hover:text-emerald-600 transition-colors dark:text-gray-400 dark:hover:text-emerald-400">
               &larr; Back to Home
             </Link>

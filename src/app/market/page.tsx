@@ -238,9 +238,9 @@ export default function MarketPage() {
           <CardTitle className="text-lg">Market Prices</CardTitle>
           <span className="text-xs text-gray-400">{filtered.length} listing{filtered.length !== 1 ? 's' : ''}</span>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 sm:p-6">
           {filtered.length === 0 ? (
-            <div className="flex flex-col items-center py-12 text-center">
+            <div className="flex flex-col items-center py-8 sm:py-12 text-center px-4">
               <DollarSign className="mb-3 h-10 w-10 text-gray-300" />
               <p className="text-sm font-medium text-gray-500">No market prices found</p>
               <p className="text-xs text-gray-400">
@@ -250,44 +250,71 @@ export default function MarketPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
-                    <th className="pb-3 pr-4">Crop</th>
-                    <th className="pb-3 pr-4">Region</th>
-                    <th className="pb-3 pr-4">Price per kg</th>
-                    <th className="pb-3 pr-4">Trend</th>
-                    <th className="pb-3 pr-4">Last Updated</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((item) => (
-                    <tr key={item.id} className="border-b border-gray-50 transition-colors hover:bg-gray-50/50">
-                      <td className="py-3 pr-4 font-medium text-gray-900">{item.crop}</td>
-                      <td className="py-3 pr-4 text-gray-600">{item.region}</td>
-                      <td className="py-3 pr-4">
-                        <span className="font-semibold text-gray-900">
-                          KES {item.price_per_kg.toFixed(2)}
-                        </span>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-2">
-                          <TrendIcon trend={item.trend} />
-                          <TrendBadge trend={item.trend} />
-                        </div>
-                      </td>
-                      <td className="py-3 text-gray-500">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="h-3.5 w-3.5 text-gray-400" />
-                          {formatDate(item.recorded_at)}
-                        </div>
-                      </td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((item) => (
+                  <div key={item.id} className="px-4 py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-gray-900">{item.crop}</span>
+                      <span className="font-semibold text-gray-900">
+                        KES {item.price_per_kg.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>{item.region}</span>
+                      <div className="flex items-center gap-2">
+                        <TrendIcon trend={item.trend} />
+                        <TrendBadge trend={item.trend} />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(item.recorded_at)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
+                      <th className="pb-3 pr-4">Crop</th>
+                      <th className="pb-3 pr-4">Region</th>
+                      <th className="pb-3 pr-4">Price per kg</th>
+                      <th className="pb-3 pr-4">Trend</th>
+                      <th className="pb-3 pr-4">Last Updated</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((item) => (
+                      <tr key={item.id} className="border-b border-gray-50 transition-colors hover:bg-gray-50/50">
+                        <td className="py-3 pr-4 font-medium text-gray-900">{item.crop}</td>
+                        <td className="py-3 pr-4 text-gray-600">{item.region}</td>
+                        <td className="py-3 pr-4">
+                          <span className="font-semibold text-gray-900">
+                            KES {item.price_per_kg.toFixed(2)}
+                          </span>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-2">
+                            <TrendIcon trend={item.trend} />
+                            <TrendBadge trend={item.trend} />
+                          </div>
+                        </td>
+                        <td className="py-3 text-gray-500">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5 text-gray-400" />
+                            {formatDate(item.recorded_at)}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -299,23 +326,27 @@ export default function MarketPage() {
         </CardHeader>
         <CardContent>
           {chartData.length === 0 ? (
-            <div className="flex flex-col items-center py-12 text-center">
+            <div className="flex flex-col items-center py-8 sm:py-12 text-center">
               <TrendingUp className="mb-3 h-10 w-10 text-gray-300" />
               <p className="text-sm font-medium text-gray-500">No data to display</p>
             </div>
           ) : (
-            <div className="h-80">
+            <div className="h-60 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis
                     dataKey="crop"
-                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                    tick={{ fontSize: 11, fill: '#6b7280' }}
                     axisLine={{ stroke: '#e5e7eb' }}
                     tickLine={false}
+                    interval={0}
+                    angle={-20}
+                    textAnchor="end"
+                    height={60}
                   />
                   <YAxis
-                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                    tick={{ fontSize: 11, fill: '#6b7280' }}
                     axisLine={{ stroke: '#e5e7eb' }}
                     tickLine={false}
                     tickFormatter={(v) => `KES ${v}`}

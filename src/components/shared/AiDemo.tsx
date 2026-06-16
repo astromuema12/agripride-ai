@@ -60,7 +60,7 @@ export function AiDemo() {
   };
 
   return (
-    <section className="bg-gradient-to-b from-emerald-50 to-white py-20">
+    <section className="bg-gradient-to-b from-emerald-50 to-white py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -68,33 +68,33 @@ export function AiDemo() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <Badge variant="primary" className="mb-4">
+          <Badge variant="primary" className="mb-3 sm:mb-4">
             <Scan className="mr-1 h-3 w-3" />
             Try It Now — No Login Required
           </Badge>
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 text-balance">
             AI Crop Disease Diagnosis
           </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-gray-500">
+          <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm text-gray-500">
             Select your crop, describe the symptoms, and get an instant AI-powered diagnosis with treatment recommendations.
           </p>
         </motion.div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-2">
+        <div className="mt-8 sm:mt-10 grid gap-6 sm:gap-8 lg:grid-cols-2">
           {/* Input */}
           <Card>
-            <CardContent className="p-6">
-              <h3 className="mb-4 text-lg font-bold text-gray-900">Describe the Problem</h3>
+            <CardContent className="p-4 sm:p-6">
+              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">Describe the Problem</h3>
               {crops.length > 0 && (
                 <div className="mb-4">
                   <label className="mb-2 block text-sm font-medium text-gray-700">Select Crop</label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {crops.map((crop) => (
                       <button
                         key={crop.id}
                         type="button"
                         onClick={() => { setSelectedCrop(crop.id); setResult(null); setError(''); }}
-                        className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                        className={`flex items-center gap-1 rounded-full px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-colors touch-manipulation ${
                           selectedCrop === crop.id
                             ? 'bg-emerald-600 text-white'
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -106,7 +106,7 @@ export function AiDemo() {
                   </div>
                 </div>
               )}
-              <div className="mb-4">
+              <div className="mb-3 sm:mb-4">
                 <label className="mb-2 block text-sm font-medium text-gray-700">Describe Symptoms</label>
                 <textarea
                   rows={4}
@@ -135,37 +135,37 @@ export function AiDemo() {
 
           {/* Result */}
           <Card>
-            <CardContent className="p-6">
-              <h3 className="mb-4 text-lg font-bold text-gray-900">Diagnosis Result</h3>
+            <CardContent className="p-4 sm:p-6">
+              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">Diagnosis Result</h3>
               {diagnosing && (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <Loader2 className="mb-3 h-10 w-10 animate-spin text-emerald-500" />
+                <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+                  <Loader2 className="mb-3 h-8 w-8 sm:h-10 sm:w-10 animate-spin text-emerald-500" />
                   <p className="text-sm text-gray-500">Analyzing symptoms...</p>
                 </div>
               )}
               {error && (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <AlertTriangle className="mb-3 h-10 w-10 text-amber-500" />
+                <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+                  <AlertTriangle className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-amber-500" />
                   <p className="text-sm text-red-500">{error}</p>
                 </div>
               )}
               {!diagnosing && !error && !result && (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <Sprout className="mb-3 h-10 w-10 text-gray-300" />
+                <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+                  <Sprout className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
                   <p className="text-sm text-gray-400">Select a crop and describe symptoms to get a diagnosis.</p>
                 </div>
               )}
               {result && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl">{result.emoji}</span>
-                      <div>
-                        <div className="text-lg font-bold text-gray-900">{result.disease}</div>
+                      <span className="text-xl sm:text-2xl">{result.emoji}</span>
+                      <div className="min-w-0">
+                        <div className="text-base sm:text-lg font-bold text-gray-900 truncate">{result.disease}</div>
                         <div className="text-xs text-gray-500 capitalize">{result.crop}</div>
                       </div>
                     </div>
-                    <Badge className={riskColors[result.risk] || 'bg-gray-100 text-gray-600'}>
+                    <Badge className={`${riskColors[result.risk] || 'bg-gray-100 text-gray-600'} w-fit`}>
                       {result.risk.toUpperCase()} Risk
                     </Badge>
                   </div>
@@ -177,7 +177,7 @@ export function AiDemo() {
                         style={{ width: `${Math.round(result.confidence * 100)}%` }}
                       />
                     </div>
-                    <span className="text-xs font-semibold text-gray-600">
+                    <span className="text-xs font-semibold text-gray-600 shrink-0">
                       {Math.round(result.confidence * 100)}% match
                     </span>
                   </div>
@@ -221,9 +221,9 @@ export function AiDemo() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-12 text-center"
+          className="mt-8 sm:mt-12 text-center"
         >
-          <p className="text-sm text-gray-400">
+          <p className="text-xs sm:text-sm text-gray-400">
             Full AI disease detection with image upload available for registered users.{' '}
             <a href="/auth?tab=register" className="text-emerald-600 underline hover:text-emerald-700">Join the Beta</a>
           </p>

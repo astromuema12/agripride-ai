@@ -154,17 +154,17 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12">
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         {/* Progress */}
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Set Up Your Farm Profile</h1>
+        <div className="mb-6 sm:mb-8 text-center">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Set Up Your Farm Profile</h1>
           <p className="mt-1 text-sm text-gray-500">Step {step} of 4 — {steps[step - 1].label}</p>
-          <Progress value={progressPercent} className="mt-4 h-2" />
+          <Progress value={progressPercent} className="mt-3 sm:mt-4 h-2" />
         </div>
 
         {/* Step indicators */}
-        <div className="mb-8 hidden justify-between sm:flex">
+        <div className="mb-6 sm:mb-8 hidden justify-between sm:flex">
           {steps.map((s) => (
             <div key={s.id} className="flex flex-col items-center gap-1">
               <div
@@ -186,7 +186,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Step content */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 sm:p-8">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -195,7 +195,7 @@ export default function OnboardingPage() {
               exit={{ opacity: 0, x: -20 }}
             >
               {step === 1 && (
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   <h2 className="text-lg font-bold text-gray-900">Personal Information</h2>
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
@@ -213,7 +213,7 @@ export default function OnboardingPage() {
               )}
 
               {step === 2 && (
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   <h2 className="text-lg font-bold text-gray-900">Farm Details</h2>
                   <div className="space-y-2">
                     <Label htmlFor="farm_size">Farm Size (Acres)</Label>
@@ -221,13 +221,13 @@ export default function OnboardingPage() {
                   </div>
                   <div className="space-y-2">
                     <Label>Crops You Grow</Label>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {cropOptions.map((crop) => (
                         <button
                           key={crop}
                           type="button"
                           onClick={() => updateForm({ crop_types: toggleArray(form.crop_types, crop) })}
-                          className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                          className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
                             form.crop_types.includes(crop)
                               ? 'bg-emerald-600 text-white'
                               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
                   </div>
                   <div className="space-y-2">
                     <Label>Do you have livestock?</Label>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {livestockOptions.map((item) => (
                         <button
                           key={item}
@@ -249,7 +249,7 @@ export default function OnboardingPage() {
                             const has = item !== 'None';
                             updateForm({ has_livestock: has, livestock_details: has ? item : '' });
                           }}
-                          className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                          className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
                             (item === 'None' && !form.has_livestock) || form.livestock_details === item
                               ? 'bg-emerald-600 text-white'
                               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -264,16 +264,16 @@ export default function OnboardingPage() {
               )}
 
               {step === 3 && (
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   <h2 className="text-lg font-bold text-gray-900">Your Farming Goals</h2>
                   <p className="text-sm text-gray-500">Select all that apply</p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {goalOptions.map((goal) => (
                       <button
                         key={goal}
                         type="button"
                         onClick={() => updateForm({ goals: toggleArray(form.goals, goal) })}
-                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                        className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
                           form.goals.includes(goal)
                             ? 'bg-emerald-600 text-white'
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -287,12 +287,12 @@ export default function OnboardingPage() {
               )}
 
               {step === 4 && (
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   <h2 className="text-lg font-bold text-gray-900">AI Personalization</h2>
                   <p className="text-sm text-gray-500">
                     Help us tailor AI recommendations to your farm. Your data stays private and secure.
                   </p>
-                  <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-4">
+                  <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 sm:p-4">
                     <h3 className="text-sm font-semibold text-emerald-800">Summary</h3>
                     <ul className="mt-2 space-y-1 text-sm text-emerald-700">
                       <li>📍 {form.county || 'County not set'}</li>
@@ -301,12 +301,12 @@ export default function OnboardingPage() {
                       <li>🎯 {form.goals.length || 0} goals selected</li>
                     </ul>
                   </div>
-                  <label className="flex items-start gap-3 rounded-lg border border-gray-200 p-4 cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 sm:p-4 cursor-pointer hover:bg-gray-50">
                     <input
                       type="checkbox"
                       checked={form.consent_ai}
                       onChange={(e) => updateForm({ consent_ai: e.target.checked })}
-                      className="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      className="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 shrink-0"
                     />
                     <div>
                       <span className="text-sm font-medium text-gray-900">I consent to AI processing of my farm data</span>
@@ -322,9 +322,10 @@ export default function OnboardingPage() {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="mt-8 flex items-center justify-between border-t border-gray-100 pt-6">
+          <div className="mt-6 sm:mt-8 flex items-center justify-between border-t border-gray-100 pt-5 sm:pt-6">
             <Button
               variant="outline"
+              size="sm"
               onClick={() => saveAndGo(step - 1)}
               disabled={step === 1 || saving}
             >
@@ -335,12 +336,12 @@ export default function OnboardingPage() {
               Step {step}/4
             </Badge>
             {step < 4 ? (
-              <Button onClick={() => saveAndGo(step + 1)} disabled={saving}>
+              <Button size="sm" onClick={() => saveAndGo(step + 1)} disabled={saving}>
                 {saving ? 'Saving...' : 'Continue'}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             ) : (
-              <Button onClick={handleComplete} disabled={saving || !form.consent_ai}>
+              <Button size="sm" onClick={handleComplete} disabled={saving || !form.consent_ai}>
                 {saving ? 'Saving...' : 'Complete Setup'}
                 <Check className="ml-2 h-4 w-4" />
               </Button>

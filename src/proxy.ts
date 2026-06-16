@@ -1,32 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { rateLimit, applyRateLimitHeaders, rateLimitResponse } from '@/lib/rate-limit'
 
 const isSupabaseConfigured = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-
-const rateMap = new Map<string, { count: number; resetTime: number }>()
-const API_RATE_LIMIT = 60
-const API_RATE_WINDOW = 60_000
-const AUTH_RATE_LIMIT = 5
-const AUTH_RATE_WINDOW = 60_000
-
-function getClientIp(request: NextRequest): string {
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    || request.headers.get('x-real-ip')
-    || 'unknown'
-}
-
-function checkRateLimit(ip: string, limit: number, window: number): boolean {
-  const now = Date.now()
-  const record = rateMap.get(ip)
-  if (!record || now > record.resetTime) {
-    rateMap.set(ip, { count: 1, resetTime: now + window })
-    return true
-  }
-  if (record.count >= limit) return false
-  record.count++
-  return true
-}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -71,11 +48,10 @@ export async function proxy(request: NextRequest) {
   response.headers.set('Content-Security-Policy', csp)
 
   if (pathname.startsWith('/api/')) {
-    const ip = getClientIp(request)
-    const limit = pathname.startsWith('/api/auth/') ? AUTH_RATE_LIMIT : API_RATE_LIMIT
-    const window = pathname.startsWith('/api/auth/') ? AUTH_RATE_WINDOW : API_RATE_WINDOW
-    if (!checkRateLimit(ip, limit, window)) {
-      return NextResponse.json({ error: 'Too many requests', status: 429 }, { status: 429 })
+    const { result, tier } = rateLimit(request)
+    applyRateLimitHeaders(response, result, tier)
+    if (!result.allowed) {
+      return rateLimitResponse(result)
     }
   }
 
@@ -97,7 +73,7 @@ export async function proxy(request: NextRequest) {
 
     const { data: { session } } = await supabase.auth.getSession()
 
-    const publicPaths = ['/auth', '/api/auth/']
+    const publicPaths = ['/auth', '/api/auth/', '/api/ai/demo']
     const isPublic = publicPaths.some(p => pathname.startsWith(p))
 
     if (pathname.startsWith('/dashboard/') && !session) {

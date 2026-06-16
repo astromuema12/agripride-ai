@@ -154,84 +154,119 @@ export default function FarmsPage() {
               <p className="text-xs">{searchQuery ? 'Try a different search term' : 'No farms registered yet'}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                    <th className="pb-3 pr-4 font-medium">Name</th>
-                    <th className="pb-3 pr-4 font-medium">Owner</th>
-                    <th className="pb-3 pr-4 font-medium">Location</th>
-                    <th className="pb-3 pr-4 font-medium">Size</th>
-                    <th className="pb-3 pr-4 font-medium">Status</th>
-                    <th className="pb-3 pr-4 font-medium">Created</th>
-                    <th className="pb-3 font-medium">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((farm) => (
-                    <tr key={farm.id} className="border-b border-gray-100 last:border-0">
-                      <td className="py-3 pr-4">
-                        <span className="font-medium text-gray-900">{farm.name}</span>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs font-medium text-emerald-700">
-                            {(userMap.get(farm.user_id) || 'U')[0]}
-                          </div>
-                          <span className="text-gray-600">{userMap.get(farm.user_id) || 'Unknown'}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-1.5 text-gray-600">
-                          <MapPin className="h-3 w-3 text-gray-400" />
-                          {farm.location}
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-1.5 text-gray-600">
-                          <Ruler className="h-3 w-3 text-gray-400" />
-                          {farm.size_acres} acres
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={farm.status === 'active' ? 'primary' : 'warning'}>
-                          {farm.status === 'active' ? 'Active' : 'Archived'}
-                        </Badge>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-1.5 text-gray-500">
-                          <Clock className="h-3 w-3" />
-                          {formatDate(farm.created_at)}
-                        </div>
-                      </td>
-                      <td className="py-3">
-                        <div className="flex items-center gap-2">
-                          {farm.status === 'archived' ? (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => handleApprove(farm)}
-                            >
-                              <CheckCircle className="mr-1 h-3.5 w-3.5" />
-                              Approve
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleArchive(farm)}
-                            >
-                              <Archive className="mr-1 h-3.5 w-3.5" />
-                              Archive
-                            </Button>
-                          )}
-                        </div>
-                      </td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((farm) => (
+                  <div key={farm.id} className="py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900">{farm.name}</span>
+                      <Badge variant={farm.status === 'active' ? 'primary' : 'warning'} className="text-[10px]">
+                        {farm.status === 'active' ? 'Active' : 'Archived'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-medium text-emerald-700">
+                        {(userMap.get(farm.user_id) || 'U')[0]}
+                      </div>
+                      {userMap.get(farm.user_id) || 'Unknown'}
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                      <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{farm.location}</span>
+                      <span className="flex items-center gap-1"><Ruler className="h-3 w-3" />{farm.size_acres} acres</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1 text-gray-400">
+                        <Clock className="h-3 w-3" />
+                        {formatDate(farm.created_at)}
+                      </div>
+                      {farm.status === 'archived' ? (
+                        <Button variant="secondary" size="sm" className="h-7 text-xs" onClick={() => handleApprove(farm)}>
+                          <CheckCircle className="mr-1 h-3 w-3" />
+                          Approve
+                        </Button>
+                      ) : (
+                        <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => handleArchive(farm)}>
+                          <Archive className="mr-1 h-3 w-3" />
+                          Archive
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+                      <th className="pb-3 pr-4 font-medium">Name</th>
+                      <th className="pb-3 pr-4 font-medium">Owner</th>
+                      <th className="pb-3 pr-4 font-medium">Location</th>
+                      <th className="pb-3 pr-4 font-medium">Size</th>
+                      <th className="pb-3 pr-4 font-medium">Status</th>
+                      <th className="pb-3 pr-4 font-medium">Created</th>
+                      <th className="pb-3 font-medium">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((farm) => (
+                      <tr key={farm.id} className="border-b border-gray-100 last:border-0">
+                        <td className="py-3 pr-4">
+                          <span className="font-medium text-gray-900">{farm.name}</span>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs font-medium text-emerald-700">
+                              {(userMap.get(farm.user_id) || 'U')[0]}
+                            </div>
+                            <span className="text-gray-600">{userMap.get(farm.user_id) || 'Unknown'}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-1.5 text-gray-600">
+                            <MapPin className="h-3 w-3 text-gray-400" />
+                            {farm.location}
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-1.5 text-gray-600">
+                            <Ruler className="h-3 w-3 text-gray-400" />
+                            {farm.size_acres} acres
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <Badge variant={farm.status === 'active' ? 'primary' : 'warning'}>
+                            {farm.status === 'active' ? 'Active' : 'Archived'}
+                          </Badge>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-1.5 text-gray-500">
+                            <Clock className="h-3 w-3" />
+                            {formatDate(farm.created_at)}
+                          </div>
+                        </td>
+                        <td className="py-3">
+                          <div className="flex items-center gap-2">
+                            {farm.status === 'archived' ? (
+                              <Button variant="secondary" size="sm" onClick={() => handleApprove(farm)}>
+                                <CheckCircle className="mr-1 h-3.5 w-3.5" />
+                                Approve
+                              </Button>
+                            ) : (
+                              <Button variant="outline" size="sm" onClick={() => handleArchive(farm)}>
+                                <Archive className="mr-1 h-3.5 w-3.5" />
+                                Archive
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

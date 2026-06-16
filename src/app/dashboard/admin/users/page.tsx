@@ -202,70 +202,97 @@ export default function UsersPage() {
               <p className="text-xs">{searchQuery ? 'Try a different search term' : 'No users registered yet'}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                    <th className="pb-3 pr-4 font-medium">Name</th>
-                    <th className="pb-3 pr-4 font-medium">Email</th>
-                    <th className="pb-3 pr-4 font-medium">Role</th>
-                    <th className="pb-3 pr-4 font-medium">Status</th>
-                    <th className="pb-3 pr-4 font-medium">Created</th>
-                    <th className="pb-3 font-medium">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((user) => (
-                    <tr key={user.id} className="border-b border-gray-100 last:border-0">
-                      <td className="py-3 pr-4">
-                        <span className="font-medium text-gray-900">{user.name}</span>
-                      </td>
-                      <td className="py-3 pr-4 text-gray-600">{user.email}</td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={roleColors[user.role]} className="capitalize">
-                          {user.role}
-                        </Badge>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={user.is_suspended ? 'destructive' : 'primary'}>
-                          {user.is_suspended ? 'Suspended' : 'Active'}
-                        </Badge>
-                      </td>
-                      <td className="py-3 pr-4 text-gray-500">
-                        <div className="flex items-center gap-1.5">
-                          <Clock className="h-3 w-3" />
-                          {formatDate(user.created_at)}
-                        </div>
-                      </td>
-                      <td className="py-3">
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => openEditDialog(user)}
-                          >
-                            <Pencil className="mr-1 h-3.5 w-3.5" />
-                            Edit
-                          </Button>
-                          <Button
-                            variant={user.is_suspended ? 'secondary' : 'destructive'}
-                            size="sm"
-                            onClick={() => handleToggleSuspend(user)}
-                          >
-                            {user.is_suspended ? (
-                              <CheckCircle className="mr-1 h-3.5 w-3.5" />
-                            ) : (
-                              <Ban className="mr-1 h-3.5 w-3.5" />
-                            )}
-                            {user.is_suspended ? 'Activate' : 'Suspend'}
-                          </Button>
-                        </div>
-                      </td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((user) => (
+                  <div key={user.id} className="py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900">{user.name}</span>
+                      <Badge variant={roleColors[user.role]} className="capitalize text-[10px]">{user.role}</Badge>
+                    </div>
+                    <div className="text-xs text-gray-600 truncate">{user.email}</div>
+                    <div className="flex items-center justify-between text-xs">
+                      <Badge variant={user.is_suspended ? 'destructive' : 'primary'} className="text-[10px]">
+                        {user.is_suspended ? 'Suspended' : 'Active'}
+                      </Badge>
+                      <div className="flex items-center gap-1.5 text-gray-500">
+                        <Clock className="h-3 w-3" />
+                        {formatDate(user.created_at)}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 pt-1">
+                      <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openEditDialog(user)}>
+                        <Pencil className="mr-1 h-3 w-3" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant={user.is_suspended ? 'secondary' : 'destructive'}
+                        size="sm"
+                        className="h-7 text-xs"
+                        onClick={() => handleToggleSuspend(user)}
+                      >
+                        {user.is_suspended ? <CheckCircle className="mr-1 h-3 w-3" /> : <Ban className="mr-1 h-3 w-3" />}
+                        {user.is_suspended ? 'Activate' : 'Suspend'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+                      <th className="pb-3 pr-4 font-medium">Name</th>
+                      <th className="pb-3 pr-4 font-medium">Email</th>
+                      <th className="pb-3 pr-4 font-medium">Role</th>
+                      <th className="pb-3 pr-4 font-medium">Status</th>
+                      <th className="pb-3 pr-4 font-medium">Created</th>
+                      <th className="pb-3 font-medium">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((user) => (
+                      <tr key={user.id} className="border-b border-gray-100 last:border-0">
+                        <td className="py-3 pr-4">
+                          <span className="font-medium text-gray-900">{user.name}</span>
+                        </td>
+                        <td className="py-3 pr-4 text-gray-600">{user.email}</td>
+                        <td className="py-3 pr-4">
+                          <Badge variant={roleColors[user.role]} className="capitalize">
+                            {user.role}
+                          </Badge>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <Badge variant={user.is_suspended ? 'destructive' : 'primary'}>
+                            {user.is_suspended ? 'Suspended' : 'Active'}
+                          </Badge>
+                        </td>
+                        <td className="py-3 pr-4 text-gray-500">
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="h-3 w-3" />
+                            {formatDate(user.created_at)}
+                          </div>
+                        </td>
+                        <td className="py-3">
+                          <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm" onClick={() => openEditDialog(user)}>
+                              <Pencil className="mr-1 h-3.5 w-3.5" />
+                              Edit
+                            </Button>
+                            <Button variant={user.is_suspended ? 'secondary' : 'destructive'} size="sm" onClick={() => handleToggleSuspend(user)}>
+                              {user.is_suspended ? <CheckCircle className="mr-1 h-3.5 w-3.5" /> : <Ban className="mr-1 h-3.5 w-3.5" />}
+                              {user.is_suspended ? 'Activate' : 'Suspend'}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

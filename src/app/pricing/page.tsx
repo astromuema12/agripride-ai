@@ -137,23 +137,23 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12 text-center"
+          className="mb-8 sm:mb-12 text-center"
         >
-          <Badge variant="primary" className="mb-4">Pricing</Badge>
-          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
+          <Badge variant="primary" className="mb-3 sm:mb-4">Pricing</Badge>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 text-balance">
             Simple, Transparent Pricing
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-500">
+          <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
             Start free and upgrade as your farm grows. All plans include our core AI features.
             M-Pesa payments coming soon.
           </p>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 xl:grid-cols-4">
           {plans.map((plan, i) => {
             const Icon = plan.icon;
             return (

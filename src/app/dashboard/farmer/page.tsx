@@ -350,32 +350,53 @@ export default function FarmerDashboard() {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
-                    <th className="pb-3 pr-4">Crop Type</th>
-                    <th className="pb-3 pr-4">Disease Prediction</th>
-                    <th className="pb-3 pr-4">Risk Level</th>
-                    <th className="pb-3 pr-4">Status</th>
-                    <th className="pb-3 pr-4">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentReports.map((report) => (
-                    <tr key={report.id} className="border-b border-gray-50">
-                      <td className="py-3 pr-4 font-medium text-gray-900">{report.crop_type}</td>
-                      <td className="py-3 pr-4 text-gray-600">
-                        {report.disease_prediction || <span className="italic text-gray-400">Pending analysis</span>}
-                      </td>
-                      <td className="py-3 pr-4"><RiskBadge risk={report.risk_level} /></td>
-                      <td className="py-3 pr-4"><StatusBadge status={report.status} /></td>
-                      <td className="py-3 text-gray-500">{formatDate(report.created_at)}</td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {recentReports.map((report) => (
+                  <div key={report.id} className="py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900">{report.crop_type}</span>
+                      <StatusBadge status={report.status} />
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      {report.disease_prediction || <span className="italic text-gray-400">Pending analysis</span>}
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <RiskBadge risk={report.risk_level} />
+                      <span className="text-gray-500">{formatDate(report.created_at)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
+                      <th className="pb-3 pr-4">Crop Type</th>
+                      <th className="pb-3 pr-4">Disease Prediction</th>
+                      <th className="pb-3 pr-4">Risk Level</th>
+                      <th className="pb-3 pr-4">Status</th>
+                      <th className="pb-3 pr-4">Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {recentReports.map((report) => (
+                      <tr key={report.id} className="border-b border-gray-50">
+                        <td className="py-3 pr-4 font-medium text-gray-900">{report.crop_type}</td>
+                        <td className="py-3 pr-4 text-gray-600">
+                          {report.disease_prediction || <span className="italic text-gray-400">Pending analysis</span>}
+                        </td>
+                        <td className="py-3 pr-4"><RiskBadge risk={report.risk_level} /></td>
+                        <td className="py-3 pr-4"><StatusBadge status={report.status} /></td>
+                        <td className="py-3 text-gray-500">{formatDate(report.created_at)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

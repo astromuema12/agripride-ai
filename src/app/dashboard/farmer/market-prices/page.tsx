@@ -44,7 +44,7 @@ export default function MarketPrices() {
         <p className="text-xs sm:text-sm text-gray-500">Current crop market prices and trends across regions</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
         <Card>
           <CardContent className="p-3 sm:p-4">
             <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 mb-1" />
@@ -93,40 +93,64 @@ export default function MarketPrices() {
               No prices found{search ? ' for &ldquo;' + search + '&rdquo;' : ''}
             </div>
           ) : (
-            <div className="-mx-3 sm:mx-0 overflow-x-auto">
-              <table className="w-full min-w-[400px]">
-                <thead>
-                  <tr className="border-b border-gray-100">
-                    <th className="text-left py-2 sm:py-3 px-3 text-[10px] sm:text-xs font-medium text-gray-500 uppercase">Crop</th>
-                    <th className="text-left py-2 sm:py-3 px-3 text-[10px] sm:text-xs font-medium text-gray-500 uppercase">Region</th>
-                    <th className="text-right py-2 sm:py-3 px-3 text-[10px] sm:text-xs font-medium text-gray-500 uppercase">Price</th>
-                    <th className="text-right py-2 sm:py-3 px-3 text-[10px] sm:text-xs font-medium text-gray-500 uppercase">Trend</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map((p) => (
-                    <tr key={p.id} className="hover:bg-gray-50">
-                      <td className="py-2.5 sm:py-3 px-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base sm:text-xl">{cropEmojis[p.crop] ?? '\u{1F33F}'}</span>
-                          <span className="text-xs sm:text-sm font-medium text-gray-900">{p.crop}</span>
-                        </div>
-                      </td>
-                      <td className="py-2.5 sm:py-3 px-3 text-[10px] sm:text-xs text-gray-500">{p.region}</td>
-                      <td className="py-2.5 sm:py-3 px-3 text-right">
-                        <span className="text-xs sm:text-sm font-bold text-gray-900">KES {p.price_per_kg.toFixed(2)}</span>
-                      </td>
-                      <td className="py-2.5 sm:py-3 px-3 text-right">
-                        <Badge variant={p.trend === 'up' ? 'primary' : p.trend === 'down' ? 'destructive' : 'secondary'} className="text-[8px] sm:text-[10px]">
-                          {p.trend === 'up' ? <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5" /> : p.trend === 'down' ? <TrendingDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5" /> : <Minus className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5" />}
-                          {p.trend}
-                        </Badge>
-                      </td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((p) => (
+                  <div key={p.id} className="py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{cropEmojis[p.crop] ?? '\u{1F33F}'}</span>
+                        <span className="text-sm font-medium text-gray-900">{p.crop}</span>
+                      </div>
+                      <span className="text-sm font-bold text-gray-900">KES {p.price_per_kg.toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-500">{p.region}</span>
+                      <Badge variant={p.trend === 'up' ? 'primary' : p.trend === 'down' ? 'destructive' : 'secondary'} className="text-[10px]">
+                        {p.trend === 'up' ? <TrendingUp className="h-3 w-3 mr-0.5" /> : p.trend === 'down' ? <TrendingDown className="h-3 w-3 mr-0.5" /> : <Minus className="h-3 w-3 mr-0.5" />}
+                        {p.trend}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-100">
+                      <th className="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase">Crop</th>
+                      <th className="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase">Region</th>
+                      <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase">Price</th>
+                      <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase">Trend</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {filtered.map((p) => (
+                      <tr key={p.id} className="hover:bg-gray-50">
+                        <td className="py-3 px-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">{cropEmojis[p.crop] ?? '\u{1F33F}'}</span>
+                            <span className="text-sm font-medium text-gray-900">{p.crop}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3 text-xs text-gray-500">{p.region}</td>
+                        <td className="py-3 px-3 text-right">
+                          <span className="text-sm font-bold text-gray-900">KES {p.price_per_kg.toFixed(2)}</span>
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <Badge variant={p.trend === 'up' ? 'primary' : p.trend === 'down' ? 'destructive' : 'secondary'} className="text-[10px]">
+                            {p.trend === 'up' ? <TrendingUp className="h-3 w-3 mr-0.5" /> : p.trend === 'down' ? <TrendingDown className="h-3 w-3 mr-0.5" /> : <Minus className="h-3 w-3 mr-0.5" />}
+                            {p.trend}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

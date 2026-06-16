@@ -174,51 +174,83 @@ export default function AuditPage() {
               <p className="text-xs">{searchQuery ? 'Try a different search term' : `No ${activeTab.toLowerCase()} recorded yet`}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                    <th className="pb-3 pr-4 font-medium">Action</th>
-                    <th className="pb-3 pr-4 font-medium">Resource</th>
-                    <th className="pb-3 pr-4 font-medium">User</th>
-                    <th className="pb-3 pr-4 font-medium">IP Address</th>
-                    <th className="pb-3 font-medium">Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((log) => (
-                    <tr key={log.id} className="border-b border-gray-100 last:border-0">
-                      <td className="py-3 pr-4">
-                        <Badge variant="default" className="capitalize">
-                          {log.action.replace(/_/g, ' ')}
-                        </Badge>
-                      </td>
-                      <td className="py-3 pr-4 text-gray-700">{log.resource}</td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                            {(userMap.get(log.user_id) || 'U')[0]}
-                          </div>
-                          <span className="text-gray-600">{userMap.get(log.user_id) || 'Unknown'}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-1.5 text-gray-500">
-                          <Globe className="h-3 w-3" />
-                          {log.ip_address || '—'}
-                        </div>
-                      </td>
-                      <td className="py-3">
-                        <div className="flex items-center gap-1.5 text-gray-500">
-                          <Clock className="h-3 w-3" />
-                          {timeAgo(log.created_at)}
-                        </div>
-                      </td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((log) => (
+                  <div key={log.id} className="py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="default" className="capitalize text-[10px]">
+                        {log.action.replace(/_/g, ' ')}
+                      </Badge>
+                      <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                        <Clock className="h-3 w-3" />
+                        {timeAgo(log.created_at)}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-700">{log.resource}</span>
+                      <div className="flex items-center gap-1.5 text-gray-500">
+                        <Globe className="h-3 w-3" />
+                        {log.ip_address || '—'}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-[10px] font-medium text-gray-600">
+                        {(userMap.get(log.user_id) || 'U')[0]}
+                      </div>
+                      {userMap.get(log.user_id) || 'Unknown'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+                      <th className="pb-3 pr-4 font-medium">Action</th>
+                      <th className="pb-3 pr-4 font-medium">Resource</th>
+                      <th className="pb-3 pr-4 font-medium">User</th>
+                      <th className="pb-3 pr-4 font-medium">IP Address</th>
+                      <th className="pb-3 font-medium">Timestamp</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((log) => (
+                      <tr key={log.id} className="border-b border-gray-100 last:border-0">
+                        <td className="py-3 pr-4">
+                          <Badge variant="default" className="capitalize">
+                            {log.action.replace(/_/g, ' ')}
+                          </Badge>
+                        </td>
+                        <td className="py-3 pr-4 text-gray-700">{log.resource}</td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
+                              {(userMap.get(log.user_id) || 'U')[0]}
+                            </div>
+                            <span className="text-gray-600">{userMap.get(log.user_id) || 'Unknown'}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex items-center gap-1.5 text-gray-500">
+                            <Globe className="h-3 w-3" />
+                            {log.ip_address || '—'}
+                          </div>
+                        </td>
+                        <td className="py-3">
+                          <div className="flex items-center gap-1.5 text-gray-500">
+                            <Clock className="h-3 w-3" />
+                            {timeAgo(log.created_at)}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

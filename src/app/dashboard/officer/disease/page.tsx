@@ -234,67 +234,110 @@ export default function DiseasePage() {
               </p>
             </div>
           ) : (
-            <div className="-mx-3 sm:mx-0 overflow-x-auto">
-              <table className="w-full min-w-[600px] text-sm">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Farmer</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Crop Type</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Disease Prediction</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Confidence</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Risk Level</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((report) => (
-                    <tr
-                      key={report.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-                      onClick={() => {
-                        setSelectedReport(report);
-                        setDialogOpen(true);
-                      }}
-                    >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                            <span className="text-xs font-bold text-emerald-700">
-                              {getFarmerName(report.user_id).split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
-                            </span>
-                          </div>
-                          <span className="font-medium text-gray-800">{getFarmerName(report.user_id)}</span>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((report) => (
+                  <div
+                    key={report.id}
+                    className="py-3 space-y-1.5 cursor-pointer"
+                    onClick={() => {
+                      setSelectedReport(report);
+                      setDialogOpen(true);
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <div className="h-7 w-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                          <span className="text-[10px] font-bold text-emerald-700">
+                            {getFarmerName(report.user_id).split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
+                          </span>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 text-gray-700">{report.crop_type}</td>
-                      <td className="px-4 py-3 text-gray-700">{report.disease_prediction || '-'}</td>
-                      <td className="px-4 py-3">
-                        {report.confidence_score !== undefined ? (
-                          <span className="font-medium text-gray-800">{Math.round(report.confidence_score * 100)}%</span>
-                        ) : '-'}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge className={riskBadgeClass(report.risk_level)}>
-                          {report.risk_level || 'unknown'}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge className={statusBadgeClass(report.status)}>
-                          {report.status}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3 shrink-0" />
-                          <span>{new Date(report.created_at).toLocaleDateString()}</span>
-                        </div>
-                      </td>
+                        <span className="text-sm font-medium text-gray-800 truncate">{getFarmerName(report.user_id)}</span>
+                      </div>
+                      <Badge className={statusBadgeClass(report.status) + ' shrink-0'}>{report.status}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-gray-600">
+                      <span>{report.crop_type}{report.disease_prediction ? ` - ${report.disease_prediction}` : ''}</span>
+                      <span className="font-medium text-gray-800">
+                        {report.confidence_score !== undefined ? `${Math.round(report.confidence_score * 100)}%` : '-'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <Badge className={riskBadgeClass(report.risk_level)}>
+                        {report.risk_level || 'unknown'}
+                      </Badge>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Calendar className="h-3 w-3" />
+                        <span>{new Date(report.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Farmer</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Crop Type</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Disease Prediction</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Confidence</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Risk Level</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.map((report) => (
+                      <tr
+                        key={report.id}
+                        className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => {
+                          setSelectedReport(report);
+                          setDialogOpen(true);
+                        }}
+                      >
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                              <span className="text-xs font-bold text-emerald-700">
+                                {getFarmerName(report.user_id).split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
+                              </span>
+                            </div>
+                            <span className="font-medium text-gray-800">{getFarmerName(report.user_id)}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-gray-700">{report.crop_type}</td>
+                        <td className="px-4 py-3 text-gray-700">{report.disease_prediction || '-'}</td>
+                        <td className="px-4 py-3">
+                          {report.confidence_score !== undefined ? (
+                            <span className="font-medium text-gray-800">{Math.round(report.confidence_score * 100)}%</span>
+                          ) : '-'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge className={riskBadgeClass(report.risk_level)}>
+                            {report.risk_level || 'unknown'}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge className={statusBadgeClass(report.status)}>
+                            {report.status}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3 shrink-0" />
+                            <span>{new Date(report.created_at).toLocaleDateString()}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </TabsContent>
       </Tabs>

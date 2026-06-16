@@ -138,13 +138,13 @@ function AuthForm() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-earth-50 px-4 py-12">
+    <div className="flex min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)] items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-earth-50 px-4 py-8 sm:py-12">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600">
-            <Leaf className="h-7 w-7 text-white" />
+        <div className="mb-6 sm:mb-8 text-center">
+          <div className="mx-auto mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-emerald-600">
+            <Leaf className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome to AgriPride AI</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Welcome to AgriPride AI</h1>
           <p className="mt-1 text-sm text-gray-500">Empowering African agriculture with AI</p>
           {isDemoMode && (
             <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">

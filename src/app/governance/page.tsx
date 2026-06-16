@@ -361,12 +361,12 @@ export default function GovernancePage() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8 px-4 sm:px-0"
     >
       {/* Header */}
       <motion.div variants={itemVariants} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
             AI Governance Center
           </h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -374,14 +374,14 @@ export default function GovernancePage() {
             compliant AI operations across AgriPride AI.
           </p>
         </div>
-        <Badge variant="primary" className="w-fit">
+        <Badge variant="primary" className="w-fit shrink-0">
           <Shield className="mr-1 h-3.5 w-3.5" />
           8 Frameworks Active
         </Badge>
       </motion.div>
 
       {/* Governance Stats */}
-      <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div variants={itemVariants} className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         {[
           { label: 'Active Frameworks', value: '8', icon: Shield, color: 'text-emerald-600 bg-emerald-50' },
           { label: 'Decisions Today', value: '47', icon: BrainCircuit, color: 'text-blue-600 bg-blue-50' },
@@ -389,13 +389,13 @@ export default function GovernancePage() {
           { label: 'Flagged Actions', value: '3', icon: AlertTriangle, color: 'text-amber-600 bg-amber-50' },
         ].map(({ label, value, icon: Icon, color }) => (
           <Card key={label}>
-            <CardContent className="flex items-center gap-4 p-5">
-              <div className={`rounded-lg p-2.5 ${color}`}>
-                <Icon className="h-5 w-5" />
+            <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
+              <div className={`rounded-lg p-2 sm:p-2.5 ${color} shrink-0`}>
+                <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
-              <div>
-                <div className="text-xl font-bold text-gray-900">{value}</div>
-                <p className="text-xs text-gray-500">{label}</p>
+              <div className="min-w-0">
+                <div className="text-lg sm:text-xl font-bold text-gray-900">{value}</div>
+                <p className="text-xs text-gray-500 truncate">{label}</p>
               </div>
             </CardContent>
           </Card>
@@ -405,20 +405,20 @@ export default function GovernancePage() {
       {/* Main Content Tabs */}
       <motion.div variants={itemVariants}>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-6">
-            <TabsTrigger value="frameworks" className="flex items-center gap-2">
-              <Shield className="h-4 w-4" />
-              Governance Frameworks
+          <TabsList className="mb-4 sm:mb-6 w-full sm:w-auto overflow-x-auto">
+            <TabsTrigger value="frameworks" className="flex items-center gap-2 flex-1 sm:flex-initial">
+              <Shield className="h-4 w-4 shrink-0" />
+              <span className="whitespace-nowrap">Governance Frameworks</span>
             </TabsTrigger>
-            <TabsTrigger value="decisions" className="flex items-center gap-2">
-              <ScrollText className="h-4 w-4" />
-              AI Decisions Log
+            <TabsTrigger value="decisions" className="flex items-center gap-2 flex-1 sm:flex-initial">
+              <ScrollText className="h-4 w-4 shrink-0" />
+              <span className="whitespace-nowrap">AI Decisions Log</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Frameworks Tab */}
           <TabsContent value="frameworks" className="mt-0">
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {frameworks.map((fw, i) => (
                 <FrameworkCard key={fw.acronym} framework={fw} index={i} />
               ))}
@@ -426,16 +426,16 @@ export default function GovernancePage() {
           </TabsContent>
 
           {/* Decisions Log Tab */}
-          <TabsContent value="decisions" className="mt-0 space-y-5">
+          <TabsContent value="decisions" className="mt-0 space-y-4 sm:space-y-5">
             <Card>
               <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
                     <CardTitle className="flex items-center gap-2 text-base">
-                      <ScrollText className="h-4 w-4 text-emerald-500" />
+                      <ScrollText className="h-4 w-4 text-emerald-500 shrink-0" />
                       Recent AI Decisions
                     </CardTitle>
-                    <CardDescription className="mt-1">
+                    <CardDescription className="mt-1 text-xs sm:text-sm">
                       Every AI-driven decision is logged with its source data, confidence score,
                       responsible agent, and governing frameworks.
                     </CardDescription>
@@ -443,20 +443,20 @@ export default function GovernancePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                    className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 w-full sm:w-auto"
                   >
                     <Server className="mr-1.5 h-3.5 w-3.5" />
                     Export Log
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 overflow-x-auto">
                 <DecisionTable />
               </CardContent>
             </Card>
 
             {/* Bottom Info Cards */}
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 sm:grid-cols-3">
               <Card className="border-emerald-100 bg-emerald-50/40">
                 <CardHeader className="pb-2 pt-4">
                   <CardTitle className="flex items-center gap-2 text-sm text-emerald-800">

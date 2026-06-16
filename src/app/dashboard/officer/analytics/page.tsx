@@ -278,60 +278,106 @@ export default function RegionalAnalyticsPage() {
               <p className="text-xs text-gray-400 mt-1">Region breakdown will appear once farms have location data</p>
             </div>
           ) : (
-            <div className="-mx-3 sm:mx-0 overflow-x-auto">
-              <table className="w-full min-w-[600px] text-sm">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Region</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Farmers</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Farms</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Disease Reports</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Resolved</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Sustain. Avg</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {regionData.map((row) => (
-                    <tr key={row.region} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />
-                          <span className="font-medium text-gray-800">{row.region}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-center text-gray-700">{row.farmers}</td>
-                      <td className="px-4 py-3 text-center text-gray-700">{row.farms}</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`font-medium ${row.diseaseReports > 0 ? 'text-red-600' : 'text-gray-700'}`}>
-                          {row.diseaseReports}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {regionData.map((row) => (
+                  <div key={row.region} className="py-3 space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <span className="text-sm font-medium text-gray-800">{row.region}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="text-gray-500">Farmers: </span>
+                        <span className="font-medium text-gray-800">{row.farmers}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Farms: </span>
+                        <span className="font-medium text-gray-800">{row.farms}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Disease: </span>
+                        <span className={`font-medium ${row.diseaseReports > 0 ? 'text-red-600' : 'text-gray-800'}`}>{row.diseaseReports}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Resolved: </span>
                         {row.diseaseReports > 0 ? (
-                          <Badge variant={row.resolved === row.diseaseReports ? 'primary' : 'warning'}>
+                          <Badge variant={row.resolved === row.diseaseReports ? 'primary' : 'warning'} className="text-[10px]">
                             {row.resolved}/{row.diseaseReports}
                           </Badge>
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
-                      </td>
-                      <td className="px-4 py-3 text-center">
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Sustain: </span>
                         {row.sustainabilityAvg > 0 ? (
-                          <div className="flex items-center justify-center gap-1">
-                            <Leaf className="h-3.5 w-3.5 text-emerald-600" />
-                            <span className="font-medium text-gray-800">
-                              {Math.round(row.sustainabilityAvg * 100)}%
-                            </span>
-                          </div>
+                          <span className="font-medium text-gray-800">{Math.round(row.sustainabilityAvg * 100)}%</span>
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
-                      </td>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">Region</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">Farmers</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">Farms</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">Disease Reports</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">Resolved</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">Sustain. Avg</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {regionData.map((row) => (
+                      <tr key={row.region} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />
+                            <span className="font-medium text-gray-800">{row.region}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-center text-gray-700">{row.farmers}</td>
+                        <td className="px-4 py-3 text-center text-gray-700">{row.farms}</td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`font-medium ${row.diseaseReports > 0 ? 'text-red-600' : 'text-gray-700'}`}>
+                            {row.diseaseReports}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          {row.diseaseReports > 0 ? (
+                            <Badge variant={row.resolved === row.diseaseReports ? 'primary' : 'warning'}>
+                              {row.resolved}/{row.diseaseReports}
+                            </Badge>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          {row.sustainabilityAvg > 0 ? (
+                            <div className="flex items-center justify-center gap-1">
+                              <Leaf className="h-3.5 w-3.5 text-emerald-600" />
+                              <span className="font-medium text-gray-800">
+                                {Math.round(row.sustainabilityAvg * 100)}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

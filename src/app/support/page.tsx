@@ -100,15 +100,15 @@ export default function SupportPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 text-center">
-          <Badge variant="primary" className="mb-4">Help Center</Badge>
-          <h1 className="text-4xl font-bold text-gray-900">How Can We Help You?</h1>
-          <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-500">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 sm:mb-12 text-center">
+          <Badge variant="primary" className="mb-3 sm:mb-4">Help Center</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance">How Can We Help You?</h1>
+          <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
             Browse our FAQs, submit a support ticket, or reach out directly.
           </p>
         </motion.div>
 
-        <div className="mb-8 flex flex-wrap justify-center gap-4">
+        <div className="mb-6 sm:mb-8 flex flex-wrap justify-center gap-3 sm:gap-4">
           <a href="mailto:musauedwin2004@gmail.com">
             <Button variant="outline" className="gap-2">
               <Mail className="h-4 w-4" />

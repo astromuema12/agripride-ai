@@ -179,48 +179,77 @@ export default function OfficerReportsPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto -mx-3 sm:mx-0">
-              <table className="w-full min-w-[400px] text-sm">
-                <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
-                    <th className="pb-3 pr-4">Report</th>
-                    <th className="pb-3 pr-4">Format</th>
-                    <th className="pb-3 pr-4">Date</th>
-                    <th className="pb-3 pr-4">Status</th>
-                    <th className="pb-3 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reports.map((r) => (
-                    <tr key={r.id} className="border-b border-gray-50 transition-colors hover:bg-gray-50/50">
-                      <td className="py-3 pr-4 font-medium text-gray-900">{r.title}</td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={formatBadgeVariant[r.format] ?? 'default'}>
-                          {r.format}
-                        </Badge>
-                      </td>
-                      <td className="py-3 pr-4 text-gray-500">{r.date}</td>
-                      <td className="py-3 pr-4">
-                        <Badge variant={r.status === 'completed' ? 'primary' : 'warning'}>
-                          {r.status === 'completed' ? 'Completed' : 'Processing'}
-                        </Badge>
-                      </td>
-                      <td className="py-3 text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="gap-1.5 text-emerald-600"
-                          onClick={() => toast.success(`Downloading ${r.title}`)}
-                        >
-                          <Download className="h-3.5 w-3.5" />
-                          Download
-                        </Button>
-                      </td>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {reports.map((r) => (
+                  <div key={r.id} className="py-3 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-900 min-w-0 flex-1 mr-2">{r.title}</span>
+                      <Badge variant={formatBadgeVariant[r.format] ?? 'default'} className="shrink-0">{r.format}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>{r.date}</span>
+                      <Badge variant={r.status === 'completed' ? 'primary' : 'warning'}>
+                        {r.status === 'completed' ? 'Completed' : 'Processing'}
+                      </Badge>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-1.5 text-emerald-600 h-8 px-0 text-xs"
+                      onClick={() => toast.success(`Downloading ${r.title}`)}
+                    >
+                      <Download className="h-3 w-3" />
+                      Download
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
+                      <th className="pb-3 pr-4">Report</th>
+                      <th className="pb-3 pr-4">Format</th>
+                      <th className="pb-3 pr-4">Date</th>
+                      <th className="pb-3 pr-4">Status</th>
+                      <th className="pb-3 text-right">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {reports.map((r) => (
+                      <tr key={r.id} className="border-b border-gray-50 transition-colors hover:bg-gray-50/50">
+                        <td className="py-3 pr-4 font-medium text-gray-900">{r.title}</td>
+                        <td className="py-3 pr-4">
+                          <Badge variant={formatBadgeVariant[r.format] ?? 'default'}>
+                            {r.format}
+                          </Badge>
+                        </td>
+                        <td className="py-3 pr-4 text-gray-500">{r.date}</td>
+                        <td className="py-3 pr-4">
+                          <Badge variant={r.status === 'completed' ? 'primary' : 'warning'}>
+                            {r.status === 'completed' ? 'Completed' : 'Processing'}
+                          </Badge>
+                        </td>
+                        <td className="py-3 text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-1.5 text-emerald-600"
+                            onClick={() => toast.success(`Downloading ${r.title}`)}
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            Download
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

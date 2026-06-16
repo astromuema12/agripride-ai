@@ -38,12 +38,12 @@ const metrics = [
 ];
 
 const features = [
-  { icon: FileSearch, title: 'AI Disease Detection', description: 'Snap a photo of your crop — our AI identifies diseases in seconds with 98.5% accuracy and recommends treatment.', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-950', gradient: 'from-red-500 to-orange-500' },
-  { icon: CloudSun, title: 'Weather Intelligence', description: 'Hyper-local 7-day forecasts, drought alerts, and planting window predictions powered by real meteorological data.', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-950', gradient: 'from-blue-500 to-cyan-500' },
-  { icon: ScrollText, title: 'AI Crop Advisor', description: 'Your personal agronomist — get tailored planting, irrigation, fertilizer, and pest management advice in your local language.', color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950', gradient: 'from-emerald-500 to-teal-500' },
-  { icon: BarChart3, title: 'Farm Analytics', description: 'Interactive dashboards with yield trends, cost tracking, profit analysis, and sustainability scoring for every farm.', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-950', gradient: 'from-amber-500 to-orange-500' },
-  { icon: Globe, title: 'Market Intelligence', description: 'Real-time crop prices across 47 counties. Know where to sell for the best price before you harvest.', color: 'text-cyan-500', bg: 'bg-cyan-50 dark:bg-cyan-950', gradient: 'from-cyan-500 to-blue-500' },
-  { icon: Shield, title: 'Responsible AI', description: 'Every decision is transparent, auditable, and governed by our TRACK framework. No black boxes — just trustworthy intelligence.', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-950', gradient: 'from-purple-500 to-violet-500' },
+  { icon: FileSearch, title: 'AI Disease Detection', description: 'Snap a photo of your crop — our AI identifies diseases in seconds with 98.5% accuracy and recommends treatment.', color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-950/40', gradient: 'from-red-500 to-orange-500' },
+  { icon: CloudSun, title: 'Weather Intelligence', description: 'Hyper-local 7-day forecasts, drought alerts, and planting window predictions powered by real meteorological data.', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-950/40', gradient: 'from-blue-500 to-cyan-500' },
+  { icon: ScrollText, title: 'AI Crop Advisor', description: 'Your personal agronomist — get tailored planting, irrigation, fertilizer, and pest management advice in your local language.', color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/40', gradient: 'from-emerald-500 to-teal-500' },
+  { icon: BarChart3, title: 'Farm Analytics', description: 'Interactive dashboards with yield trends, cost tracking, profit analysis, and sustainability scoring for every farm.', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-950/40', gradient: 'from-amber-500 to-orange-500' },
+  { icon: Globe, title: 'Market Intelligence', description: 'Real-time crop prices across 47 counties. Know where to sell for the best price before you harvest.', color: 'text-cyan-500', bg: 'bg-cyan-50 dark:bg-cyan-950/40', gradient: 'from-cyan-500 to-blue-500' },
+  { icon: Shield, title: 'Responsible AI', description: 'Every decision is transparent, auditable, and governed by our TRACK framework. No black boxes — just trustworthy intelligence.', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-950/40', gradient: 'from-purple-500 to-violet-500' },
 ];
 
 const testimonialsData = [
@@ -109,7 +109,7 @@ export default function HomePage() {
         <Particles />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-400/15 via-transparent to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-emerald-600/10 via-transparent to-transparent" />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-emerald-500/5 blur-3xl" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-emerald-500/5 blur-3xl max-xs:h-80 max-xs:w-80" />
 
         <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
@@ -123,14 +123,15 @@ export default function HomePage() {
               <a key={l} href={`#${l.toLowerCase()}`} className="text-sm font-medium text-emerald-200/70 transition-all hover:text-white relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-emerald-400 after:transition-all hover:after:w-full">{l}</a>
             ))}
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" className="text-emerald-200 hover:text-white hover:bg-emerald-800/50" onClick={() => router.push('/auth')}>Sign In</Button>
-            <Button className="bg-white text-emerald-900 hover:bg-emerald-50 shadow-xl shadow-emerald-500/10" onClick={() => router.push('/auth?tab=register')}>Get Started Free</Button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button variant="ghost" className="text-emerald-200 hover:text-white hover:bg-emerald-800/50 hidden xs:inline-flex" onClick={() => router.push('/auth')}>Sign In</Button>
+            <Button size="sm" className="bg-white text-emerald-900 hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 sm:hidden" onClick={() => router.push('/auth?tab=register')}>Start</Button>
+            <Button className="bg-white text-emerald-900 hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>Get Started Free</Button>
           </div>
         </nav>
 
-        <div className="relative mx-auto max-w-7xl px-4 pb-28 pt-20 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-16 lg:grid-cols-2">
+        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-12 sm:pb-28 sm:pt-20 lg:px-8">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -140,33 +141,33 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-sm font-medium text-emerald-300 backdrop-blur-md"
+                className="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs sm:px-4 sm:py-1.5 sm:text-sm font-medium text-emerald-300 backdrop-blur-md"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                 </span>
                 Beta Program
-                <span className="text-emerald-400/60">&mdash;</span>
-                <span>Now Open</span>
+                <span className="text-emerald-400/60 hidden xs:inline">&mdash;</span>
+                <span className="hidden xs:inline">Now Open</span>
               </motion.div>
-              <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="text-3xl font-bold leading-[1.1] tracking-tight text-white xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-balance">
                 AI That Understands{' '}
                 <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-emerald-200 bg-clip-text text-transparent">African Agriculture</span>
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-emerald-200/70">
+              <p className="mt-4 sm:mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-emerald-200/70">
                 Diagnose crop diseases in seconds, get hyper-local weather forecasts, and access market intelligence — all powered by responsible AI built for African farmers.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button size="xl" className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-emerald-950 hover:from-emerald-300 hover:to-emerald-400 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-400/40" onClick={() => router.push('/auth?tab=register')}>
+              <div className="mt-6 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
+                <Button size="xl" className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-emerald-950 hover:from-emerald-300 hover:to-emerald-400 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-400/40 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
                   Start Free Trial
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
-                <Button size="xl" variant="outline" className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-800/40 hover:text-white hover:border-emerald-400/50 backdrop-blur-sm" onClick={() => router.push('/governance')}>
+                <Button size="xl" variant="outline" className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-800/40 hover:text-white hover:border-emerald-400/50 backdrop-blur-sm w-full xs:w-auto" onClick={() => router.push('/governance')}>
                   <Sparkles className="mr-2 h-4 w-4" /> See How It Works
                 </Button>
               </div>
-              <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-emerald-300/60">
+              <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-emerald-300/60">
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> No credit card</span>
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Free during beta</span>
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> M-Pesa coming soon</span>
@@ -179,60 +180,60 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="relative"
             >
-              <div className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-emerald-300/20 blur-3xl animate-pulse-glow" />
+              <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-gradient-to-r from-emerald-500/20 via-emerald-400/10 to-emerald-300/20 blur-3xl animate-pulse-glow" />
               <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-1 backdrop-blur-xl">
-                <div className="rounded-xl bg-gray-950/80 p-5">
-                  <div className="mb-4 flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="rounded-xl bg-gray-950/80 p-3 sm:p-5">
+                  <div className="mb-3 sm:mb-4 flex items-center justify-between border-b border-white/[0.06] pb-2 sm:pb-3">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1.5">
-                        <div className="h-3 w-3 rounded-full bg-red-500/80" />
-                        <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
-                        <div className="h-3 w-3 rounded-full bg-green-500/80" />
+                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-red-500/80" />
+                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-yellow-500/80" />
+                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-green-500/80" />
                       </div>
-                      <span className="ml-3 text-xs text-white/40 font-mono">agripride-dashboard</span>
+                      <span className="ml-2 sm:ml-3 text-[10px] sm:text-xs text-white/40 font-mono">agripride-dashboard</span>
                     </div>
-                    <div className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs text-emerald-400">
+                    <div className="flex items-center gap-1 sm:gap-2 rounded-full bg-emerald-500/10 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs text-emerald-400">
                       <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400" /><span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" /></span>
-                      All Systems Normal
+                      <span className="hidden xs:inline">All Systems Normal</span>
                     </div>
                   </div>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 gap-2 xs:grid-cols-4 xs:gap-3">
                     {[
                       { label: 'Active Farms', value: '12', change: '+3', icon: Sprout },
                       { label: 'Crops Monitored', value: '24', change: '+8', icon: TreePine },
                       { label: 'Diagnosis This Month', value: '47', change: '+12', icon: FileSearch },
                       { label: 'Avg. Yield Increase', value: '35%', change: '+5%', icon: TrendingUp },
                     ].map((s, i) => (
-                      <div key={i} className="rounded-xl bg-white/[0.04] p-3 border border-white/[0.04] hover:bg-white/[0.07] transition-colors">
+                      <div key={i} className="rounded-xl bg-white/[0.04] p-2 sm:p-3 border border-white/[0.04] hover:bg-white/[0.07] transition-colors">
                         <div className="flex items-center justify-between">
-                          <s.icon className="h-4 w-4 text-emerald-400" />
-                          <span className="text-xs font-medium text-emerald-400">{s.change}</span>
+                          <s.icon className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-400" />
+                          <span className="text-[10px] sm:text-xs font-medium text-emerald-400">{s.change}</span>
                         </div>
-                        <div className="mt-2 text-lg font-bold text-white">{s.value}</div>
-                        <div className="text-xs text-white/40">{s.label}</div>
+                        <div className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-white">{s.value}</div>
+                        <div className="text-[10px] sm:text-xs text-white/40">{s.label}</div>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 grid grid-cols-2 gap-3">
-                    <div className="rounded-xl bg-white/[0.04] p-3 border border-white/[0.04]">
-                      <div className="mb-2 flex items-center justify-between text-xs text-white/50">
+                  <div className="mt-2 sm:mt-3 grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
+                    <div className="rounded-xl bg-white/[0.04] p-2 sm:p-3 border border-white/[0.04]">
+                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-white/50">
                         <span>Crop Health Index</span>
                         <span className="text-emerald-400 font-medium">92%</span>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                      <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-white/[0.06]">
                         <div className="h-full w-[92%] rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
                       </div>
-                      <div className="mt-2 flex justify-between text-xs text-white/30"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
+                      <div className="mt-1 sm:mt-2 flex justify-between text-[10px] sm:text-xs text-white/30"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
                     </div>
-                    <div className="rounded-xl bg-white/[0.04] p-3 border border-white/[0.04]">
-                      <div className="mb-2 flex items-center justify-between text-xs text-white/50">
+                    <div className="rounded-xl bg-white/[0.04] p-2 sm:p-3 border border-white/[0.04]">
+                      <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-white/50">
                         <span>Current Weather</span>
-                        <span className="text-yellow-400"><CloudSun className="h-3.5 w-3.5" /></span>
+                        <span className="text-yellow-400"><CloudSun className="h-3 w-3 sm:h-3.5 sm:w-3.5" /></span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-white">
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-white">
                         28°C · Partly Cloudy
                       </div>
-                      <div className="mt-1 text-xs text-emerald-400/80">Rain expected in 2 days</div>
+                      <div className="mt-1 text-[10px] sm:text-xs text-emerald-400/80">Rain expected in 2 days</div>
                     </div>
                   </div>
                 </div>
@@ -243,13 +244,13 @@ export default function HomePage() {
       </section>
 
       {/* ===== TRUST BAR ===== */}
-      <section className="relative border-b border-gray-100 bg-white py-16 dark:border-gray-800 dark:bg-[var(--background)]">
+      <section className="relative border-b border-gray-100 bg-white py-12 sm:py-16 dark:border-gray-800 dark:bg-[var(--background)]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-8 text-center text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Trusted by farmers and partners across Kenya</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
+          <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Trusted by farmers and partners across Kenya</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-14 gap-y-4 sm:gap-y-6">
             {['Kenya Farmers Association', 'Ministry of Agriculture', 'Safaricom', 'University of Nairobi', 'AgriFi Kenya', 'World Food Programme'].map((name) => (
-              <div key={name} className="group flex items-center gap-2.5 text-sm font-semibold text-gray-400 transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
-                <Shield className="h-4 w-4 transition-transform group-hover:scale-110" /> {name}
+              <div key={name} className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-400 transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
+                <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:scale-110" /> {name}
               </div>
             ))}
           </div>
@@ -257,7 +258,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== METRICS ===== */}
-      <section id="features" className="relative overflow-hidden bg-gradient-to-b from-emerald-50/80 to-white py-24 dark:from-emerald-950/30 dark:to-[var(--background)]">
+      <section id="features" className="relative overflow-hidden bg-gradient-to-b from-emerald-50/80 to-white py-16 sm:py-24 dark:from-emerald-950/30 dark:to-[var(--background)]">
         <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-48 rounded-full bg-emerald-500/5 blur-3xl" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -266,9 +267,9 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-4">Platform Impact</Badge>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-[var(--foreground)]">Growing Africa&apos;s Agricultural Future</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Real metrics from our growing platform deployment across Kenya.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">Platform Impact</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Growing Africa&apos;s Agricultural Future</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Real metrics from our growing platform deployment across Kenya.</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -282,7 +283,7 @@ export default function HomePage() {
                 <div className="group relative rounded-2xl border border-gray-100 bg-white p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 dark:border-gray-800 dark:bg-[var(--card)] dark:hover:shadow-emerald-500/5">
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/[0.04] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative">
-                    <div className="mb-3 inline-flex rounded-xl bg-emerald-50 p-3 dark:bg-emerald-900/50">
+                    <div className="mb-3 inline-flex rounded-xl bg-emerald-50 p-3 dark:bg-emerald-900/30">
                       <m.icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div className="text-3xl font-bold text-gray-900 dark:text-[var(--foreground)]">{m.value}</div>
@@ -296,7 +297,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== FEATURES ===== */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -304,9 +305,9 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-4">Everything You Need</Badge>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-[var(--foreground)]">Powerful Tools for Modern Farming</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500 dark:text-[var(--muted-foreground)]">From disease detection to market prices — one platform for your entire farming operation.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">Everything You Need</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Powerful Tools for Modern Farming</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">From disease detection to market prices — one platform for your entire farming operation.</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -335,19 +336,19 @@ export default function HomePage() {
       </section>
 
       {/* ===== AI GOVERNANCE ===== */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-green-950 to-emerald-900 py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-950 via-green-950 to-emerald-900 py-16 sm:py-24">
         <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-emerald-500/5 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full bg-emerald-400/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Badge variant="secondary" className="mb-4 border-emerald-400/20 bg-emerald-500/10 text-emerald-300">Responsible AI</Badge>
-              <h2 className="text-4xl font-bold text-white">AI You Can Trust</h2>
-              <p className="mt-4 text-lg text-emerald-200/60">Every diagnosis, recommendation, and insight is governed by our Responsible AI framework. No black boxes — full transparency.</p>
+              <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-400/20 bg-emerald-500/10 text-emerald-300">Responsible AI</Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-balance">AI You Can Trust</h2>
+              <p className="mt-3 sm:mt-4 text-base sm:text-lg text-emerald-200/60">Every diagnosis, recommendation, and insight is governed by our Responsible AI framework. No black boxes — full transparency.</p>
               <div className="mt-8 space-y-4">
                 {[
                   { label: 'TRACK', desc: 'Transparency & Accountability in every AI decision' },
@@ -368,7 +369,7 @@ export default function HomePage() {
                   </motion.div>
                 ))}
               </div>
-              <Button className="mt-8 bg-gradient-to-r from-emerald-500 to-emerald-400 text-emerald-950 hover:from-emerald-400 hover:to-emerald-300 shadow-xl shadow-emerald-500/20" onClick={() => router.push('/governance')}>
+              <Button className="mt-6 sm:mt-8 bg-gradient-to-r from-emerald-500 to-emerald-400 text-emerald-950 hover:from-emerald-400 hover:to-emerald-300 shadow-xl shadow-emerald-500/20 w-full sm:w-auto" onClick={() => router.push('/governance')}>
                 Learn About Our AI
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -380,8 +381,8 @@ export default function HomePage() {
               className="relative"
             >
               <div className="absolute -inset-4 rounded-2xl bg-emerald-500/10 blur-2xl" />
-              <div className="relative overflow-hidden rounded-2xl border border-emerald-800/40 bg-emerald-900/30 p-6 backdrop-blur-sm">
-                <div className="mb-4 flex items-center gap-3 border-b border-emerald-800/30 pb-4">
+              <div className="relative overflow-hidden rounded-2xl border border-emerald-800/40 bg-emerald-900/30 p-4 sm:p-6 backdrop-blur-sm">
+                <div className="mb-3 sm:mb-4 flex items-center gap-3 border-b border-emerald-800/30 pb-3 sm:pb-4">
                   <div className="rounded-lg bg-emerald-800/50 p-2">
                     <Shield className="h-5 w-5 text-emerald-400" />
                   </div>
@@ -415,7 +416,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section id="testimonials" className="py-24">
+      <section id="testimonials" className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -423,9 +424,9 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-4">Farmer Success Stories</Badge>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-[var(--foreground)]">Real Farmers, Real Results</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Hear from farmers who are already transforming their farms with AgriPride AI.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">Farmer Success Stories</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Real Farmers, Real Results</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Hear from farmers who are already transforming their farms with AgriPride AI.</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -440,7 +441,7 @@ export default function HomePage() {
                   <Quote className="mb-4 h-8 w-8 text-emerald-200 dark:text-emerald-800" />
                   <p className="mb-6 text-sm leading-relaxed text-gray-600 dark:text-[var(--muted-foreground)]">&ldquo;{t.quote}&rdquo;</p>
                   <div className="mb-4 flex items-center gap-4 border-t border-gray-100 pt-4 dark:border-gray-800">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{t.avatar}</div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{t.avatar}</div>
                     <div>
                       <div className="font-semibold text-gray-900 dark:text-[var(--foreground)]">{t.name}</div>
                       <div className="text-xs text-gray-500 dark:text-[var(--muted-foreground)]">{t.location} · {t.crop}</div>
@@ -466,7 +467,7 @@ export default function HomePage() {
       <AiDemo />
 
       {/* ===== PRICING ===== */}
-      <section id="pricing" className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white py-24 dark:from-emerald-950/20 dark:to-[var(--background)]">
+      <section id="pricing" className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white py-16 sm:py-24 dark:from-emerald-950/20 dark:to-[var(--background)]">
         <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-emerald-500/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -475,11 +476,11 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-4">Simple Pricing</Badge>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-[var(--foreground)]">Plans for Every Farm</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Start free, upgrade as you grow. All plans include core AI features.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">Simple Pricing</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Plans for Every Farm</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-500 dark:text-[var(--muted-foreground)]">Start free, upgrade as you grow. All plans include core AI features.</p>
           </motion.div>
-          <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3">
             <span className={`text-sm font-medium transition-colors ${billing === 'monthly' ? 'text-gray-900 dark:text-[var(--foreground)]' : 'text-gray-400'}`}>Monthly</span>
             <button
               onClick={() => setBilling(billing === 'monthly' ? 'annual' : 'monthly')}
@@ -537,7 +538,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== FAQ ===== */}
-      <section className="py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -545,9 +546,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-[var(--foreground)]">Frequently Asked Questions</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-[var(--foreground)] text-balance">Frequently Asked Questions</h2>
           </motion.div>
-          <div className="mt-12 space-y-4">
+          <div className="mt-8 sm:mt-12 space-y-4">
             {faqItems.map((item, i) => (
               <motion.div
                 key={i}
@@ -575,7 +576,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="relative overflow-hidden py-24">
+      <section className="relative overflow-hidden py-16 sm:py-24">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 animate-gradient" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-400/30 via-transparent to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-emerald-300/20 via-transparent to-transparent" />
@@ -585,14 +586,14 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold text-white sm:text-5xl">Ready to Transform Your Farm?</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100/80">Join thousands of Kenyan farmers using AI to increase yields, reduce losses, and make smarter decisions. Free during beta.</p>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button size="xl" className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl shadow-black/10 hover:shadow-emerald-200/50" onClick={() => router.push('/auth?tab=register')}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-balance">Ready to Transform Your Farm?</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-emerald-100/80">Join thousands of Kenyan farmers using AI to increase yields, reduce losses, and make smarter decisions. Free during beta.</p>
+            <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
+              <Button size="xl" className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl shadow-black/10 hover:shadow-emerald-200/50 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
                 Join the Beta Free
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button size="xl" variant="outline" className="border-emerald-300/40 text-white hover:bg-emerald-500/20 hover:border-emerald-200/60 backdrop-blur-sm" onClick={() => router.push('/contact')}>
+              <Button size="xl" variant="outline" className="border-emerald-300/40 text-white hover:bg-emerald-500/20 hover:border-emerald-200/60 backdrop-blur-sm w-full xs:w-auto" onClick={() => router.push('/contact')}>
                 Talk to Our Team
               </Button>
             </div>
@@ -602,9 +603,9 @@ export default function HomePage() {
 
       {/* ===== FOOTER ===== */}
       <footer className="border-t border-gray-800 bg-gray-950 text-gray-400">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-10">
+            <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/20">
                   <Leaf className="h-5 w-5 text-white" />
@@ -614,8 +615,8 @@ export default function HomePage() {
               <p className="mt-4 text-sm leading-relaxed text-gray-400/80">Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.</p>
             </div>
             <div>
-              <h4 className="mb-4 text-sm font-semibold tracking-wide text-white">Platform</h4>
-              <ul className="space-y-2.5 text-sm">
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Platform</h4>
+              <ul className="space-y-2 text-sm">
                 <li><Link href="/governance" className="transition-colors hover:text-emerald-400">AI Governance</Link></li>
                 <li><Link href="/analytics" className="transition-colors hover:text-emerald-400">Analytics</Link></li>
                 <li><Link href="/market" className="transition-colors hover:text-emerald-400">Market Intelligence</Link></li>
@@ -624,8 +625,8 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-4 text-sm font-semibold tracking-wide text-white">Company</h4>
-              <ul className="space-y-2.5 text-sm">
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Company</h4>
+              <ul className="space-y-2 text-sm">
                 <li><Link href="/contact" className="transition-colors hover:text-emerald-400">Contact</Link></li>
                 <li><Link href="/support" className="transition-colors hover:text-emerald-400">Support</Link></li>
                 <li><Link href="/testimonials" className="transition-colors hover:text-emerald-400">Testimonials</Link></li>
@@ -634,18 +635,18 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="mb-4 text-sm font-semibold tracking-wide text-white">Contact & Social</h4>
-              <ul className="space-y-2.5 text-sm">
-                <li><a href="mailto:musauedwin2004@gmail.com" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><Mail className="h-4 w-4 text-emerald-400 transition-transform group-hover:scale-110" /> musauedwin2004@gmail.com</a></li>
-                <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-400" /> Nairobi, Kenya</li>
-                <li><a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaWhatsapp className="h-4 w-4 text-green-400 transition-transform group-hover:scale-110" /> WhatsApp</a></li>
-                <li><a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaLinkedinIn className="h-4 w-4 text-blue-400 transition-transform group-hover:scale-110" /> LinkedIn</a></li>
-                <li><a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaFacebook className="h-4 w-4 text-blue-400 transition-transform group-hover:scale-110" /> Facebook</a></li>
-                <li><a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaInstagram className="h-4 w-4 text-pink-400 transition-transform group-hover:scale-110" /> Instagram</a></li>
+              <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white">Contact & Social</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="mailto:musauedwin2004@gmail.com" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><Mail className="h-4 w-4 text-emerald-400 transition-transform group-hover:scale-110" /> <span className="break-all">musauedwin2004@gmail.com</span></a></li>
+                <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-400 shrink-0" /> Nairobi, Kenya</li>
+                <li><a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaWhatsapp className="h-4 w-4 text-green-400 transition-transform group-hover:scale-110 shrink-0" /> WhatsApp</a></li>
+                <li><a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaLinkedinIn className="h-4 w-4 text-blue-400 transition-transform group-hover:scale-110 shrink-0" /> LinkedIn</a></li>
+                <li><a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaFacebook className="h-4 w-4 text-blue-400 transition-transform group-hover:scale-110 shrink-0" /> Facebook</a></li>
+                <li><a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><FaInstagram className="h-4 w-4 text-pink-400 transition-transform group-hover:scale-110 shrink-0" /> Instagram</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 flex flex-col items-center gap-4 border-t border-gray-800 pt-8 text-center text-sm sm:flex-row sm:justify-between">
+          <div className="mt-10 sm:mt-12 flex flex-col items-center gap-4 border-t border-gray-800 pt-8 text-center text-sm sm:flex-row sm:justify-between">
             <p>&copy; {new Date().getFullYear()} AgriPride AI Ltd. All rights reserved.</p>
           </div>
         </div>

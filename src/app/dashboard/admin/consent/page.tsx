@@ -196,77 +196,122 @@ export default function ConsentPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                    <th className="pb-3 pr-4 font-medium">User</th>
-                    <th className="pb-3 pr-4 font-medium">Email</th>
-                    <th className="pb-3 pr-4 font-medium">Consent Type</th>
-                    <th className="pb-3 pr-4 font-medium">Status</th>
-                    <th className="pb-3 pr-4 font-medium">Granted Date</th>
-                    <th className="pb-3 font-medium">Revoked Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((record) => {
-                    const user = userMap.get(record.user_id);
-                    return (
-                      <tr key={record.id} className="border-b border-gray-100 last:border-0">
-                        <td className="py-3 pr-4">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                              {(user?.name || 'U')[0]}
-                            </div>
-                            <span className="font-medium text-gray-900">{user?.name || 'Unknown'}</span>
+            <>
+              {/* Mobile card view */}
+              <div className="block sm:hidden divide-y divide-gray-100">
+                {filtered.map((record) => {
+                  const user = userMap.get(record.user_id);
+                  return (
+                    <div key={record.id} className="py-3 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
+                            {(user?.name || 'U')[0]}
                           </div>
-                        </td>
-                        <td className="py-3 pr-4">
-                          <div className="flex items-center gap-1.5 text-gray-600">
-                            <Mail className="h-3 w-3" />
-                            {user?.email || '—'}
-                          </div>
-                        </td>
-                        <td className="py-3 pr-4">
-                          <Badge variant="secondary" className="capitalize">
-                            {record.type.replace(/_/g, ' ')}
+                          <span className="text-sm font-medium text-gray-900 truncate">{user?.name || 'Unknown'}</span>
+                        </div>
+                        {record.granted ? (
+                          <Badge variant="primary" className="flex shrink-0 items-center gap-1 text-[10px]">
+                            <CheckCircle className="h-3 w-3" />
+                            Granted
                           </Badge>
-                        </td>
-                        <td className="py-3 pr-4">
-                          {record.granted ? (
-                            <Badge variant="primary" className="flex w-fit items-center gap-1">
-                              <CheckCircle className="h-3 w-3" />
-                              Granted
+                        ) : (
+                          <Badge variant="destructive" className="flex shrink-0 items-center gap-1 text-[10px]">
+                            <XCircle className="h-3 w-3" />
+                            Revoked
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                        <Mail className="h-3 w-3 shrink-0" />
+                        {user?.email || '—'}
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <Badge variant="secondary" className="capitalize text-[10px]">
+                          {record.type.replace(/_/g, ' ')}
+                        </Badge>
+                        <div className="flex items-center gap-3 text-gray-500">
+                          <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{new Date(record.granted_at).toLocaleDateString()}</span>
+                          {record.revoked_at && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{new Date(record.revoked_at).toLocaleDateString()}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {/* Desktop table view */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+                      <th className="pb-3 pr-4 font-medium">User</th>
+                      <th className="pb-3 pr-4 font-medium">Email</th>
+                      <th className="pb-3 pr-4 font-medium">Consent Type</th>
+                      <th className="pb-3 pr-4 font-medium">Status</th>
+                      <th className="pb-3 pr-4 font-medium">Granted Date</th>
+                      <th className="pb-3 font-medium">Revoked Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((record) => {
+                      const user = userMap.get(record.user_id);
+                      return (
+                        <tr key={record.id} className="border-b border-gray-100 last:border-0">
+                          <td className="py-3 pr-4">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
+                                {(user?.name || 'U')[0]}
+                              </div>
+                              <span className="font-medium text-gray-900">{user?.name || 'Unknown'}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 pr-4">
+                            <div className="flex items-center gap-1.5 text-gray-600">
+                              <Mail className="h-3 w-3" />
+                              {user?.email || '—'}
+                            </div>
+                          </td>
+                          <td className="py-3 pr-4">
+                            <Badge variant="secondary" className="capitalize">
+                              {record.type.replace(/_/g, ' ')}
                             </Badge>
-                          ) : (
-                            <Badge variant="destructive" className="flex w-fit items-center gap-1">
-                              <XCircle className="h-3 w-3" />
-                              Revoked
-                            </Badge>
-                          )}
-                        </td>
-                        <td className="py-3 pr-4">
-                          <div className="flex items-center gap-1.5 text-gray-500">
-                            <Clock className="h-3 w-3" />
-                            {new Date(record.granted_at).toLocaleDateString()}
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          {record.revoked_at ? (
+                          </td>
+                          <td className="py-3 pr-4">
+                            {record.granted ? (
+                              <Badge variant="primary" className="flex w-fit items-center gap-1">
+                                <CheckCircle className="h-3 w-3" />
+                                Granted
+                              </Badge>
+                            ) : (
+                              <Badge variant="destructive" className="flex w-fit items-center gap-1">
+                                <XCircle className="h-3 w-3" />
+                                Revoked
+                              </Badge>
+                            )}
+                          </td>
+                          <td className="py-3 pr-4">
                             <div className="flex items-center gap-1.5 text-gray-500">
                               <Clock className="h-3 w-3" />
-                              {new Date(record.revoked_at).toLocaleDateString()}
+                              {new Date(record.granted_at).toLocaleDateString()}
                             </div>
-                          ) : (
-                            <span className="text-gray-400">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                          <td className="py-3">
+                            {record.revoked_at ? (
+                              <div className="flex items-center gap-1.5 text-gray-500">
+                                <Clock className="h-3 w-3" />
+                                {new Date(record.revoked_at).toLocaleDateString()}
+                              </div>
+                            ) : (
+                              <span className="text-gray-400">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
