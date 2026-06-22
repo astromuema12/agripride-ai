@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe } from 'lucide-react';
+import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { MpesaPayment } from '@/components/shared/mpesa-payment';
 import { toast } from 'sonner';
 
 interface Plan {
@@ -115,6 +116,8 @@ const plans: Plan[] = [
 export default function PricingPage() {
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<{ tier: string; name: string; price: number } | null>(null);
+  const [showMpesa, setShowMpesa] = useState(false);
 
   const handleSubscribe = async (tier: string) => {
     setLoading(tier);
@@ -126,13 +129,27 @@ export default function PricingPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Subscription failed');
-      toast.success('Subscription initiated!');
-      router.push('/auth');
+
+      if (data.requiresMpesa) {
+        const plan = plans.find((p) => p.tier === tier);
+        setSelectedPlan({ tier, name: plan?.name || '', price: plan?.price || 0 });
+        setShowMpesa(true);
+        toast.info('Enter your M-Pesa phone number to continue');
+      } else {
+        toast.success(data.message || 'Subscription activated!');
+        router.push('/auth');
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Subscription failed');
     } finally {
       setLoading(null);
     }
+  };
+
+  const handlePaymentSuccess = (receipt: string) => {
+    toast.success(`Payment successful! Receipt: ${receipt}`);
+    setShowMpesa(false);
+    router.push('/auth');
   };
 
   return (
@@ -149,7 +166,7 @@ export default function PricingPage() {
           </h1>
           <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
             Start free and upgrade as your farm grows. All plans include our core AI features.
-            M-Pesa payments coming soon.
+            Pay securely with M-Pesa.
           </p>
         </motion.div>
 
@@ -177,6 +194,11 @@ export default function PricingPage() {
                       <div className="rounded-lg bg-white/20 p-2">
                         <Icon className="h-6 w-6" />
                       </div>
+                      {plan.price > 0 && (
+                        <div className="rounded-full bg-white/20 p-1.5">
+                          <Smartphone className="h-4 w-4" />
+                        </div>
+                      )}
                     </div>
                     <CardTitle className="mt-4 text-xl font-bold">{plan.name}</CardTitle>
                     <CardDescription className="text-sm text-white/80">{plan.description}</CardDescription>
@@ -222,35 +244,35 @@ export default function PricingPage() {
                         'Get Started Free'
                       ) : (
                         <>
-                          Subscribe
-                          <ArrowRight className="ml-2 h-4 w-4" />
+                          Subscribe via M-Pesa
+                          <Smartphone className="ml-2 h-4 w-4" />
                         </>
                       )}
                     </Button>
+
+                    {plan.price > 0 && (
+                      <p className="mt-2 text-center text-xs text-gray-400">
+                        Secure M-Pesa payment
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
             );
           })}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 text-center"
-        >
-          <Card className="mx-auto max-w-2xl border-emerald-100 bg-emerald-50/50">
-            <CardContent className="p-8">
-              <h3 className="text-lg font-semibold text-gray-900">M-Pesa Payments Coming Soon</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                We are integrating M-Pesa Daraja API for seamless mobile money payments.
-                All prices are in KES. For now, join our free tier to get started.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
       </div>
+
+      {selectedPlan && (
+        <MpesaPayment
+          open={showMpesa}
+          onOpenChange={setShowMpesa}
+          amount={selectedPlan.price}
+          planName={selectedPlan.name}
+          tier={selectedPlan.tier}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </div>
   );
 }
