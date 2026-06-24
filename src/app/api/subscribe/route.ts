@@ -9,13 +9,16 @@ const SubscribeSchema = z.object({
   tier: z.enum(['free', 'premium', 'cooperative', 'enterprise']),
   userId: z.string().optional(),
   phone: z.string().optional(),
+  paymentMethod: z.enum(['mpesa', 'flutterwave']).optional().default('mpesa'),
+  email: z.string().email().optional(),
+  name: z.string().optional(),
 });
 
 async function handler(req: NextRequest) {
   const parsed = await parseBody(req, SubscribeSchema);
   if (!parsed.success) return parsed.response;
 
-  const { tier, userId, phone } = parsed.data;
+  const { tier, userId, phone, paymentMethod, email, name } = parsed.data;
 
   await subscriptionService.seedPlans();
 
@@ -43,6 +46,73 @@ async function handler(req: NextRequest) {
         features: plan.features,
       },
       message: 'Free plan selected. Account activated.',
+    });
+  }
+
+  if (paymentMethod === 'flutterwave') {
+    const flwConfigured = !!(
+      process.env.FLW_PUBLIC_KEY &&
+      process.env.FLW_SECRET_KEY &&
+      process.env.FLW_ENCRYPTION_KEY
+    );
+
+    if (!flwConfigured) {
+      return apiError(503, 'Flutterwave payment is not configured. Please contact support.');
+    }
+
+    const { generateTxRef } = await import('@/lib/flutterwave');
+    const txRef = generateTxRef(tier, userId || 'guest');
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://agripride-ai.vercel.app';
+
+    const { initializeFlutterwavePayment, flutterwaveTransactionService } = await import('@/lib/flutterwave');
+
+    const result = await initializeFlutterwavePayment({
+      amount: plan.price_kes,
+      currency: 'KES',
+      tx_ref: txRef,
+      customer: {
+        email: email || `${userId || 'guest'}@agripride.ai`,
+        name: name || 'Farmer',
+        phone_number: phone,
+      },
+      meta: { userId, tier, planId: plan.id, planName: plan.name },
+      redirect_url: `${baseUrl}/api/payments/callback?tx_ref=${txRef}`,
+      payment_options: 'mobilemoney,card',
+    });
+
+    if (!result.success) {
+      return apiError(502, result.error || 'Failed to initialize payment');
+    }
+
+    await flutterwaveTransactionService.create({
+      user_id: userId || 'guest',
+      tx_ref: txRef,
+      flw_transaction_id: 0,
+      amount: plan.price_kes,
+      currency: 'KES',
+      payment_method: 'pending',
+      status: 'pending',
+      email: email || '',
+      plan_id: plan.id,
+      metadata: { tier, planName: plan.name },
+    });
+
+    logger.info('Flutterwave payment initiated from subscribe', {
+      component: 'subscribe',
+      metadata: { txRef, tier, userId },
+    });
+
+    return apiSuccess({
+      plan: {
+        id: plan.id,
+        name: plan.name,
+        tier: plan.tier,
+        price_kes: plan.price_kes,
+        features: plan.features,
+      },
+      checkout_url: result.data!.link,
+      tx_ref: txRef,
+      message: 'Redirecting to payment page...',
     });
   }
 

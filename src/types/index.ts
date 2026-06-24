@@ -384,6 +384,24 @@ export interface ActivityLog {
   created_at: string;
 }
 
+export type FlutterwavePaymentStatus = 'pending' | 'successful' | 'failed' | 'cancelled';
+
+export interface FlutterwaveTransaction {
+  id: string;
+  user_id: string;
+  tx_ref: string;
+  flw_transaction_id: number;
+  amount: number;
+  currency: string;
+  payment_method: string;
+  status: FlutterwavePaymentStatus;
+  phone?: string;
+  email?: string;
+  plan_id: string;
+  metadata?: Record<string, unknown>;
+  created_at: string;
+}
+
 export type AdminRole = 'super_admin' | 'support_admin' | 'finance_admin' | 'content_admin';
 
 export interface AdminUser extends User {

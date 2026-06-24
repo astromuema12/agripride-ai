@@ -17,6 +17,7 @@ const STORE_MAP: Record<string, string> = {
   supportTickets: 'support_tickets',
   ticketMessages: 'ticket_messages',
   mpesaTransactions: 'mpesa_transactions',
+  flutterwaveTransactions: 'flutterwave_transactions',
   aiUsageLogs: 'ai_usage_logs',
   activityLogs: 'activity_logs',
   platformStats: 'platform_stats',

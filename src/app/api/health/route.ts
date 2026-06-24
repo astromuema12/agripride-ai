@@ -48,6 +48,13 @@ export async function GET() {
   );
   checks.mpesa = hasMpesa ? 'configured' : 'not_configured';
 
+  const hasFlutterwave = !!(
+    process.env.FLW_PUBLIC_KEY &&
+    process.env.FLW_SECRET_KEY &&
+    process.env.FLW_ENCRYPTION_KEY
+  );
+  checks.flutterwave = hasFlutterwave ? 'configured' : 'not_configured';
+
   health.checks = checks;
   health.responseTimeMs = Date.now() - startTime;
 

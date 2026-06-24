@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, Smartphone } from 'lucide-react';
+import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, Smartphone, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -113,11 +113,57 @@ const plans: Plan[] = [
   },
 ];
 
-export default function PricingPage() {
+function PricingPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<{ tier: string; name: string; price: number } | null>(null);
   const [showMpesa, setShowMpesa] = useState(false);
+  const [flwLoading, setFlwLoading] = useState<string | null>(null);
+
+  const payment = searchParams.get('payment');
+  const statusMap: Record<string, { variant: 'success' | 'error' | 'warning' | 'default'; message: string }> = {
+    success: { variant: 'success', message: 'Payment successful! Your premium features are now active.' },
+    failed: { variant: 'error', message: 'Payment failed. Please try again.' },
+    cancelled: { variant: 'warning', message: 'Payment was cancelled.' },
+    pending: { variant: 'warning', message: 'Your payment is being processed. This may take a moment.' },
+    already_active: { variant: 'success', message: 'Your subscription is already active.' },
+  };
+
+  const statusMessage = payment ? statusMap[payment] : null;
+
+  const handleFlutterwaveSubscribe = async (tier: string) => {
+    setFlwLoading(tier);
+    try {
+      const plan = plans.find((p) => p.tier === tier);
+      const storedUser = localStorage.getItem('agripride_user');
+      const user = storedUser ? JSON.parse(storedUser) : null;
+
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tier,
+          userId: user?.id,
+          email: user?.email || 'farmer@agripride.ai',
+          name: user?.name || 'Farmer',
+          paymentMethod: 'flutterwave',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Payment initiation failed');
+
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Payment initiation failed');
+    } finally {
+      setFlwLoading(null);
+    }
+  };
 
   const handleSubscribe = async (tier: string) => {
     setLoading(tier);
@@ -155,6 +201,16 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+        {statusMessage && (
+          <div className={`mb-6 rounded-lg px-4 py-3 text-sm font-medium ${
+            statusMessage.variant === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+            statusMessage.variant === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+            statusMessage.variant === 'warning' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+            'bg-gray-50 text-gray-700 border border-gray-200'
+          }`}>
+            {statusMessage.message}
+          </div>
+        )}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -166,7 +222,7 @@ export default function PricingPage() {
           </h1>
           <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
             Start free and upgrade as your farm grows. All plans include our core AI features.
-            Pay securely with M-Pesa.
+            Pay securely with M-Pesa or Flutterwave.
           </p>
         </motion.div>
 
@@ -225,34 +281,55 @@ export default function PricingPage() {
                       ))}
                     </ul>
 
-                    <Button
-                      className="mt-6 w-full"
-                      variant={plan.popular ? 'default' : 'outline'}
-                      size="lg"
-                      onClick={() => {
-                        if (plan.price === 0) {
-                          router.push('/auth?tab=register');
-                        } else {
-                          handleSubscribe(plan.tier);
-                        }
-                      }}
-                      disabled={loading === plan.tier}
-                    >
-                      {loading === plan.tier ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : plan.price === 0 ? (
-                        'Get Started Free'
-                      ) : (
-                        <>
-                          Subscribe via M-Pesa
-                          <Smartphone className="ml-2 h-4 w-4" />
-                        </>
+                    <div className="mt-6 space-y-2">
+                      <Button
+                        className="w-full"
+                        variant={plan.popular ? 'default' : 'outline'}
+                        size="lg"
+                        onClick={() => {
+                          if (plan.price === 0) {
+                            router.push('/auth?tab=register');
+                          } else {
+                            handleSubscribe(plan.tier);
+                          }
+                        }}
+                        disabled={loading === plan.tier}
+                      >
+                        {loading === plan.tier ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : plan.price === 0 ? (
+                          'Get Started Free'
+                        ) : (
+                          <>
+                            Pay with M-Pesa
+                            <Smartphone className="ml-2 h-4 w-4" />
+                          </>
+                        )}
+                      </Button>
+
+                      {plan.price > 0 && (
+                        <Button
+                          variant="outline"
+                          className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                          size="lg"
+                          onClick={() => handleFlutterwaveSubscribe(plan.tier)}
+                          disabled={flwLoading === plan.tier}
+                        >
+                          {flwLoading === plan.tier ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <>
+                              <CreditCard className="mr-2 h-4 w-4" />
+                              Pay with Flutterwave
+                            </>
+                          )}
+                        </Button>
                       )}
-                    </Button>
+                    </div>
 
                     {plan.price > 0 && (
                       <p className="mt-2 text-center text-xs text-gray-400">
-                        Secure M-Pesa payment
+                        Secure payments via M-Pesa or Flutterwave
                       </p>
                     )}
                   </CardContent>
@@ -274,5 +351,17 @@ export default function PricingPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      </div>
+    }>
+      <PricingPageContent />
+    </Suspense>
   );
 }
