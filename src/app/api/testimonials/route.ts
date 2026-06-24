@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { testimonialService } from '@/services/testimonial.service';
+import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { logger } from '@/lib/logger';
 
 const CreateTestimonialSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
@@ -11,40 +13,25 @@ const CreateTestimonialSchema = z.object({
   userId: z.string().optional(),
 });
 
-export async function GET() {
-  try {
-    const testimonials = await testimonialService.getApproved();
-    return Response.json({ success: true, data: testimonials });
-  } catch (error) {
-    console.error('Testimonials fetch error:', error);
-    return Response.json({ success: false, error: 'Failed to fetch testimonials' }, { status: 500 });
-  }
+async function getHandler() {
+  const testimonials = await testimonialService.getApproved();
+  return apiSuccess(testimonials);
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const parsed = CreateTestimonialSchema.safeParse(body);
+async function postHandler(req: NextRequest) {
+  const parsed = await parseBody(req, CreateTestimonialSchema);
+  if (!parsed.success) return parsed.response;
 
-    if (!parsed.success) {
-      return Response.json({
-        success: false,
-        error: parsed.error.issues.map((e) => e.message).join(', '),
-      }, { status: 400 });
-    }
+  const testimonial = await testimonialService.create({
+    ...parsed.data,
+    is_approved: false,
+  } as any);
 
-    const testimonial = await testimonialService.create({
-      ...parsed.data,
-      is_approved: false,
-    } as any);
-
-    return Response.json({
-      success: true,
-      message: 'Thank you for your testimonial! It will be reviewed and published soon.',
-      data: testimonial,
-    });
-  } catch (error) {
-    console.error('Testimonial create error:', error);
-    return Response.json({ success: false, error: 'Failed to submit testimonial' }, { status: 500 });
-  }
+  return apiSuccess({
+    message: 'Thank you for your testimonial! It will be reviewed and published soon.',
+    data: testimonial,
+  });
 }
+
+export const GET = withErrorHandling(getHandler);
+export const POST = withErrorHandling(postHandler);

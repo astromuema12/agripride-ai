@@ -1,49 +1,41 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { z } from 'zod';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
+import { withErrorHandling, apiError, apiSuccess } from '@/lib/api-utils';
+import { logger } from '@/lib/logger';
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-const UploadSchema = z.object({
-  userId: z.string().optional(),
-});
-
-export async function POST(req: NextRequest) {
+async function handler(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get('file') as File | null;
   const userId = formData.get('userId') as string | null;
 
-  const parsed = UploadSchema.safeParse({ userId: userId || undefined });
-  if (!parsed.success) {
-    return Response.json({ error: parsed.error.issues.map(e => e.message).join(', ') }, { status: 400 });
-  }
-
   if (!file) {
-    return Response.json({ error: 'No file provided' }, { status: 400 });
+    return apiError(400, 'No file provided');
   }
 
   if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    return Response.json({
-      error: `Invalid file type. Allowed: ${ALLOWED_MIME_TYPES.join(', ')}`,
-    }, { status: 400 });
+    return apiError(400, `Invalid file type. Allowed: ${ALLOWED_MIME_TYPES.join(', ')}`);
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return Response.json({
-      error: `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB`,
-    }, { status: 400 });
+    return apiError(400, `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB`);
   }
 
   if (file.size === 0) {
-    return Response.json({ error: 'File is empty' }, { status: 400 });
+    return apiError(400, 'File is empty');
+  }
+
+  if (file.size < 100) {
+    return apiError(400, 'File too small or corrupted');
   }
 
   if (serverSupabase) {
     const { data: { session } } = await serverSupabase.auth.getSession();
     if (!session?.user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError(401, 'Unauthorized');
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -52,6 +44,23 @@ export async function POST(req: NextRequest) {
     if (supabaseUrl && supabaseServiceKey) {
       const supabase = createClient(supabaseUrl, supabaseServiceKey);
       const buffer = Buffer.from(await file.arrayBuffer());
+
+      // Validate file signature (magic bytes) for images
+      const header = buffer.slice(0, 4).toString('hex');
+      const validHeaders: Record<string, string[]> = {
+        'image/jpeg': ['ffd8'],
+        'image/png': ['89504e47'],
+        'image/webp': ['52494646'],
+      };
+      const validHeader = validHeaders[file.type];
+      if (validHeader && !validHeader.some((h) => header.startsWith(h))) {
+        logger.warn('File content mismatch with declared MIME type', {
+          component: 'upload',
+          metadata: { declaredType: file.type, header, fileName: file.name },
+        });
+        return apiError(400, 'File content does not match declared type');
+      }
+
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const fileName = `${Date.now()}-${safeName}`;
 
@@ -60,17 +69,23 @@ export async function POST(req: NextRequest) {
         .upload(fileName, buffer, {
           contentType: file.type,
           upsert: false,
+          cacheControl: '3600',
         });
 
       if (error) {
-        return Response.json({ error: 'Failed to upload file' }, { status: 500 });
+        logger.error('Storage upload failed', {
+          component: 'upload',
+          error,
+          metadata: { fileName },
+        });
+        return apiError(500, 'Failed to upload file');
       }
 
       const { data: { publicUrl } } = supabase.storage
         .from('disease-images')
         .getPublicUrl(data.path);
 
-      writeAuditLog({
+      await writeAuditLog({
         user_id: session.user.id,
         action: 'file_upload',
         resource: 'storage',
@@ -79,14 +94,15 @@ export async function POST(req: NextRequest) {
         ip_address: req.headers.get('x-forwarded-for') || undefined,
       });
 
-      return Response.json({ url: publicUrl, path: data.path });
+      return apiSuccess({ url: publicUrl, path: data.path });
     }
   }
 
-  const base64 = Buffer.from(await file.arrayBuffer()).toString('base64');
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const base64 = buffer.toString('base64');
   const dataUrl = `data:${file.type};base64,${base64}`;
 
-  writeAuditLog({
+  await writeAuditLog({
     user_id: userId || 'anonymous',
     action: 'file_upload',
     resource: 'storage',
@@ -94,5 +110,7 @@ export async function POST(req: NextRequest) {
     ip_address: req.headers.get('x-forwarded-for') || undefined,
   });
 
-  return Response.json({ url: dataUrl, path: null });
+  return apiSuccess({ url: dataUrl, path: null });
 }
+
+export const POST = withErrorHandling(handler);

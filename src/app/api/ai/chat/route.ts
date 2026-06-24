@@ -1,34 +1,27 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
-import { getChatResponse as getAgentChatResponse, diagnoseDisease, getCropAdvisorAdvice } from '@/lib/ai-agents';
+import { getChatResponse, diagnoseDisease, getCropAdvisorAdvice } from '@/lib/ai-agents';
+import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { trackAiUsage, reportError } from '@/lib/monitoring';
+import { logger } from '@/lib/logger';
 
 const ChatSchema = z.object({
   message: z.string().min(1, 'Message is required').max(10000),
   userId: z.string().optional(),
 });
 
-export async function POST(req: NextRequest) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return Response.json({ error: 'Invalid JSON body' }, { status: 400 });
-  }
-
-  const parsed = ChatSchema.safeParse(body);
-  if (!parsed.success) {
-    return Response.json({
-      error: parsed.error.issues.map(e => e.message).join(', '),
-    }, { status: 400 });
-  }
+async function handler(req: NextRequest) {
+  const parsed = await parseBody(req, ChatSchema);
+  if (!parsed.success) return parsed.response;
 
   const { message, userId } = parsed.data;
+  const startTime = Date.now();
 
   if (serverSupabase) {
     const { data: { session } } = await serverSupabase.auth.getSession();
     if (!session?.user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return apiError(401, 'Unauthorized');
     }
 
     const { data: consent } = await serverSupabase
@@ -38,11 +31,11 @@ export async function POST(req: NextRequest) {
       .eq('type', 'ai_processing')
       .single();
     if (consent && !consent.granted) {
-      return Response.json({ error: 'AI processing not consented' }, { status: 403 });
+      return apiError(403, 'AI processing not consented');
     }
   }
 
-  writeAuditLog({
+  await writeAuditLog({
     user_id: userId || 'anonymous',
     action: 'ai_chat',
     resource: 'ai_chat',
@@ -51,8 +44,8 @@ export async function POST(req: NextRequest) {
   });
 
   const hasRealAI = !!process.env.OPENAI_API_KEY;
-
   const encoder = new TextEncoder();
+
   const stream = new ReadableStream({
     async start(controller) {
       try {
@@ -66,14 +59,25 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               model: 'gpt-4o-mini',
               messages: [
-                { role: 'system', content: 'You are AgriPride AI, a helpful agricultural assistant for small-scale farmers in East Africa. Provide practical, actionable advice about crop farming, pest management, soil health, weather, and sustainable agriculture. Keep responses concise and practical.' },
+                {
+                  role: 'system',
+                  content: 'You are AgriPride AI, a helpful agricultural assistant for small-scale farmers in East Africa. Provide practical, actionable advice about crop farming, pest management, soil health, weather, and sustainable agriculture. Keep responses concise and practical.',
+                },
                 { role: 'user', content: message },
               ],
               stream: true,
+              stream_options: { include_usage: true },
             }),
           });
 
-          if (!response.ok) throw new Error('OpenAI API error');
+          if (!response.ok) {
+            const errorText = await response.text().catch(() => 'Unknown error');
+            logger.error('OpenAI streaming error', {
+              component: 'ai',
+              metadata: { status: response.status, error: errorText },
+            });
+            throw new Error(`OpenAI API error: ${response.status}`);
+          }
 
           const reader = response.body?.getReader();
           if (!reader) throw new Error('No response stream');
@@ -99,12 +103,17 @@ export async function POST(req: NextRequest) {
                   if (content) {
                     controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: content })}\n\n`));
                   }
-                } catch {}
+                } catch {
+                  // skip malformed SSE lines
+                }
               }
             }
           }
+
+          const duration = Date.now() - startTime;
+          trackAiUsage('chat', duration, true, 'gpt-4o-mini', userId);
         } else {
-          const agentResponse = getAgentChatResponse(message);
+          const agentResponse = getChatResponse(message);
           const fullResponse = agentResponse.success && agentResponse.data
             ? (agentResponse.data as { response: string }).response
             : 'I am your AgriPride AI assistant for Kenyan agriculture. I can help with planting advice, fertilizer recommendations, pest and disease management, weather information, and sustainability practices for all crops grown in Kenya. What would you like to know?';
@@ -112,13 +121,17 @@ export async function POST(req: NextRequest) {
 
           for (const word of words) {
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: word + ' ' })}\n\n`));
-            await new Promise((r) => setTimeout(r, 40 + Math.random() * 30));
+            await new Promise((r) => setTimeout(r, 20 + Math.random() * 20));
           }
+
+          trackAiUsage('chat', Date.now() - startTime, true, 'local-agent', userId);
         }
 
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
-      } catch {
+      } catch (error) {
+        trackAiUsage('chat', Date.now() - startTime, false, hasRealAI ? 'gpt-4o-mini' : 'local-agent', userId);
+        await reportError(error, { userId, endpoint: 'ai/chat' });
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: 'I apologize, but I encountered an error processing your request. Please try again.' })}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
@@ -129,8 +142,12 @@ export async function POST(req: NextRequest) {
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
+      'X-Request-Id': crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+      'X-Accel-Buffering': 'no',
     },
   });
 }
+
+export const POST = withErrorHandling(handler);

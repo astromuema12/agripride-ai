@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
 import { diagnose } from '@/lib/diagnosis-engine';
+import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { trackAiUsage, reportError } from '@/lib/monitoring';
+import { logger } from '@/lib/logger';
 import type { GrowthStage } from '@/types';
 
 const GROWTH_STAGES = ['seedling', 'vegetative', 'flowering', 'fruiting', 'unknown'] as const;
@@ -14,28 +17,17 @@ const DiagnoseSchema = z.object({
   userId: z.string().optional(),
 });
 
-export async function POST(req: NextRequest) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return Response.json({ success: false, error: 'Invalid JSON body' }, { status: 400 });
-  }
-
-  const parsed = DiagnoseSchema.safeParse(body);
-  if (!parsed.success) {
-    return Response.json({
-      success: false,
-      error: parsed.error.issues.map(e => e.message).join(', '),
-    }, { status: 400 });
-  }
+async function handler(req: NextRequest) {
+  const parsed = await parseBody(req, DiagnoseSchema);
+  if (!parsed.success) return parsed.response;
 
   const { cropType, symptoms, growthStage, imageBase64, userId } = parsed.data;
+  const startTime = Date.now();
 
   if (serverSupabase) {
     const { data: { session } } = await serverSupabase.auth.getSession();
     if (!session?.user) {
-      return Response.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      return apiError(401, 'Unauthorized');
     }
 
     if (userId && userId !== session.user.id) {
@@ -45,7 +37,7 @@ export async function POST(req: NextRequest) {
         .eq('id', session.user.id)
         .single();
       if (!userData || userData.role !== 'admin') {
-        return Response.json({ success: false, error: 'Forbidden' }, { status: 403 });
+        return apiError(403, 'Forbidden');
       }
     }
 
@@ -56,7 +48,7 @@ export async function POST(req: NextRequest) {
       .eq('type', 'ai_processing')
       .single();
     if (consent && !consent.granted) {
-      return Response.json({ success: false, error: 'AI processing not consented' }, { status: 403 });
+      return apiError(403, 'AI processing not consented');
     }
   }
 
@@ -93,12 +85,21 @@ export async function POST(req: NextRequest) {
         }),
       });
 
-      if (!response.ok) throw new Error('API error');
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Unknown error');
+        logger.error('OpenAI API error', {
+          component: 'ai',
+          metadata: { status: response.status, error: errorText },
+        });
+        throw new Error(`OpenAI API error: ${response.status}`);
+      }
 
       const data = await response.json();
       const result = JSON.parse(data.choices[0].message.content);
+      const duration = Date.now() - startTime;
 
-      writeAuditLog({
+      trackAiUsage('diagnose', duration, true, 'gpt-4o-mini', userId);
+      await writeAuditLog({
         user_id: userId || 'anonymous',
         action: 'ai_diagnosis',
         resource: 'ai_diagnose',
@@ -106,19 +107,17 @@ export async function POST(req: NextRequest) {
         ip_address: req.headers.get('x-forwarded-for') || undefined,
       });
 
-      return Response.json({
-        success: true,
-        data: result,
+      return apiSuccess({
+        ...result,
         confidence_score: result.primaryDiagnosis?.confidence,
         responsible_agent: 'AI Disease Diagnostic Agent',
         frameworks_used: ['AIM Framework', 'MAP Framework', 'TRACK Framework'],
         timestamp: new Date().toISOString(),
       });
-    } catch {
-      return Response.json({
-        success: false,
-        error: 'Failed to diagnose. Please try again.',
-      }, { status: 500 });
+    } catch (error) {
+      trackAiUsage('diagnose', Date.now() - startTime, false, 'gpt-4o-mini', userId);
+      await reportError(error, { cropType, growthStage, endpoint: 'ai/diagnose' });
+      return apiError(500, 'Failed to diagnose. Please try again.');
     }
   }
 
@@ -130,7 +129,10 @@ export async function POST(req: NextRequest) {
     growthStage: growthStage as GrowthStage | undefined,
   });
 
-  writeAuditLog({
+  const duration = Date.now() - startTime;
+  trackAiUsage('diagnose', duration, true, 'local-engine', userId);
+
+  await writeAuditLog({
     user_id: userId || 'anonymous',
     action: 'ai_diagnosis',
     resource: 'ai_diagnose',
@@ -144,8 +146,7 @@ export async function POST(req: NextRequest) {
     ip_address: req.headers.get('x-forwarded-for') || undefined,
   });
 
-  return Response.json({
-    success: true,
+  return apiSuccess({
     data: result,
     confidence_score: result.primaryDiagnosis?.confidence,
     responsible_agent: 'Crop Disease Diagnostic Agent',
@@ -153,3 +154,5 @@ export async function POST(req: NextRequest) {
     timestamp: new Date().toISOString(),
   });
 }
+
+export const POST = withErrorHandling(handler);
