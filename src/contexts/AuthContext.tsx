@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 import { User, UserRole } from '@/types';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { demoLogin, demoRegister } from '@/lib/demo-auth';
+import { recordSession } from '@/lib/sessions';
 
 const SESSION_TIMEOUT_MS = 10 * 60 * 1000;
 const ACTIVITY_CHECK_INTERVAL_MS = 10 * 1000;
@@ -21,13 +22,15 @@ interface AuthContextType {
   register: (email: string, password: string, name: string, role: UserRole) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
+  signInWithOAuth: (provider: 'google' | 'github') => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 async function fetchUserProfile(userId: string): Promise<User | null> {
-  if (!isSupabaseConfigured) return null;
-  const { data } = await supabase!
+  if (!isSupabaseConfigured || !supabase) return null;
+  const { data } = await supabase
     .from('users')
     .select('*')
     .eq('id', userId)
@@ -45,12 +48,13 @@ async function ensureUserProfile(authUser: { id: string; email?: string; user_me
       role: 'farmer' as UserRole,
       is_suspended: false,
     };
-    const { data } = await supabase!
-      .from('users')
-      .insert(newProfile)
-      .select()
-      .single();
-    profile = data as User | null;
+  if (!supabase) return null;
+  const { data } = await supabase
+    .from('users')
+    .insert(newProfile)
+    .select()
+    .single();
+  profile = data as User | null;
   }
   return profile;
 }
@@ -77,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem(STORAGE_KEYS.demoMode) === 'true';
   });
+  const [oAuthLoading, setOAuthLoading] = useState(false);
 
   const touchActivity = useCallback(() => {
     localStorage.setItem(STORAGE_KEYS.lastActivity, Date.now().toString());
@@ -121,12 +126,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    setLoading(false);
+
+    async function initSession() {
+      if (isSupabaseConfigured && supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const profile = await ensureUserProfile(session.user);
+          if (profile) {
+            setUser(profile);
+            localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+            localStorage.removeItem(STORAGE_KEYS.demoMode);
+            setIsDemoMode(false);
+            await recordSession(profile.id);
+          }
+        }
+      }
+      setLoading(false);
+    }
+
+    initSession();
+
+    if (isSupabaseConfigured && supabase) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const profile = await ensureUserProfile(session.user);
+          if (profile) {
+            setUser(profile);
+            localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+            localStorage.removeItem(STORAGE_KEYS.demoMode);
+            setIsDemoMode(false);
+            await recordSession(profile.id);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          localStorage.removeItem(STORAGE_KEYS.user);
+          localStorage.removeItem(STORAGE_KEYS.demoMode);
+          localStorage.removeItem(STORAGE_KEYS.lastActivity);
+          setIsDemoMode(false);
+        }
+      });
+
+      return () => {
+        subscription?.unsubscribe();
+      };
+    }
   }, []);
 
   const login = useCallback(async (email: string, password: string): Promise<{ error?: string }> => {
-    if (isSupabaseConfigured) {
-      const { data, error } = await supabase!.auth.signInWithPassword({ email, password });
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (!error && data.user) {
         const profile = await ensureUserProfile(data.user);
         if (profile) {
@@ -135,6 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
           touchActivity();
+          await recordSession(profile.id);
           return {};
         }
       }
@@ -157,8 +206,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(async (email: string, password: string, name: string, _role: UserRole): Promise<{ error?: string }> => {
     const forcedRole: UserRole = 'farmer';
-    if (isSupabaseConfigured) {
-      const { data, error } = await supabase!.auth.signUp({
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { name, role: forcedRole } },
@@ -171,6 +220,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.removeItem(STORAGE_KEYS.demoMode);
           setIsDemoMode(false);
           touchActivity();
+          await recordSession(profile.id);
           return {};
         }
       }
@@ -188,8 +238,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [touchActivity]);
 
   const logout = useCallback(async () => {
-    if (isSupabaseConfigured && !isDemoMode) {
-      await supabase!.auth.signOut();
+    if (isSupabaseConfigured && supabase && !isDemoMode) {
+      await supabase.auth.signOut();
     }
     setUser(null);
     localStorage.removeItem(STORAGE_KEYS.user);
@@ -199,16 +249,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [isDemoMode]);
 
   const resetPassword = useCallback(async (email: string): Promise<{ error?: string }> => {
-    if (isSupabaseConfigured) {
-      const { error } = await supabase!.auth.resetPasswordForEmail(email);
+    if (isSupabaseConfigured && supabase) {
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
       if (error) return { error: error.message };
       return {};
     }
     return { error: 'Password reset unavailable in demo mode' };
   }, []);
 
+  const signInWithOAuth = useCallback(async (provider: 'google' | 'github') => {
+    if (!isSupabaseConfigured || !supabase) return;
+    setOAuthLoading(true);
+    try {
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const callbackUrl = `${origin}/api/auth/callback`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: callbackUrl },
+      });
+      if (error) {
+        console.error(`${provider} OAuth error:`, error.message);
+      }
+    } catch (err) {
+      console.error(`${provider} OAuth error:`, err);
+    } finally {
+      setOAuthLoading(false);
+    }
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    if (!isSupabaseConfigured || !supabase) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      const profile = await ensureUserProfile(session.user);
+      if (profile) {
+        setUser(profile);
+        localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+      }
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, isDemoMode, login, register, logout, resetPassword }}>
+    <AuthContext.Provider value={{ user, loading, isDemoMode, login, register, logout, resetPassword, signInWithOAuth, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

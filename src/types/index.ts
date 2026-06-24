@@ -408,3 +408,65 @@ export interface AdminUser extends User {
   admin_role?: AdminRole;
   permissions?: string[];
 }
+
+// --- Auth enhancements (Phase 1-7) ---
+
+export interface OAuthAccount {
+  id: string;
+  user_id: string;
+  provider: 'google' | 'github';
+  provider_account_id: string;
+  provider_email?: string;
+  created_at: string;
+}
+
+export interface MfaCredential {
+  id: string;
+  user_id: string;
+  secret: string;
+  method: 'authenticator';
+  verified: boolean;
+  enabled: boolean;
+  created_at: string;
+  last_used_at?: string;
+}
+
+export interface MfaRecoveryCode {
+  id: string;
+  user_id: string;
+  code_hash: string;
+  used: boolean;
+  used_at?: string;
+  created_at: string;
+}
+
+export interface UserSession {
+  id: string;
+  user_id: string;
+  session_token: string;
+  device_name?: string;
+  device_type?: string;
+  browser?: string;
+  os?: string;
+  ip_address?: string;
+  city?: string;
+  country?: string;
+  is_current: boolean;
+  last_active_at: string;
+  created_at: string;
+  expires_at: string;
+}
+
+export interface MfaSetupResult {
+  secret: string;
+  qrCodeUrl: string;
+  recoveryCodes: string[];
+}
+
+export interface PasswordStrengthResult {
+  score: number;
+  label: 'weak' | 'fair' | 'good' | 'strong' | 'very_strong';
+  color: string;
+  cracks: string[];
+  suggestions: string[];
+}

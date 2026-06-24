@@ -7,7 +7,7 @@ import {
   BarChart3, Users, TreePine, Shield, AlertTriangle,
   Wheat, Leaf, LineChart, Menu, X, Building2, UserCheck,
   Bot, TrendingUp, DollarSign, Download, Bell,
-  Star, MessageCircle, CreditCard,
+  Star, MessageCircle, CreditCard, Lock,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -27,6 +27,8 @@ const farmerLinks = [
   { href: '/dashboard/farmer/recommendations', label: 'AI Recommendations', icon: ScrollText },
   { href: '/dashboard/farmer/sustainability', label: 'Sustainability', icon: Leaf },
   { href: '/dashboard/farmer/export', label: 'Data Export', icon: Download },
+  { href: '/settings', label: 'Settings', icon: Shield },
+  { href: '/dashboard/security', label: 'Security', icon: Lock },
 ];
 
 const officerLinks = [
@@ -38,6 +40,8 @@ const officerLinks = [
   { href: '/dashboard/officer/reports', label: 'Reports', icon: LineChart },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
   { href: '/dashboard/officer/export', label: 'Data Export', icon: Download },
+  { href: '/settings', label: 'Settings', icon: Shield },
+  { href: '/dashboard/security', label: 'Security', icon: Lock },
 ];
 
 const adminLinks = [
@@ -53,6 +57,8 @@ const adminLinks = [
   { href: '/dashboard/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
   { href: '/dashboard/admin/export', label: 'Data Export', icon: Download },
+  { href: '/settings', label: 'Settings', icon: Shield },
+  { href: '/dashboard/security', label: 'Security', icon: Lock },
 ];
 
 export function Sidebar() {

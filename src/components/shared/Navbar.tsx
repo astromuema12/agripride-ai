@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Wheat, Menu, X, Bell, LogOut, Settings, Shield, Sun, Moon } from 'lucide-react';
+import { Wheat, Menu, X, Bell, LogOut, Settings, Shield, Sun, Moon, Lock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -161,6 +161,10 @@ export function Navbar() {
                   <DropdownMenuItem onClick={() => router.push('/settings')}>
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/dashboard/security')}>
+                    <Lock className="mr-2 h-4 w-4" />
+                    Security
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>

@@ -87,7 +87,7 @@ export async function proxy(request: NextRequest) {
       data: { session },
     } = await supabase.auth.getSession();
 
-    const publicPaths = ['/auth', '/api/auth/', '/api/ai/demo', '/api/health'];
+    const publicPaths = ['/auth', '/api/auth/', '/api/ai/demo', '/api/health', '/api/auth/callback'];
     const isPublic = publicPaths.some((p) => pathname.startsWith(p));
 
     if (pathname.startsWith('/dashboard/') && !session) {
