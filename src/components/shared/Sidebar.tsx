@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Sprout, FileSearch, CloudSun, ScrollText,
   BarChart3, Users, TreePine, Shield, AlertTriangle,
-  Leaf, LineChart, Menu, X, Building2, UserCheck,
+  Wheat, Leaf, LineChart, Menu, X, Building2, UserCheck,
   Bot, TrendingUp, DollarSign, Download, Bell,
   Star, MessageCircle, CreditCard,
 } from 'lucide-react';
@@ -105,7 +105,7 @@ export function Sidebar() {
         )}
       >
         <div className={cn('flex items-center gap-2 border-b border-[var(--border)] px-4 py-3', collapsed && 'justify-center')}>
-          <Leaf className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <Wheat className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
           {!collapsed && (
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-sm font-semibold text-[var(--foreground)] capitalize truncate">{user?.role}</span>

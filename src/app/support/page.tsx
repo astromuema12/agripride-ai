@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'Is AgriPride AI currently available?',
-    a: 'We are currently in our Beta Program, onboarding farmers in Kenya. Sign up to join the waitlist and we will notify you when we expand to your region.',
+    a: 'Yes, AgriPride AI is live and available to farmers in Kenya. Sign up for a free account to get started with AI disease detection, weather forecasts, and market intelligence.',
   },
   {
     q: 'How much does it cost?',
@@ -33,8 +33,8 @@ const faqs = [
     a: 'Yes. We use encryption, row-level security in our database, and follow strict data protection practices. We never share your personal data without your explicit consent.',
   },
   {
-    q: 'How do I become a beta tester?',
-    a: 'Create a free account on our platform and complete the onboarding process. Beta testers get early access to features and priority support.',
+    q: 'How do I get started?',
+    a: 'Create a free account on our platform and complete the onboarding process. You will get immediate access to all features and support.',
   },
   {
     q: 'Do you offer support in local languages?',

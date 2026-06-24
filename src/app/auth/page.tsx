@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Leaf, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Wheat, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -142,7 +142,7 @@ function AuthForm() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-md">
         <div className="mb-6 sm:mb-8 text-center">
           <div className="mx-auto mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-emerald-600">
-            <Leaf className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
+            <Wheat className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Welcome to AgriPride AI</h1>
           <p className="mt-1 text-sm text-gray-500">Empowering African agriculture with AI</p>
@@ -216,8 +216,8 @@ function AuthForm() {
                   </form>
 
                   <div className="mt-6 rounded-lg bg-emerald-50 p-4">
-                    <p className="mb-1 text-xs font-medium text-emerald-700">Beta Program</p>
-                    <p className="text-xs text-emerald-600">Creating an account registers you for our beta program. We are currently onboarding farmers in Kenya.</p>
+                    <p className="mb-1 text-xs font-medium text-emerald-700">Free to Use</p>
+                    <p className="text-xs text-emerald-600">Creating an account gives you full access to all features. We are currently onboarding farmers in Kenya.</p>
                   </div>
                 </CardContent>
               </Card>

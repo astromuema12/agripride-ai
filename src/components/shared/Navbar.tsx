@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Leaf, Menu, X, Bell, LogOut, Settings, Shield, Sun, Moon } from 'lucide-react';
+import { Wheat, Menu, X, Bell, LogOut, Settings, Shield, Sun, Moon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -64,7 +64,7 @@ export function Navbar() {
         <div className="flex items-center gap-4 sm:gap-8">
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
             <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-emerald-600">
-              <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              <Wheat className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <span className="text-base sm:text-lg font-bold text-[var(--foreground)]">AgriPride AI</span>
             <span suppressHydrationWarning>

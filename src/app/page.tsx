@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, Leaf, CloudSun, Shield, BarChart3,
+  ArrowRight, Wheat, CloudSun, Shield, BarChart3,
   Sprout, FileSearch, ScrollText, TreePine,
   Globe, CheckCircle, Quote, Mail, MapPin,
   TrendingUp, Users, DollarSign, Activity,
@@ -62,7 +62,7 @@ const faqItems = [
   { q: 'How does the AI disease detection work?', a: 'Upload a photo of your crop. Our AI analyzes visual symptoms against a database of 200+ crop diseases, returns a diagnosis with confidence score, treatment plan, and prevention tips.' },
   { q: 'Is my farm data secure?', a: 'Yes. All data is encrypted at rest and in transit. We use Supabase with Row-Level Security — you control who sees your data. We never sell farmer data.' },
   { q: 'Do I need internet access?', a: 'The platform works best online, but key features like diagnosis history and farm records are cached for offline access in low-connectivity areas.' },
-  { q: 'How do I pay?', a: 'M-Pesa integration is coming soon. For now, all plans are free during our beta program. We will announce payment launch with advance notice.' },
+  { q: 'How do I pay?', a: 'M-Pesa integration is coming soon. For now, all plans are free to use. We will announce payment launch with advance notice.' },
 ];
 
 function Particles() {
@@ -114,7 +114,7 @@ export default function HomePage() {
         <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/25">
-              <Leaf className="h-5 w-5 text-white dark:text-white" />
+              <Wheat className="h-5 w-5 text-white dark:text-white" />
             </div>
             <span className="text-lg font-bold text-white dark:text-white">AgriPride AI</span>
           </div>
@@ -147,9 +147,9 @@ export default function HomePage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                 </span>
-                Beta Program
+                Now Live
                 <span className="text-emerald-400/60 hidden xs:inline">&mdash;</span>
-                <span className="hidden xs:inline">Now Open</span>
+                <span className="hidden xs:inline">For Kenyan Farmers</span>
               </motion.div>
               <h1 className="text-3xl font-bold leading-[1.1] tracking-tight text-white xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-balance">
                 AI That Understands{' '}
@@ -169,7 +169,7 @@ export default function HomePage() {
               </div>
               <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-emerald-300/60">
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> No credit card</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Free during beta</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Free to use</span>
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> M-Pesa coming soon</span>
               </div>
             </motion.div>
@@ -586,10 +586,10 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-balance">Ready to Transform Your Farm?</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-emerald-100/80">Join thousands of Kenyan farmers using AI to increase yields, reduce losses, and make smarter decisions. Free during beta.</p>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-emerald-100/80">Join thousands of Kenyan farmers using AI to increase yields, reduce losses, and make smarter decisions. Free to get started.</p>
             <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
               <Button size="xl" className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl shadow-black/10 hover:shadow-emerald-200/50 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
-                Join the Beta Free
+                Get Started Free
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button size="xl" variant="outline" className="border-emerald-300/40 text-white hover:bg-emerald-500/20 hover:border-emerald-200/60 backdrop-blur-sm w-full xs:w-auto" onClick={() => router.push('/contact')}>
@@ -607,7 +607,7 @@ export default function HomePage() {
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/20">
-                  <Leaf className="h-5 w-5 text-white dark:text-white" />
+                  <Wheat className="h-5 w-5 text-white dark:text-white" />
                 </div>
                 <span className="text-lg font-bold text-white dark:text-slate-900">AgriPride AI</span>
               </div>

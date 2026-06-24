@@ -326,7 +326,7 @@ export function AiDemo() {
         >
           <p className="text-xs sm:text-sm text-gray-400">
             Full AI disease detection with image upload available for registered users.{' '}
-            <a href="/auth?tab=register" className="text-emerald-600 underline hover:text-emerald-700">Join the Beta</a>
+            <a href="/auth?tab=register" className="text-emerald-600 underline hover:text-emerald-700">Get Started</a>
           </p>
         </motion.div>
       </div>

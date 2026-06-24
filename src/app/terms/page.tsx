@@ -10,8 +10,8 @@ const sections = [
     content: 'By accessing or using AgriPride AI, you agree to be bound by these Terms of Service. If you do not agree, please do not use the platform.',
   },
   {
-    title: 'Beta Program',
-    content: 'AgriPride AI is currently in Beta phase. Services are provided "as is" with no guarantees of uninterrupted availability. Features may change significantly during beta. We appreciate your feedback as we improve the platform.',
+    title: 'Service Availability',
+    content: 'AgriPride AI is provided "as is" with no guarantees of uninterrupted availability. Features may change as we continue to improve the platform. We appreciate your feedback as we grow.',
   },
   {
     title: 'User Accounts',
@@ -65,7 +65,7 @@ export default function TermsPage() {
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-lg border border-amber-100 bg-amber-50/50 p-4 text-center">
             <AlertTriangle className="mx-auto mb-2 h-6 w-6 text-amber-600" />
-            <p className="text-sm font-medium text-amber-800">Beta Terms Apply</p>
+            <p className="text-sm font-medium text-amber-800">Terms of Service Apply</p>
           </div>
           <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4 text-center">
             <CheckCircle className="mx-auto mb-2 h-6 w-6 text-emerald-600" />

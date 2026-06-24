@@ -59,7 +59,7 @@ export default function TestimonialsPage() {
           </Badge>
           <h1 className="text-4xl font-bold text-gray-900">What Farmers Say</h1>
           <p className="mx-auto mt-3 max-w-2xl text-gray-500">
-            Real experiences from our growing community of beta testers.
+            Real experiences from our growing community of farmers.
           </p>
         </motion.div>
 

@@ -64,7 +64,7 @@ export default function ContactPage() {
           <Badge variant="primary" className="mb-3 sm:mb-4">Get In Touch</Badge>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance">Contact Us</h1>
           <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
-            Have a question about our beta program? Want to partner with us? We&apos;d love to hear from you.
+            Have a question about AgriPride AI? Want to partner with us? We&apos;d love to hear from you.
           </p>
         </motion.div>
 
