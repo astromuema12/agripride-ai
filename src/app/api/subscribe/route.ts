@@ -1,15 +1,12 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { subscriptionService, userSubscriptionService } from '@/services/subscription.service';
-import { mpesaApi, mpesaTransactionService } from '@/services/mpesa.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
 import { logger } from '@/lib/logger';
 
 const SubscribeSchema = z.object({
   tier: z.enum(['free', 'premium', 'cooperative', 'enterprise']),
   userId: z.string().optional(),
-  phone: z.string().optional(),
-  paymentMethod: z.enum(['mpesa', 'flutterwave']).optional().default('mpesa'),
   email: z.string().email().optional(),
   name: z.string().optional(),
 });
@@ -18,7 +15,7 @@ async function handler(req: NextRequest) {
   const parsed = await parseBody(req, SubscribeSchema);
   if (!parsed.success) return parsed.response;
 
-  const { tier, userId, phone, paymentMethod, email, name } = parsed.data;
+  const { tier, userId, email, name } = parsed.data;
 
   await subscriptionService.seedPlans();
 
@@ -49,118 +46,46 @@ async function handler(req: NextRequest) {
     });
   }
 
-  if (paymentMethod === 'flutterwave') {
-    const flwConfigured = !!(
-      process.env.FLW_PUBLIC_KEY &&
-      process.env.FLW_SECRET_KEY &&
-      process.env.FLW_ENCRYPTION_KEY
-    );
-
-    if (!flwConfigured) {
-      return apiError(503, 'Flutterwave payment is not configured. Please contact support.');
-    }
-
-    const { generateTxRef } = await import('@/lib/flutterwave');
-    const txRef = generateTxRef(tier, userId || 'guest');
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://agripride-ai.vercel.app';
-
-    const { initializeFlutterwavePayment, flutterwaveTransactionService } = await import('@/lib/flutterwave');
-
-    const result = await initializeFlutterwavePayment({
-      amount: plan.price_kes,
-      currency: 'KES',
-      tx_ref: txRef,
-      customer: {
-        email: email || `${userId || 'guest'}@agripride.ai`,
-        name: name || 'Farmer',
-        phone_number: phone,
-      },
-      meta: { userId, tier, planId: plan.id, planName: plan.name },
-      redirect_url: `${baseUrl}/api/payments/callback?tx_ref=${txRef}`,
-      payment_options: 'mobilemoney,card',
-    });
-
-    if (!result.success) {
-      return apiError(502, result.error || 'Failed to initialize payment');
-    }
-
-    await flutterwaveTransactionService.create({
-      user_id: userId || 'guest',
-      tx_ref: txRef,
-      flw_transaction_id: 0,
-      amount: plan.price_kes,
-      currency: 'KES',
-      payment_method: 'pending',
-      status: 'pending',
-      email: email || '',
-      plan_id: plan.id,
-      metadata: { tier, planName: plan.name },
-    });
-
-    logger.info('Flutterwave payment initiated from subscribe', {
-      component: 'subscribe',
-      metadata: { txRef, tier, userId },
-    });
-
-    return apiSuccess({
-      plan: {
-        id: plan.id,
-        name: plan.name,
-        tier: plan.tier,
-        price_kes: plan.price_kes,
-        features: plan.features,
-      },
-      checkout_url: result.data!.link,
-      tx_ref: txRef,
-      message: 'Redirecting to payment page...',
-    });
-  }
-
-  if (!phone) {
-    return apiSuccess({
-      plan: {
-        id: plan.id,
-        name: plan.name,
-        tier: plan.tier,
-        price_kes: plan.price_kes,
-        features: plan.features,
-      },
-      requiresMpesa: true,
-      message: `Selected ${plan.name} plan. Provide phone number for M-Pesa payment.`,
-    });
-  }
-
-  if (!mpesaApi.isConfigured) {
-    return apiError(503, 'M-Pesa payment is not configured yet. Please contact support.');
-  }
-
-  const mpesaResult = await mpesaApi.stkPush(
-    phone,
-    plan.price_kes,
-    `AGRIPRIDE_${tier.toUpperCase()}`,
-    `${plan.name} Subscription`,
+  const pstkConfigured = !!(
+    process.env.PAYSTACK_PUBLIC_KEY &&
+    process.env.PAYSTACK_SECRET_KEY
   );
 
-  if (!mpesaResult.success) {
-    return apiError(400, mpesaResult.error || 'M-Pesa payment initiation failed');
+  if (!pstkConfigured) {
+    return apiError(503, 'Paystack payment is not configured. Please contact support.');
   }
 
-  if (userId) {
-    await userSubscriptionService.create({
-      user_id: userId,
-      plan_id: plan.id,
-      status: 'trial',
-      started_at: new Date().toISOString(),
-      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    } as never);
-  }
+  const { generateReference, initializePaystackPayment, paystackTransactionService } = await import('@/lib/paystack');
+  const reference = generateReference(tier, userId || 'guest');
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://agripride-ai.vercel.app';
 
-  await mpesaTransactionService.recordTransaction({
-    phone,
+  const result = await initializePaystackPayment({
     amount: plan.price_kes,
-    transaction_id: mpesaResult.data!.CheckoutRequestID,
+    email: email || `${userId || 'guest'}@agripride.ai`,
+    reference,
+    metadata: { userId, tier, planId: plan.id, planName: plan.name },
+    callback_url: `${baseUrl}/api/payments/callback?reference=${reference}`,
+  });
+
+  if (!result.success) {
+    return apiError(502, result.error || 'Failed to initialize payment');
+  }
+
+  await paystackTransactionService.create({
+    user_id: userId || 'guest',
+    reference,
+    paystack_id: 0,
+    amount: plan.price_kes,
+    currency: 'KES',
     status: 'pending',
-    user_id: userId,
+    email: email || '',
+    plan_id: plan.id,
+    metadata: { tier, planName: plan.name },
+  });
+
+  logger.info('Paystack payment initiated from subscribe', {
+    component: 'subscribe',
+    metadata: { reference, tier, userId },
   });
 
   return apiSuccess({
@@ -171,9 +96,9 @@ async function handler(req: NextRequest) {
       price_kes: plan.price_kes,
       features: plan.features,
     },
-    checkoutRequestID: mpesaResult.data!.CheckoutRequestID,
-    merchantRequestID: mpesaResult.data!.MerchantRequestID,
-    message: 'M-Pesa prompt sent. Check your phone to complete payment.',
+    authorization_url: result.data!.authorization_url,
+    reference,
+    message: 'Redirecting to payment page...',
   });
 }
 

@@ -41,19 +41,11 @@ export async function GET() {
   const hasOpenAI = !!process.env.OPENAI_API_KEY;
   checks.ai = hasOpenAI ? 'configured' : 'demo_mode';
 
-  const hasMpesa = !!(
-    process.env.MPESA_CONSUMER_KEY &&
-    process.env.MPESA_CONSUMER_SECRET &&
-    process.env.MPESA_PASSKEY
+  const hasPaystack = !!(
+    process.env.PAYSTACK_PUBLIC_KEY &&
+    process.env.PAYSTACK_SECRET_KEY
   );
-  checks.mpesa = hasMpesa ? 'configured' : 'not_configured';
-
-  const hasFlutterwave = !!(
-    process.env.FLW_PUBLIC_KEY &&
-    process.env.FLW_SECRET_KEY &&
-    process.env.FLW_ENCRYPTION_KEY
-  );
-  checks.flutterwave = hasFlutterwave ? 'configured' : 'not_configured';
+  checks.paystack = hasPaystack ? 'configured' : 'not_configured';
 
   health.checks = checks;
   health.responseTimeMs = Date.now() - startTime;

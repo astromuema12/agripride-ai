@@ -3,11 +3,10 @@
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, Smartphone, CreditCard } from 'lucide-react';
+import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MpesaPayment } from '@/components/shared/mpesa-payment';
 import { toast } from 'sonner';
 
 interface Plan {
@@ -117,9 +116,6 @@ function PricingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState<{ tier: string; name: string; price: number } | null>(null);
-  const [showMpesa, setShowMpesa] = useState(false);
-  const [flwLoading, setFlwLoading] = useState<string | null>(null);
 
   const payment = searchParams.get('payment');
   const statusMap: Record<string, { variant: 'success' | 'error' | 'warning' | 'default'; message: string }> = {
@@ -132,12 +128,25 @@ function PricingPageContent() {
 
   const statusMessage = payment ? statusMap[payment] : null;
 
-  const handleFlutterwaveSubscribe = async (tier: string) => {
-    setFlwLoading(tier);
+  const handleSubscribe = async (tier: string) => {
+    setLoading(tier);
     try {
       const plan = plans.find((p) => p.tier === tier);
       const storedUser = localStorage.getItem('agripride_user');
       const user = storedUser ? JSON.parse(storedUser) : null;
+
+      if (plan?.price === 0) {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tier, userId: user?.id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Subscription failed');
+        toast.success(data.message || 'Subscription activated!');
+        router.push('/auth');
+        return;
+      }
 
       const res = await fetch('/api/subscribe', {
         method: 'POST',
@@ -147,55 +156,21 @@ function PricingPageContent() {
           userId: user?.id,
           email: user?.email || 'farmer@agripride.ai',
           name: user?.name || 'Farmer',
-          paymentMethod: 'flutterwave',
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Payment initiation failed');
 
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url;
       } else {
         throw new Error('No checkout URL returned');
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Payment initiation failed');
-    } finally {
-      setFlwLoading(null);
-    }
-  };
-
-  const handleSubscribe = async (tier: string) => {
-    setLoading(tier);
-    try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Subscription failed');
-
-      if (data.requiresMpesa) {
-        const plan = plans.find((p) => p.tier === tier);
-        setSelectedPlan({ tier, name: plan?.name || '', price: plan?.price || 0 });
-        setShowMpesa(true);
-        toast.info('Enter your M-Pesa phone number to continue');
-      } else {
-        toast.success(data.message || 'Subscription activated!');
-        router.push('/auth');
-      }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Subscription failed');
+      toast.error(err instanceof Error ? err.message : 'Payment failed');
     } finally {
       setLoading(null);
     }
-  };
-
-  const handlePaymentSuccess = (receipt: string) => {
-    toast.success(`Payment successful! Receipt: ${receipt}`);
-    setShowMpesa(false);
-    router.push('/auth');
   };
 
   return (
@@ -222,7 +197,7 @@ function PricingPageContent() {
           </h1>
           <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
             Start free and upgrade as your farm grows. All plans include our core AI features.
-            Pay securely with M-Pesa or Flutterwave.
+            Pay securely with Paystack.
           </p>
         </motion.div>
 
@@ -250,11 +225,6 @@ function PricingPageContent() {
                       <div className="rounded-lg bg-white/20 p-2">
                         <Icon className="h-6 w-6" />
                       </div>
-                      {plan.price > 0 && (
-                        <div className="rounded-full bg-white/20 p-1.5">
-                          <Smartphone className="h-4 w-4" />
-                        </div>
-                      )}
                     </div>
                     <CardTitle className="mt-4 text-xl font-bold">{plan.name}</CardTitle>
                     <CardDescription className="text-sm text-white/80">{plan.description}</CardDescription>
@@ -281,7 +251,7 @@ function PricingPageContent() {
                       ))}
                     </ul>
 
-                    <div className="mt-6 space-y-2">
+                    <div className="mt-6">
                       <Button
                         className="w-full"
                         variant={plan.popular ? 'default' : 'outline'}
@@ -301,35 +271,16 @@ function PricingPageContent() {
                           'Get Started Free'
                         ) : (
                           <>
-                            Pay with M-Pesa
-                            <Smartphone className="ml-2 h-4 w-4" />
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            Pay with Paystack
                           </>
                         )}
                       </Button>
-
-                      {plan.price > 0 && (
-                        <Button
-                          variant="outline"
-                          className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                          size="lg"
-                          onClick={() => handleFlutterwaveSubscribe(plan.tier)}
-                          disabled={flwLoading === plan.tier}
-                        >
-                          {flwLoading === plan.tier ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          ) : (
-                            <>
-                              <CreditCard className="mr-2 h-4 w-4" />
-                              Pay with Flutterwave
-                            </>
-                          )}
-                        </Button>
-                      )}
                     </div>
 
                     {plan.price > 0 && (
                       <p className="mt-2 text-center text-xs text-gray-400">
-                        Secure payments via M-Pesa or Flutterwave
+                        Secure payment via Paystack
                       </p>
                     )}
                   </CardContent>
@@ -340,16 +291,7 @@ function PricingPageContent() {
         </div>
       </div>
 
-      {selectedPlan && (
-        <MpesaPayment
-          open={showMpesa}
-          onOpenChange={setShowMpesa}
-          amount={selectedPlan.price}
-          planName={selectedPlan.name}
-          tier={selectedPlan.tier}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
+
     </div>
   );
 }

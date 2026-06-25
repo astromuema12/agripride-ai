@@ -48,7 +48,7 @@ export async function proxy(request: NextRequest) {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
-    "connect-src 'self' https://*.supabase.co https://api.openai.com https://*.vercel.app",
+    "connect-src 'self' https://*.supabase.co https://api.openai.com https://api.paystack.co https://*.vercel.app",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -87,7 +87,7 @@ export async function proxy(request: NextRequest) {
       data: { session },
     } = await supabase.auth.getSession();
 
-    const publicPaths = ['/auth', '/api/auth/', '/api/ai/demo', '/api/health', '/api/auth/callback'];
+    const publicPaths = ['/auth', '/api/auth/', '/api/ai/demo', '/api/health', '/api/auth/callback', '/api/payments/', '/api/webhooks/paystack'];
     const isPublic = publicPaths.some((p) => pathname.startsWith(p));
 
     if (pathname.startsWith('/dashboard/') && !session) {

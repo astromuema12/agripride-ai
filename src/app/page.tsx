@@ -62,7 +62,7 @@ const faqItems = [
   { q: 'How does the AI disease detection work?', a: 'Upload a photo of your crop. Our AI analyzes visual symptoms against a database of 200+ crop diseases, returns a diagnosis with confidence score, treatment plan, and prevention tips.' },
   { q: 'Is my farm data secure?', a: 'Yes. All data is encrypted at rest and in transit. We use Supabase with Row-Level Security — you control who sees your data. We never sell farmer data.' },
   { q: 'Do I need internet access?', a: 'The platform works best online, but key features like diagnosis history and farm records are cached for offline access in low-connectivity areas.' },
-  { q: 'How do I pay?', a: 'M-Pesa integration is coming soon. For now, all plans are free to use. We will announce payment launch with advance notice.' },
+  { q: 'How do I pay?', a: 'We accept Paystack payments for premium plans. Free plans are available with no payment required.' },
 ];
 
 function Particles() {
@@ -170,7 +170,7 @@ export default function HomePage() {
               <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-emerald-300/60">
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> No credit card</span>
                 <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Free to use</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> M-Pesa coming soon</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Paystack payments</span>
               </div>
             </motion.div>
 
@@ -528,7 +528,7 @@ export default function HomePage() {
                     {plan.monthly === 0 ? 'Get Started Free' : 'Subscribe'}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                  {plan.monthly > 0 && <p className="mt-3 text-center text-xs text-[var(--muted-foreground)]">M-Pesa payments coming soon</p>}
+                  {plan.monthly > 0 && <p className="mt-3 text-center text-xs text-[var(--muted-foreground)]">Powered by Paystack</p>}
                 </div>
               </motion.div>
             ))}

@@ -1,19 +1,41 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CreditCard, Users, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { CreditCard, Users, Loader2, CheckCircle, XCircle, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { userSubscriptionService } from '@/services/subscription.service';
-import type { UserSubscription } from '@/types';
+import { paystackTransactionService } from '@/lib/paystack';
+import type { UserSubscription, PaystackTransaction } from '@/types';
 
 export default function AdminSubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<UserSubscription[]>([]);
+  const [transactions, setTransactions] = useState<PaystackTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [txSearch, setTxSearch] = useState('');
 
   useEffect(() => {
-    userSubscriptionService.getAll().then((data) => { setSubscriptions(data); setLoading(false); });
+    Promise.all([
+      userSubscriptionService.getAll(),
+      paystackTransactionService.getAllTransactions(100, 0),
+    ]).then(([subs, txs]) => {
+      setSubscriptions(subs);
+      setTransactions(txs.data);
+      setLoading(false);
+    });
   }, []);
+
+  const totalRevenue = transactions
+    .filter((t) => t.status === 'success')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const filteredTxs = transactions.filter((t) =>
+    !txSearch ||
+    t.reference.toLowerCase().includes(txSearch.toLowerCase()) ||
+    t.email?.toLowerCase().includes(txSearch.toLowerCase()) ||
+    t.user_id.toLowerCase().includes(txSearch.toLowerCase()),
+  );
 
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-emerald-500" /></div>;
 
@@ -21,10 +43,10 @@ export default function AdminSubscriptionsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Subscriptions</h1>
-        <p className="text-sm text-gray-500">Manage user subscriptions and plan allocations.</p>
+        <p className="text-sm text-gray-500">Manage user subscriptions and view Paystack transactions.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <Card>
           <CardContent className="p-4 text-center">
             <CreditCard className="mx-auto mb-2 h-6 w-6 text-emerald-600" />
@@ -46,10 +68,18 @@ export default function AdminSubscriptionsPage() {
             <p className="text-xs text-gray-500">Expired/Cancelled</p>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <Users className="mx-auto mb-2 h-6 w-6 text-blue-600" />
+            <p className="text-2xl font-bold text-gray-900">KES {totalRevenue.toLocaleString()}</p>
+            <p className="text-xs text-gray-500">Total Revenue</p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
         <CardContent className="p-6">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Subscriptions</h2>
           {subscriptions.length === 0 ? (
             <p className="text-sm text-gray-400">No subscriptions yet.</p>
           ) : (
@@ -69,6 +99,55 @@ export default function AdminSubscriptionsPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">Paystack Transactions</h2>
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Input
+                placeholder="Search transactions..."
+                value={txSearch}
+                onChange={(e) => setTxSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          {filteredTxs.length === 0 ? (
+            <p className="text-sm text-gray-400">No transactions yet.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
+                    <th className="pb-2 font-medium">Reference</th>
+                    <th className="pb-2 font-medium">User</th>
+                    <th className="pb-2 font-medium">Email</th>
+                    <th className="pb-2 font-medium">Amount</th>
+                    <th className="pb-2 font-medium">Status</th>
+                    <th className="pb-2 font-medium">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTxs.map((tx) => (
+                    <tr key={tx.id} className="border-b border-gray-100">
+                      <td className="py-2 font-mono text-xs text-gray-600">{tx.reference.slice(0, 24)}...</td>
+                      <td className="py-2 text-gray-600">{tx.user_id.slice(0, 12)}</td>
+                      <td className="py-2 text-gray-600">{tx.email || '-'}</td>
+                      <td className="py-2 font-medium text-gray-900">KES {tx.amount.toLocaleString()}</td>
+                      <td className="py-2">
+                        <Badge className={`text-[10px] ${tx.status === 'success' ? 'bg-green-100 text-green-700' : tx.status === 'failed' ? 'bg-red-100 text-red-700' : tx.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}`}>{tx.status}</Badge>
+                      </td>
+                      <td className="py-2 text-xs text-gray-400">{new Date(tx.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>

@@ -106,38 +106,21 @@ export async function getUserTransactionHistory(userId: string) {
   if (!isSupabaseConfigured || !supabase) return [];
 
   try {
-    const { data: flwTxs } = await supabase
-      .from('flutterwave_transactions')
+    const { data: pstkTxs } = await supabase
+      .from('paystack_transactions')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(50);
 
-    const { data: mpesaTxs } = await supabase
-      .from('mpesa_transactions')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(50);
-
-    const all = [
-      ...(flwTxs || []).map((t) => ({
-        id: t.id,
-        amount: t.amount,
-        method: 'Flutterwave',
-        status: t.status,
-        reference: t.tx_ref,
-        created_at: t.created_at,
-      })),
-      ...(mpesaTxs || []).map((t) => ({
-        id: t.id,
-        amount: t.amount,
-        method: 'M-Pesa',
-        status: t.status,
-        reference: t.transaction_id || '',
-        created_at: t.created_at,
-      })),
-    ];
+    const all = (pstkTxs || []).map((t) => ({
+      id: t.id,
+      amount: t.amount,
+      method: 'Paystack',
+      status: t.status,
+      reference: t.reference,
+      created_at: t.created_at,
+    }));
 
     all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 

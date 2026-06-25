@@ -297,7 +297,6 @@ export interface UserSubscription {
   user_id: string;
   plan_id: string;
   status: 'active' | 'cancelled' | 'expired' | 'trial';
-  mpesa_receipt?: string;
   started_at: string;
   expires_at?: string;
   cancelled_at?: string;
@@ -343,19 +342,6 @@ export interface TicketMessage {
   created_at: string;
 }
 
-export interface MpesaTransaction {
-  id: string;
-  user_id?: string;
-  phone: string;
-  amount: number;
-  receipt_number?: string;
-  transaction_id?: string;
-  result_code?: number;
-  result_desc?: string;
-  status: 'pending' | 'success' | 'failed';
-  created_at: string;
-}
-
 export interface AiUsageLog {
   id: string;
   user_id?: string;
@@ -384,20 +370,20 @@ export interface ActivityLog {
   created_at: string;
 }
 
-export type FlutterwavePaymentStatus = 'pending' | 'successful' | 'failed' | 'cancelled';
+export type PaystackPaymentStatus = 'pending' | 'success' | 'failed' | 'cancelled';
 
-export interface FlutterwaveTransaction {
+export interface PaystackTransaction {
   id: string;
   user_id: string;
-  tx_ref: string;
-  flw_transaction_id: number;
+  reference: string;
+  paystack_id: number;
   amount: number;
   currency: string;
-  payment_method: string;
-  status: FlutterwavePaymentStatus;
-  phone?: string;
+  status: PaystackPaymentStatus;
   email?: string;
   plan_id: string;
+  channel?: string;
+  paid_at?: string;
   metadata?: Record<string, unknown>;
   created_at: string;
 }

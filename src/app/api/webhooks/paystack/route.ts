@@ -1,23 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   verifyWebhookSignature,
-  parseFlutterwaveWebhook,
-  verifyFlutterwaveTransaction,
-  flutterwaveTransactionService,
-} from '@/lib/flutterwave';
+  parsePaystackWebhook,
+  verifyPaystackTransaction,
+  paystackTransactionService,
+} from '@/lib/paystack';
 import { userSubscriptionService } from '@/services/subscription.service';
 import { writeAuditLog } from '@/lib/server-auth';
 import { logger } from '@/lib/logger';
 import { reportError, trackMetric } from '@/lib/monitoring';
 
-async function handler(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const rawBody = await req.text();
-  const signature = req.headers.get('x-verify-hash');
+  const signature = req.headers.get('x-paystack-signature');
 
   const isValid = verifyWebhookSignature(rawBody, signature);
   if (!isValid) {
-    logger.warn('Flutterwave webhook invalid signature', {
-      component: 'flutterwave',
+    logger.warn('Paystack webhook invalid signature', {
+      component: 'paystack',
     });
     return NextResponse.json({ status: 'error', message: 'Invalid signature' }, { status: 401 });
   }
@@ -29,57 +29,55 @@ async function handler(req: NextRequest) {
     return NextResponse.json({ status: 'error', message: 'Invalid JSON' }, { status: 400 });
   }
 
-  const parsed = parseFlutterwaveWebhook(body);
+  const parsed = parsePaystackWebhook(body);
 
-  logger.info('Flutterwave webhook received', {
-    component: 'flutterwave',
+  logger.info('Paystack webhook received', {
+    component: 'paystack',
     metadata: {
       event: parsed.event,
-      txRef: parsed.txRef,
+      reference: parsed.reference,
       status: parsed.status,
-      transactionId: parsed.transactionId,
     },
   });
 
-  if (parsed.event !== 'charge.completed') {
+  if (parsed.event !== 'charge.success') {
     return NextResponse.json({ status: 'ignored', message: 'Event not handled' });
   }
 
-  if (!parsed.txRef || !parsed.transactionId) {
-    logger.warn('Flutterwave webhook missing tx_ref or transaction_id', {
-      component: 'flutterwave',
+  if (!parsed.reference) {
+    logger.warn('Paystack webhook missing reference', {
+      component: 'paystack',
     });
-    return NextResponse.json({ status: 'ignored', message: 'Missing required fields' });
+    return NextResponse.json({ status: 'ignored', message: 'Missing reference' });
   }
 
-  const existing = await flutterwaveTransactionService.getByTxRef(parsed.txRef);
+  const existing = await paystackTransactionService.getByReference(parsed.reference);
   if (!existing) {
-    logger.warn('Flutterwave webhook unknown tx_ref', {
-      component: 'flutterwave',
-      metadata: { txRef: parsed.txRef },
+    logger.warn('Paystack webhook unknown reference', {
+      component: 'paystack',
+      metadata: { reference: parsed.reference },
     });
     return NextResponse.json({ status: 'ignored', message: 'Unknown transaction' });
   }
 
-  if (existing.status === 'successful') {
-    logger.info('Flutterwave webhook duplicate for completed tx', {
-      component: 'flutterwave',
-      metadata: { txRef: parsed.txRef },
+  if (existing.status === 'success') {
+    logger.info('Paystack webhook duplicate for completed tx', {
+      component: 'paystack',
+      metadata: { reference: parsed.reference },
     });
     return NextResponse.json({ status: 'ok', message: 'Already processed' });
   }
 
-  const verify = await verifyFlutterwaveTransaction(parsed.transactionId);
+  const verify = await verifyPaystackTransaction(parsed.reference);
   if (!verify.success) {
-    await reportError(new Error('Flutterwave verification failed'), {
-      txRef: parsed.txRef,
-      transactionId: parsed.transactionId,
+    await reportError(new Error('Paystack verification failed'), {
+      reference: parsed.reference,
     });
     return NextResponse.json({ status: 'error', message: 'Verification failed' }, { status: 502 });
   }
 
   const verifiedData = verify.data!;
-  const paymentSuccessful = verifiedData.status === 'successful';
+  const paymentSuccessful = verifiedData.status === 'success';
 
   if (paymentSuccessful) {
     const existingActive = await userSubscriptionService.getUserSubscription(existing.user_id);
@@ -98,14 +96,15 @@ async function handler(req: NextRequest) {
       expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     } as never);
 
-    await flutterwaveTransactionService.updateStatus(
-      parsed.txRef,
-      'successful',
-      parsed.transactionId,
+    await paystackTransactionService.updateStatus(
+      parsed.reference,
+      'success',
+      verifiedData.id,
       {
         verified: true,
         verifiedAt: new Date().toISOString(),
-        paymentType: verifiedData.payment_type,
+        channel: verifiedData.channel,
+        paid_at: verifiedData.paid_at,
       },
     );
 
@@ -115,51 +114,49 @@ async function handler(req: NextRequest) {
       resource: 'user_subscriptions',
       details: {
         planId: existing.plan_id,
-        txRef: parsed.txRef,
-        transactionId: parsed.transactionId,
+        reference: parsed.reference,
+        transactionId: verifiedData.id,
         source: 'webhook',
       },
     });
 
     trackMetric('payment_success', 1, {
       tier: existing.plan_id,
-      method: 'flutterwave_webhook',
+      method: 'paystack_webhook',
     });
 
     logger.info('Subscription activated via webhook', {
-      component: 'flutterwave',
+      component: 'paystack',
       metadata: {
         userId: existing.user_id,
         planId: existing.plan_id,
-        txRef: parsed.txRef,
+        reference: parsed.reference,
       },
     });
   } else {
-    await flutterwaveTransactionService.updateStatus(
-      parsed.txRef,
+    await paystackTransactionService.updateStatus(
+      parsed.reference,
       'failed',
-      parsed.transactionId,
+      verifiedData.id,
     );
 
     trackMetric('payment_failed', 1, {
       tier: existing.plan_id,
-      method: 'flutterwave_webhook',
+      method: 'paystack_webhook',
     });
 
     logger.info('Payment failed via webhook', {
-      component: 'flutterwave',
-      metadata: { txRef: parsed.txRef, status: verifiedData.status },
+      component: 'paystack',
+      metadata: { reference: parsed.reference, status: verifiedData.status },
     });
 
     await writeAuditLog({
       user_id: existing.user_id,
       action: 'payment_failed',
-      resource: 'flutterwave_transactions',
-      details: { txRef: parsed.txRef, status: verifiedData.status },
+      resource: 'paystack_transactions',
+      details: { reference: parsed.reference, status: verifiedData.status },
     });
   }
 
   return NextResponse.json({ status: 'ok', message: 'Webhook processed' });
 }
-
-export const POST = handler;
