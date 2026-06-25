@@ -143,7 +143,7 @@ function PricingPageContent() {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Subscription failed');
-        toast.success(data.message || 'Subscription activated!');
+        toast.success(data.data?.message || 'Subscription activated!');
         router.push('/auth');
         return;
       }
@@ -161,8 +161,9 @@ function PricingPageContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Payment initiation failed');
 
-      if (data.authorization_url) {
-        window.location.href = data.authorization_url;
+      const authorization_url = data.data?.authorization_url || data.authorization_url;
+      if (authorization_url) {
+        window.location.assign(authorization_url);
       } else {
         throw new Error('No checkout URL returned');
       }

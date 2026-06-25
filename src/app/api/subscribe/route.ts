@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { subscriptionService, userSubscriptionService } from '@/services/subscription.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { generateReference, initializePaystackPayment, paystackTransactionService } from '@/lib/paystack';
 import { logger } from '@/lib/logger';
 
 const SubscribeSchema = z.object({
@@ -55,7 +56,6 @@ async function handler(req: NextRequest) {
     return apiError(503, 'Paystack payment is not configured. Please contact support.');
   }
 
-  const { generateReference, initializePaystackPayment, paystackTransactionService } = await import('@/lib/paystack');
   const reference = generateReference(tier, userId || 'guest');
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://agripride-ai.vercel.app';
 
@@ -71,7 +71,7 @@ async function handler(req: NextRequest) {
     return apiError(502, result.error || 'Failed to initialize payment');
   }
 
-  await paystackTransactionService.create({
+  paystackTransactionService.create({
     user_id: userId || 'guest',
     reference,
     paystack_id: 0,
@@ -81,6 +81,12 @@ async function handler(req: NextRequest) {
     email: email || '',
     plan_id: plan.id,
     metadata: { tier, planName: plan.name },
+  }).catch((err) => {
+    logger.error('Failed to persist Paystack transaction', {
+      component: 'subscribe',
+      error: err,
+      metadata: { reference },
+    });
   });
 
   logger.info('Paystack payment initiated from subscribe', {
