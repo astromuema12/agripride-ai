@@ -37,3 +37,8 @@ AgriPride AI — Next.js agri-tech app with Paystack payments, Supabase (configu
 - `src/lib/sidebar-context.tsx` — `SidebarProvider` + `useSidebar()` hook, consumed by both `Sidebar.tsx` (toggle) and `DashboardLayout` (dynamic margin)
 - `DashboardLayout` wraps children in `SidebarProvider` and applies `overflow-x-auto` to prevent horizontal overflow
 - Farmer weather forecast uses `overflow-x-auto` with `min-w-[280px]` on the 7-day grid to prevent overflow on narrow cards
+
+## Responsiveness
+- All `<TabsList>` across dashboard pages use `flex-wrap h-auto` to prevent tab overflow on narrow screens (admin/consent, admin/analytics, officer/disease)
+- Contact messages and ticket descriptions capped with `line-clamp-3` to prevent card expansion
+- Disease prediction table cells use `max-w-[200px] truncate` to prevent table stretching on narrow desktop
