@@ -154,7 +154,7 @@ export abstract class BaseService<T extends { id: string }> {
         }
         logger.error(`Failed to create in ${this.table}`, {
           component: 'base-service',
-          error: error.message,
+          error: error?.message || 'Unknown error',
         });
       } catch (err) {
         logger.error(`Exception creating in ${this.table}`, {
