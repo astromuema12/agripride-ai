@@ -208,12 +208,14 @@ export class PaystackTransactionService extends BaseService<PaystackTransaction>
 
   async getByReference(reference: string): Promise<PaystackTransaction | null> {
     if (isSupabaseConfigured) {
-      const { data } = await supabase!
+      const { data, error } = await supabase!
         .from('paystack_transactions')
         .select('*')
         .eq('reference', reference)
         .single();
-      return data as PaystackTransaction | null;
+      if (!error && data) {
+        return data as PaystackTransaction;
+      }
     }
     const all = await this.getAll();
     return all.find((t) => t.reference === reference) ?? null;
@@ -221,12 +223,14 @@ export class PaystackTransactionService extends BaseService<PaystackTransaction>
 
   async getByPaystackId(paystackId: number): Promise<PaystackTransaction | null> {
     if (isSupabaseConfigured) {
-      const { data } = await supabase!
+      const { data, error } = await supabase!
         .from('paystack_transactions')
         .select('*')
         .eq('paystack_id', paystackId)
         .maybeSingle();
-      return data as PaystackTransaction | null;
+      if (!error && data) {
+        return data as PaystackTransaction;
+      }
     }
     const all = await this.getAll();
     return all.find((t) => t.paystack_id === paystackId) ?? null;
@@ -238,20 +242,23 @@ export class PaystackTransactionService extends BaseService<PaystackTransaction>
     offset = 0,
   ): Promise<{ data: PaystackTransaction[]; total: number }> {
     if (isSupabaseConfigured) {
-      const [{ data, count, error }, { count: total }] = await Promise.all([
-        supabase!
-          .from('paystack_transactions')
-          .select('*', { count: 'exact' })
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false })
-          .range(offset, offset + limit - 1),
-        supabase!
-          .from('paystack_transactions')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', userId),
-      ]);
-      if (error) throw error;
-      return { data: (data ?? []) as PaystackTransaction[], total: total ?? 0 };
+      try {
+        const [{ data, count, error }, { count: total }] = await Promise.all([
+          supabase!
+            .from('paystack_transactions')
+            .select('*', { count: 'exact' })
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false })
+            .range(offset, offset + limit - 1),
+          supabase!
+            .from('paystack_transactions')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', userId),
+        ]);
+        if (!error) {
+          return { data: (data ?? []) as PaystackTransaction[], total: total ?? 0 };
+        }
+      } catch { /* fallback to demo store */ }
     }
     const all = await this.getAll();
     const filtered = all.filter((t) => t.user_id === userId);
@@ -282,18 +289,21 @@ export class PaystackTransactionService extends BaseService<PaystackTransaction>
     offset = 0,
   ): Promise<{ data: PaystackTransaction[]; total: number }> {
     if (isSupabaseConfigured) {
-      const [{ data, count, error }, { count: total }] = await Promise.all([
-        supabase!
-          .from('paystack_transactions')
-          .select('*', { count: 'exact' })
-          .order('created_at', { ascending: false })
-          .range(offset, offset + limit - 1),
-        supabase!
-          .from('paystack_transactions')
-          .select('*', { count: 'exact', head: true }),
-      ]);
-      if (error) throw error;
-      return { data: (data ?? []) as PaystackTransaction[], total: total ?? 0 };
+      try {
+        const [{ data, count, error }, { count: total }] = await Promise.all([
+          supabase!
+            .from('paystack_transactions')
+            .select('*', { count: 'exact' })
+            .order('created_at', { ascending: false })
+            .range(offset, offset + limit - 1),
+          supabase!
+            .from('paystack_transactions')
+            .select('*', { count: 'exact', head: true }),
+        ]);
+        if (!error) {
+          return { data: (data ?? []) as PaystackTransaction[], total: total ?? 0 };
+        }
+      } catch { /* fallback to demo store */ }
     }
     const all = await this.getAll();
     return {

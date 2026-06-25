@@ -142,19 +142,25 @@ export abstract class BaseService<T extends { id: string }> {
     } as unknown as T;
 
     if (isSupabaseConfigured) {
-      const { data, error } = await supabase!
-        .from(this.table)
-        .insert(newItem)
-        .select()
-        .single();
-      if (error) {
+      try {
+        const { data, error } = await supabase!
+          .from(this.table)
+          .insert(newItem)
+          .select()
+          .single();
+        if (!error) {
+          return data as T;
+        }
         logger.error(`Failed to create in ${this.table}`, {
           component: 'base-service',
           error: error.message,
         });
-        throw new Error(error.message);
+      } catch (err) {
+        logger.error(`Exception creating in ${this.table}`, {
+          component: 'base-service',
+          error: err,
+        });
       }
-      return data as T;
     }
     await putItem(this.storeName, newItem);
     return newItem;

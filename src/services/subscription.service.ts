@@ -78,12 +78,14 @@ export class SubscriptionService extends BaseService<SubscriptionPlan> {
 
   async getByTier(tier: SubscriptionPlan['tier']): Promise<SubscriptionPlan | null> {
     if (isSupabaseConfigured) {
-      const { data } = await supabase!
+      const { data, error } = await supabase!
         .from('subscription_plans')
         .select('*')
         .eq('tier', tier)
         .single();
-      return data as SubscriptionPlan | null;
+      if (!error && data) {
+        return data as SubscriptionPlan;
+      }
     }
     const all = await this.getAll();
     return all.find((p) => p.tier === tier && p.is_active) ?? null;
@@ -95,13 +97,15 @@ export class UserSubscriptionService extends BaseService<UserSubscription> {
 
   async getUserSubscription(userId: string): Promise<UserSubscription | null> {
     if (isSupabaseConfigured) {
-      const { data } = await supabase!
+      const { data, error } = await supabase!
         .from('user_subscriptions')
         .select('*')
         .eq('user_id', userId)
         .eq('status', 'active')
         .single();
-      return data as UserSubscription | null;
+      if (!error && data) {
+        return data as UserSubscription;
+      }
     }
     const all = await this.getAll();
     return all.find((s) => s.user_id === userId && s.status === 'active') ?? null;
