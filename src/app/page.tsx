@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AiDemo } from '@/components/shared/AiDemo';
-import { Footer } from '@/components/shared/Footer';
 import type { Testimonial } from '@/types';
 
 const containerVariants = {
@@ -600,8 +599,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== FOOTER ===== */}
-      <Footer />
+      
     </div>
   );
 }
