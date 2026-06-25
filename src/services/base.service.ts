@@ -148,7 +148,8 @@ export abstract class BaseService<T extends { id: string }> {
           .insert(newItem)
           .select()
           .single();
-        if (!error) {
+        if (!error && data) {
+          await putItem(this.storeName, data as T).catch(() => {});
           return data as T;
         }
         logger.error(`Failed to create in ${this.table}`, {
@@ -176,14 +177,15 @@ export abstract class BaseService<T extends { id: string }> {
           .eq('id', id)
           .select()
           .single();
-        if (error) throw error;
-        return data as T;
+        if (!error && data) {
+          await putItem(this.storeName, data as T).catch(() => {});
+          return data as T;
+        }
       } catch (err) {
         logger.error(`Failed to update in ${this.table}:${id}`, {
           component: 'base-service',
           error: err,
         });
-        return null;
       }
     }
     const existing = await getItem<T>(this.storeName, id);
@@ -197,13 +199,14 @@ export abstract class BaseService<T extends { id: string }> {
     if (!id) return;
     if (isSupabaseConfigured) {
       const { error } = await supabase!.from(this.table).delete().eq('id', id);
-      if (error) {
-        logger.error(`Failed to delete in ${this.table}:${id}`, {
-          component: 'base-service',
-          error: error.message,
-        });
+      if (!error) {
+        await deleteItem(this.storeName, id).catch(() => {});
+        return;
       }
-      return;
+      logger.error(`Failed to delete in ${this.table}:${id}`, {
+        component: 'base-service',
+        error: error.message,
+      });
     }
     await deleteItem(this.storeName, id);
   }
@@ -214,14 +217,14 @@ export abstract class BaseService<T extends { id: string }> {
         const { count, error } = await supabase!
           .from(this.table)
           .select('*', { count: 'exact', head: true });
-        if (error) throw error;
-        return count ?? 0;
+        if (!error) {
+          return count ?? 0;
+        }
       } catch (err) {
         logger.error(`Failed to count ${this.table}`, {
           component: 'base-service',
           error: err,
         });
-        return 0;
       }
     }
     return getTotalCount(this.storeName);
