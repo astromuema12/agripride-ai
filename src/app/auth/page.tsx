@@ -332,7 +332,6 @@ function AuthForm() {
                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                           <div>
                             <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">Free to Use</p>
-                            <p className="text-xs text-emerald-600/80 dark:text-emerald-400/70 mt-0.5">Creating an account gives you full access to all features. We are currently onboarding farmers in Kenya.</p>
                           </div>
                         </div>
                       </div>
