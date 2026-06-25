@@ -59,20 +59,18 @@ export abstract class BaseService<T extends { id: string }> {
           .from(this.table)
           .select('*')
           .order('created_at', { ascending: false });
-        if (error) {
-          logger.error(`Failed to fetch all from ${this.table}`, {
-            component: 'base-service',
-            error: error.message,
-          });
-          return [];
+        if (!error) {
+          return (data ?? []) as T[];
         }
-        return (data ?? []) as T[];
+        logger.error(`Failed to fetch all from ${this.table}`, {
+          component: 'base-service',
+          error: error.message,
+        });
       } catch (err) {
         logger.error(`Exception fetching all from ${this.table}`, {
           component: 'base-service',
           error: err,
         });
-        return [];
       }
     }
     return getCollection<T>(this.storeName);
@@ -92,16 +90,15 @@ export abstract class BaseService<T extends { id: string }> {
             .from(this.table)
             .select('*', { count: 'exact', head: true }),
         ]);
-        if (error) throw error;
-        if (countError) throw countError;
-        return { data: (data ?? []) as T[], total: total ?? 0 };
+        if (!error && !countError) {
+          return { data: (data ?? []) as T[], total: total ?? 0 };
+        }
       } catch (err) {
         logger.error(`Failed paginated query on ${this.table}`, {
           component: 'base-service',
           error: err,
           metadata: { limit: safeLimit, offset },
         });
-        return { data: [], total: 0 };
       }
     }
     return getPaginatedCollection<T>(this.storeName, safeLimit, offset);
@@ -116,19 +113,20 @@ export abstract class BaseService<T extends { id: string }> {
           .select('*')
           .eq('id', id)
           .single();
+        if (!error && data) {
+          return data as T;
+        }
         if (error && error.code !== 'PGRST116') {
           logger.warn(`getById failed for ${this.table}:${id}`, {
             component: 'base-service',
             error: error.message,
           });
         }
-        return (data ?? null) as T | null;
       } catch (err) {
         logger.error(`Exception in getById for ${this.table}:${id}`, {
           component: 'base-service',
           error: err,
         });
-        return null;
       }
     }
     return (await getItem<T>(this.storeName, id)) ?? null;
@@ -255,15 +253,14 @@ export abstract class BaseService<T extends { id: string }> {
             .select('*', { count: 'exact', head: true })
             .eq(column, value as string),
         ]);
-        if (error) throw error;
-        if (countError) throw countError;
-        return { data: (data ?? []) as T[], total: total ?? 0 };
+        if (!error && !countError) {
+          return { data: (data ?? []) as T[], total: total ?? 0 };
+        }
       } catch (err) {
         logger.error(`Failed query on ${this.table}.${column}`, {
           component: 'base-service',
           error: err,
         });
-        return { data: [], total: 0 };
       }
     }
     const all = await getCollection<T>(this.storeName);
