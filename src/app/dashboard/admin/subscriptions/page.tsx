@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { userSubscriptionService } from '@/services/subscription.service';
 import { paystackTransactionService } from '@/lib/paystack';
 import type { UserSubscription, PaystackTransaction } from '@/types';
+import { toast } from 'sonner';
 
 export default function AdminSubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<UserSubscription[]>([]);
@@ -23,6 +24,9 @@ export default function AdminSubscriptionsPage() {
       setSubscriptions(subs);
       setTransactions(txs.data);
       setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+      toast.error('Failed to load subscriptions');
     });
   }, []);
 

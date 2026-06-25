@@ -18,7 +18,7 @@ export default function AdminTestimonialsPage() {
 
   useEffect(() => {
     Promise.all([testimonialService.getPending(), testimonialService.getApproved()])
-      .then(([p, a]) => { setPending(p); setApproved(a); setLoading(false); });
+      .then(([p, a]) => { setPending(p); setApproved(a); setLoading(false); }).catch(() => { setLoading(false); toast.error('Failed to load testimonials'); });
   }, []);
 
   const handleApprove = async (id: string) => {

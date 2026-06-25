@@ -14,7 +14,7 @@ export default function AdminContactsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    contactService.getAll().then((data) => { setInquiries(data); setLoading(false); });
+    contactService.getAll().then((data) => { setInquiries(data); setLoading(false); }).catch(() => { setLoading(false); toast.error('Failed to load inquiries'); });
   }, []);
 
   const markResolved = async (id: string) => {

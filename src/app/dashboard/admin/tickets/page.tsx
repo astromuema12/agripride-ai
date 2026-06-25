@@ -17,7 +17,7 @@ export default function AdminTicketsPage() {
   const [response, setResponse] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    supportTicketService.getAll().then((data) => { setTickets(data); setLoading(false); });
+    supportTicketService.getAll().then((data) => { setTickets(data); setLoading(false); }).catch(() => { setLoading(false); toast.error('Failed to load tickets'); });
   }, []);
 
   const handleResolve = async (id: string) => {
