@@ -260,7 +260,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       <Tabs defaultValue="users" className="space-y-6">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="users" className="gap-2">
             <Users className="h-4 w-4" />
             User Growth

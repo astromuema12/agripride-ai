@@ -148,7 +148,7 @@ export default function ConsentPage() {
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as ConsentType | 'all')}>
-              <TabsList>
+              <TabsList className="flex-wrap h-auto">
                 <TabsTrigger value="all">All Types</TabsTrigger>
                 {CONSENT_TYPES.map((t) => (
                   <TabsTrigger key={t.value} value={t.value}>

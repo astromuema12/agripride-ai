@@ -50,7 +50,7 @@ export default function AdminTicketsPage() {
                         <Badge className="text-[10px] bg-yellow-100 text-yellow-700">{ticket.priority || 'medium'}</Badge>
                         <Badge className="text-[10px] bg-blue-100 text-blue-700 capitalize">{ticket.category || 'general'}</Badge>
                       </div>
-                      <p className="mt-1 text-sm text-gray-500">{ticket.description}</p>
+                      <p className="mt-1 text-sm text-gray-500 line-clamp-3">{ticket.description}</p>
                       <div className="mt-1 flex items-center gap-3 text-xs text-gray-400">
                         <span className="flex items-center gap-1"><User className="h-3 w-3" /> {ticket.user_id?.slice(0, 8)}</span>
                         {ticket.email && <span className="flex items-center gap-1"><Mail className="h-3 w-3" /> {ticket.email}</span>}

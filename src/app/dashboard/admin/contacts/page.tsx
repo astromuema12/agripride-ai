@@ -63,7 +63,7 @@ export default function AdminContactsPage() {
                         <Badge className={`text-[10px] ${statusColors[inq.status] || 'bg-gray-100 text-gray-600'}`}>{inq.status}</Badge>
                       </div>
                       <p className="mt-1 text-sm font-medium text-gray-700">{inq.subject}</p>
-                      <p className="mt-1 text-sm text-gray-500">{inq.message}</p>
+                      <p className="mt-1 text-sm text-gray-500 line-clamp-3">{inq.message}</p>
                       <p className="mt-1 text-xs text-gray-400">{new Date(inq.created_at).toLocaleString()}</p>
                     </div>
                     <div className="ml-4 flex gap-2">

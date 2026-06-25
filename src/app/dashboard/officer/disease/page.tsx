@@ -215,7 +215,7 @@ export default function DiseasePage() {
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as StatusTab)}>
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="all">All ({statusCounts.total})</TabsTrigger>
           <TabsTrigger value="submitted">Submitted ({statusCounts.submitted})</TabsTrigger>
           <TabsTrigger value="reviewed">Reviewed ({statusCounts.reviewed})</TabsTrigger>
@@ -310,7 +310,7 @@ export default function DiseasePage() {
                           </div>
                         </td>
                         <td className="px-4 py-3 text-gray-700">{report.crop_type}</td>
-                        <td className="px-4 py-3 text-gray-700">{report.disease_prediction || '-'}</td>
+                        <td className="px-4 py-3 text-gray-700 max-w-[200px] truncate">{report.disease_prediction || '-'}</td>
                         <td className="px-4 py-3">
                           {report.confidence_score !== undefined ? (
                             <span className="font-medium text-gray-800">{Math.round(report.confidence_score * 100)}%</span>

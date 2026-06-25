@@ -385,7 +385,7 @@ export default function FarmerDashboard() {
                     {recentReports.map((report) => (
                       <tr key={report.id} className="border-b border-gray-50">
                         <td className="py-3 pr-4 font-medium text-gray-900">{report.crop_type}</td>
-                        <td className="py-3 pr-4 text-gray-600">
+                        <td className="py-3 pr-4 text-gray-600 max-w-[200px] truncate">
                           {report.disease_prediction || <span className="italic text-gray-400">Pending analysis</span>}
                         </td>
                         <td className="py-3 pr-4"><RiskBadge risk={report.risk_level} /></td>
