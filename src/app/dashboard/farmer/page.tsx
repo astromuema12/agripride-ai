@@ -305,9 +305,9 @@ export default function FarmerDashboard() {
 
                 {/* 7-day forecast */}
                 {weather.forecast && weather.forecast.length > 0 && (
-                  <div>
+                  <div className="overflow-x-auto -mx-1 px-1">
                     <p className="mb-2 text-xs font-medium text-gray-500">7-Day Forecast</p>
-                    <div className="grid grid-cols-7 gap-1">
+                    <div className="grid grid-cols-7 gap-1 min-w-[280px]">
                       {weather.forecast.slice(0, 7).map((day) => (
                         <div
                           key={day.date}
