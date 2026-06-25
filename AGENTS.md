@@ -30,3 +30,10 @@ AgriPride AI — Next.js agri-tech app with Paystack payments, Supabase (configu
 
 ## Common Errors Fixed
 - `error.message` on null `error` in `create()` fallthrough — use `error?.message || 'Unknown error'`
+- Admin pages (contacts, tickets, testimonials, subscriptions) hang on loading because `.then()` had no `.catch()` — added toast error + `setLoading(false)` in catch
+- `SidebarContext` lifted collapsed state out of Sidebar so `DashboardLayout` can apply dynamic `lg:ml-64` / `lg:ml-16` margin — prevents 192px wasted space on desktop when sidebar is collapsed
+
+## Dashboard Layout
+- `src/lib/sidebar-context.tsx` — `SidebarProvider` + `useSidebar()` hook, consumed by both `Sidebar.tsx` (toggle) and `DashboardLayout` (dynamic margin)
+- `DashboardLayout` wraps children in `SidebarProvider` and applies `overflow-x-auto` to prevent horizontal overflow
+- Farmer weather forecast uses `overflow-x-auto` with `min-w-[280px]` on the 7-day grid to prevent overflow on narrow cards
