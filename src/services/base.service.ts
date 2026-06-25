@@ -59,13 +59,15 @@ export abstract class BaseService<T extends { id: string }> {
           .from(this.table)
           .select('*')
           .order('created_at', { ascending: false });
-        if (!error) {
+        if (!error && data && data.length > 0) {
           return (data ?? []) as T[];
         }
-        logger.error(`Failed to fetch all from ${this.table}`, {
-          component: 'base-service',
-          error: error.message,
-        });
+        if (error) {
+          logger.error(`Failed to fetch all from ${this.table}`, {
+            component: 'base-service',
+            error: error.message,
+          });
+        }
       } catch (err) {
         logger.error(`Exception fetching all from ${this.table}`, {
           component: 'base-service',
