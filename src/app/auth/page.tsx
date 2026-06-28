@@ -95,7 +95,9 @@ function AuthForm() {
   const [tab, setTab] = useState<'login' | 'register'>(searchParams.get('tab') === 'register' ? 'register' : 'login');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -103,6 +105,8 @@ function AuthForm() {
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [regConfirmPassword, setRegConfirmPassword] = useState('');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const [resetEmail, setResetEmail] = useState('');
   const [showReset, setShowReset] = useState(false);
@@ -153,13 +157,21 @@ function AuthForm() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!regName || !regEmail || !regPassword) {
+    if (!regName || !regEmail || !regPassword || !regConfirmPassword) {
       setError('All fields are required');
+      return;
+    }
+    if (regPassword !== regConfirmPassword) {
+      setError('Passwords do not match');
       return;
     }
     const passwordError = validatePassword(regPassword);
     if (passwordError) {
       setError(passwordError);
+      return;
+    }
+    if (!agreeToTerms) {
+      setError('You must agree to the Terms of Service and Privacy Policy');
       return;
     }
     setLoading(true);
@@ -313,13 +325,30 @@ function AuthForm() {
                       <form onSubmit={handleLogin} className="space-y-4">
                         <FormField id="email" label="Email" type="email" placeholder="farmer@agripride.ai" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} autoComplete="email" />
                         <FormField id="password" label="Password" type="password" placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="current-password" />
+                        
+                        <div className="flex items-center justify-between">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={rememberMe}
+                              onChange={(e) => setRememberMe(e.target.checked)}
+                              className="h-4 w-4 rounded border-[var(--border)] text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0"
+                            />
+                            <span className="text-sm text-[var(--muted-foreground)]">Remember me</span>
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setShowReset(true)}
+                            className="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
+                          >
+                            Forgot password?
+                          </button>
+                        </div>
+                        
                         {error && <p className="flex items-center gap-1 text-sm text-red-500"><AlertCircle className="h-4 w-4" />{error}</p>}
                         <Button type="submit" className="w-full gap-2 h-11 text-base" disabled={loading}>
                           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                           Sign In
-                        </Button>
-                        <Button type="button" variant="link" className="w-full text-xs text-[var(--muted-foreground)] hover:text-emerald-600" onClick={() => setShowReset(true)}>
-                          Forgot your password?
                         </Button>
                       </form>
 
@@ -327,24 +356,41 @@ function AuthForm() {
                         <OAuthButtons mode="login" />
                       </div>
 
-                      <div className="mt-6 rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-900/20 dark:to-emerald-800/10 p-4 border border-emerald-200/50 dark:border-emerald-800/30">
-                        <div className="flex items-start gap-3">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                          <div>
-                            <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">Free to Use</p>
-                          </div>
-                        </div>
-                      </div>
+                      <p className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
+                        Don&apos;t have an account?{' '}
+                        <button
+                          type="button"
+                          onClick={() => switchTab('register')}
+                          className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
+                        >
+                          Sign up
+                        </button>
+                      </p>
                     </TabsContent>
 
                     <TabsContent value="register" className="px-6 pb-6 pt-4 mt-0">
                       <form onSubmit={handleRegister} className="space-y-4">
-                        <FormField id="reg-name" label="Full Name" type="text" placeholder="John Farmer" value={regName} onChange={(e) => setRegName(e.target.value)} autoComplete="name" />
-                        <FormField id="reg-email" label="Email" type="email" placeholder="farmer@agripride.ai" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} autoComplete="email" />
+                        <FormField id="reg-name" label="Full Name" type="text" placeholder="Enter your full name" value={regName} onChange={(e) => setRegName(e.target.value)} autoComplete="name" />
+                        <FormField id="reg-email" label="Email" type="email" placeholder="Enter your email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} autoComplete="email" />
                         <div className="space-y-1.5">
-                          <FormField id="reg-password" label="Password" type="password" placeholder="Min. 8 characters, uppercase, lowercase, digit, special char" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="new-password" />
+                          <FormField id="reg-password" label="Password" type="password" placeholder="Create a password" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="new-password" />
                           <PasswordStrengthMeter password={regPassword} />
                         </div>
+                        <FormField id="reg-confirm-password" label="Confirm Password" type="password" placeholder="Confirm your password" value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} showToggle showPassword={showConfirmPassword} onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} autoComplete="new-password" />
+                        <label className="flex items-start gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={agreeToTerms}
+                            onChange={(e) => setAgreeToTerms(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 shrink-0 rounded border-[var(--border)] text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0"
+                          />
+                          <span className="text-sm text-[var(--muted-foreground)]">
+                            I agree to the{' '}
+                            <a href="/terms" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-2">Terms of Service</a>
+                            {' '}and{' '}
+                            <a href="/privacy" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-2">Privacy Policy</a>
+                          </span>
+                        </label>
                         {error && <p className="flex items-center gap-1 text-sm text-red-500"><AlertCircle className="h-4 w-4" />{error}</p>}
                         <Button type="submit" className="w-full gap-2 h-11 text-base" disabled={loading}>
                           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
@@ -356,11 +402,15 @@ function AuthForm() {
                         <OAuthButtons mode="register" />
                       </div>
 
-                      <p className="mt-4 text-center text-xs text-[var(--muted-foreground)]">
-                        By creating an account, you agree to our{' '}
-                        <a href="/terms" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-2">Terms</a>
-                        {' '}and{' '}
-                        <a href="/privacy" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-2">Privacy Policy</a>
+                      <p className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
+                        Already have an account?{' '}
+                        <button
+                          type="button"
+                          onClick={() => switchTab('login')}
+                          className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
+                        >
+                          Sign in
+                        </button>
                       </p>
                     </TabsContent>
                   </Tabs>
