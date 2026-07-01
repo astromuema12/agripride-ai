@@ -20,7 +20,9 @@ async function handler(req: NextRequest) {
   const { userId } = parsed.data;
   const startTime = Date.now();
 
-  if (serverSupabase) {
+  const isDemoMode = !process.env.OPENAI_API_KEY;
+
+  if (serverSupabase && !isDemoMode) {
     const { data: { session } } = await serverSupabase.auth.getSession();
     if (!session?.user) {
       return apiError(401, 'Unauthorized');

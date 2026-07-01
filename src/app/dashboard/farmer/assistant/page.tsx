@@ -61,7 +61,11 @@ export default function AIAssistant() {
       created_at: new Date().toISOString(),
     };
     setMessages((prev) => [...prev, userMsg]);
-    await addChatMessage({ user_id: user.id, role: 'user', content: userQuery });
+    try {
+      await addChatMessage({ user_id: user.id, role: 'user', content: userQuery });
+    } catch {
+      // Silently fail - message is still in local state
+    }
 
     const tempId = `stream-${Date.now()}`;
     const placeholder: ChatMessage = {
@@ -79,7 +83,7 @@ export default function AIAssistant() {
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userQuery }),
+        body: JSON.stringify({ message: userQuery, userId: user.id }),
       });
 
       if (!response.ok) throw new Error('API error');
@@ -130,14 +134,18 @@ export default function AIAssistant() {
       };
 
       setMessages((prev) => prev.map((m) => (m.id === tempId ? finalMsg : m)));
-      await addChatMessage({
-        user_id: user.id,
-        role: 'assistant',
-        content: fullText,
-        agent_name: 'AI Assistant',
-        confidence_score: 0.92,
-        frameworks_used: ['AIM Framework', 'TRACK Framework'],
-      });
+      try {
+        await addChatMessage({
+          user_id: user.id,
+          role: 'assistant',
+          content: fullText,
+          agent_name: 'AI Assistant',
+          confidence_score: 0.92,
+          frameworks_used: ['AIM Framework', 'TRACK Framework'],
+        });
+      } catch {
+        // Silently fail - response is already in local state
+      }
     } catch {
       setMessages((prev) =>
         prev.map((m) =>

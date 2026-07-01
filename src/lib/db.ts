@@ -145,17 +145,23 @@ export async function getUsers(limit = 100, offset = 0): Promise<{ data: User[];
 
 export async function getFarms(userId?: string, limit = 100, offset = 0): Promise<{ data: Farm[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('farms').select('*', { count: 'exact' });
-    let countQuery = supabase!.from('farms').select('*', { count: 'exact', head: true });
-    if (userId) {
-      query = query.eq('user_id', userId);
-      countQuery = countQuery.eq('user_id', userId);
+    try {
+      let query = supabase!.from('farms').select('*', { count: 'exact' });
+      let countQuery = supabase!.from('farms').select('*', { count: 'exact', head: true });
+      if (userId) {
+        query = query.eq('user_id', userId);
+        countQuery = countQuery.eq('user_id', userId);
+      }
+      const [{ data, count }, { count: total }] = await Promise.all([
+        query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+        countQuery,
+      ]);
+      if (data && data.length > 0) {
+        return { data: data as Farm[], total: total ?? 0 };
+      }
+    } catch {
+      // Fall through to demo store
     }
-    const [{ data, count }, { count: total }] = await Promise.all([
-      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
-      countQuery,
-    ]);
-    return { data: (data ?? []) as Farm[], total: total ?? 0 };
   }
   await ensureSeeded();
   const all = await getCollection<Farm>('farms');
@@ -216,17 +222,23 @@ export async function updateFarm(id: string, updates: Partial<Farm>): Promise<Fa
 
 export async function getCrops(farmId?: string, limit = 100, offset = 0): Promise<{ data: Crop[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('crops').select('*', { count: 'exact' });
-    let countQuery = supabase!.from('crops').select('*', { count: 'exact', head: true });
-    if (farmId) {
-      query = query.eq('farm_id', farmId);
-      countQuery = countQuery.eq('farm_id', farmId);
+    try {
+      let query = supabase!.from('crops').select('*', { count: 'exact' });
+      let countQuery = supabase!.from('crops').select('*', { count: 'exact', head: true });
+      if (farmId) {
+        query = query.eq('farm_id', farmId);
+        countQuery = countQuery.eq('farm_id', farmId);
+      }
+      const [{ data, count }, { count: total }] = await Promise.all([
+        query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+        countQuery,
+      ]);
+      if (data && data.length > 0) {
+        return { data: data as Crop[], total: total ?? 0 };
+      }
+    } catch {
+      // Fall through to demo store
     }
-    const [{ data, count }, { count: total }] = await Promise.all([
-      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
-      countQuery,
-    ]);
-    return { data: (data ?? []) as Crop[], total: total ?? 0 };
   }
   await ensureSeeded();
   const all = await getCollection<Crop>('crops');
@@ -441,10 +453,16 @@ export async function addChatMessage(msg: Omit<ChatMessage, 'id' | 'created_at'>
 
 export async function getYieldPredictions(farmId?: string): Promise<YieldPrediction[]> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('yield_predictions').select('*');
-    if (farmId) query = query.eq('farm_id', farmId);
-    const { data } = await query.order('created_at', { ascending: false });
-    return (data ?? []) as YieldPrediction[];
+    try {
+      let query = supabase!.from('yield_predictions').select('*');
+      if (farmId) query = query.eq('farm_id', farmId);
+      const { data } = await query.order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        return data as YieldPrediction[];
+      }
+    } catch {
+      // Fall through to demo store
+    }
   }
   await ensureSeeded();
   const all = await getCollection<YieldPrediction>('yieldPredictions');

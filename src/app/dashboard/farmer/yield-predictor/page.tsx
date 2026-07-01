@@ -43,13 +43,16 @@ export default function YieldPredictor() {
     ]).then(([{ data: f }, p]) => {
       setFarms(f);
       setPredictions(p.filter((pr) => pr.farm_id && f.some((fm) => fm.id === pr.farm_id)));
+    }).catch(() => {
+      toast.error('Failed to load farm data');
+    }).finally(() => {
       setLoading(false);
     });
   }, [user]);
 
   useEffect(() => {
     if (selectedFarm) {
-      getCrops(selectedFarm).then(({ data }) => setCrops(data));
+      getCrops(selectedFarm).then(({ data }) => setCrops(data)).catch(() => setCrops([]));
     }
   }, [selectedFarm]);
 
@@ -131,9 +134,13 @@ export default function YieldPredictor() {
                   <SelectValue placeholder={selectedFarm ? 'Select crop' : 'Select a farm first'} />
                 </SelectTrigger>
                 <SelectContent>
-                  {crops.map((c) => (
-                    <SelectItem key={c.id} value={c.id} className="text-xs sm:text-sm">{c.name} &ndash; {c.variety}</SelectItem>
-                  ))}
+                  {crops.length === 0 && selectedFarm ? (
+                    <div className="px-2 py-4 text-xs text-gray-400 text-center">No crops found for this farm</div>
+                  ) : (
+                    crops.map((c) => (
+                      <SelectItem key={c.id} value={c.id} className="text-xs sm:text-sm">{c.name} &ndash; {c.variety}</SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>
