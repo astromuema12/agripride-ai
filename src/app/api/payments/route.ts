@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { sanitizeObject } from '@/middleware/security';
 import { subscriptionService } from '@/services/subscription.service';
 import {
   initializePaystackPayment,
@@ -21,7 +22,8 @@ async function handler(req: NextRequest) {
   const parsed = await parseBody(req, InitPaymentSchema);
   if (!parsed.success) return parsed.response;
 
-  const { tier, userId, email, name } = parsed.data;
+  const sanitized = sanitizeObject({ name: parsed.data.name });
+  const { tier, userId, email, name } = { ...parsed.data, ...sanitized };
 
   const { configured } = paystackConfig();
   if (!configured) {

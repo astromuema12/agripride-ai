@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { subscriptionService, userSubscriptionService } from '@/services/subscription.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { sanitizeObject } from '@/middleware/security';
 import { generateReference, initializePaystackPayment, paystackTransactionService } from '@/lib/paystack';
 import { logger } from '@/lib/logger';
 
@@ -16,7 +17,8 @@ async function handler(req: NextRequest) {
   const parsed = await parseBody(req, SubscribeSchema);
   if (!parsed.success) return parsed.response;
 
-  const { tier, userId, email, name } = parsed.data;
+  const sanitized = sanitizeObject({ name: parsed.data.name, email: parsed.data.email });
+  const { tier, userId, email, name } = { ...parsed.data, ...sanitized };
 
   await subscriptionService.seedPlans();
 

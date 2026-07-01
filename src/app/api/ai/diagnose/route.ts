@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
 import { diagnose } from '@/lib/diagnosis-engine';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { sanitizeObject } from '@/middleware/security';
 import { trackAiUsage, reportError } from '@/lib/monitoring';
 import { logger } from '@/lib/logger';
 import type { GrowthStage } from '@/types';
@@ -21,7 +22,8 @@ async function handler(req: NextRequest) {
   const parsed = await parseBody(req, DiagnoseSchema);
   if (!parsed.success) return parsed.response;
 
-  const { cropType, symptoms, growthStage, imageBase64, userId } = parsed.data;
+  const sanitized = sanitizeObject({ cropType: parsed.data.cropType, symptoms: parsed.data.symptoms });
+  const { cropType, symptoms, growthStage, imageBase64, userId } = { ...parsed.data, ...sanitized };
   const startTime = Date.now();
 
   if (serverSupabase) {

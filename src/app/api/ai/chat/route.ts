@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
 import { getChatResponse, diagnoseDisease, getCropAdvisorAdvice } from '@/lib/ai-agents';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { sanitizeInput } from '@/middleware/security';
 import { trackAiUsage, reportError } from '@/lib/monitoring';
 import { logger } from '@/lib/logger';
 
@@ -15,7 +16,8 @@ async function handler(req: NextRequest) {
   const parsed = await parseBody(req, ChatSchema);
   if (!parsed.success) return parsed.response;
 
-  const { message, userId } = parsed.data;
+  const message = sanitizeInput(parsed.data.message);
+  const { userId } = parsed.data;
   const startTime = Date.now();
 
   if (serverSupabase) {

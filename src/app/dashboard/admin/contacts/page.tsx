@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { contactService } from '@/services/contact.service';
+import { validateEmailHref, validateTelHref } from '@/middleware/security';
 import type { ContactInquiry } from '@/types';
 import { toast } from 'sonner';
 
@@ -52,11 +53,11 @@ export default function AdminContactsPage() {
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-semibold text-gray-900">{inq.name}</span>
-                        <a href={`mailto:${inq.email}`} className="flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                        <a href={validateEmailHref(inq.email)} className="flex items-center gap-1 text-xs text-blue-600 hover:underline">
                           <Mail className="h-3 w-3" /> {inq.email}
                         </a>
                         {inq.phone && (
-                          <a href={`tel:${inq.phone}`} className="flex items-center gap-1 text-xs text-gray-500">
+                          <a href={validateTelHref(inq.phone)} className="flex items-center gap-1 text-xs text-gray-500">
                             <Phone className="h-3 w-3" /> {inq.phone}
                           </a>
                         )}

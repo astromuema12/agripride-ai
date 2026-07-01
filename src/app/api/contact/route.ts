@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { contactService } from '@/services/contact.service';
 import { activityService } from '@/services/analytics.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { sanitizeObject } from '@/middleware/security';
 import { logger } from '@/lib/logger';
 
 const ContactSchema = z.object({
@@ -22,14 +23,15 @@ async function handler(req: NextRequest) {
     return apiError(400, 'Message too large');
   }
 
+  const sanitized = sanitizeObject(parsed.data);
   const ip = req.headers.get('x-forwarded-for') || 'unknown';
 
-  const contact = await contactService.create({ ...parsed.data, status: 'pending' });
+  const contact = await contactService.create({ ...sanitized, status: 'pending' });
 
   await activityService.logActivity({
     user_id: undefined,
     event_type: 'contact_submission',
-    metadata: { subject: parsed.data.subject, email: parsed.data.email, contactId: contact.id },
+    metadata: { subject: sanitized.subject, email: sanitized.email, contactId: contact.id },
     ip_address: ip,
     user_agent: req.headers.get('user-agent') || undefined,
   }).catch((err) => {

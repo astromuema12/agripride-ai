@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { testimonialService } from '@/services/testimonial.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
+import { sanitizeObject } from '@/middleware/security';
 import { logger } from '@/lib/logger';
 
 const CreateTestimonialSchema = z.object({
@@ -22,8 +23,10 @@ async function postHandler(req: NextRequest) {
   const parsed = await parseBody(req, CreateTestimonialSchema);
   if (!parsed.success) return parsed.response;
 
+  const sanitized = sanitizeObject(parsed.data);
+
   const testimonial = await testimonialService.create({
-    ...parsed.data,
+    ...sanitized,
     is_approved: false,
   } as any);
 

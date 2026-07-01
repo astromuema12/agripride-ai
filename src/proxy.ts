@@ -42,9 +42,14 @@ export async function proxy(request: NextRequest) {
     'max-age=31536000; includeSubDomains; preload',
   );
 
+  const isDev = process.env.NODE_ENV === 'development';
+  const scriptSrc = isDev
+    ? "'self' 'unsafe-inline' 'unsafe-eval'"
+    : "'self' 'unsafe-inline'";
+
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+    `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
