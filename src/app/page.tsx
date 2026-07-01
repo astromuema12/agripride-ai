@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AiDemo } from '@/components/shared/AiDemo';
+import { useI18n } from '@/lib/i18n';
 import type { Testimonial } from '@/types';
 
 const containerVariants = {
@@ -92,7 +93,9 @@ function Particles() {
 }
 
 export default function HomePage() {
+  const { t } = useI18n();
   const router = useRouter();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly');
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
@@ -118,14 +121,17 @@ export default function HomePage() {
             <span className="text-lg font-bold text-white dark:text-white">AgriPride AI</span>
           </div>
           <div className="hidden items-center gap-8 md:flex">
-            {['Features', 'Pricing', 'Governance', 'Contact'].map((l) => (
-              <a key={l} href={`#${l.toLowerCase()}`} className="text-sm font-medium text-emerald-200/70 transition-all hover:text-white relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-emerald-400 after:transition-all hover:after:w-full">{l}</a>
-            ))}
+            {[t('landing.features.title'), t('nav.pricing'), t('nav.governance'), t('nav.contact')].map((l, i) => {
+              const ids = ['features', 'pricing', 'governance', 'contact'];
+              return (
+                <a key={ids[i]} href={`#${ids[i]}`} className="text-sm font-medium text-emerald-200/70 transition-all hover:text-white relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-emerald-400 after:transition-all hover:after:w-full">{l}</a>
+              );
+            })}
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Button variant="ghost" className="text-emerald-200 hover:text-white hover:bg-emerald-800/50 hidden xs:inline-flex" onClick={() => router.push('/auth')}>Sign In</Button>
-            <Button size="sm" className="bg-white text-emerald-900 hover:bg-emerald-50 dark:bg-white dark:text-emerald-900 dark:hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 sm:hidden" onClick={() => router.push('/auth?tab=register')}>Start</Button>
-            <Button className="bg-white text-emerald-900 hover:bg-emerald-50 dark:bg-white dark:text-emerald-900 dark:hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>Get Started Free</Button>
+            <Button variant="ghost" className="text-emerald-200 hover:text-white hover:bg-emerald-800/50 hidden xs:inline-flex" onClick={() => router.push('/auth')}>{t('nav.signIn')}</Button>
+            <Button size="sm" className="bg-white text-emerald-900 hover:bg-emerald-50 dark:bg-white dark:text-emerald-900 dark:hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 sm:hidden" onClick={() => router.push('/auth?tab=register')}>{t('common.getStarted')}</Button>
+            <Button className="bg-white text-emerald-900 hover:bg-emerald-50 dark:bg-white dark:text-emerald-900 dark:hover:bg-emerald-50 shadow-xl shadow-emerald-500/10 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>{t('landing.hero.cta')}</Button>
           </div>
         </nav>
 
@@ -146,24 +152,23 @@ export default function HomePage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                 </span>
-                Now Live
+                {t('common.new')}
                 <span className="text-emerald-400/60 hidden xs:inline">&mdash;</span>
-                <span className="hidden xs:inline">For Kenyan Farmers</span>
+                <span className="hidden xs:inline">{t('landing.hero.farmersCountDesc')}</span>
               </motion.div>
               <h1 className="text-3xl font-bold leading-[1.1] tracking-tight text-white xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-balance">
-                AI That Understands{' '}
-                <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-emerald-200 bg-clip-text text-transparent">African Agriculture</span>
+                {t('landing.hero.title')}
               </h1>
               <p className="mt-4 sm:mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-emerald-200/70">
-                Diagnose crop diseases in seconds, get hyper-local weather forecasts, and access market intelligence — all powered by responsible AI built for African farmers.
+                {t('landing.hero.subtitle')}
               </p>
               <div className="mt-6 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
                 <Button size="xl" className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-emerald-950 hover:from-emerald-300 hover:to-emerald-400 shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-400/40 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
-                  Start Free Trial
+                  {t('landing.hero.cta')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button size="xl" variant="outline" className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-800/40 hover:text-white hover:border-emerald-400/50 backdrop-blur-sm w-full xs:w-auto" onClick={() => router.push('/governance')}>
-                  <Sparkles className="mr-2 h-4 w-4" /> See How It Works
+                  <Sparkles className="mr-2 h-4 w-4" /> {t('landing.hero.learnMore')}
                 </Button>
               </div>
               <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-emerald-300/60">

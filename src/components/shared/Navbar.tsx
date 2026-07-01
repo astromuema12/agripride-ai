@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Wheat, Menu, X, Bell, LogOut, Settings, Shield, Sun, Moon, Lock } from 'lucide-react';
+import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -92,6 +93,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-1 sm:gap-3">
+          <LanguageSwitcher />
           <Button
             variant="ghost"
             size="icon"

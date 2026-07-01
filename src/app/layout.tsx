@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { I18nProvider } from '@/lib/i18n';
 import { Navbar } from '@/components/shared/Navbar';
 import { Footer } from '@/components/shared/Footer';
 import { CookieConsent } from '@/components/shared/CookieConsent';
@@ -25,13 +26,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={inter.variable}>
         <ThemeProvider>
-          <AuthProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <CookieConsent />
-            <Toaster richColors closeButton position="top-right" />
-          </AuthProvider>
+          <I18nProvider>
+            <AuthProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+              <CookieConsent />
+              <Toaster richColors closeButton position="top-right" />
+            </AuthProvider>
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

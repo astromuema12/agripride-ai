@@ -29,6 +29,18 @@
   --color-earth-800: #52341c;
   --color-earth-900: #3a2414;
 
+  /* Gold palette for premium highlights */
+  --color-gold-50: #fefce8;
+  --color-gold-100: #fef9c3;
+  --color-gold-200: #fef08a;
+  --color-gold-300: #fde047;
+  --color-gold-400: #facc15;
+  --color-gold-500: #ca8a04;
+  --color-gold-600: #a16207;
+  --color-gold-700: #854d0e;
+  --color-gold-800: #713f12;
+  --color-gold-900: #422006;
+
   /* Extended slate palette for dark mode overrides */
   --color-slate-50: #f8fafc;
   --color-slate-100: #f1f5f9;
@@ -54,7 +66,7 @@
     --muted: #f1f5f9;
     --muted-foreground: #64748b;
     --border: #e2e8f0;
-    --ring: #10b981;
+    --ring: #059669;
     --radius: 0.75rem;
 
     --color-bg: #f8fafc;
@@ -67,11 +79,20 @@
     --color-accent-hover: #047857;
     --color-accent-soft: #ecfdf5;
     --color-accent-text: #047857;
-    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-    --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.06);
-    --shadow-button: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
-    --shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.08);
-    --shadow-dialog: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --color-success: #059669;
+    --color-warning: #d97706;
+    --color-danger: #dc2626;
+    --color-info: #0284c7;
+
+    --shadow-xs: 0 0 0 1px rgba(0, 0, 0, 0.02);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+    --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03);
+    --shadow-button: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    --shadow-dialog: 0 8px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.1);
   }
 
   .dark {
@@ -97,11 +118,20 @@
     --color-accent-hover: #6ee7b7;
     --color-accent-soft: #064e3b;
     --color-accent-text: #34d399;
-    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
-    --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --shadow-button: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-    --shadow-dropdown: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-dialog: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-danger: #f87171;
+    --color-info: #38bdf8;
+
+    --shadow-xs: 0 0 0 1px rgba(255, 255, 255, 0.03);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.25), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+    --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.25);
+    --shadow-button: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+    --shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03);
+    --shadow-dialog: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -250,13 +280,78 @@ html {
   background-clip: text;
 }
 
+/* Subtle background dot pattern for premium sections */
+.bg-dot-pattern {
+  background-image: radial-gradient(circle, var(--color-border) 0.5px, transparent 0.5px);
+  background-size: 16px 16px;
+}
+
+/* Focus ring */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
 /* Hover lift */
 .hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hover-lift:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-card-hover);
+}
+
+/* Subtle scale on click */
+.active-scale:active {
+  transform: scale(0.98);
+}
+
+/* Content fade in */
+.content-fade-in {
+  animation: content-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stat card value animation */
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-count-up {
+  animation: count-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Divider with gradient */
+.divider-gradient {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+}
+
+/* Premium stat highlight */
+.stat-highlight {
+  font-feature-settings: "tnum";
+  letter-spacing: -0.02em;
 }
 
 /* Dark mode color overrides — Tailwind utility classes adapt automatically */
