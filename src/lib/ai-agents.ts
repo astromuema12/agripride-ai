@@ -302,6 +302,17 @@ export function getChatResponse(query: string): AIAgentResponse {
 
   const detectedCrop = detectCropType(lower);
 
+  const isLivestock = lower.includes('cattle') || lower.includes('cow') || lower.includes('bull') || lower.includes('calf') || lower.includes('beef') || lower.includes('livestock') || lower.includes('sheep') || lower.includes('goat') || lower.includes('pig') || lower.includes('swine') || lower.includes('herd') || lower.includes('grazing') || lower.includes('pasture') || lower.includes('fodder') || lower.includes('zero grazing') || lower.includes('animal husbandry');
+  const isPoultry = lower.includes('chicken') || lower.includes('hen') || lower.includes('rooster') || lower.includes('broiler') || lower.includes('layer') || lower.includes('poultry') || lower.includes('egg') || lower.includes('hatch') || lower.includes('incubat') || lower.includes('vaccin') || lower.includes('fowl') || lower.includes('turkey') || lower.includes('duck');
+  const isDairy = lower.includes('dairy') || lower.includes('milk') || lower.includes('milking') || lower.includes('udder') || lower.includes('cream') || lower.includes('yogurt') || lower.includes('cheese') || lower.includes('mastitis');
+  const isAquaculture = lower.includes('fish') || lower.includes('pond') || lower.includes('tilapia') || lower.includes('catfish') || lower.includes('aquaculture') || lower.includes('fingerling') || lower.includes('aquaponics');
+  const isBeekeeping = lower.includes('bee') || lower.includes('honey') || lower.includes('apiary') || lower.includes('hive') || lower.includes('beekeep') || lower.includes('pollinat') || lower.includes('wax') || lower.includes('propolis');
+  const isIrrigation = lower.includes('irrigat') || lower.includes('drip') || lower.includes('sprinkler') || lower.includes('water') || lower.includes('drought') || lower.includes('watering') || lower.includes('moisture');
+  const isPostHarvest = lower.includes('storage') || lower.includes('post-harvest') || lower.includes('post harvest') || lower.includes('silo') || lower.includes('drying') || lower.includes('grading') || lower.includes('packaging') || lower.includes('value addition') || lower.includes('processing') || lower.includes('preserv') || lower.includes('shelf life');
+  const isFarmEconomics = lower.includes('profit') || lower.includes('cost') || lower.includes('budget') || lower.includes('income') || lower.includes('revenue') || lower.includes('expense') || lower.includes('loan') || lower.includes('credit') || lower.includes('market') || lower.includes('price') || lower.includes('sell') || lower.includes('record') || lower.includes('bookkeep') || lower.includes('enterprise budget');
+  const isSoil = lower.includes('soil') || lower.includes('compost') || lower.includes('manure') || lower.includes('fertility') || lower.includes('ph') || lower.includes('organic matter') || lower.includes('nitrogen') || lower.includes('phosphorus') || lower.includes('potassium') || lower.includes('npk') || lower.includes('dap') || lower.includes('can') || lower.includes('liming') || lower.includes('deficiency');
+  const isGreenhouse = lower.includes('greenhouse') || lower.includes('polytunnel') || lower.includes('shade net') || lower.includes('protected') || lower.includes('mulch') || lower.includes('row cover');
+
   if (detectedCrop) {
     const isDisease = lower.includes('disease') || lower.includes('symptom') || lower.includes('diagnos') || lower.includes('blight') || lower.includes('rust') || lower.includes('mold') || lower.includes('infection') || lower.includes('treatment') || lower.includes('cure') || lower.includes('fungus') || lower.includes('bacteria') || lower.includes('virus') || lower.includes('rot') || lower.includes('wilt') || lower.includes('spot') || lower.includes('lesion');
     const isFertilizer = lower.includes('fertilizer') || lower.includes('manure') || lower.includes('nutrient') || lower.includes('npk') || lower.includes('dap') || lower.includes('can') || lower.includes('compost') || lower.includes('feeding');
@@ -358,6 +369,222 @@ export function getChatResponse(query: string): AIAgentResponse {
         frameworks = advice.frameworks_used ?? ['AIM Framework', 'RANK Framework', 'TRAIL Framework'];
       }
     }
+  } else if (isLivestock) {
+    if (isDairy) {
+      response = `I can help with dairy farming. Here are key areas:
+
+WHAT: Dairy farming involves raising dairy cattle for milk production.
+
+KEY PRACTICES:
+1. Breed selection: Friesian (high yield), Ayrshire (good for tropics), Jersey (high butterfat), Guernsey, or Zebu crosses for hardiness
+2. Housing: Well-ventilated zero-grazing units with proper drainage, feeding troughs, and clean water
+3. Feeding: Quality fodder (Napier grass, Rhodes grass), concentrates (dairy meal), minerals, and clean water ad libitum
+4. Milking: Twice daily at consistent times, hygienic practices, teat dipping after milking
+5. Health: Regular deworming, vaccination (FMD, LSD, Brucellosis), mastitis prevention, hoof care
+
+COMMON MISTAKES:
+- Inadequate feeding especially during early lactation
+- Poor heat detection leading to long calving intervals
+- Insufficient clean water affecting milk yield
+- Delayed treatment of mastitis and other diseases
+
+For specific advice, please provide: your location, breed, number of cows, current feeding program, and milk production levels.`;
+      agentName = 'Dairy Specialist Agent';
+    } else if (isPoultry) {
+      if (lower.includes('layer') || lower.includes('egg')) {
+        response = `I can help with layer (egg) poultry farming. Here are key areas:
+
+WHAT: Layer farming focuses on raising chickens for egg production.
+
+KEY PRACTICES:
+1. Breed selection: Hy-Line Brown, ISA Brown, Lohmann Brown, or Kenbro for dual-purpose
+2. Housing: Deep litter system (4-5 birds/m²) or battery cages with proper ventilation
+3. Feeding: Layer starter (0-8 weeks), growers mash (8-18 weeks), layers mash (18+ weeks) with calcium supplementation
+4. Lighting: 16 hours of light per day for optimal egg production
+5. Vaccination: Marek's (day 1), Newcastle (weeks 1, 4), Gumboro (weeks 2, 5), Fowl Pox (week 6)
+6. Egg collection: 3-4 times daily, store at 15-20°C, 75-80% humidity
+
+BENEFITS: Quick returns (18-20 weeks to first egg), steady income from egg sales, manure for crop farming.
+
+For specific advice, please provide: your location, breed, flock size, housing system, and current challenges.`;
+      } else {
+        response = `I can help with broiler (meat) poultry farming. Here are key areas:
+
+WHAT: Broiler farming raises chickens for meat production, typically harvested at 5-8 weeks.
+
+KEY PRACTICES:
+1. Breed selection: Cobb 500, Ross 308, or indigenous breeds for slower growth
+2. Housing: 10-12 birds/m², proper ventilation, brooder heating (32-35°C first week, reduce by 3°C weekly)
+3. Feeding: Broiler starter (0-3 weeks), broiler finisher (3 weeks to market)
+4. Feed conversion: Target 1.6-1.8 kg feed per kg live weight
+5. Health: Strict biosecurity, vaccination, clean bedding, adequate feeder/drinker space
+6. Harvesting: Process at 5-8 weeks depending on target weight (1.5-2.5 kg live weight)
+
+BENEFITS: Fast turnaround (5-8 weeks), high demand, good profit potential with proper management.
+
+For specific advice, please provide: your location, breed, flock size, house type, and current issues.`;
+      }
+      agentName = 'Poultry Specialist Agent';
+    } else {
+      response = `I can help with livestock management. Here are key areas:
+
+CATTLE: Breed selection (Beef: Boran, Sahiwal, Charolais crosses | Dairy: Friesian, Ayrshire, Jersey, Zebu crosses), housing (zero-grazing units, paddocks), feeding (quality pasture, hay, silage, concentrates), health management (vaccination, deworming, disease control), breeding (AI service, bull selection, calving management)
+
+GOATS: Breeds (Gallaoer, Saanen, Toggenburg, Small East African), housing (raised floors, well-ventilated), feeding (browse plants, hay, supplements), health (CCPP, Brucellosis, worm control)
+
+PIGS: Breeds (Large White, Landrace, Duroc, Camborough), housing (well-drained pens, farrowing crates), feeding (pig starter, grower, finisher rations), health (ASF prevention, vaccination, deworming)
+
+For specific advice on any livestock type, please provide: your location, type of livestock, breed, herd/flock size, current feeding program, and the specific challenge you're facing.`;
+      agentName = 'Livestock Specialist Agent';
+    }
+    frameworks = ['AIM Framework', 'TRACK Framework', 'TRAIL Framework'];
+  } else if (isPoultry) {
+    if (lower.includes('layer') || lower.includes('egg')) {
+      response = `I can help with layer (egg) poultry farming. Here are key areas:
+
+WHAT: Layer farming focuses on raising chickens for egg production.
+
+KEY PRACTICES:
+1. Breed selection: Hy-Line Brown, ISA Brown, Lohmann Brown, or Kenbro for dual-purpose
+2. Housing: Deep litter system (4-5 birds/m²) or battery cages with proper ventilation
+3. Feeding: Layer starter (0-8 weeks), growers mash (8-18 weeks), layers mash (18+ weeks) with calcium supplementation
+4. Lighting: 16 hours of light per day for optimal egg production
+5. Vaccination: Marek's (day 1), Newcastle (weeks 1, 4), Gumboro (weeks 2, 5), Fowl Pox (week 6)
+6. Egg collection: 3-4 times daily, store at 15-20°C, 75-80% humidity
+
+For specific advice, please provide: your location, breed, flock size, housing system, and current challenges.`;
+      agentName = 'Poultry Specialist Agent';
+    } else {
+      response = `I can help with poultry farming. Here are key areas for broiler production:
+
+WHAT: Broiler farming raises chickens for meat, harvestable at 5-8 weeks.
+
+KEY PRACTICES:
+1. Housing: 10-12 birds/m², proper ventilation, brooder heating
+2. Feeding: Broiler starter then finisher for optimal growth
+3. Health: Strict biosecurity, vaccination (Newcastle, Gumboro, Fowl Pox)
+4. Harvest: Process at 5-8 weeks (target 1.5-2.5 kg live weight)
+
+For specific advice, please provide: your location, breed, flock size, and current challenges.`;
+      agentName = 'Poultry Specialist Agent';
+    }
+    frameworks = ['AIM Framework', 'TRACK Framework', 'TRAIL Framework'];
+  } else if (isAquaculture) {
+    response = `I can help with fish farming (aquaculture). Here are key areas:
+
+WHAT: Fish farming involves raising fish in controlled environments for food production.
+
+KEY PRACTICES:
+1. Species: Tilapia (hardy, fast-growing), Catfish (high demand, fast-growing), or both in polyculture
+2. Pond construction: 0.1-1 acre ponds, 1-1.5m deep, clay soil preferred, proper inlet/outlet systems
+3. Stocking: Tilapia at 2-3 fingerlings/m², Catfish at 5-10 fingerlings/m²
+4. Feeding: Floating pellets (25-35% protein), feed 2-4 times daily at 3-5% body weight
+5. Water quality: Dissolved oxygen > 5mg/L, pH 6.5-8.5, ammonia < 0.05mg/L
+6. Harvesting: Partial harvesting after 4-6 months, complete harvest after 6-8 months
+
+BENEFITS: High protein food source, good income, can integrate with crop farming (rice-fish, aquaponics).
+
+For specific advice, please provide: your location, pond size, fish species, and main challenge.`;
+    agentName = 'Aquaculture Specialist Agent';
+    frameworks = ['AIM Framework', 'TRAIL Framework'];
+  } else if (isBeekeeping) {
+    response = `I can help with beekeeping (apiculture). Here are key areas:
+
+WHAT: Beekeeping involves maintaining bee colonies for honey, wax, propolis, and pollination services.
+
+KEY PRACTICES:
+1. Hive types: Langstroth (modern, movable frames), Kenya Top Bar (affordable, ideal for smallholders), traditional log hives
+2. Apiary setup: Place hives under shade, near flowering plants, away from human/animal traffic, facing east or southeast
+3. Equipment: Bee suit, smoker, hive tool, brush, feeder, queen excluder
+4. Seasonal management: Inspect every 2-3 weeks, control swarm, pest management (Varroa mites, wax moths, ants)
+5. Honey harvesting: Harvest when 80% of frames are capped, use proper extraction equipment
+6. Value addition: Pure honey, beeswax products, propolis tincture, royal jelly
+
+BENEFITS: Pollination improves crop yields by 30-50%, honey has high market value, low startup costs.
+
+For specific advice, please provide: your location, hive type, number of hives, and main challenge.`;
+    agentName = 'Beekeeping Specialist Agent';
+    frameworks = ['AIM Framework', 'TRAIL Framework'];
+  } else if (isIrrigation) {
+    response = `I can help with irrigation and water management. Here are key areas:
+
+WHAT: Irrigation is the artificial application of water to crops to supplement rainfall.
+
+KEY TYPES:
+1. Drip irrigation: Water delivered directly to root zone — 60-80% water efficiency, best for vegetables and high-value crops
+2. Sprinkler irrigation: Overhead water application — good for field crops, 70-75% efficiency
+3. Surface irrigation: Furrow, basin, or flood — 40-60% efficiency, low cost but water-intensive
+4. Centre pivot: Automated large-scale irrigation — ideal for commercial farms
+
+BEST PRACTICES:
+1. Schedule irrigation based on crop water requirements and soil moisture
+2. Irrigate in early morning or evening to reduce evaporation
+3. Use mulching to reduce water loss from soil surface
+4. Consider rainwater harvesting (roof catchment, ponds, tanks)
+5. Test soil moisture before irrigating (feel method, tensiometer, or moisture sensors)
+
+COMMON MISTAKES: Over-irrigation causing waterlogging and disease, irrigating during peak sun hours, poor system maintenance.
+
+For specific advice, please provide: your location, crops grown, farm size, water source, and current irrigation system.`;
+    agentName = 'Irrigation Specialist Agent';
+    frameworks = ['AIM Framework', 'TRAIL Framework', 'TRACK Framework'];
+  } else if (isPostHarvest) {
+    response = `I can help with post-harvest handling and storage. Here are key areas:
+
+WHAT: Post-harvest handling covers all activities from harvest to consumption.
+
+KEY PRACTICES:
+1. Harvest timing: Harvest at optimal maturity — too early reduces quality, too late increases losses
+2. Cleaning and grading: Remove debris, sort by size and quality to get better prices
+3. Drying: Reduce moisture to safe levels — maize 13.5%, beans 15%, rice 14%
+4. Storage: Hermetic bags (PICS bags), metal silos, proper ventilation, pest monitoring
+5. Value addition: Processing, packaging, branding to increase income
+
+COMMON LOSSES: 30-40% of produce lost post-harvest in many regions due to poor handling, pests, and lack of storage.
+
+BENEFITS OF GOOD PRACTICE: Longer shelf life, higher market prices, reduced waste, food security.
+
+For specific advice, please provide: your crop type, quantity, storage facilities, and main post-harvest challenge.`;
+    agentName = 'Post-Harvest Specialist Agent';
+    frameworks = ['AIM Framework', 'TRAIL Framework'];
+  } else if (isFarmEconomics) {
+    response = `I can help with farm economics and management. Here are key areas:
+
+WHAT: Farm economics involves analyzing the financial aspects of farming to maximize profitability.
+
+KEY PRACTICES:
+1. Record keeping: Track all income, expenses, production, and inventory — use simple ledgers or digital tools
+2. Enterprise budgeting: Calculate costs and returns for each farm activity separately
+3. Break-even analysis: Determine the price or production level needed to cover costs
+4. Profit margins: Revenue minus all costs — aim for at least 30% gross margin
+5. Market analysis: Research market prices, timing, and channels before planting
+6. Risk management: Diversify crops/livestock, consider insurance, maintain emergency savings
+
+COMMON MISTAKES: Poor record keeping, not separating personal and farm finances, ignoring depreciation, selling at farm gate without marketing.
+
+For specific advice, please provide: your farm size, enterprises, main expenses, and location.`;
+    agentName = 'Farm Economics Specialist Agent';
+    frameworks = ['AIM Framework', 'TRACK Framework', 'RANK Framework'];
+  } else if (isGreenhouse) {
+    response = `I can help with greenhouse farming. Here are key areas:
+
+WHAT: Greenhouse farming involves growing crops in a controlled environment for year-round production.
+
+KEY CROPS: Tomatoes, capsicum (bell peppers), cucumbers, lettuce, strawberries, herbs, flowers.
+
+KEY PRACTICES:
+1. Greenhouse types: Tunnel (low-cost), Venlo (commercial), shade net (for low-light crops)
+2. Climate control: Temperature (25-30°C day, 15-20°C night), humidity (60-80%), ventilation
+3. Irrigation: Drip irrigation with fertigation — apply water and nutrients together
+4. Growing media: Coco peat, rockwool, or sterilized soil in bags
+5. Pest management: Sticky traps, biological control (predatory mites, parasitoids), screen netting
+6. Crop management: Pruning, staking, pollination (bumblebees or manual), de-leafing
+
+BENEFITS: Higher yields (3-5x open field), better quality, year-round production, efficient water use.
+
+For specific advice, please provide: your location, greenhouse size, crops planned, and budget.`;
+    agentName = 'Greenhouse Specialist Agent';
+    frameworks = ['AIM Framework', 'TRAIL Framework', 'TRACK Framework'];
   } else if (lower.includes('weather') || lower.includes('rain') || lower.includes('temperature') || lower.includes('humid') || lower.includes('forecast') || lower.includes('drought') || lower.includes('sunny') || lower.includes('cloud')) {
     const advisory = getWeatherAdvisory('current', []);
     if (advisory.success) {
@@ -365,22 +592,30 @@ export function getChatResponse(query: string): AIAgentResponse {
       agentName = advisory.responsible_agent ?? 'Weather Intelligence Agent';
       frameworks = advisory.frameworks_used ?? ['TRAIL Framework', 'TRACK Framework'];
     }
-  } else if (lower.includes('sustainab') || lower.includes('soil') || lower.includes('carbon') || lower.includes('environment') || lower.includes('organic') || lower.includes('score') || lower.includes('footprint')) {
-    response = 'To improve your sustainability score on your Kenyan farm:\n1) Practice crop rotation to maintain soil health and break pest cycles.\n2) Use drip irrigation or alternate wetting-drying to reduce water consumption by up to 60%.\n3) Plant cover crops like cowpeas or lablab to prevent erosion and fix nitrogen.\n4) Compost crop residues to enrich soil organic matter.\n5) Plant agroforestry trees (grevillea, calliandra) for shade, fodder, and firewood.\n6) Maintain buffer zones near water bodies.\n7) Use integrated soil fertility management combining organic manure with inorganic fertilizers.\n8) Practice zero-tillage or minimum tillage to reduce soil disturbance.';
-    agentName = 'Sustainability Agent';
+  } else if (isSoil || lower.includes('sustainab') || lower.includes('carbon') || lower.includes('environment') || lower.includes('organic') || lower.includes('score') || lower.includes('footprint')) {
+    response = 'To improve your sustainability score and soil health on your farm:\n\n1) Practice crop rotation to maintain soil health and break pest cycles.\n2) Use drip irrigation or alternate wetting-drying to reduce water consumption by up to 60%.\n3) Plant cover crops like cowpeas or lablab to prevent erosion and fix nitrogen.\n4) Compost crop residues to enrich soil organic matter.\n5) Plant agroforestry trees (grevillea, calliandra) for shade, fodder, and firewood.\n6) Maintain buffer zones near water bodies.\n7) Use integrated soil fertility management combining organic manure with inorganic fertilizers.\n8) Practice zero-tillage or minimum tillage to reduce soil disturbance.\n9) Conduct regular soil testing to determine pH, organic matter, and nutrient levels.\n10) Apply lime if soil pH is below 5.5 for most crops (target pH 6.0-7.0).';
+    agentName = 'Sustainability and Soil Specialist Agent';
     frameworks = ['AIM Framework', 'OASIS Framework', 'TRACK Framework'];
   } else {
-    response = `I'm your AgriPride AI assistant for Kenyan agriculture. I can help you with over 40 crops grown in Kenya including:
+    response = `I'm your AgriPride AI agricultural assistant. I can help with a wide range of agricultural topics including:
 
-🌽 Cereals: Maize, Wheat, Rice, Sorghum, Millet, Barley
-🥔 Tubers: Cassava, Sweet Potato, Potato, Arrow Roots, Yams
-🫘 Legumes: Beans, Cowpeas, Green Grams, Pigeon Peas, Groundnuts
-🍌 Fruits: Banana, Mango, Avocado, Pineapple, Passion Fruit, Citrus, Watermelon, Pawpaw
-☕ Cash Crops: Coffee, Tea, Sugarcane, Cotton, Pyrethrum, Sisal
-🥬 Vegetables: Tomato, Onion, Kale, Cabbage, Spinach, French Beans, Capsicum
-🌴 Other: Coconut, Cashew, Macadamia, Sunflower, Sesame
+CROP PRODUCTION: Planting, fertilizers, pest and disease management, harvesting for over 40 crops
+LIVESTOCK: Cattle, dairy, poultry, goats, sheep, pigs
+AQUACULTURE: Fish farming, pond management
+BEEKEEPING: Hive management, honey harvesting
+SOIL MANAGEMENT: Fertility, composting, testing
+IRRIGATION: Drip, sprinkler, systems design
+GREENHOUSE: Protected cultivation
+POST-HARVEST: Storage, processing, value addition
+FARM ECONOMICS: Budgeting, record keeping, marketing
+SUSTAINABILITY: Organic farming, conservation, climate-smart practices
 
-Ask me about planting techniques, fertilizer rates, pest and disease management, or weather information for any crop!`;
+To give you the best advice, please tell me:
+1. What specific agricultural topic or problem do you need help with?
+2. What is your location or growing region?
+3. What is your farm size and scale?
+
+Ask me anything about farming and agriculture!`;
   }
 
   return {

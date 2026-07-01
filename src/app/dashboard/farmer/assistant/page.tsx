@@ -79,11 +79,16 @@ export default function AIAssistant() {
     };
     setMessages((prev) => [...prev, placeholder]);
 
+    const historyMessages = messages
+      .filter((m) => m.content && !m.id.startsWith('stream-') && m.id !== 'welcome')
+      .slice(-20)
+      .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }));
+
     try {
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userQuery, userId: user.id }),
+        body: JSON.stringify({ message: userQuery, userId: user.id, history: historyMessages }),
       });
 
       if (!response.ok) throw new Error('API error');
