@@ -42,3 +42,15 @@ AgriPride AI — Next.js agri-tech app with Paystack payments, Supabase (configu
 - All `<TabsList>` across dashboard pages use `flex-wrap h-auto` to prevent tab overflow on narrow screens (admin/consent, admin/analytics, officer/disease)
 - Contact messages and ticket descriptions capped with `line-clamp-3` to prevent card expansion
 - Disease prediction table cells use `max-w-[200px] truncate` to prevent table stretching on narrow desktop
+
+## Security (XSS)
+- `src/middleware/security.ts` — `sanitizeInput()` uses `sanitize-html` (strip all tags). Also exports `sanitizeObject()`, `validateEmailHref()`, `validateTelHref()`.
+- All user-text API routes sanitize before storage: `/api/testimonials`, `/api/contact`, `/api/ai/chat`, `/api/ai/diagnose`, `/api/payments`, `/api/subscribe`.
+- Admin contacts page uses `validateEmailHref()`/`validateTelHref()` for `mailto:`/`tel:` hrefs to prevent `javascript:` protocol injection.
+- CSP in `src/proxy.ts`: removes `'unsafe-eval'` in production; kept in dev for HMR.
+
+## Contact Email Notifications
+- `src/lib/email.ts` — uses Resend to forward contact form submissions to `NEXT_PUBLIC_CONTACT_EMAIL`.
+- Env vars: `RESEND_API_KEY` (required), `RESEND_FROM` (defaults to `onboarding@resend.dev`).
+- Fire-and-forget: if `RESEND_API_KEY` is not set, email sending is silently skipped.
+- Vercel env `RESEND_FROM` set to `onboarding@resend.dev` (works without domain verification on Resend free tier).
