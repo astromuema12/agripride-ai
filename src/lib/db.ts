@@ -270,17 +270,23 @@ export async function createCrop(crop: Omit<Crop, 'id' | 'created_at'>): Promise
 
 export async function getDiseaseReports(farmId?: string, limit = 100, offset = 0): Promise<{ data: DiseaseReport[]; total: number }> {
   if (isSupabaseConfigured) {
-    let query = supabase!.from('disease_reports').select('*', { count: 'exact' });
-    let countQuery = supabase!.from('disease_reports').select('*', { count: 'exact', head: true });
-    if (farmId) {
-      query = query.eq('farm_id', farmId);
-      countQuery = countQuery.eq('farm_id', farmId);
+    try {
+      let query = supabase!.from('disease_reports').select('*', { count: 'exact' });
+      let countQuery = supabase!.from('disease_reports').select('*', { count: 'exact', head: true });
+      if (farmId) {
+        query = query.eq('farm_id', farmId);
+        countQuery = countQuery.eq('farm_id', farmId);
+      }
+      const [{ data, count }, { count: total }] = await Promise.all([
+        query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
+        countQuery,
+      ]);
+      if (data && data.length > 0) {
+        return { data: data as DiseaseReport[], total: total ?? 0 };
+      }
+    } catch {
+      // Fall through to demo store
     }
-    const [{ data, count }, { count: total }] = await Promise.all([
-      query.order('created_at', { ascending: false }).range(offset, offset + limit - 1),
-      countQuery,
-    ]);
-    return { data: (data ?? []) as DiseaseReport[], total: total ?? 0 };
   }
   await ensureSeeded();
   const all = await getCollection<DiseaseReport>('diseaseReports');

@@ -26,7 +26,9 @@ async function handler(req: NextRequest) {
   const { cropType, symptoms, growthStage, imageBase64, userId } = { ...parsed.data, ...sanitized };
   const startTime = Date.now();
 
-  if (serverSupabase) {
+  const isDemoMode = !process.env.OPENAI_API_KEY;
+
+  if (serverSupabase && !isDemoMode) {
     const { data: { session } } = await serverSupabase.auth.getSession();
     if (!session?.user) {
       return apiError(401, 'Unauthorized');

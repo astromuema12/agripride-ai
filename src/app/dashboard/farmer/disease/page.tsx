@@ -116,12 +116,16 @@ export default function DiseaseDiagnosisPage() {
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const [{ data: userFarms }, { data: allReports }] = await Promise.all([
-        getFarms(user.id),
-        getDiseaseReports(),
-      ]);
-      setFarms(userFarms);
-      setReports(allReports.filter((r) => r.user_id === user.id));
+      try {
+        const [{ data: userFarms }, { data: allReports }] = await Promise.all([
+          getFarms(user.id),
+          getDiseaseReports(),
+        ]);
+        setFarms(userFarms);
+        setReports(allReports.filter((r) => r.user_id === user.id));
+      } catch {
+        toast.error('Failed to load farm data');
+      }
     };
     load();
   }, [user]);
