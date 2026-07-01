@@ -151,7 +151,7 @@ async function handler(req: NextRequest) {
   });
 
   return apiSuccess({
-    data: result,
+    ...result,
     confidence_score: result.primaryDiagnosis?.confidence,
     responsible_agent: 'Crop Disease Diagnostic Agent',
     frameworks_used: ['AIM Framework', 'MAP Framework', 'TRACK Framework'],

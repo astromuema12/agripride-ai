@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDiseaseReports, createDiseaseReport, getFarms } from '@/lib/db';
-import type { DiseaseReport, Farm, GrowthStage, PossibleCause, DiagnosisResult } from '@/types';
+import type { DiseaseReport, Farm, GrowthStage, PossibleCause } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import Image from 'next/image';
 import {
-  FileSearch, AlertTriangle, Shield, Clock, BrainCircuit, Save, History,
+  FileSearch, Shield, Clock, BrainCircuit, Save, History,
   ImagePlus, X, Volume2, VolumeX, Loader2, HelpCircle, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { speakText, stopSpeaking } from '@/lib/tts';
@@ -48,44 +48,44 @@ interface APIResponseData {
   missingInfo?: string[];
 }
 
-function RiskBadge({ risk }: { risk: string }) {
+function RiskBadge({ risk }: { risk?: string }) {
   const map: Record<string, { variant: 'destructive' | 'warning' | 'primary' | 'default'; label: string }> = {
     critical: { variant: 'destructive', label: 'Critical' },
     high: { variant: 'destructive', label: 'High' },
     medium: { variant: 'warning', label: 'Medium' },
     low: { variant: 'primary', label: 'Low' },
   };
-  const { variant, label } = map[risk.toLowerCase()] ?? map.low;
+  const { variant, label } = map[risk?.toLowerCase() ?? ''] ?? map.low;
   return <Badge variant={variant}>{label}</Badge>;
 }
 
 function StatusBadge({ status }: { status: DiseaseReport['status'] }) {
-  const map: Record<string, { variant: 'warning' | 'secondary' | 'primary'; label: string }> = {
+  const map: Record<string, { variant: 'warning' | 'secondary' | 'primary' | 'default'; label: string }> = {
     submitted: { variant: 'warning', label: 'Submitted' },
     reviewed: { variant: 'secondary', label: 'Reviewed' },
     resolved: { variant: 'primary', label: 'Resolved' },
   };
-  const { variant, label } = map[status];
+  const { variant, label } = map[status] ?? { variant: 'default' as const, label: status || 'Unknown' };
   return <Badge variant={variant}>{label}</Badge>;
 }
 
-function UncertaintyBadge({ level }: { level: string }) {
+function UncertaintyBadge({ level }: { level?: string }) {
   const map: Record<string, { variant: 'warning' | 'secondary' | 'destructive'; label: string }> = {
     low: { variant: 'secondary', label: 'Low Uncertainty' },
     moderate: { variant: 'warning', label: 'Moderate Uncertainty' },
     high: { variant: 'destructive', label: 'High Uncertainty' },
   };
-  const { variant, label } = map[level.toLowerCase()] ?? { variant: 'warning' as const, label: level };
+  const { variant, label } = map[level?.toLowerCase() ?? ''] ?? { variant: 'warning' as const, label: level || 'Moderate Uncertainty' };
   return <Badge variant={variant}>{label}</Badge>;
 }
 
-function LikelihoodBadge({ likelihood }: { likelihood: string }) {
+function LikelihoodBadge({ likelihood }: { likelihood?: string }) {
   const map: Record<string, { variant: 'primary' | 'warning' | 'destructive'; label: string }> = {
     high: { variant: 'primary', label: 'High Likelihood' },
     medium: { variant: 'warning', label: 'Medium Likelihood' },
     low: { variant: 'destructive', label: 'Low Likelihood' },
   };
-  const { variant, label } = map[likelihood.toLowerCase()] ?? { variant: 'warning' as const, label: likelihood };
+  const { variant, label } = map[likelihood?.toLowerCase() ?? ''] ?? { variant: 'warning' as const, label: likelihood || 'Unknown' };
   return <Badge variant={variant}>{label}</Badge>;
 }
 
@@ -200,20 +200,24 @@ export default function DiseaseDiagnosisPage() {
         toast.error(resultData.error || 'Diagnosis failed');
       }
     } catch {
-      const { diagnoseDisease } = await import('@/lib/ai-agents');
-      const fallback = diagnoseDisease(cropType, symptoms, growthStage);
-      if (fallback.success && fallback.data) {
-        setResult({
-          data: fallback.data as APIResponseData,
-          confidence_score: fallback.confidence_score,
-          responsible_agent: fallback.responsible_agent,
-          frameworks_used: fallback.frameworks_used,
-          timestamp: fallback.timestamp,
-        });
-        toast.success('Offline diagnosis complete');
-      } else {
-        toast.error('An error occurred during diagnosis');
+      try {
+        const { diagnoseDisease } = await import('@/lib/ai-agents');
+        const fallback = diagnoseDisease(cropType, symptoms, growthStage);
+        if (fallback.success && fallback.data) {
+          setResult({
+            data: fallback.data as APIResponseData,
+            confidence_score: fallback.confidence_score,
+            responsible_agent: fallback.responsible_agent,
+            frameworks_used: fallback.frameworks_used,
+            timestamp: fallback.timestamp,
+          });
+          toast.success('Offline diagnosis complete');
+          return;
+        }
+      } catch {
+        // Fallback also failed — show friendly error below
       }
+      toast.error('Unable to complete diagnosis. Please check your description and try again.');
     } finally {
       setDiagnosing(false);
     }
@@ -263,10 +267,6 @@ export default function DiseaseDiagnosisPage() {
       speakText(text, () => setSpeakingId(null));
     }
   };
-
-  const primaryConfidencePct = result?.data?.primaryDiagnosis
-    ? Math.round(result.data.primaryDiagnosis.confidence * 100)
-    : 0;
 
   if (!user) return null;
 
@@ -353,7 +353,7 @@ export default function DiseaseDiagnosisPage() {
                 <Label>Upload Photo</Label>
                 {imagePreview ? (
                   <div className="relative rounded-lg overflow-hidden border border-gray-200">
-                    <Image src={imagePreview ?? ''} alt="Crop preview" width={400} height={200} className="w-full h-48 object-cover" />
+                    <Image src={imagePreview ?? ''} alt="Crop preview" width={400} height={200} className="w-full h-48 object-cover" unoptimized />
                     <button
                       onClick={clearImage}
                       className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80"
@@ -447,7 +447,7 @@ export default function DiseaseDiagnosisPage() {
                 <CardContent className="space-y-4 sm:space-y-5 pt-4 sm:pt-6 px-3 sm:px-6">
                   {imagePreview && (
                     <div className="rounded-lg overflow-hidden border border-gray-200">
-                      <Image src={imagePreview} alt="Diagnosed crop" width={600} height={300} className="w-full max-h-64 object-contain bg-gray-50" />
+                      <Image src={imagePreview} alt="Diagnosed crop" width={600} height={300} className="w-full max-h-64 object-contain bg-gray-50" unoptimized />
                     </div>
                   )}
 
