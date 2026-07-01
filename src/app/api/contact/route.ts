@@ -4,6 +4,7 @@ import { contactService } from '@/services/contact.service';
 import { activityService } from '@/services/analytics.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
 import { sanitizeObject } from '@/middleware/security';
+import { sendContactNotification } from '@/lib/email';
 import { logger } from '@/lib/logger';
 
 const ContactSchema = z.object({
@@ -27,6 +28,16 @@ async function handler(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || 'unknown';
 
   const contact = await contactService.create({ ...sanitized, status: 'pending' });
+
+  sendContactNotification(
+    sanitized.name,
+    sanitized.email || '',
+    sanitized.subject,
+    sanitized.message,
+    sanitized.phone,
+  ).catch((err) => {
+    logger.warn('Failed to send contact notification email', { component: 'contact', error: err });
+  });
 
   await activityService.logActivity({
     user_id: undefined,
