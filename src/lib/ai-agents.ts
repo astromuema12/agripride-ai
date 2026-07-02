@@ -302,11 +302,11 @@ export function getChatResponse(query: string): AIAgentResponse {
 
   const detectedCrop = detectCropType(lower);
 
-  const isLivestock = lower.includes('cattle') || lower.includes('cow') || lower.includes('bull') || lower.includes('calf') || lower.includes('beef') || lower.includes('livestock') || lower.includes('sheep') || lower.includes('goat') || lower.includes('pig') || lower.includes('swine') || lower.includes('herd') || lower.includes('grazing') || lower.includes('pasture') || lower.includes('fodder') || lower.includes('zero grazing') || lower.includes('animal husbandry');
-  const isPoultry = lower.includes('chicken') || lower.includes('hen') || lower.includes('rooster') || lower.includes('broiler') || lower.includes('layer') || lower.includes('poultry') || lower.includes('egg') || lower.includes('hatch') || lower.includes('incubat') || lower.includes('vaccin') || lower.includes('fowl') || lower.includes('turkey') || lower.includes('duck');
-  const isDairy = lower.includes('dairy') || lower.includes('milk') || lower.includes('milking') || lower.includes('udder') || lower.includes('cream') || lower.includes('yogurt') || lower.includes('cheese') || lower.includes('mastitis');
-  const isAquaculture = lower.includes('fish') || lower.includes('pond') || lower.includes('tilapia') || lower.includes('catfish') || lower.includes('aquaculture') || lower.includes('fingerling') || lower.includes('aquaponics');
-  const isBeekeeping = lower.includes('bee') || lower.includes('honey') || lower.includes('apiary') || lower.includes('hive') || lower.includes('beekeep') || lower.includes('pollinat') || lower.includes('wax') || lower.includes('propolis');
+  const isLivestock = lower.includes('cattle') || lower.includes('cow') || lower.includes('bull') || lower.includes('calf') || lower.includes('beef') || lower.includes('livestock') || lower.includes('sheep') || lower.includes('goat') || lower.includes('pig') || lower.includes('swine') || lower.includes('herd') || lower.includes('grazing') || lower.includes('pasture') || lower.includes('fodder') || lower.includes('zero grazing') || lower.includes('animal husbandry') || lower.includes('ruminant') || lower.includes('livestock') || lower.includes('drench') || lower.includes('deworm') || lower.includes('vaccinat') || lower.includes('lamb') || lower.includes('kid') || lower.includes('feeder') || lower.includes('weaner') || lower.includes('farrow');
+  const isPoultry = lower.includes('chicken') || lower.includes('hen') || lower.includes('rooster') || lower.includes('broiler') || lower.includes('layer') || lower.includes('poultry') || lower.includes('egg') || lower.includes('hatch') || lower.includes('incubat') || lower.includes('vaccin') || lower.includes('fowl') || lower.includes('turkey') || lower.includes('duck') || lower.includes('kienyeji');
+  const isDairy = lower.includes('dairy') || lower.includes('milk') || lower.includes('milking') || lower.includes('udder') || lower.includes('cream') || lower.includes('yogurt') || lower.includes('cheese') || lower.includes('mastitis') || lower.includes('milk fever') || lower.includes('ketosis') || lower.includes('lactation') || lower.includes('colostrum');
+  const isAquaculture = lower.includes('fish') || lower.includes('pond') || lower.includes('tilapia') || lower.includes('catfish') || lower.includes('aquaculture') || lower.includes('fingerling') || lower.includes('aquaponics') || lower.includes('ocha') || lower.includes('samaki');
+  const isBeekeeping = lower.includes('bee') || lower.includes('honey') || lower.includes('apiary') || lower.includes('hive') || lower.includes('beekeep') || lower.includes('pollinat') || lower.includes('wax') || lower.includes('propolis') || lower.includes('asali') || lower.includes('nyuki');
   const isIrrigation = lower.includes('irrigat') || lower.includes('drip') || lower.includes('sprinkler') || lower.includes('water') || lower.includes('drought') || lower.includes('watering') || lower.includes('moisture');
   const isPostHarvest = lower.includes('storage') || lower.includes('post-harvest') || lower.includes('post harvest') || lower.includes('silo') || lower.includes('drying') || lower.includes('grading') || lower.includes('packaging') || lower.includes('value addition') || lower.includes('processing') || lower.includes('preserv') || lower.includes('shelf life');
   const isFarmEconomics = lower.includes('profit') || lower.includes('cost') || lower.includes('budget') || lower.includes('income') || lower.includes('revenue') || lower.includes('expense') || lower.includes('loan') || lower.includes('credit') || lower.includes('market') || lower.includes('price') || lower.includes('sell') || lower.includes('record') || lower.includes('bookkeep') || lower.includes('enterprise budget');
@@ -426,15 +426,67 @@ For specific advice, please provide: your location, breed, flock size, house typ
       }
       agentName = 'Poultry Specialist Agent';
     } else {
-      response = `I can help with livestock management. Here are key areas:
+      const lower = query.toLowerCase();
+      const isGoat = lower.includes('goat') || lower.includes('mbuzi') || lower.includes('kid');
+      const isSheep = lower.includes('sheep') || lower.includes('kondoo') || lower.includes('lamb') || lower.includes('mutton');
+      const isPig = lower.includes('pig') || lower.includes('nguruwe') || lower.includes('swine') || lower.includes('pork') || lower.includes('farrow') || lower.includes('weaner');
 
-CATTLE: Breed selection (Beef: Boran, Sahiwal, Charolais crosses | Dairy: Friesian, Ayrshire, Jersey, Zebu crosses), housing (zero-grazing units, paddocks), feeding (quality pasture, hay, silage, concentrates), health management (vaccination, deworming, disease control), breeding (AI service, bull selection, calving management)
+      if (isGoat) {
+        response = `I can help with goat farming. Here are key areas:
 
-GOATS: Breeds (Gallaoer, Saanen, Toggenburg, Small East African), housing (raised floors, well-ventilated), feeding (browse plants, hay, supplements), health (CCPP, Brucellosis, worm control)
+WHAT: Goat farming (caprine production) is popular for milk (dairy goats), meat, and manure.
 
-PIGS: Breeds (Large White, Landrace, Duroc, Camborough), housing (well-drained pens, farrowing crates), feeding (pig starter, grower, finisher rations), health (ASF prevention, vaccination, deworming)
+KEY PRACTICES:
+1. Breed selection: Saanen (dairy, 2-4L/day), Toggenburg (dairy, good for tropics), Galla/Boer (meat, fast-growing), Small East African (hardy, indigenous)
+2. Housing: Raised wooden slatted floors (prevents foot rot and pneumonia), well-ventilated, 1.5-2m² per goat, clean dry bedding
+3. Feeding: Browse plants (acacia, leucaena), quality hay, dairy meal for lactating does, mineral blocks, clean water
+4. Health: Vaccinate for CCPP, Brucellosis, Orf, Enterotoxaemia; deworm every 3 months; control external parasites (ticks, mites)
+5. Breeding: Kidding twice per year, gestation 150 days, wean kids at 8-12 weeks
+6. Common diseases: CCPP (contagious caprine pleuropneumonia), Orf (sore mouth), Coccidiosis (scours in kids), Pneumonia, Internal parasites
+
+For specific advice, please provide: your location, breed, herd size, feeding program, and main challenge.`;
+      } else if (isSheep) {
+        response = `I can help with sheep farming. Here are key areas:
+
+WHAT: Sheep farming (ovine production) for meat (mutton/lamb), wool, and manure.
+
+KEY PRACTICES:
+1. Breed selection: Dorper (meat, hardy, fast-growing), Red Maasai (indigenous, trypanotolerant), Merino (wool), Hampshire Down (meat)
+2. Housing: Well-ventilated shelters, 1-1.5m² per sheep, dry bedding, protection from predators
+3. Feeding: Quality pasture rotation, hay, sheep pellets, mineral licks, clean water ad libitum
+4. Health: Vaccinate for PPR, Anthrax, Blackleg, Enterotoxaemia; deworm strategic (wet season); foot rot prevention, fly strike control
+5. Breeding: Lambing twice per year, gestation 147 days, wean lambs at 8-12 weeks
+6. Common diseases: PPR (peste des petits ruminants), Foot rot, Internal parasites, Bloat, Fly strike, Orf
+
+For specific advice, please provide: your location, breed, flock size, feeding program, and main challenge.`;
+      } else if (isPig) {
+        response = `I can help with pig farming. Here are key areas:
+
+WHAT: Pig farming (swine production) for pork — the fastest-growing livestock sector in East Africa.
+
+KEY PRACTICES:
+1. Breed selection: Large White (prolific, good mothering), Landrace (long body, good meat), Duroc (meat quality), Camborough (hybrid)
+2. Housing: Well-drained concrete pens, farrowing crates with creep area, proper ventilation, 2-2.5m² per adult pig
+3. Feeding: Pig starter (18-20% protein, 0-8 weeks), pig grower (16%, 8-16 weeks), pig finisher (14%, 16 weeks to slaughter); kitchen waste can supplement but must be boiled
+4. Health: ASF prevention (biosecurity is critical — no raw meat scraps, restrict visitors), vaccination for CSF and Erysipelas, deworm quarterly
+5. Breeding: Gestation 114 days (3 months, 3 weeks, 3 days), wean at 4-6 weeks, 8-12 piglets per litter
+6. Farrowing management: Clean farrowing pen, heat lamp for piglets, iron injection at day 3, castration at 2-4 weeks
+7. Biosecurity: ASF has no vaccine — strict biosecurity is essential. Quarantine new stock 30 days. Restrict farm entry. Footbaths with disinfectant.
+
+For specific advice, please provide: your location, breed, herd size, feeding program, and main challenge.`;
+      } else {
+        response = `I can help with livestock management. Here are key areas:
+
+CATTLE: Breed selection (Beef: Boran, Sahiwal, Charolais crosses | Dairy: Friesian, Ayrshire, Jersey, Zebu crosses), housing (zero-grazing units, paddocks), feeding (quality pasture, hay, silage, concentrates, mineral supplements), health (FMD, LSD, Brucellosis, ECF, mastitis vaccination, deworming), breeding (AI service, bull selection, heat detection, calving management)
+
+GOATS: Breeds (Saanen, Toggenburg, Galla/Boer, Small East African), housing (raised floors), feeding (browse, hay, supplements), health (CCPP, Orf, worm control), breeding
+
+SHEEP: Breeds (Dorper, Red Maasai, Merino), housing (sheltered), feeding (pasture, hay, concentrates), health (PPR, Foot rot, Fly strike)
+
+PIGS: Breeds (Large White, Landrace, Duroc), housing (concrete pens), feeding (starter, grower, finisher), health (ASF biosecurity, CSF vaccination)
 
 For specific advice on any livestock type, please provide: your location, type of livestock, breed, herd/flock size, current feeding program, and the specific challenge you're facing.`;
+      }
       agentName = 'Livestock Specialist Agent';
     }
     frameworks = ['AIM Framework', 'TRACK Framework', 'TRAIL Framework'];

@@ -456,3 +456,97 @@ export interface PasswordStrengthResult {
   cracks: string[];
   suggestions: string[];
 }
+
+// ─── Livestock Types ─────────────────────────────────────
+
+export type LivestockCategory = 'dairy_cattle' | 'beef_cattle' | 'goat' | 'sheep' | 'poultry_layer' | 'poultry_broiler' | 'pig' | 'fish' | 'bee';
+
+export type AnimalGender = 'male' | 'female';
+
+export type HealthStatus = 'healthy' | 'sick' | 'recovering' | 'critical' | 'deceased';
+
+export type VaccinationStatus = 'up_to_date' | 'overdue' | 'not_started';
+
+export interface Animal {
+  id: string;
+  farm_id: string;
+  user_id: string;
+  tag_number: string;
+  name?: string;
+  category: LivestockCategory;
+  breed: string;
+  gender: AnimalGender;
+  birth_date: string;
+  acquisition_date: string;
+  weight_kg?: number;
+  health_status: HealthStatus;
+  vaccination_status: VaccinationStatus;
+  notes?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VaccinationRecord {
+  id: string;
+  animal_id: string;
+  vaccine_name: string;
+  batch_number?: string;
+  date_administered: string;
+  next_due_date?: string;
+  administered_by?: string;
+  notes?: string;
+  created_at: string;
+}
+
+export interface HealthRecord {
+  id: string;
+  animal_id: string;
+  date: string;
+  condition: string;
+  symptoms: string;
+  diagnosis?: string;
+  treatment?: string;
+  veterinarian?: string;
+  cost_kes?: number;
+  follow_up_date?: string;
+  outcome?: 'recovered' | 'ongoing' | 'referred' | 'deceased';
+  created_at: string;
+}
+
+export interface MilkProduction {
+  id: string;
+  animal_id: string;
+  date: string;
+  morning_kg: number;
+  evening_kg: number;
+  total_kg: number;
+  notes?: string;
+  created_at: string;
+}
+
+export interface BreedingRecord {
+  id: string;
+  animal_id: string;
+  mate_id?: string;
+  breeding_date: string;
+  method: 'natural' | 'artificial_insemination';
+  sire_breed?: string;
+  expected_delivery?: string;
+  delivery_date?: string;
+  offspring_count?: number;
+  outcome?: 'successful' | 'failed' | 'pending';
+  notes?: string;
+  created_at: string;
+}
+
+export interface FeedRecord {
+  id: string;
+  animal_id: string;
+  date: string;
+  feed_type: string;
+  quantity_kg: number;
+  cost_kes?: number;
+  notes?: string;
+  created_at: string;
+}

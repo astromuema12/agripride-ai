@@ -7,7 +7,7 @@ import {
   BarChart3, Users, TreePine, Shield, AlertTriangle,
   Wheat, Leaf, LineChart, Menu, X, Building2, UserCheck,
   Bot, TrendingUp, DollarSign, Download, Bell,
-  Star, MessageCircle, CreditCard, Lock,
+  Star, MessageCircle, CreditCard, Lock, PawPrint,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -20,6 +20,7 @@ const farmerLinks = [
   { href: '/dashboard/farmer', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/farmer/farms', label: 'My Farms', icon: Building2 },
   { href: '/dashboard/farmer/crops', label: 'Crop Records', icon: Sprout },
+  { href: '/dashboard/farmer/livestock', label: 'Livestock', icon: PawPrint },
   { href: '/dashboard/farmer/disease', label: 'Disease Diagnosis', icon: FileSearch },
   { href: '/dashboard/farmer/assistant', label: 'AI Assistant', icon: Bot },
   { href: '/dashboard/farmer/weather', label: 'Weather', icon: CloudSun },
