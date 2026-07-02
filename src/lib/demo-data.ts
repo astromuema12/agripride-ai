@@ -1,4 +1,4 @@
-import { Farm, Crop, DiseaseReport, Recommendation, WeatherData, WeatherForecast, MarketPrice, SustainabilityScore, Notification, AuditLog, YieldRecord, ConsentRecord, User, UserRole, Animal, VaccinationRecord, HealthRecord, MilkProduction, BreedingRecord, FeedRecord, LivestockCategory, AnimalGender, HealthStatus, VaccinationStatus } from '@/types';
+import { Farm, Crop, DiseaseReport, Recommendation, WeatherData, WeatherForecast, MarketPrice, SustainabilityScore, Notification, AuditLog, YieldRecord, ConsentRecord, User, UserRole, FarmExpense, FarmRevenue } from '@/types';
 
 const cropTypes = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Sorghum', 'Millet', 'Beans', 'Coffee', 'Tea', 'Cotton', 'Groundnuts', 'Sweet Potatoes', 'Yams', 'Plantains', 'Vegetables'];
 const regions = ['Rift Valley', 'Central', 'Coastal', 'Eastern', 'Western', 'Nyanza', 'North Eastern'];
@@ -276,210 +276,73 @@ export function generateConsentRecords(userIds: string[]): ConsentRecord[] {
   );
 }
 
-// ─── Livestock Data Generators ────────────────────────────
+const expenseCategories: FarmExpense['category'][] = ['seeds', 'fertilizer', 'pesticide', 'labour', 'irrigation', 'equipment', 'transport', 'storage', 'veterinary', 'feed', 'other'];
+const revenueSources: FarmRevenue['source'][] = ['crop_sale', 'other'];
 
-const livestockCategories: LivestockCategory[] = ['dairy_cattle', 'beef_cattle', 'goat', 'sheep', 'poultry_layer', 'poultry_broiler', 'pig'];
-const cattleBreeds = ['Friesian', 'Ayrshire', 'Jersey', 'Guernsey', 'Sahiwal', 'Boran', 'Zebu', 'Hereford', 'Charolais', 'Angus'];
-const goatBreeds = ['Saanen', 'Toggenburg', 'Alpine', 'Gall', 'Small East African', 'Boer', 'Kenya Alpine'];
-const sheepBreeds = ['Dorper', 'Red Maasai', 'Merino', 'Hampshire Down', 'Corriedale', 'Blackhead Persian'];
-const poultryBreeds = ['Isa Brown', 'Hy-Line', 'Rhode Island Red', 'Kenbro', 'Kuroiler', 'Sasso', 'Cobb 500', 'Ross 308'];
-const pigBreeds = ['Large White', 'Landrace', 'Duroc', 'Hampshire', 'Pietrain', 'Saddleback'];
-const vaccineNames: Record<LivestockCategory, string[]> = {
-  dairy_cattle: ['Anthrax', 'Black Quarter', 'Brucellosis (RB51)', 'Foot & Mouth Disease', 'Lumpy Skin Disease', 'East Coast Fever', 'Rift Valley Fever', 'Rabies'],
-  beef_cattle: ['Anthrax', 'Black Quarter', 'Foot & Mouth Disease', 'Lumpy Skin Disease', 'Rabies', 'Brucellosis'],
-  goat: ['PPR (Goat Plague)', 'Anthrax', 'Enterotoxaemia', 'Orf', 'Goat Pox', 'Contagious Caprine Pleuropneumonia'],
-  sheep: ['PPR', 'Anthrax', 'Blackleg', 'Enterotoxaemia', 'Sheep Pox', 'Rift Valley Fever', 'Ovine Brucellosis'],
-  poultry_layer: ['Newcastle Disease', 'Infectious Bursal Disease (Gumboro)', 'Fowl Pox', 'Fowl Typhoid', 'Avian Influenza', 'Marek\'s Disease', 'Coccidiosis'],
-  poultry_broiler: ['Newcastle Disease', 'Infectious Bursal Disease', 'Fowl Pox', 'Avian Influenza', 'Coccidiosis'],
-  pig: ['Classical Swine Fever', 'African Swine Fever', 'Foot & Mouth Disease', 'Porcine Reproductive & Respiratory Syndrome', 'Swine Erysipelas', 'Porcine Circovirus'],
-  bee: ['European Foulbrood', 'American Foulbrood', 'Nosema', 'Varroa Mite Treatment', 'Chalkbrood'],
-  fish: ['Columnaris', 'Furunculosis', 'Vibriosis', 'Ich (White Spot)', 'Costia', 'Trichodina'],
-};
-
-const healthConditions: Record<LivestockCategory, string[]> = {
-  dairy_cattle: ['Mastitis', 'Lameness', 'Ketosis', 'Milk Fever', 'Bloat', 'Respiratory Infection', 'Foot Rot', 'Coccidiosis', 'Worm Infestation', 'Eye Infection'],
-  beef_cattle: ['Bloat', 'Foot Rot', 'Respiratory Infection', 'Pink Eye', 'Anthrax', 'Blackleg', 'Internal Parasites', 'External Parasites'],
-  goat: ['Coccidiosis', 'Pneumonia', 'Enterotoxaemia', 'PPR', 'Orf', 'Internal Parasites', 'External Parasites', 'Caprine Arthritis Encephalitis'],
-  sheep: ['Bloat', 'Foot Rot', 'Internal Parasites', 'Fly Strike', 'Pneumonia', 'Lambing Complications', 'Enterotoxaemia', 'Sore Mouth'],
-  poultry_layer: ['Coccidiosis', 'Avian Influenza', 'Newcastle Disease', 'Fowl Cholera', 'Bumble Foot', 'Egg Binding', 'Prolapse', 'Respiratory Infection'],
-  poultry_broiler: ['Coccidiosis', 'Avian Influenza', 'Newcastle Disease', 'Sudden Death Syndrome', 'Lameness', 'Ascites', 'Respiratory Infection'],
-  pig: ['African Swine Fever', 'Classical Swine Fever', 'Foot Rot', 'Pneumonia', 'Swine Erysipelas', 'Porcine Stress Syndrome', 'Internal Parasites', 'Mastitis'],
-  bee: ['Varroa Mite', 'American Foulbrood', 'European Foulbrood', 'Nosema', 'Chalkbrood', 'Small Hive Beetle'],
-  fish: ['Columnaris', 'Furunculosis', 'Vibriosis', 'Saprolegnia', 'Ich', 'Costia', 'Trichodina', 'Gill Disease'],
-};
-
-const feedTypes: Record<LivestockCategory, string[]> = {
-  dairy_cattle: ['Napier Grass', 'Rhodes Grass', 'Lucerne', 'Dairy Meal', 'Maize Silage', 'Mineral Block', 'Cotton Seed Cake', 'Wheat Bran'],
-  beef_cattle: ['Napier Grass', 'Rhodes Grass', 'Maize Stover', 'Beef Concentrate', 'Molasses', 'Maize Silage', 'Mineral Block'],
-  goat: ['Napier Grass', 'Lucerne', 'Goat Pellet', 'Dairy Meal', 'Mineral Block', 'Maize Bran', 'Sweet Potato Vines'],
-  sheep: ['Rhodes Grass', 'Lucerne', 'Sheep Pellet', 'Mineral Block', 'Wheat Bran', 'Maize Stover'],
-  poultry_layer: ['Layers Mash', 'Layers Pellets', 'Oyster Shells', 'Growers Mash', 'Chick Mash', 'Green Vegetables'],
-  poultry_broiler: ['Broiler Starter', 'Broiler Finisher', 'Chick Mash', 'Broiler Concentrate'],
-  pig: ['Pig Starter', 'Pig Grower', 'Pig Finisher', 'Maize Bran', 'Wheat Bran', 'Kitchen Waste', 'Soya Meal'],
-  bee: ['Sugar Syrup', 'Pollen Substitute', 'Protein Patty'],
-  fish: ['Fish Pellets (Floating)', 'Fish Pellets (Sinking)', 'Omena Meal'],
-};
-
-function generateLivestockTags(): string {
-  const prefix = randomItem(['AP', 'AG', 'AH', 'AK']);
-  return `${prefix}-${String(randomInt(100, 999))}`;
-}
-
-export function generateAnimals(count: number, farmIds: string[]): Animal[] {
-  const animals: Animal[] = [];
-  for (let i = 0; i < count; i++) {
-    const category = randomItem(livestockCategories);
-    const gender: AnimalGender = category === 'poultry_layer' ? 'female' : Math.random() > 0.3 ? 'female' : 'male';
-    const breeds = category === 'dairy_cattle' || category === 'beef_cattle' ? cattleBreeds
-      : category === 'goat' ? goatBreeds
-      : category === 'sheep' ? sheepBreeds
-      : category === 'poultry_layer' || category === 'poultry_broiler' ? poultryBreeds
-      : pigBreeds;
-    const birthDate = randomDate(new Date('2022-01-01'), new Date('2026-03-01'));
-    const createdDate = randomDate(new Date(birthDate), new Date('2026-05-01'));
-    const healthStatuses: HealthStatus[] = ['healthy', 'healthy', 'healthy', 'healthy', 'sick', 'recovering', 'critical'];
-    animals.push({
-      id: `animal-${i + 1}`,
-      farm_id: randomItem(farmIds),
-      user_id: 'demo-user-1',
-      tag_number: generateLivestockTags(),
-      name: Math.random() > 0.4 ? randomItem(['Bella', 'Daisy', 'Luna', 'Max', 'Stella', 'Milo', 'Charlie', 'Coco', 'Ruby', 'Zuri', 'Leo', 'Mpenzi', 'Simba', 'Jasiri', 'Peace']) : undefined,
-      category,
-      breed: randomItem(breeds),
-      gender,
-      birth_date: birthDate,
-      acquisition_date: randomDate(new Date(birthDate), new Date('2026-03-01')),
-      weight_kg: Math.random() > 0.1 ? randomFloat(15, 600, 1) : undefined,
-      health_status: randomItem(healthStatuses),
-      vaccination_status: randomItem(['up_to_date', 'overdue']) as VaccinationStatus,
-      is_active: Math.random() > 0.1,
-      created_at: createdDate,
-      updated_at: randomDate(new Date(createdDate), new Date('2026-06-01')),
-    });
-  }
-  return animals;
-}
-
-export function generateVaccinations(animals: Animal[]): VaccinationRecord[] {
-  const records: VaccinationRecord[] = [];
-  for (const animal of animals) {
-    const vaccines = vaccineNames[animal.category] || [];
-    const numVaccines = Math.min(vaccines.length, randomInt(2, 5));
-    const selected = [...vaccines].sort(() => Math.random() - 0.5).slice(0, numVaccines);
-    for (const vaccineName of selected) {
-      const administered = randomDate(new Date('2025-01-01'), new Date('2026-06-01'));
-      records.push({
-        id: `vacc-${animal.id}-${records.length + 1}`,
-        animal_id: animal.id,
-        vaccine_name: vaccineName,
-        batch_number: `BN-${randomInt(1000, 9999)}`,
-        date_administered: administered,
-        next_due_date: Math.random() > 0.2 ? randomDate(new Date(administered), new Date(Date.parse(administered) + 365 * 24 * 3600 * 1000)) : undefined,
-        notes: Math.random() > 0.6 ? `Administered by ${randomItem(['Dr. Kamau', 'Dr. Wanjiku', 'Vet Officer', 'Community Vet'])}` : undefined,
-        created_at: administered,
+export function generateFarmExpenses(farmIds: string[]): FarmExpense[] {
+  const expenses: FarmExpense[] = [];
+  for (const farmId of farmIds) {
+    const numExpenses = randomInt(8, 20);
+    for (let i = 0; i < numExpenses; i++) {
+      const cat = randomItem(expenseCategories);
+      const descs: Record<string, string[]> = {
+        seeds: ['Hybrid maize seeds', 'Certified wheat seeds', 'Bean seeds', 'Vegetable seeds', 'Rice seedlings'],
+        fertilizer: ['DAP fertilizer', 'Urea', 'NPK 17-17-17', 'CAN fertilizer', 'Organic compost'],
+        pesticide: ['Insecticide spray', 'Herbicide', 'Fungicide', 'Nematicide'],
+        labour: ['Planting labour', 'Weeding labour', 'Harvesting labour', 'Irrigation labour'],
+        irrigation: ['Water pump fuel', 'Drip line repair', 'Irrigation pipe', 'Water storage tank'],
+        equipment: ['Tractor hire', 'Plough repair', 'Sprayer pump', 'Knapsack sprayer'],
+        transport: ['Produce transport', 'Input delivery', 'Market transport'],
+        storage: ['Warehouse rental', 'Grain storage bags', 'Cold storage', 'Drying cost'],
+        veterinary: ['Vaccination', 'Deworming', 'Treatment', 'Vet consultation'],
+        feed: ['Dairy meal', 'Layers mash', 'Hay bales', 'Mineral supplements'],
+        other: ['Land lease', 'Electricity', 'Water bill', 'Licence fee'],
+      };
+      const d = randomItem(descs[cat] || ['General expense']);
+      const amounts: Record<string, [number, number]> = {
+        seeds: [2000, 15000], fertilizer: [3000, 25000], pesticide: [1000, 8000],
+        labour: [2000, 12000], irrigation: [1000, 10000], equipment: [3000, 50000],
+        transport: [1000, 8000], storage: [500, 5000],
+        veterinary: [500, 5000], feed: [2000, 20000], other: [500, 10000],
+      };
+      const [minA, maxA] = amounts[cat] || [500, 5000];
+      expenses.push({
+        id: `exp-${farmId}-${i + 1}`,
+        farm_id: farmId,
+        category: cat,
+        description: d,
+        amount_kes: randomInt(minA, maxA),
+        date: randomDate(new Date('2026-01-01'), new Date()),
+        created_at: randomDate(new Date('2026-01-01'), new Date()),
       });
     }
   }
-  return records;
+  return expenses;
 }
 
-export function generateHealthRecords(animals: Animal[]): HealthRecord[] {
-  const records: HealthRecord[] = [];
-  for (const animal of animals.filter(() => Math.random() > 0.4)) {
-    const conditions = healthConditions[animal.category] || ['General Check-up'];
-    const numRecords = randomInt(0, 3);
-    for (let i = 0; i < numRecords; i++) {
-      const recordDate = randomDate(new Date('2025-06-01'), new Date('2026-06-01'));
-      const condition = randomItem(conditions);
-      records.push({
-        id: `health-${animal.id}-${i + 1}`,
-        animal_id: animal.id,
-        date: recordDate,
-        condition,
-        symptoms: randomItem([`Loss of appetite, lethargy`, `Coughing, nasal discharge`, `Diarrhoea, dehydration`, `Lameness, swelling`, `Reduced milk yield`, `Weight loss, dull coat`]),
-        diagnosis: `Clinical examination suggests ${condition.toLowerCase()}`,
-        treatment: randomItem([`Antibiotic course 5 days`, `Deworming - Albendazole 10mg/kg`, `Anti-inflammatory medication`, `Supportive care + fluids`, `Topical treatment`]),
-        veterinarian: randomItem(['Dr. Kamau', 'Dr. Wanjiku', 'Dr. Ochieng', 'Dr. Akinyi', 'Dr. Mutua']),
-        cost_kes: randomInt(500, 8000),
-        follow_up_date: Math.random() > 0.6 ? randomDate(new Date(recordDate), new Date(Date.parse(recordDate) + 30 * 24 * 3600 * 1000)) : undefined,
-        outcome: randomItem(['recovered', 'recovered', 'ongoing', 'referred']),
-        created_at: recordDate,
+export function generateFarmRevenues(farmIds: string[], cropIds: string[]): FarmRevenue[] {
+  const revenues: FarmRevenue[] = [];
+  for (const farmId of farmIds) {
+    const numRevenues = randomInt(3, 8);
+    for (let i = 0; i < numRevenues; i++) {
+      const src = randomItem(revenueSources);
+      const descs: Record<string, string[]> = {
+        crop_sale: ['Maize harvest sale', 'Bean produce sale', 'Vegetable market sale', 'Wheat bulk sale', 'Coffee cherry sale'],
+        other: ['Crop residue sale', 'Manure sale', 'Contract farming payment'],
+      };
+      revenues.push({
+        id: `rev-${farmId}-${i + 1}`,
+        farm_id: farmId,
+        source: src,
+        description: randomItem(descs[src] || ['General income']),
+        amount_kes: randomInt(src === 'crop_sale' ? 10000 : 1000, src === 'crop_sale' ? 200000 : 50000),
+        date: randomDate(new Date('2026-01-01'), new Date()),
+        buyer: Math.random() > 0.5 ? randomItem(['Kenya Grain Millers', 'Fresh Produce Exporters', 'Local Market', 'Brookside Dairy', 'KCC']) : undefined,
+        created_at: randomDate(new Date('2026-01-01'), new Date()),
       });
     }
   }
-  return records;
-}
-
-export function generateMilkProduction(animals: Animal[]): MilkProduction[] {
-  const dairyAnimals = animals.filter(a => a.category === 'dairy_cattle' && a.gender === 'female' && a.health_status !== 'deceased');
-  const records: MilkProduction[] = [];
-  const startDate = new Date('2026-01-01');
-  const endDate = new Date('2026-06-01');
-  for (const animal of dairyAnimals) {
-    const numDays = randomInt(10, 30);
-    for (let d = 0; d < numDays; d++) {
-      const date = new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
-      const morning = randomFloat(2, 12, 1);
-      const evening = randomFloat(1.5, 8, 1);
-      records.push({
-        id: `milk-${animal.id}-${d + 1}`,
-        animal_id: animal.id,
-        date: date.toISOString().split('T')[0],
-        morning_kg: morning,
-        evening_kg: evening,
-        total_kg: parseFloat((morning + evening).toFixed(1)),
-        notes: Math.random() > 0.8 ? 'Normal production' : undefined,
-        created_at: date.toISOString(),
-      });
-    }
-  }
-  return records;
-}
-
-export function generateBreedingRecords(animals: Animal[]): BreedingRecord[] {
-  const femaleAnimals = animals.filter(a => a.gender === 'female' && a.health_status !== 'deceased');
-  const records: BreedingRecord[] = [];
-  for (const animal of femaleAnimals.slice(0, Math.floor(femaleAnimals.length * 0.6))) {
-    if (Math.random() > 0.5) continue;
-    const breedingDate = randomDate(new Date('2025-06-01'), new Date('2026-03-01'));
-    const isAI = Math.random() > 0.4;
-    const outcome = Math.random() > 0.7 ? 'successful' : 'pending';
-    records.push({
-      id: `breed-${animal.id}`,
-      animal_id: animal.id,
-      breeding_date: breedingDate,
-      method: isAI ? 'artificial_insemination' : 'natural',
-      sire_breed: isAI ? randomItem(cattleBreeds) : undefined,
-      expected_delivery: outcome === 'successful' ? randomDate(new Date(breedingDate), new Date(Date.parse(breedingDate) + 285 * 24 * 3600 * 1000)) : undefined,
-      delivery_date: outcome === 'successful' && Math.random() > 0.7 ? randomDate(new Date(breedingDate), new Date(Date.parse(breedingDate) + 290 * 24 * 3600 * 1000)) : undefined,
-      offspring_count: outcome === 'successful' ? randomInt(1, 2) : undefined,
-      outcome,
-      notes: outcome === 'successful' ? 'Successful breeding' : 'Awaiting confirmation',
-      created_at: breedingDate,
-    });
-  }
-  return records;
-}
-
-export function generateFeedRecords(animals: Animal[]): FeedRecord[] {
-  const records: FeedRecord[] = [];
-  for (const animal of animals.filter(() => Math.random() > 0.3)) {
-    const feeds = feedTypes[animal.category] || ['General Feed'];
-    const numRecords = randomInt(2, 8);
-    for (let i = 0; i < numRecords; i++) {
-      records.push({
-        id: `feed-${animal.id}-${i + 1}`,
-        animal_id: animal.id,
-        date: randomDate(new Date('2026-01-01'), new Date('2026-06-01')),
-        feed_type: randomItem(feeds),
-        quantity_kg: randomFloat(0.5, 25, 1),
-        cost_kes: randomInt(100, 3000),
-        notes: Math.random() > 0.7 ? `Purchased from ${randomItem(['Agrovet', 'KALRO', 'Feed Manufacturer', 'Local Supplier'])}` : undefined,
-        created_at: randomDate(new Date('2026-01-01'), new Date('2026-06-01')),
-      });
-    }
-  }
-  return records;
+  return revenues;
 }
 
 export const DEMO_DATA_KEY = 'agripride_demo_data';

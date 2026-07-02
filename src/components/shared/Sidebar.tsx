@@ -7,7 +7,7 @@ import {
   BarChart3, Users, TreePine, Shield, AlertTriangle,
   Wheat, Leaf, LineChart, Menu, X, Building2, UserCheck,
   Bot, TrendingUp, DollarSign, Download, Bell,
-  Star, MessageCircle, CreditCard, Lock, PawPrint,
+  Star, MessageCircle, CreditCard, Lock, Receipt,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -15,52 +15,53 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { useSidebar } from '@/lib/sidebar-context';
+import { useI18n } from '@/lib/i18n/context';
 
 const farmerLinks = [
-  { href: '/dashboard/farmer', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/farmer/farms', label: 'My Farms', icon: Building2 },
-  { href: '/dashboard/farmer/crops', label: 'Crop Records', icon: Sprout },
-  { href: '/dashboard/farmer/livestock', label: 'Livestock', icon: PawPrint },
-  { href: '/dashboard/farmer/disease', label: 'Disease Diagnosis', icon: FileSearch },
-  { href: '/dashboard/farmer/assistant', label: 'AI Assistant', icon: Bot },
-  { href: '/dashboard/farmer/weather', label: 'Weather', icon: CloudSun },
-  { href: '/dashboard/farmer/market-prices', label: 'Market Prices', icon: DollarSign },
-  { href: '/dashboard/farmer/yield-predictor', label: 'Yield Predictor', icon: TrendingUp },
-  { href: '/dashboard/farmer/recommendations', label: 'AI Recommendations', icon: ScrollText },
-  { href: '/dashboard/farmer/sustainability', label: 'Sustainability', icon: Leaf },
-  { href: '/dashboard/farmer/export', label: 'Data Export', icon: Download },
-  { href: '/settings', label: 'Settings', icon: Shield },
-  { href: '/dashboard/security', label: 'Security', icon: Lock },
+  { href: '/dashboard/farmer', key: 'overview' as const, icon: LayoutDashboard },
+  { href: '/dashboard/farmer/farms', key: 'myFarms' as const, icon: Building2 },
+  { href: '/dashboard/farmer/crops', key: 'cropRecords' as const, icon: Sprout },
+  { href: '/dashboard/farmer/disease', key: 'diseaseDiagnosis' as const, icon: FileSearch },
+  { href: '/dashboard/farmer/assistant', key: 'aiAssistant' as const, icon: Bot },
+  { href: '/dashboard/farmer/weather', key: 'weather' as const, icon: CloudSun },
+  { href: '/dashboard/farmer/market-prices', key: 'market' as const, icon: DollarSign, ns: 'nav' as const },
+  { href: '/dashboard/farmer/finance', key: 'farmFinance' as const, icon: Receipt },
+  { href: '/dashboard/farmer/yield-predictor', key: 'yieldPredictor' as const, icon: TrendingUp },
+  { href: '/dashboard/farmer/recommendations', key: 'aiRecommendations' as const, icon: ScrollText },
+  { href: '/dashboard/farmer/sustainability', key: 'sustainability' as const, icon: Leaf },
+  { href: '/dashboard/farmer/export', key: 'dataExport' as const, icon: Download },
+  { href: '/settings', key: 'settings' as const, icon: Shield, ns: 'nav' as const },
+  { href: '/dashboard/security', key: 'security' as const, icon: Lock, ns: 'nav' as const },
 ];
 
 const officerLinks = [
-  { href: '/dashboard/officer', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/officer/farmers', label: 'Farmers', icon: Users },
-  { href: '/dashboard/officer/disease', label: 'Disease Monitoring', icon: AlertTriangle },
-  { href: '/dashboard/officer/recommendations', label: 'Recommendations', icon: ScrollText },
-  { href: '/dashboard/officer/analytics', label: 'Regional Analytics', icon: BarChart3 },
-  { href: '/dashboard/officer/reports', label: 'Reports', icon: LineChart },
-  { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
-  { href: '/dashboard/officer/export', label: 'Data Export', icon: Download },
-  { href: '/settings', label: 'Settings', icon: Shield },
-  { href: '/dashboard/security', label: 'Security', icon: Lock },
+  { href: '/dashboard/officer', key: 'overview' as const, icon: LayoutDashboard },
+  { href: '/dashboard/officer/farmers', key: 'farmers' as const, icon: Users },
+  { href: '/dashboard/officer/disease', key: 'diseaseMonitoring' as const, icon: AlertTriangle },
+  { href: '/dashboard/officer/recommendations', key: 'recommendations' as const, icon: ScrollText },
+  { href: '/dashboard/officer/analytics', key: 'regionalAnalytics' as const, icon: BarChart3 },
+  { href: '/dashboard/officer/reports', key: 'reports' as const, icon: LineChart },
+  { href: '/dashboard/notifications', key: 'notifications' as const, icon: Bell, ns: 'nav' as const },
+  { href: '/dashboard/officer/export', key: 'dataExport' as const, icon: Download },
+  { href: '/settings', key: 'settings' as const, icon: Shield, ns: 'nav' as const },
+  { href: '/dashboard/security', key: 'security' as const, icon: Lock, ns: 'nav' as const },
 ];
 
 const adminLinks = [
-  { href: '/dashboard/admin', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/admin/users', label: 'User Management', icon: UserCheck },
-  { href: '/dashboard/admin/farms', label: 'Farm Management', icon: TreePine },
-  { href: '/dashboard/admin/testimonials', label: 'Testimonials', icon: Star },
-  { href: '/dashboard/admin/contacts', label: 'Contact Inquiries', icon: MessageCircle },
-  { href: '/dashboard/admin/tickets', label: 'Support Tickets', icon: Shield },
-  { href: '/dashboard/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
-  { href: '/dashboard/admin/audit', label: 'Audit Center', icon: ScrollText },
-  { href: '/dashboard/admin/consent', label: 'Consent Management', icon: FileSearch },
-  { href: '/dashboard/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
-  { href: '/dashboard/admin/export', label: 'Data Export', icon: Download },
-  { href: '/settings', label: 'Settings', icon: Shield },
-  { href: '/dashboard/security', label: 'Security', icon: Lock },
+  { href: '/dashboard/admin', key: 'overview' as const, icon: LayoutDashboard },
+  { href: '/dashboard/admin/users', key: 'userManagement' as const, icon: UserCheck },
+  { href: '/dashboard/admin/farms', key: 'farmManagement' as const, icon: TreePine },
+  { href: '/dashboard/admin/testimonials', key: 'testimonials' as const, icon: Star },
+  { href: '/dashboard/admin/contacts', key: 'contactInquiries' as const, icon: MessageCircle },
+  { href: '/dashboard/admin/tickets', key: 'supportTickets' as const, icon: Shield },
+  { href: '/dashboard/admin/subscriptions', key: 'subscriptions' as const, icon: CreditCard },
+  { href: '/dashboard/admin/audit', key: 'auditCenter' as const, icon: ScrollText },
+  { href: '/dashboard/admin/consent', key: 'consentManagement' as const, icon: FileSearch },
+  { href: '/dashboard/admin/analytics', key: 'analytics' as const, icon: BarChart3 },
+  { href: '/dashboard/notifications', key: 'notifications' as const, icon: Bell, ns: 'nav' as const },
+  { href: '/dashboard/admin/export', key: 'dataExport' as const, icon: Download },
+  { href: '/settings', key: 'settings' as const, icon: Shield, ns: 'nav' as const },
+  { href: '/dashboard/security', key: 'security' as const, icon: Lock, ns: 'nav' as const },
 ];
 
 export function Sidebar() {
@@ -68,6 +69,7 @@ export function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { user } = useAuth();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (mobileOpen) {
@@ -117,7 +119,7 @@ export function Sidebar() {
           {!collapsed && (
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-sm font-semibold text-[var(--foreground)] capitalize truncate">{user?.role}</span>
-              <Badge variant="primary" className="text-[10px] shrink-0">Dashboard</Badge>
+              <Badge variant="primary" className="text-[10px] shrink-0">{t('nav.sidebar.dashboard')}</Badge>
             </div>
           )}
         </div>
@@ -132,16 +134,19 @@ export function Sidebar() {
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors touch-manipulation',
+                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 touch-manipulation',
                   isActive
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300'
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 nav-active-indicator'
                     : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]',
                   collapsed && 'justify-center px-2'
                 )}
-                title={collapsed ? link.label : undefined}
+                title={collapsed ? (link.ns === 'nav' ? t(`nav.${link.key}`) : t(`nav.sidebar.${link.key}`)) : undefined}
               >
-                <Icon className="h-4 w-4 shrink-0" />
-                {!collapsed && <span className="truncate">{link.label}</span>}
+                <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-200', isActive && 'scale-110')} />
+                {!collapsed && <span className="truncate">{link.ns === 'nav' ? t(`nav.${link.key}`) : t(`nav.sidebar.${link.key}`)}</span>}
+                {isActive && !collapsed && (
+                  <span className="ml-auto flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                )}
               </Link>
             );
           })}
@@ -150,7 +155,7 @@ export function Sidebar() {
         {!collapsed && (
           <div className="border-t border-[var(--border)] p-3 sm:p-4">
             <Link href="/" className="text-xs text-[var(--muted-foreground)] hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-              &larr; Back to Home
+              {t('nav.sidebar.backToHome')}
             </Link>
           </div>
         )}

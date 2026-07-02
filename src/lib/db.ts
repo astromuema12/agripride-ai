@@ -4,15 +4,13 @@ import {
   generateDiseaseReports, generateWeatherData, generateMarketPrices,
   generateSustainabilityScores, generateNotifications, generateAuditLogs,
   generateYieldRecords, generateRecommendations, generateConsentRecords,
-  generateAnimals, generateVaccinations, generateHealthRecords,
-  generateMilkProduction, generateBreedingRecords, generateFeedRecords,
+  generateFarmExpenses, generateFarmRevenues,
 } from './demo-data';
 import type {
   Farm, Crop, DiseaseReport, Recommendation, WeatherData,
   MarketPrice, SustainabilityScore, Notification, AuditLog,
   YieldRecord, DashboardStats, User, ConsentRecord, ChatMessage,
-  YieldPrediction, Animal, VaccinationRecord, HealthRecord,
-  MilkProduction, BreedingRecord, FeedRecord,
+  YieldPrediction, FarmExpense, FarmRevenue,
 } from '@/types';
 import { writeAuditLog } from './server-auth';
 import { getCollection, getPaginatedCollection, setCollection, getItem, putItem, deleteItem, getTotalCount, getDemoDataKey, clearAllData } from './demo-store';
@@ -37,13 +35,6 @@ async function ensureSeeded(): Promise<void> {
   const sampleFarmIds = farmIds.slice(0, sampleSize);
   const sampleCropIds = generateCrops(sampleSize * CROPS_PER_FARM, sampleFarmIds).map((c) => c.id);
 
-  const animals = generateAnimals(100, sampleFarmIds);
-  const vaccinationRecords = generateVaccinations(animals);
-  const healthRecords = generateHealthRecords(animals);
-  const milkProduction = generateMilkProduction(animals);
-  const breedingRecords = generateBreedingRecords(animals);
-  const feedRecords = generateFeedRecords(animals);
-
   await Promise.all([
     setCollection('users', users, key),
     setCollection('farms', farms, key),
@@ -59,12 +50,8 @@ async function ensureSeeded(): Promise<void> {
     setCollection('consentRecords', generateConsentRecords(userIds), key),
     setCollection('chatMessages', [], key),
     setCollection('yieldPredictions', [], key),
-    setCollection('animals', animals, key),
-    setCollection('vaccinationRecords', vaccinationRecords, key),
-    setCollection('healthRecords', healthRecords, key),
-    setCollection('milkProduction', milkProduction, key),
-    setCollection('breedingRecords', breedingRecords, key),
-    setCollection('feedRecords', feedRecords, key),
+    setCollection('farmExpenses', generateFarmExpenses(farmIds), key),
+    setCollection('farmRevenues', generateFarmRevenues(farmIds, sampleCropIds), key),
   ]);
 }
 
@@ -575,102 +562,16 @@ export async function updateUserConsent(userId: string, type: ConsentRecord['typ
   }
 }
 
-// ─── Livestock Services ───────────────────────────────────
+// ─── Finance Services ──────────────────────────────────────
 
-export async function getAnimals(limit = 100, offset = 0): Promise<{ data: Animal[]; total: number }> {
-  if (isSupabaseConfigured) {
-    const { data, error } = await supabase!.from('animals').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(offset, offset + limit - 1);
-    if (!error && data?.length) return { data, total: data.length };
-  }
+export async function getFarmExpenses(farmId?: string): Promise<FarmExpense[]> {
   await ensureSeeded();
-  return getPaginatedCollection<Animal>('animals', limit, offset);
+  const all = await getCollection<FarmExpense>('farmExpenses');
+  return farmId ? all.filter((e) => e.farm_id === farmId) : all;
 }
 
-export async function getAnimalById(id: string): Promise<Animal | null> {
-  if (isSupabaseConfigured) {
-    const { data, error } = await supabase!.from('animals').select('*').eq('id', id).single();
-    if (!error && data) return data;
-  }
+export async function getFarmRevenues(farmId?: string): Promise<FarmRevenue[]> {
   await ensureSeeded();
-  return (await getItem<Animal>('animals', id)) ?? null;
-}
-
-export async function addAnimal(animal: Animal): Promise<Animal> {
-  if (isSupabaseConfigured) {
-    const { data, error } = await supabase!.from('animals').insert(animal).select().single();
-    if (!error && data) return data;
-  }
-  await ensureSeeded();
-  await putItem('animals', animal);
-  return animal;
-}
-
-export async function updateAnimal(id: string, updates: Partial<Animal>): Promise<Animal | null> {
-  if (isSupabaseConfigured) {
-    const { data, error } = await supabase!.from('animals').update(updates).eq('id', id).select().single();
-    if (!error && data) return data;
-  }
-  const existing = await getItem<Animal>('animals', id);
-  if (!existing) return null;
-  const updated = { ...existing, ...updates, updated_at: new Date().toISOString() };
-  await putItem('animals', updated);
-  return updated;
-}
-
-export async function deleteAnimal(id: string): Promise<boolean> {
-  if (isSupabaseConfigured) {
-    const { error } = await supabase!.from('animals').delete().eq('id', id);
-    if (!error) return true;
-  }
-  await deleteItem('animals', id);
-  return true;
-}
-
-export async function getVaccinationRecords(animalId?: string): Promise<VaccinationRecord[]> {
-  await ensureSeeded();
-  const all = await getCollection<VaccinationRecord>('vaccinationRecords');
-  return animalId ? all.filter((v) => v.animal_id === animalId) : all;
-}
-
-export async function addVaccinationRecord(record: VaccinationRecord): Promise<VaccinationRecord> {
-  await ensureSeeded();
-  await putItem('vaccinationRecords', record);
-  return record;
-}
-
-export async function getHealthRecords(animalId?: string): Promise<HealthRecord[]> {
-  await ensureSeeded();
-  const all = await getCollection<HealthRecord>('healthRecords');
-  return animalId ? all.filter((r) => r.animal_id === animalId) : all;
-}
-
-export async function addHealthRecord(record: HealthRecord): Promise<HealthRecord> {
-  await ensureSeeded();
-  await putItem('healthRecords', record);
-  return record;
-}
-
-export async function getMilkProduction(animalId?: string, limit = 100): Promise<MilkProduction[]> {
-  await ensureSeeded();
-  const all = await getCollection<MilkProduction>('milkProduction');
-  const filtered = animalId ? all.filter((m) => m.animal_id === animalId) : all;
-  return filtered.slice(0, limit);
-}
-
-export async function addMilkProduction(record: MilkProduction): Promise<MilkProduction> {
-  await ensureSeeded();
-  await putItem('milkProduction', record);
-  return record;
-}
-
-export async function getBreedingRecords(animalId?: string): Promise<BreedingRecord[]> {
-  await ensureSeeded();
-  const all = await getCollection<BreedingRecord>('breedingRecords');
-  return animalId ? all.filter((r) => r.animal_id === animalId) : all;
-}
-
-export async function getFeedRecords(animalId?: string): Promise<FeedRecord[]> {
-  await ensureSeeded();
-  const all = await getCollection<FeedRecord>('feedRecords');
-  return animalId ? all.filter((f) => f.animal_id === animalId) : all;
+  const all = await getCollection<FarmRevenue>('farmRevenues');
+  return farmId ? all.filter((r) => r.farm_id === farmId) : all;
 }

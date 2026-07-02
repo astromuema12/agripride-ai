@@ -21,7 +21,8 @@ const steps = [
 ];
 
 const cropOptions = ['Maize', 'Wheat', 'Rice', 'Coffee', 'Tea', 'Sugar Cane', 'Cassava', 'Beans', 'Potatoes', 'Tomatoes', 'Bananas', 'Other'];
-const livestockOptions = ['Cattle', 'Goats', 'Sheep', 'Chickens', 'Pigs', 'None'];
+
+
 const goalOptions = [
   'Increase crop yield',
   'Reduce disease loss',
@@ -40,8 +41,6 @@ type FormData = {
   county: string;
   farm_size_acres: string;
   crop_types: string[];
-  has_livestock: boolean;
-  livestock_details: string;
   goals: string[];
   consent_ai: boolean;
   current_step: number;
@@ -57,8 +56,6 @@ export default function OnboardingPage() {
     county: '',
     farm_size_acres: '',
     crop_types: [],
-    has_livestock: false,
-    livestock_details: '',
     goals: [],
     consent_ai: false,
     current_step: 1,
@@ -78,8 +75,8 @@ export default function OnboardingPage() {
             county: profile.county || '',
             farm_size_acres: profile.farm_size_acres?.toString() || '',
             crop_types: profile.crop_types || [],
-            has_livestock: profile.has_livestock || false,
-            livestock_details: profile.livestock_details || '',
+
+
             goals: profile.goals || [],
             current_step: profile.current_step || 1,
           }));
@@ -106,8 +103,8 @@ export default function OnboardingPage() {
         county: form.county,
         farm_size_acres: form.farm_size_acres ? Number(form.farm_size_acres) : undefined,
         crop_types: form.crop_types,
-        has_livestock: form.has_livestock,
-        livestock_details: form.livestock_details,
+
+
         goals: form.goals,
       });
       setStep(next);
@@ -238,28 +235,6 @@ export default function OnboardingPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Do you have livestock?</Label>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {livestockOptions.map((item) => (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={() => {
-                            const has = item !== 'None';
-                            updateForm({ has_livestock: has, livestock_details: has ? item : '' });
-                          }}
-                          className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
-                            (item === 'None' && !form.has_livestock) || form.livestock_details === item
-                              ? 'bg-emerald-600 text-white'
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                          }`}
-                        >
-                          {item}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -297,7 +272,6 @@ export default function OnboardingPage() {
                     <ul className="mt-2 space-y-1 text-sm text-emerald-700">
                       <li>📍 {form.county || 'County not set'}</li>
                       <li>🌱 {form.crop_types.length || 0} crop types selected</li>
-                      <li>🐄 {form.has_livestock ? form.livestock_details : 'No livestock'}</li>
                       <li>🎯 {form.goals.length || 0} goals selected</li>
                     </ul>
                   </div>

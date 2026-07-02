@@ -263,7 +263,7 @@ export default function FarmerDashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 page-enter">
       {/* Header with greeting */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Greeting name={user.name} />
@@ -281,14 +281,14 @@ export default function FarmerDashboard() {
       </div>
 
       {/* Farm Health Score + KPI Grid */}
-      <div className="grid gap-4 lg:grid-cols-5">
-        <Card className="lg:col-span-1">
+      <div className="grid gap-4 lg:grid-cols-5 stagger-grid">
+        <Card className="lg:col-span-1 premium-card">
           <CardContent className="p-5">
             <FarmHealthScore score={healthScore} />
           </CardContent>
         </Card>
         {kpis.map((kpi) => (
-          <Card key={kpi.label} className="lg:col-span-1">
+          <Card key={kpi.label} className="lg:col-span-1 premium-card">
             <CardContent className="flex items-center gap-4 p-5">
               <div className={`rounded-xl p-3 ${kpi.color}`}>
                 <kpi.icon className="h-5 w-5" />
@@ -324,7 +324,7 @@ export default function FarmerDashboard() {
         <div className="space-y-6 lg:col-span-2">
           {/* Tasks */}
           {todayTasks.length > 0 && (
-            <Card>
+            <Card className="premium-card">
               <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-emerald-500" />
@@ -353,7 +353,7 @@ export default function FarmerDashboard() {
 
           {/* Disease Alerts */}
           {reports.filter(r => r.risk_level === 'high' || r.risk_level === 'critical').length > 0 && (
-            <Card className="border-red-200 dark:border-red-900/50">
+            <Card className="border-red-200 dark:border-red-900/50 premium-card">
               <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 text-red-600 dark:text-red-400">
                   <AlertTriangle className="h-4 w-4" />
@@ -377,7 +377,7 @@ export default function FarmerDashboard() {
           )}
 
           {/* Recent AI Recommendations */}
-          <Card>
+          <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
               <CardTitle className="text-sm font-semibold">{t('dashboard.aiInsights')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/recommendations')}>
@@ -419,7 +419,7 @@ export default function FarmerDashboard() {
           </Card>
 
           {/* Recent Disease Reports */}
-          <Card>
+          <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
               <CardTitle className="text-sm font-semibold">{t('disease.history')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/disease')}>
@@ -464,7 +464,7 @@ export default function FarmerDashboard() {
         {/* Right: Weather + Crop Status */}
         <div className="space-y-6">
           {/* Weather Widget */}
-          <Card>
+          <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
               <CardTitle className="text-sm font-semibold">{t('weather.sevenDayForecast')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/weather')}>
@@ -529,8 +529,70 @@ export default function FarmerDashboard() {
             </CardContent>
           </Card>
 
+          {/* Regional Risk Intelligence */}
+          {reports.length > 0 && (
+            <Card className="premium-card">
+              <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                  {t('riskWidget.title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-5 pb-4 pt-0">
+                <div className="space-y-3">
+                  {(() => {
+                    const riskOrder = { critical: 0, high: 1, medium: 2, low: 3 } as const;
+                    const riskCounts: Record<string, { risk: keyof typeof riskOrder; count: number }> = {};
+                    reports.forEach(r => {
+                      const crop = r.crop_type || 'Unknown';
+                      const rl = (r.risk_level || 'low') as keyof typeof riskOrder;
+                      const prev = riskCounts[crop];
+                      if (!prev || riskOrder[rl] < riskOrder[prev.risk]) {
+                        riskCounts[crop] = { risk: rl, count: (prev?.count || 0) + 1 };
+                      } else {
+                        riskCounts[crop] = { risk: prev.risk, count: prev.count + 1 };
+                      }
+                    });
+                    const sorted = Object.entries(riskCounts).sort(([, a], [, b]) => {
+                      const order = { critical: 0, high: 1, medium: 2, low: 3 };
+                      return (order[a.risk] || 99) - (order[b.risk] || 99);
+                    }).slice(0, 5);
+                    return sorted.map(([crop, data]) => {
+                      const riskColors: Record<string, string> = {
+                        critical: 'bg-red-500',
+                        high: 'bg-orange-500',
+                        medium: 'bg-amber-400',
+                        low: 'bg-green-400',
+                      };
+                      const badgeVariants: Record<string, { variant: 'destructive' | 'warning' | 'primary' | 'default'; label: string }> = {
+                        critical: { variant: 'destructive', label: t('riskWidget.critical') },
+                        high: { variant: 'destructive', label: t('riskWidget.high') },
+                        medium: { variant: 'warning', label: t('riskWidget.medium') },
+                        low: { variant: 'primary', label: t('riskWidget.low') },
+                      };
+                      const bv = badgeVariants[data.risk] || badgeVariants.low;
+                      return (
+                        <div key={crop} className="flex items-center justify-between rounded-lg border border-[var(--border)] px-3 py-2.5">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${riskColors[data.risk] || 'bg-gray-300'}`} />
+                            <span className="text-sm font-medium text-[var(--foreground)]">{crop}</span>
+                            <span className="text-xs text-[var(--muted-foreground)]">({data.count})</span>
+                          </div>
+                          <Badge variant={bv.variant}>{bv.label}</Badge>
+                        </div>
+                      );
+                    });
+                  })()}
+                  <p className="text-[10px] text-[var(--muted-foreground)] text-center pt-1">
+                    {t('riskWidget.lastUpdated')}: {new Date().toLocaleDateString()}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Crop Status */}
-          <Card>
+          <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
               <CardTitle className="text-sm font-semibold">{t('dashboard.cropStatus')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/crops')}>
@@ -578,7 +640,7 @@ export default function FarmerDashboard() {
           </Card>
 
           {/* Recent Activity */}
-          <Card>
+          <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
               <CardTitle className="text-sm font-semibold">{t('common.recentActivity')}</CardTitle>
             </CardHeader>

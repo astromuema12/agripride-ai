@@ -27,8 +27,6 @@ CREATE TABLE IF NOT EXISTS farmer_profiles (
   county VARCHAR(255),
   farm_size_acres DECIMAL(10,2),
   crop_types TEXT[] DEFAULT '{}',
-  has_livestock BOOLEAN DEFAULT FALSE,
-  livestock_details TEXT,
   gps_lat DECIMAL(10,7),
   gps_lng DECIMAL(10,7),
   goals TEXT[] DEFAULT '{}',

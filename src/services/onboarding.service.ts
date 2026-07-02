@@ -35,7 +35,6 @@ export class OnboardingService extends BaseService<FarmerProfile> {
       onboarding_completed: false,
       current_step: updates.current_step ?? 1,
       crop_types: updates.crop_types ?? [],
-      has_livestock: updates.has_livestock ?? false,
       goals: updates.goals ?? [],
       ai_personalized: false,
       ...updates,

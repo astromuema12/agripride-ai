@@ -1,9 +1,9 @@
 const DB_NAME = 'agripride_demo';
 const DB_VERSION = 1;
 
-export type StoreName = 'users' | 'farms' | 'crops' | 'diseaseReports' | 'recommendations' | 'weatherData' | 'marketPrices' | 'sustainabilityScores' | 'notifications' | 'auditLogs' | 'yieldRecords' | 'consentRecords' | 'chatMessages' | 'yieldPredictions' | 'contactInquiries' | 'farmerProfiles' | 'subscriptionPlans' | 'userSubscriptions' | 'testimonials' | 'supportTickets' | 'ticketMessages' | 'paystackTransactions' | 'aiUsageLogs' | 'activityLogs' | 'platformStats' | 'animals' | 'vaccinationRecords' | 'healthRecords' | 'milkProduction' | 'breedingRecords' | 'feedRecords';
+export type StoreName = 'users' | 'farms' | 'crops' | 'diseaseReports' | 'recommendations' | 'weatherData' | 'marketPrices' | 'sustainabilityScores' | 'notifications' | 'auditLogs' | 'yieldRecords' | 'consentRecords' | 'chatMessages' | 'yieldPredictions' | 'contactInquiries' | 'farmerProfiles' | 'subscriptionPlans' | 'userSubscriptions' | 'testimonials' | 'supportTickets' | 'ticketMessages' | 'paystackTransactions' | 'aiUsageLogs' | 'activityLogs' | 'platformStats' | 'farmExpenses' | 'farmRevenues';
 
-const ALL_STORES: StoreName[] = ['users', 'farms', 'crops', 'diseaseReports', 'recommendations', 'weatherData', 'marketPrices', 'sustainabilityScores', 'notifications', 'auditLogs', 'yieldRecords', 'consentRecords', 'chatMessages', 'yieldPredictions', 'contactInquiries', 'farmerProfiles', 'subscriptionPlans', 'userSubscriptions', 'testimonials', 'supportTickets', 'ticketMessages', 'paystackTransactions', 'aiUsageLogs', 'activityLogs', 'platformStats', 'animals', 'vaccinationRecords', 'healthRecords', 'milkProduction', 'breedingRecords', 'feedRecords'];
+const ALL_STORES: StoreName[] = ['users', 'farms', 'crops', 'diseaseReports', 'recommendations', 'weatherData', 'marketPrices', 'sustainabilityScores', 'notifications', 'auditLogs', 'yieldRecords', 'consentRecords', 'chatMessages', 'yieldPredictions', 'contactInquiries', 'farmerProfiles', 'subscriptionPlans', 'userSubscriptions', 'testimonials', 'supportTickets', 'ticketMessages', 'paystackTransactions', 'aiUsageLogs', 'activityLogs', 'platformStats', 'farmExpenses', 'farmRevenues'];
 
 // In-memory fallback for server-side execution (API routes, SSR)
 const serverStore = new Map<string, Map<string, unknown>>();
