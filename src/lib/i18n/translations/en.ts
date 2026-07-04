@@ -303,7 +303,6 @@ export const en = {
       freeToUse: 'Free to use',
       paystackPayments: 'Paystack payments',
       allSystemsNormal: 'All Systems Normal',
-      trustBar: 'Trusted by farmers and partners across Kenya',
       platformImpact: 'Platform Impact',
       growingFuture: "Growing Africa's Agricultural Future",
       realMetrics: 'Real metrics from our growing platform deployment across Kenya.',

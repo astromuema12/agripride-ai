@@ -305,7 +305,6 @@ export const sw: Translations = {
       freeToUse: 'Bure kutumia',
       paystackPayments: 'Malipo ya Paystack',
       allSystemsNormal: 'Mifumo Yote Inafanya Kazi',
-      trustBar: 'Inaaminika na wakulima na washirika kote Kenya',
       platformImpact: 'Athari za Jukwaa',
       growingFuture: "Kukuza Mustakabali wa Kilimo Afrika",
       realMetrics: 'Takwimu halisi kutoka kwa jukwaa letu linalokua kote Kenya.',

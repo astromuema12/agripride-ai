@@ -98,12 +98,6 @@ export default function HomePage() {
     { q: t('pricing.faq.q2'), a: t('pricing.faq.a2') },
   ];
 
-  const testimonialsData = [
-    { quote: 'AgriPride AI caught a fungal infection in my maize before I could see it. Saved my entire season.', avatar: 'JK', name: 'James Kiprop', location: 'Eldoret', crop: t('crops.maize'), yield: '+42%', revenue: '+KES 180K' },
-    { quote: 'The weather predictions are spot-on. I now know exactly when to plant and harvest.', avatar: 'WN', name: 'Wanjiku Njoroge', location: 'Nakuru', crop: t('crops.coffee'), yield: '+35%', revenue: '+KES 250K' },
-    { quote: 'Market price alerts helped me sell my tomatoes at peak price. The AI recommendations are a game-changer.', avatar: 'DO', name: 'David Ochieng', location: 'Kisumu', crop: t('crops.tomatoes'), yield: '+28%', revenue: '+KES 95K' },
-  ];
-
   return (
     <div className="min-h-screen overflow-hidden">
       {/* ===== HERO ===== */}
@@ -243,20 +237,6 @@ export default function HomePage() {
                 </div>
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== TRUST BAR ===== */}
-      <section className="relative border-b border-[var(--border)] bg-[var(--background)] py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">{t('landing.hero.trustBar')}</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-14 gap-y-4 sm:gap-y-6">
-            {['Kenya Farmers Association', 'Ministry of Agriculture', 'Safaricom', 'University of Nairobi', 'AgriFi Kenya'].map((name) => (
-              <div key={name} className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--muted-foreground)] transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
-                <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:scale-110" /> {name}
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -419,6 +399,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
+      {testimonials.length > 0 && (
       <section id="testimonials" className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -438,26 +419,16 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="mt-16 grid gap-8 md:grid-cols-3"
           >
-            {testimonialsData.map((item, i) => (
-              <motion.div key={i} variants={itemVariants}>
+            {testimonials.map((item, i) => (
+              <motion.div key={item.id} variants={itemVariants}>
                 <div className="group relative h-full rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
                   <Quote className="mb-4 h-8 w-8 text-emerald-200 dark:text-emerald-800" />
-                  <p className="mb-6 text-sm leading-relaxed text-[var(--muted-foreground)]">&ldquo;{item.quote}&rdquo;</p>
+                  <p className="mb-6 text-sm leading-relaxed text-[var(--muted-foreground)]">&ldquo;{item.content}&rdquo;</p>
                   <div className="mb-4 flex items-center gap-4 border-t border-[var(--border)] pt-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{item.avatar}</div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{item.name.charAt(0).toUpperCase()}</div>
                     <div>
                       <div className="font-semibold text-[var(--foreground)]">{item.name}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">{item.location} · {item.crop}</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-3 dark:from-emerald-900/30 dark:to-emerald-800/20">
-                    <div className="text-center">
-                      <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{item.yield}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">{t('landing.hero.yieldIncrease')}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{item.revenue}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">{t('landing.hero.revenueGain')}</div>
+                      {item.location && <div className="text-xs text-[var(--muted-foreground)]">{item.location}{item.farm_type ? ` · ${item.farm_type}` : ''}</div>}
                     </div>
                   </div>
                 </div>
@@ -466,6 +437,7 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+      )}
 
       <AiDemo />
 
