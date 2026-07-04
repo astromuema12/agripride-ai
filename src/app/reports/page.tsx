@@ -26,13 +26,7 @@ interface GeneratedReport {
   status: 'completed' | 'processing';
 }
 
-const recentReports: GeneratedReport[] = [
-  { id: 'RPT-001', title: 'Farm Report - Q2 2026', format: 'PDF', date: '2026-06-02', status: 'completed' },
-  { id: 'RPT-002', title: 'Disease Outbreak Analysis', format: 'CSV', date: '2026-06-01', status: 'completed' },
-  { id: 'RPT-003', title: 'Yield Performance - May 2026', format: 'Excel', date: '2026-05-28', status: 'completed' },
-  { id: 'RPT-004', title: 'Sustainability Scorecard', format: 'PDF', date: '2026-05-25', status: 'completed' },
-  { id: 'RPT-005', title: 'Monthly Disease Summary', format: 'CSV', date: '2026-05-20', status: 'completed' },
-];
+const recentReports: GeneratedReport[] = [];
 
 const formatBadgeVariant: Record<string, 'primary' | 'secondary' | 'default'> = {
   PDF: 'primary',
