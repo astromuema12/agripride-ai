@@ -15,8 +15,8 @@ export function LanguageSwitcher() {
   const { language, setLanguage, t } = useI18n();
 
   const languages = [
-    { code: 'en' as const, label: t('common.english') },
-    { code: 'sw' as const, label: t('common.kiswahili') },
+    { code: 'en' as const, label: t('common.english'), flag: '🇬🇧' },
+    { code: 'sw' as const, label: t('common.kiswahili'), flag: '🇰🇪' },
   ];
 
   const current = languages.find((l) => l.code === language) ?? languages[0];
@@ -44,7 +44,10 @@ export function LanguageSwitcher() {
             onClick={() => setLanguage(lang.code)}
             className="flex items-center justify-between gap-3 cursor-pointer"
           >
-            <span className={lang.code === language ? 'font-medium' : ''}>{lang.label}</span>
+            <span className="flex items-center gap-2">
+              <span>{lang.flag}</span>
+              <span className={lang.code === language ? 'font-medium' : ''}>{lang.label}</span>
+            </span>
             {lang.code === language && (
               <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             )}

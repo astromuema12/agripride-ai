@@ -165,11 +165,6 @@ export default function HomePage() {
                   <Sparkles className="mr-2 h-4 w-4" /> {t('landing.hero.learnMore')}
                 </Button>
               </div>
-              <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-emerald-300/60">
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> {t('landing.hero.noCreditCard')}</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> {t('landing.hero.freeToUse')}</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> {t('landing.hero.paystackPayments')}</span>
-              </div>
             </motion.div>
 
             <motion.div
