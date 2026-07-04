@@ -12,15 +12,15 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useI18n } from '@/lib/i18n';
 
-const contactInfo = [
-  { icon: Mail, label: 'Email', value: 'musauedwin2004@gmail.com', href: 'mailto:musauedwin2004@gmail.com' },
-  { icon: Phone, label: 'Phone', value: '+254 7 ...', href: 'tel:+2547...' },
-  { icon: MapPin, label: 'Location', value: 'Nairobi, Kenya' },
-  { icon: FaWhatsapp, label: 'WhatsApp', value: 'Chat on WhatsApp', href: 'https://whatsapp.com/dl/' },
-];
-
 export default function ContactPage() {
   const { t } = useI18n();
+
+  const contactInfo = [
+    { icon: Mail, labelKey: 'contact.emailUs' as const, label: t('contact.emailUs'), value: 'musauedwin2004@gmail.com', href: 'mailto:musauedwin2004@gmail.com' },
+    { icon: Phone, labelKey: 'contact.phone' as const, label: t('contact.phone'), value: '+254 7 ...', href: 'tel:+2547...' },
+    { icon: MapPin, labelKey: 'contact.location' as const, label: t('contact.location'), value: t('contact.locationDesc') },
+    { icon: FaWhatsapp, labelKey: 'contact.whatsapp' as const, label: t('contact.whatsapp'), value: t('contact.chatOnWhatsApp'), href: 'https://whatsapp.com/dl/' },
+  ];
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
@@ -78,12 +78,9 @@ export default function ContactPage() {
           >
             {contactInfo.map((item) => {
               const Icon = item.icon;
-              const labelKey = item.label === 'Email' ? 'contact.emailUs' :
-                item.label === 'Phone' ? 'contact.phone' :
-                item.label === 'Location' ? 'contact.location' :
-                item.label === 'WhatsApp' ? 'contact.whatsapp' : '';
+              const labelKey = item.labelKey;
               return (
-                <Card key={item.label} className="transition-shadow hover:shadow-md">
+                <Card key={item.labelKey} className="transition-shadow hover:shadow-md">
                   <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
                     <div className="rounded-lg bg-emerald-50 p-2.5 sm:p-3 text-emerald-600 shrink-0">
                       <Icon className="h-4 w-4 sm:h-5 sm:w-5" />

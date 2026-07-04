@@ -372,13 +372,13 @@ function AuthForm() {
 
                     <TabsContent value="register" className="px-6 pb-6 pt-4 mt-0">
                       <form onSubmit={handleRegister} className="space-y-4">
-                        <FormField id="reg-name" label={t('auth.name')} type="text" placeholder="Enter your full name" value={regName} onChange={(e) => setRegName(e.target.value)} autoComplete="name" />
-                        <FormField id="reg-email" label={t('auth.email')} type="email" placeholder="Enter your email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} autoComplete="email" />
+                        <FormField id="reg-name" label={t('auth.name')} type="text" placeholder={t('auth.name')} value={regName} onChange={(e) => setRegName(e.target.value)} autoComplete="name" />
+                        <FormField id="reg-email" label={t('auth.email')} type="email" placeholder={t('common.email')} value={regEmail} onChange={(e) => setRegEmail(e.target.value)} autoComplete="email" />
                         <div className="space-y-1.5">
-                          <FormField id="reg-password" label={t('auth.password')} type="password" placeholder="Create a password" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="new-password" />
+                          <FormField id="reg-password" label={t('auth.password')} type="password" placeholder={t('auth.password')} value={regPassword} onChange={(e) => setRegPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="new-password" />
                           <PasswordStrengthMeter password={regPassword} />
                         </div>
-                        <FormField id="reg-confirm-password" label={t('auth.confirmPassword')} type="password" placeholder="Confirm your password" value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} showToggle showPassword={showConfirmPassword} onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} autoComplete="new-password" />
+                        <FormField id="reg-confirm-password" label={t('auth.confirmPassword')} type="password" placeholder={t('auth.confirmPassword')} value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} showToggle showPassword={showConfirmPassword} onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} autoComplete="new-password" />
                         <label className="flex items-start gap-2 cursor-pointer">
                           <input
                             type="checkbox"

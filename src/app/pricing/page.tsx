@@ -23,98 +23,95 @@ interface Plan {
   color: string;
 }
 
-const plans: Plan[] = [
-  {
-    tier: 'free',
-    name: 'Free Farmer',
-    price: 0,
-    period: '/month',
-    description: 'Get started with basic AI-powered farming tools.',
-    icon: Leaf,
-    color: 'from-emerald-400 to-emerald-600',
-    features: [
-      'Basic AI Chat (10 queries/day)',
-      'Weather Alerts & Forecasts',
-      'Market Price Updates',
-      'Community Access',
-      'Email Support',
-    ],
-    notIncluded: [
-      'Advanced AI Diagnosis',
-      'Farm Analytics Dashboard',
-      'Loan Recommendations',
-      'Priority Support',
-    ],
-  },
-  {
-    tier: 'premium',
-    name: 'Premium Farmer',
-    price: 299,
-    period: '/month',
-    description: 'Unlock the full power of AI for your farm.',
-    icon: Sparkles,
-    popular: true,
-    color: 'from-emerald-500 to-emerald-700',
-    features: [
-      'Advanced AI Diagnosis (unlimited)',
-      'Farm Analytics Dashboard',
-      'Loan Recommendations',
-      'Crop Advisor AI',
-      'Data Export',
-      'Priority Email & WhatsApp Support',
-      'No Ads',
-    ],
-    notIncluded: [
-      'Multi-farm Dashboard',
-      'Group Analytics',
-    ],
-  },
-  {
-    tier: 'cooperative',
-    name: 'Cooperative Plan',
-    price: 999,
-    period: '/month',
-    description: 'Empower your cooperative with group intelligence.',
-    icon: Building2,
-    color: 'from-blue-500 to-blue-700',
-    features: [
-      'All Premium Features',
-      'Multi-farm Dashboard',
-      'Group Analytics & Reports',
-      'Cooperative Management Tools',
-      'Bulk Disease Diagnosis',
-      'Dedicated Account Manager',
-      'Custom Branding',
-    ],
-    notIncluded: [
-      'White-label Options',
-      'API Access',
-    ],
-  },
-  {
-    tier: 'enterprise',
-    name: 'Enterprise',
-    price: 4999,
-    period: '/month',
-    description: 'For NGOs, governments, and large-scale operations.',
-    icon: Globe,
-    color: 'from-purple-500 to-purple-700',
-    features: [
-      'All Cooperative Features',
-      'NGO & Government Dashboards',
-      'Large Scale Monitoring',
-      'Custom Integrations',
-      'API Access',
-      'White-label Options',
-      'Dedicated Support Team',
-      'SLA Guarantee',
-    ],
-    notIncluded: [],
-  },
-];
+
 
 function PricingPageContent() {
-  const { t } = useI18n();
+  const { t, translations } = useI18n();
+
+  const plans: Plan[] = [
+    {
+      tier: 'free',
+      name: t('pricing.free'),
+      price: 0,
+      period: t('pricing.perMonth'),
+      description: t('pricing.freePlan.description'),
+      icon: Leaf,
+      color: 'from-emerald-400 to-emerald-600',
+      features: [
+        translations.pricing.freePlan.features[0],
+        translations.pricing.freePlan.features[1],
+        translations.pricing.freePlan.features[2],
+        translations.pricing.freePlan.features[3],
+      ],
+      notIncluded: [
+        'Advanced AI Diagnosis',
+        'Farm Analytics Dashboard',
+        'Loan Recommendations',
+        'Priority Support',
+      ],
+    },
+    {
+      tier: 'premium',
+      name: t('pricing.premium'),
+      price: 299,
+      period: t('pricing.perMonth'),
+      description: t('pricing.premiumPlan.description'),
+      icon: Sparkles,
+      popular: true,
+      color: 'from-emerald-500 to-emerald-700',
+      features: [
+        translations.pricing.premiumPlan.features[0],
+        translations.pricing.premiumPlan.features[1],
+        translations.pricing.premiumPlan.features[2],
+        translations.pricing.premiumPlan.features[3],
+        translations.pricing.premiumPlan.features[4],
+      ],
+      notIncluded: [
+        'Multi-farm Dashboard',
+        'Group Analytics',
+      ],
+    },
+    {
+      tier: 'cooperative',
+      name: t('pricing.cooperative'),
+      price: 999,
+      period: t('pricing.perMonth'),
+      description: t('pricing.cooperativePlan.description'),
+      icon: Building2,
+      color: 'from-blue-500 to-blue-700',
+      features: [
+        translations.pricing.cooperativePlan.features[0],
+        translations.pricing.cooperativePlan.features[1],
+        translations.pricing.cooperativePlan.features[2],
+        translations.pricing.cooperativePlan.features[3],
+        translations.pricing.cooperativePlan.features[4],
+        translations.pricing.cooperativePlan.features[5],
+      ],
+      notIncluded: [
+        'White-label Options',
+        'API Access',
+      ],
+    },
+    {
+      tier: 'enterprise',
+      name: t('pricing.enterprise'),
+      price: 4999,
+      period: t('pricing.perMonth'),
+      description: t('pricing.enterprisePlan.description'),
+      icon: Globe,
+      color: 'from-purple-500 to-purple-700',
+      features: [
+        translations.pricing.enterprisePlan.features[0],
+        translations.pricing.enterprisePlan.features[1],
+        translations.pricing.enterprisePlan.features[2],
+        translations.pricing.enterprisePlan.features[3],
+        translations.pricing.enterprisePlan.features[4],
+        translations.pricing.enterprisePlan.features[5],
+        translations.pricing.enterprisePlan.features[6],
+      ],
+      notIncluded: [],
+    },
+  ];
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
@@ -161,16 +158,16 @@ function PricingPageContent() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Payment initiation failed');
+      if (!res.ok) throw new Error(data.error || t('errors.paymentFailed'));
 
       const authorization_url = data.data?.authorization_url || data.authorization_url;
       if (authorization_url) {
         window.location.assign(authorization_url);
       } else {
-        throw new Error('No checkout URL returned');
+        throw new Error(t('errors.paymentFailed'));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Payment failed');
+      toast.error(err instanceof Error ? err.message : t('errors.paymentFailed'));
     } finally {
       setLoading(null);
     }

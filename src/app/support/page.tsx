@@ -12,41 +12,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useI18n } from '@/lib/i18n';
 
-const faqs = [
-  {
-    q: 'What is AgriPride AI?',
-    a: 'AgriPride AI is an agricultural intelligence platform that uses artificial intelligence to help farmers detect crop diseases early, get weather forecasts, access market prices, and receive personalized farming recommendations.',
-  },
-  {
-    q: 'Is AgriPride AI currently available?',
-    a: 'Yes, AgriPride AI is live and available to farmers in Kenya. Sign up for a free account to get started with AI disease detection, weather forecasts, and market intelligence.',
-  },
-  {
-    q: 'How much does it cost?',
-    a: 'We offer a Free tier with basic features. Premium plans start at KES 299/month. Cooperative and Enterprise plans are also available. See our Pricing page for details.',
-  },
-  {
-    q: 'How does the AI disease diagnosis work?',
-    a: 'Upload a photo of your crop, describe the symptoms, and our AI analyzes the image and text to provide a diagnosis, confidence score, treatment recommendations, and prevention strategies.',
-  },
-  {
-    q: 'Is my data secure?',
-    a: 'Yes. We use encryption, row-level security in our database, and follow strict data protection practices. We never share your personal data without your explicit consent.',
-  },
-  {
-    q: 'How do I get started?',
-    a: 'Create a free account on our platform and complete the onboarding process. You will get immediate access to all features and support.',
-  },
-  {
-    q: 'Do you offer support in local languages?',
-    a: 'Currently our platform supports English, with Swahili support coming soon. Our support team can assist in English and Swahili.',
-  },
-  {
-    q: 'How do I contact support?',
-    a: 'You can reach us via the Contact page, email us at musauedwin2004@gmail.com, or chat with us on WhatsApp for quick responses.',
-  },
-];
-
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -67,6 +32,40 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 
 export default function SupportPage() {
   const { t } = useI18n();
+  const faqs = [
+    {
+      q: 'What is AgriPride AI?',
+      a: 'AgriPride AI is an agricultural intelligence platform that uses artificial intelligence to help farmers detect crop diseases early, get weather forecasts, access market prices, and receive personalized farming recommendations.',
+    },
+    {
+      q: 'Is AgriPride AI currently available?',
+      a: 'Yes, AgriPride AI is live and available to farmers in Kenya. Sign up for a free account to get started with AI disease detection, weather forecasts, and market intelligence.',
+    },
+    {
+      q: 'How much does it cost?',
+      a: 'We offer a Free tier with basic features. Premium plans start at KES 299/month. Cooperative and Enterprise plans are also available. See our Pricing page for details.',
+    },
+    {
+      q: 'How does the AI disease diagnosis work?',
+      a: 'Upload a photo of your crop, describe the symptoms, and our AI analyzes the image and text to provide a diagnosis, confidence score, treatment recommendations, and prevention strategies.',
+    },
+    {
+      q: 'Is my data secure?',
+      a: 'Yes. We use encryption, row-level security in our database, and follow strict data protection practices. We never share your personal data without your explicit consent.',
+    },
+    {
+      q: 'How do I get started?',
+      a: 'Create a free account on our platform and complete the onboarding process. You will get immediate access to all features and support.',
+    },
+    {
+      q: 'Do you offer support in local languages?',
+      a: 'Currently our platform supports English, with Swahili support coming soon. Our support team can assist in English and Swahili.',
+    },
+    {
+      q: 'How do I contact support?',
+      a: 'You can reach us via the Contact page, email us at musauedwin2004@gmail.com, or chat with us on WhatsApp for quick responses.',
+    },
+  ];
   const [loading, setLoading] = useState(false);
   const [ticketForm, setTicketForm] = useState({ subject: '', message: '' });
 
@@ -120,7 +119,7 @@ export default function SupportPage() {
           <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="gap-2">
               <MessageCircle className="h-4 w-4" />
-              WhatsApp
+              {t('support.contact.whatsapp')}
             </Button>
           </a>
         </div>

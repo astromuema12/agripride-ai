@@ -15,6 +15,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { toast } from 'sonner';
+import { useI18n } from '@/lib/i18n';
 
 interface SubScore {
   key: keyof Omit<SustainabilityScore, 'id' | 'farm_id' | 'overall_score' | 'recorded_at'>;
@@ -24,38 +25,8 @@ interface SubScore {
   tip: string;
 }
 
-const SUB_SCORES: SubScore[] = [
-  {
-    key: 'soil_health',
-    label: 'Soil Health',
-    icon: Leaf,
-    color: 'text-emerald-600',
-    tip: 'Rotate crops regularly and add organic compost to improve soil nutrients.',
-  },
-  {
-    key: 'water_usage',
-    label: 'Water Usage',
-    icon: Droplets,
-    color: 'text-blue-600',
-    tip: 'Install drip irrigation systems and collect rainwater for better efficiency.',
-  },
-  {
-    key: 'biodiversity',
-    label: 'Biodiversity',
-    icon: Bug,
-    color: 'text-amber-600',
-    tip: 'Plant hedgerows and maintain natural habitats to attract beneficial insects.',
-  },
-  {
-    key: 'carbon_footprint',
-    label: 'Carbon Footprint',
-    icon: Wind,
-    color: 'text-purple-600',
-    tip: 'Reduce tillage, use renewable energy, and plant cover crops to sequester carbon.',
-  },
-];
-
 function CircularScore({ score, size = 160 }: { score: number; size?: number }) {
+  const { t } = useI18n();
   const pct = Math.round(score * 100);
   const strokeWidth = 12;
   const radius = (size - strokeWidth) / 2;
@@ -89,22 +60,55 @@ function CircularScore({ score, size = 160 }: { score: number; size?: number }) 
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-4xl font-bold text-gray-900">{pct}%</span>
-        <span className="text-xs font-medium text-gray-500">Overall</span>
+        <span className="text-xs font-medium text-gray-500">{t('sustainability.overallScore')}</span>
       </div>
     </div>
   );
 }
 
 function TrendBadge({ score }: { score: number }) {
-  if (score >= 0.7) return <Badge variant="primary" className="gap-1"><ArrowUp className="h-3 w-3" />Good</Badge>;
-  if (score >= 0.4) return <Badge variant="warning" className="gap-1"><Minus className="h-3 w-3" />Fair</Badge>;
-  return <Badge variant="destructive" className="gap-1"><ArrowDown className="h-3 w-3" />Needs Work</Badge>;
+  const { t } = useI18n();
+  if (score >= 0.7) return <Badge variant="primary" className="gap-1"><ArrowUp className="h-3 w-3" />{t('sustainability.badges.good')}</Badge>;
+  if (score >= 0.4) return <Badge variant="warning" className="gap-1"><Minus className="h-3 w-3" />{t('sustainability.badges.fair')}</Badge>;
+  return <Badge variant="destructive" className="gap-1"><ArrowDown className="h-3 w-3" />{t('sustainability.badges.needsWork')}</Badge>;
 }
 
 export default function SustainabilityPage() {
+  const { t } = useI18n();
   const { user } = useAuth();
   const [scores, setScores] = useState<SustainabilityScore[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const SUB_SCORES: SubScore[] = [
+    {
+      key: 'soil_health',
+      label: t('sustainability.subScores.soilHealth.label'),
+      icon: Leaf,
+      color: 'text-emerald-600',
+      tip: t('sustainability.subScores.soilHealth.tip'),
+    },
+    {
+      key: 'water_usage',
+      label: t('sustainability.subScores.waterUsage.label'),
+      icon: Droplets,
+      color: 'text-blue-600',
+      tip: t('sustainability.subScores.waterUsage.tip'),
+    },
+    {
+      key: 'biodiversity',
+      label: t('sustainability.subScores.biodiversity.label'),
+      icon: Bug,
+      color: 'text-amber-600',
+      tip: t('sustainability.subScores.biodiversity.tip'),
+    },
+    {
+      key: 'carbon_footprint',
+      label: t('sustainability.subScores.carbonFootprint.label'),
+      icon: Wind,
+      color: 'text-purple-600',
+      tip: t('sustainability.subScores.carbonFootprint.tip'),
+    },
+  ];
 
   useEffect(() => {
     async function load() {
@@ -115,7 +119,7 @@ export default function SustainabilityPage() {
         const allScores = await getSustainabilityScores();
         setScores(allScores.filter((s) => farmIds.includes(s.farm_id)));
       } catch (err) {
-        toast.error('Failed to load sustainability scores');
+        toast.error(t('errors.general'));
       } finally {
         setLoading(false);
       }
@@ -165,9 +169,9 @@ export default function SustainabilityPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Sustainability Score</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('sustainability.title')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Track your farm&apos;s environmental impact and get improvement tips
+            {t('sustainability.subtitle')}
           </p>
         </div>
         {latestScore && <TrendBadge score={latestScore.overall_score} />}
@@ -179,9 +183,9 @@ export default function SustainabilityPage() {
             <div className="rounded-full bg-emerald-50 p-4 mb-4">
               <Leaf className="h-10 w-10 text-emerald-500" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">No Sustainability Data</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('sustainability.noDataTitle')}</h3>
             <p className="text-sm text-gray-500">
-              Sustainability scores will appear once your farm data is analyzed.
+              {t('sustainability.noDataDescription')}
             </p>
           </CardContent>
         </Card>
@@ -220,27 +224,27 @@ export default function SustainabilityPage() {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Historical Scores</CardTitle>
+                  <CardTitle>{t('sustainability.historicalScores')}</CardTitle>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500">
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      Overall
+                      {t('sustainability.overallScore')}
                     </span>
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-emerald-300" />
-                      Soil
+                      {t('sustainability.subScores.soilHealth.label')}
                     </span>
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-blue-400" />
-                      Water
+                      {t('sustainability.subScores.waterUsage.label')}
                     </span>
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-amber-400" />
-                      Bio
+                      {t('sustainability.subScores.biodiversity.label')}
                     </span>
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-purple-400" />
-                      Carbon
+                      {t('sustainability.subScores.carbonFootprint.label')}
                     </span>
                   </div>
                 </div>
@@ -259,11 +263,11 @@ export default function SustainabilityPage() {
                         boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                       }}
                     />
-                    <Line type="monotone" dataKey="score" stroke="#059669" strokeWidth={2.5} dot={{ fill: '#059669', r: 4 }} name="Overall" />
-                    <Line type="monotone" dataKey="soil" stroke="#6ee7b7" strokeWidth={1.5} dot={false} name="Soil" />
-                    <Line type="monotone" dataKey="water" stroke="#60a5fa" strokeWidth={1.5} dot={false} name="Water" />
-                    <Line type="monotone" dataKey="biodiversity" stroke="#fbbf24" strokeWidth={1.5} dot={false} name="Biodiversity" />
-                    <Line type="monotone" dataKey="carbon" stroke="#a78bfa" strokeWidth={1.5} dot={false} name="Carbon" />
+                    <Line type="monotone" dataKey="score" stroke="#059669" strokeWidth={2.5} dot={{ fill: '#059669', r: 4 }} name={t('sustainability.overallScore')} />
+                    <Line type="monotone" dataKey="soil" stroke="#6ee7b7" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.soilHealth.label')} />
+                    <Line type="monotone" dataKey="water" stroke="#60a5fa" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.waterUsage.label')} />
+                    <Line type="monotone" dataKey="biodiversity" stroke="#fbbf24" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.biodiversity.label')} />
+                    <Line type="monotone" dataKey="carbon" stroke="#a78bfa" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.carbonFootprint.label')} />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/lib/i18n';
 import { getRecommendations } from '@/lib/db';
 import type { Recommendation } from '@/types';
 import { formatDate } from '@/lib/utils';
@@ -16,11 +17,12 @@ import {
 } from 'lucide-react';
 
 function TypeBadge({ type }: { type: Recommendation['type'] }) {
+  const { t } = useI18n();
   const map: Record<string, { variant: 'primary' | 'destructive' | 'secondary' | 'default'; label: string }> = {
-    crop_advisor: { variant: 'primary', label: 'Crop Advisor' },
-    disease: { variant: 'destructive', label: 'Disease' },
-    weather: { variant: 'secondary', label: 'Weather' },
-    general: { variant: 'default', label: 'General' },
+    crop_advisor: { variant: 'primary', label: t('recommendations.categories.cropAdvisor') },
+    disease: { variant: 'destructive', label: t('recommendations.categories.disease') },
+    weather: { variant: 'secondary', label: t('recommendations.categories.weather') },
+    general: { variant: 'default', label: t('recommendations.categories.general') },
   };
   const { variant, label } = map[type] ?? map.general;
   return <Badge variant={variant}>{label}</Badge>;
@@ -28,6 +30,7 @@ function TypeBadge({ type }: { type: Recommendation['type'] }) {
 
 export default function RecommendationsPage() {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +45,7 @@ export default function RecommendationsPage() {
         const { data } = await getRecommendations(user.id);
         setRecommendations(data);
       } catch {
-        toast.error('Failed to load recommendations');
+        toast.error(t('errors.general'));
       } finally {
         setLoading(false);
       }
@@ -76,20 +79,20 @@ export default function RecommendationsPage() {
   };
 
   const typeTabs = [
-    { value: 'all', label: `All (${total})` },
-    { value: 'crop_advisor', label: `Crop Advisor (${byType.crop_advisor})` },
-    { value: 'disease', label: `Disease (${byType.disease})` },
-    { value: 'weather', label: `Weather (${byType.weather})` },
-    { value: 'general', label: `General (${byType.general})` },
+    { value: 'all', label: `${t('common.all')} (${total})` },
+    { value: 'crop_advisor', label: `${t('recommendations.categories.cropAdvisor')} (${byType.crop_advisor})` },
+    { value: 'disease', label: `${t('recommendations.categories.disease')} (${byType.disease})` },
+    { value: 'weather', label: `${t('recommendations.categories.weather')} (${byType.weather})` },
+    { value: 'general', label: `${t('recommendations.categories.general')} (${byType.general})` },
   ];
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">AI Recommendations</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('recommendations.title')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Intelligent insights and suggestions from AI agents
+            {t('recommendations.subtitle')}
           </p>
         </div>
       </div>
@@ -102,7 +105,7 @@ export default function RecommendationsPage() {
               <ScrollText className="h-5 w-5 text-emerald-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Total</p>
+              <p className="text-xs text-gray-500">{t('common.total')}</p>
               <p className="text-xl font-bold text-gray-900">{total}</p>
             </div>
           </CardContent>
@@ -113,7 +116,7 @@ export default function RecommendationsPage() {
               <ScrollText className="h-5 w-5 text-emerald-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Crop Advisor</p>
+              <p className="text-xs text-gray-500">{t('recommendations.categories.cropAdvisor')}</p>
               <p className="text-xl font-bold text-gray-900">{byType.crop_advisor}</p>
             </div>
           </CardContent>
@@ -124,7 +127,7 @@ export default function RecommendationsPage() {
               <ScrollText className="h-5 w-5 text-red-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Disease</p>
+              <p className="text-xs text-gray-500">{t('recommendations.categories.disease')}</p>
               <p className="text-xl font-bold text-gray-900">{byType.disease}</p>
             </div>
           </CardContent>
@@ -135,7 +138,7 @@ export default function RecommendationsPage() {
               <ScrollText className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Weather</p>
+              <p className="text-xs text-gray-500">{t('recommendations.categories.weather')}</p>
               <p className="text-xl font-bold text-gray-900">{byType.weather}</p>
             </div>
           </CardContent>
@@ -146,7 +149,7 @@ export default function RecommendationsPage() {
               <ScrollText className="h-5 w-5 text-gray-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">General</p>
+              <p className="text-xs text-gray-500">{t('recommendations.categories.general')}</p>
               <p className="text-xl font-bold text-gray-900">{byType.general}</p>
             </div>
           </CardContent>
@@ -180,12 +183,12 @@ export default function RecommendationsPage() {
                   <ScrollText className="h-10 w-10 text-emerald-500" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  {typeFilter === 'all' ? 'No Recommendations' : `No ${typeFilter} recommendations`}
+                  {typeFilter === 'all' ? t('recommendations.noRecommendations') : t('recommendations.noFilteredTitle').replace('{type}', typeFilter)}
                 </h3>
                 <p className="text-sm text-gray-500">
                   {typeFilter === 'all'
-                    ? 'AI-generated recommendations will appear here.'
-                    : 'No recommendations of this type available.'}
+                    ? t('recommendations.aiWillAppear')
+                    : t('recommendations.noFilteredDesc')}
                 </p>
               </CardContent>
             </Card>
@@ -210,7 +213,7 @@ export default function RecommendationsPage() {
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                           <TypeBadge type={rec.type} />
                           {isRead && (
-                            <Badge variant="default" className="text-[10px]">Read</Badge>
+                            <Badge variant="default" className="text-[10px]">{t('recommendations.read')}</Badge>
                           )}
                           <CardTitle className="text-base truncate">{rec.title}</CardTitle>
                         </div>
@@ -218,7 +221,7 @@ export default function RecommendationsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleRead(rec.id)}
-                          title={isRead ? 'Mark as unread' : 'Mark as read'}
+                          title={isRead ? t('recommendations.markAsUnread') : t('recommendations.markAsRead')}
                         >
                           {isRead ? (
                             <EyeOff className="h-4 w-4 text-gray-400" />
@@ -241,7 +244,7 @@ export default function RecommendationsPage() {
                           className="h-auto p-0 text-xs"
                           onClick={() => toggleExpand(rec.id)}
                         >
-                          {isExpanded ? 'Show less' : 'Show more'}
+                          {isExpanded ? t('common.showLess') : t('common.showMore')}
                         </Button>
                       )}
 
@@ -249,7 +252,7 @@ export default function RecommendationsPage() {
                       {confidencePct !== null && (
                         <div>
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-gray-500">Confidence Score</span>
+                            <span className="text-xs text-gray-500">{t('recommendations.confidenceScore')}</span>
                             <span className={`text-xs font-medium ${
                               confidencePct >= 80 ? 'text-emerald-600' : confidencePct >= 60 ? 'text-amber-600' : 'text-red-600'
                             }`}>
@@ -284,7 +287,7 @@ export default function RecommendationsPage() {
                       {rec.source_data && Object.keys(rec.source_data).length > 0 && (
                         <details className="text-xs text-gray-500 border-t border-gray-100 pt-2">
                           <summary className="cursor-pointer hover:text-gray-700 font-medium">
-                            Source Data
+                            {t('recommendations.sourceData')}
                           </summary>
                           <pre className="mt-2 rounded-lg bg-gray-50 p-3 overflow-x-auto text-[11px] text-gray-600">
                             {JSON.stringify(rec.source_data, null, 2)}

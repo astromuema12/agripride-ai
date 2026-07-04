@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import { getFarms, createFarm } from '@/lib/db';
 import type { Farm } from '@/types';
@@ -25,9 +26,10 @@ import {
 const SOIL_TYPES = ['Loamy', 'Sandy', 'Clay', 'Silty', 'Peaty', 'Chalky', 'Saline'];
 
 function StatusBadge({ status }: { status: Farm['status'] }) {
+  const { t } = useI18n();
   const map: Record<string, { variant: 'primary' | 'default'; label: string }> = {
-    active: { variant: 'primary', label: 'Active' },
-    archived: { variant: 'default', label: 'Archived' },
+    active: { variant: 'primary', label: t('common.active') },
+    archived: { variant: 'default', label: t('common.archived') },
   };
   const { variant, label } = map[status] ?? map.active;
   return <Badge variant={variant}>{label}</Badge>;
@@ -36,6 +38,7 @@ function StatusBadge({ status }: { status: Farm['status'] }) {
 export default function FarmsPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const { t } = useI18n();
 
   const [farms, setFarms] = useState<Farm[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +59,7 @@ export default function FarmsPage() {
         const { data } = await getFarms(user.id);
         setFarms(data);
       } catch {
-        toast.error('Failed to load farms');
+        toast.error(t('errors.general'));
       } finally {
         setLoading(false);
       }
@@ -67,19 +70,19 @@ export default function FarmsPage() {
     if (!user) return;
 
     if (!name.trim()) {
-      toast.error('Farm name is required');
+      toast.error(t('farms.errors.nameRequired'));
       return;
     }
     if (!location.trim()) {
-      toast.error('Location is required');
+      toast.error(t('farms.errors.locationRequired'));
       return;
     }
     if (!sizeAcres || Number(sizeAcres) <= 0) {
-      toast.error('Size must be a positive number');
+      toast.error(t('farms.errors.sizeRequired'));
       return;
     }
     if (!soilType) {
-      toast.error('Please select a soil type');
+      toast.error(t('farms.errors.soilRequired'));
       return;
     }
 
@@ -98,11 +101,11 @@ export default function FarmsPage() {
         status: 'active',
       });
       setFarms((prev) => [newFarm, ...prev]);
-      toast.success('Farm added successfully');
+      toast.success(t('farms.addSuccess'));
       setDialogOpen(false);
       resetForm();
     } catch {
-      toast.error('Failed to create farm');
+      toast.error(t('farms.addFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -122,9 +125,9 @@ export default function FarmsPage() {
   if (!user) return null;
 
   const stats = [
-    { icon: Sprout, label: 'Total Farms', value: farms.length, color: 'text-emerald-600 bg-emerald-50' },
-    { icon: Ruler, label: 'Total Acres', value: totalAcres.toFixed(1), color: 'text-blue-600 bg-blue-50' },
-    { icon: Leaf, label: 'Active Farms', value: activeFarms, color: 'text-green-600 bg-green-50' },
+    { icon: Sprout, label: t('dashboard.farmer.totalFarms'), value: farms.length, color: 'text-emerald-600 bg-emerald-50' },
+    { icon: Ruler, label: t('farms.totalAcres'), value: totalAcres.toFixed(1), color: 'text-blue-600 bg-blue-50' },
+    { icon: Leaf, label: t('farms.activeFarms'), value: activeFarms, color: 'text-green-600 bg-green-50' },
   ];
 
   return (
@@ -132,61 +135,61 @@ export default function FarmsPage() {
       {/* Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Farms</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.farmer.myFarms')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Manage your registered farms and their details
+            {t('farms.subtitle')}
           </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Add Farm
+              {t('dashboard.farmer.addFarm')}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Add New Farm</DialogTitle>
+              <DialogTitle>{t('dashboard.farmer.addFarm')}</DialogTitle>
               <DialogDescription>
-                Enter the details of your farm to register it in the system.
+                {t('farms.addDialogDesc')}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label htmlFor="farm-name">Farm Name</Label>
+                <Label htmlFor="farm-name">{t('farms.farmName')}</Label>
                 <Input
                   id="farm-name"
-                  placeholder="e.g., Green Valley Farm"
+                  placeholder={t('farms.placeholders.name')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="farm-location">Location</Label>
+                <Label htmlFor="farm-location">{t('common.location')}</Label>
                 <Input
                   id="farm-location"
-                  placeholder="e.g., Rift Valley, Kenya"
+                  placeholder={t('farms.placeholders.location')}
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="farm-size">Size (Acres)</Label>
+                <Label htmlFor="farm-size">{t('farms.form.sizeAcres')}</Label>
                 <Input
                   id="farm-size"
                   type="number"
                   min="0"
                   step="0.1"
-                  placeholder="e.g., 25"
+                  placeholder={t('farms.placeholders.size')}
                   value={sizeAcres}
                   onChange={(e) => setSizeAcres(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="farm-soil">Soil Type</Label>
+                <Label htmlFor="farm-soil">{t('dashboard.farmer.soilType')}</Label>
                 <Select value={soilType} onValueChange={setSoilType}>
                   <SelectTrigger id="farm-soil">
-                    <SelectValue placeholder="Select soil type" />
+                    <SelectValue placeholder={t('farms.placeholders.soilType')} />
                   </SelectTrigger>
                   <SelectContent>
                     {SOIL_TYPES.map((type) => (
@@ -196,21 +199,21 @@ export default function FarmsPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="farm-crops">Crops Grown</Label>
+                <Label htmlFor="farm-crops">{t('farms.form.cropsGrown')}</Label>
                 <Input
                   id="farm-crops"
-                  placeholder="e.g., Maize, Beans, Wheat"
+                  placeholder={t('farms.placeholders.cropsGrown')}
                   value={cropsGrown}
                   onChange={(e) => setCropsGrown(e.target.value)}
                 />
-                <p className="text-xs text-gray-400">Separate multiple crops with commas</p>
+                <p className="text-xs text-gray-400">{t('farms.form.cropsHint')}</p>
               </div>
               <div className="flex justify-end gap-3 pt-2">
                 <Button variant="outline" onClick={() => { setDialogOpen(false); resetForm(); }}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button onClick={handleCreateFarm} disabled={submitting}>
-                  {submitting ? 'Adding...' : 'Add Farm'}
+                  {submitting ? t('common.adding') : t('dashboard.farmer.addFarm')}
                 </Button>
               </div>
             </div>
@@ -254,13 +257,13 @@ export default function FarmsPage() {
             <div className="rounded-full bg-emerald-50 p-4 mb-4">
               <Sprout className="h-10 w-10 text-emerald-500" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">No Farms Registered</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('dashboard.farmer.noFarms')}</h3>
             <p className="text-sm text-gray-500 mb-4">
-              Add your first farm to start managing your agricultural operations.
+              {t('dashboard.farmer.noFarmsDesc')}
             </p>
             <Button onClick={() => setDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Your First Farm
+              {t('dashboard.farmer.addFarm')}
             </Button>
           </CardContent>
         </Card>
@@ -281,7 +284,7 @@ export default function FarmsPage() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Ruler className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  <span>{farm.size_acres} acres</span>
+                  <span>{farm.size_acres} {t('landing.metrics.acres')}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Leaf className="h-4 w-4 text-gray-400 flex-shrink-0" />
@@ -300,14 +303,14 @@ export default function FarmsPage() {
                   </div>
                 )}
                 <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">Added {formatDate(farm.created_at)}</span>
+                  <span className="text-xs text-gray-400">{t('crops.added')} {formatDate(farm.created_at)}</span>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => router.push(`/dashboard/farmer/farms/${farm.id}/crops`)}
                   >
                     <MoreHorizontal className="mr-1 h-3.5 w-3.5" />
-                    View Crops
+                    {t('dashboard.farmer.myCrops')}
                   </Button>
                 </div>
               </CardContent>

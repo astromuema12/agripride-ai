@@ -28,43 +28,6 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } },
 };
 
-const metrics = [
-  { value: '15,000+', label: 'Farmers Reached', icon: Users },
-  { value: '25,000+', label: 'Acres Monitored', icon: Activity },
-  { value: '98.5%', label: 'Diagnosis Accuracy', icon: Shield },
-  { value: '30%', label: 'Avg. Yield Increase', icon: TrendingUp },
-  { value: '47', label: 'Counties in Kenya', icon: Globe },
-  { value: 'KES 50M+', label: 'Farmer Value Created', icon: DollarSign },
-];
-
-const features = [
-  { icon: FileSearch, title: 'AI Disease Detection', description: 'Snap a photo of your crop — our AI identifies diseases in seconds with 98.5% accuracy and recommends treatment.', color: 'text-red-500', bg: 'bg-red-50', gradient: 'from-red-500 to-orange-500' },
-  { icon: CloudSun, title: 'Weather Intelligence', description: 'Hyper-local 7-day forecasts, drought alerts, and planting window predictions powered by real meteorological data.', color: 'text-blue-500', bg: 'bg-blue-50', gradient: 'from-blue-500 to-cyan-500' },
-  { icon: ScrollText, title: 'AI Crop Advisor', description: 'Your personal agronomist — get tailored planting, irrigation, fertilizer, and pest management advice in your local language.', color: 'text-emerald-500', bg: 'bg-emerald-50', gradient: 'from-emerald-500 to-teal-500' },
-  { icon: BarChart3, title: 'Farm Analytics', description: 'Interactive dashboards with yield trends, cost tracking, profit analysis, and sustainability scoring for every farm.', color: 'text-amber-500', bg: 'bg-amber-50', gradient: 'from-amber-500 to-orange-500' },
-  { icon: Globe, title: 'Market Intelligence', description: 'Real-time crop prices across 47 counties. Know where to sell for the best price before you harvest.', color: 'text-cyan-500', bg: 'bg-cyan-50', gradient: 'from-cyan-500 to-blue-500' },
-  { icon: Shield, title: 'Responsible AI', description: 'Every decision is transparent, auditable, and governed by our TRACK framework. No black boxes — just trustworthy intelligence.', color: 'text-purple-500', bg: 'bg-purple-50', gradient: 'from-purple-500 to-violet-500' },
-];
-
-const testimonialsData = [
-  { name: 'Grace Wanjiku', location: 'Kiambu County', crop: 'Maize & Beans', avatar: 'GW', yield: '+42%', revenue: '+KES 180,000', quote: 'AgriPride detected a maize blight I would have missed for another two weeks. The treatment saved my entire 3-acre harvest.' },
-  { name: 'James Ochieng', location: 'Kisumu County', crop: 'Rice & Vegetables', avatar: 'JO', yield: '+35%', revenue: '+KES 95,000', quote: 'The weather alerts helped me time my planting perfectly. Last season I lost 40% to unexpected drought. This season? Zero loss.' },
-  { name: 'Sarah Nyambura', location: 'Nakuru County', crop: 'Dairy & Fodder', avatar: 'SN', yield: '+28%', revenue: '+KES 220,000', quote: 'As a female farmer, having AI-powered insights gives me confidence. The market prices feature alone has transformed my income.' },
-];
-
-const pricingPlans = [
-  { name: 'Starter', monthly: 0, annual: 0, desc: 'For individual farmers getting started', features: ['AI Disease Diagnosis (10/mo)', 'Weather Forecasts', 'Market Price Access', 'Basic Farm Records', 'Community Access'], popular: false },
-  { name: 'Professional', monthly: 299, annual: 2990, desc: 'For serious farmers maximizing yields', features: ['Unlimited AI Diagnosis', 'AI Crop Advisor', 'Weather Intelligence Pro', 'Farm Analytics Dashboard', 'Market Intelligence', 'Data Export', 'Priority Support'], popular: true },
-  { name: 'Enterprise', monthly: 4999, annual: 49990, desc: 'For cooperatives, NGOs & agribusinesses', features: ['Everything in Professional', 'Multi-farm Dashboard', 'Group Analytics', 'Custom Integrations', 'API Access', 'Dedicated Account Manager', 'White-label Options', 'SLA Guarantee'], popular: false },
-];
-
-const faqItems = [
-  { q: 'How does the AI disease detection work?', a: 'Upload a photo of your crop. Our AI analyzes visual symptoms against a database of 200+ crop diseases, returns a diagnosis with confidence score, treatment plan, and prevention tips.' },
-  { q: 'Is my farm data secure?', a: 'Yes. All data is encrypted at rest and in transit. We use Supabase with Row-Level Security — you control who sees your data. We never sell farmer data.' },
-  { q: 'Do I need internet access?', a: 'The platform works best online, but key features like diagnosis history and farm records are cached for offline access in low-connectivity areas.' },
-  { q: 'How do I pay?', a: 'We accept Paystack payments for premium plans. Free plans are available with no payment required.' },
-];
-
 function Particles() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -103,6 +66,43 @@ export default function HomePage() {
   useEffect(() => {
     fetch('/api/testimonials').then((r) => r.json()).then((res) => { if (res.success) setTestimonials(res.data); }).catch(() => {});
   }, []);
+
+  const metrics = [
+    { value: '15,000+', label: t('landing.hero.farmersCount', { count: '15,000' }), icon: Users },
+    { value: '25,000+', label: t('landing.metrics.acres'), icon: Activity },
+    { value: '98.5%', label: t('landing.stats.accuracy'), icon: Shield },
+    { value: '30%', label: t('landing.metrics.yield'), icon: TrendingUp },
+    { value: '47', label: t('landing.metrics.counties'), icon: Globe },
+    { value: 'KES 50M+', label: t('landing.metrics.value'), icon: DollarSign },
+  ];
+
+  const features = [
+    { icon: FileSearch, title: t('landing.features.diseaseDetection'), description: t('landing.features.diseaseDetectionDesc'), color: 'text-red-500', bg: 'bg-red-50', gradient: 'from-red-500 to-orange-500' },
+    { icon: CloudSun, title: t('landing.features.weatherMonitoring'), description: t('landing.features.weatherMonitoringDesc'), color: 'text-blue-500', bg: 'bg-blue-50', gradient: 'from-blue-500 to-cyan-500' },
+    { icon: ScrollText, title: t('landing.features.aiAssistant'), description: t('landing.features.aiAssistantDesc'), color: 'text-emerald-500', bg: 'bg-emerald-50', gradient: 'from-emerald-500 to-teal-500' },
+    { icon: BarChart3, title: t('dashboard.farmer.farmAnalytics'), description: t('landing.features.yieldPredictionDesc'), color: 'text-amber-500', bg: 'bg-amber-50', gradient: 'from-amber-500 to-orange-500' },
+    { icon: Globe, title: t('landing.features.marketPrices'), description: t('landing.features.marketPricesDesc'), color: 'text-cyan-500', bg: 'bg-cyan-50', gradient: 'from-cyan-500 to-blue-500' },
+    { icon: Shield, title: t('landing.features.sustainability'), description: t('landing.features.sustainabilityDesc'), color: 'text-purple-500', bg: 'bg-purple-50', gradient: 'from-purple-500 to-violet-500' },
+  ];
+
+  const pricingPlans = [
+    { name: t('pricing.free'), monthly: 0, annual: 0, desc: t('pricing.freePlan.description'), features: [t('landing.features.diseaseDetection'), t('landing.features.weatherMonitoring'), t('landing.features.marketPrices'), t('dashboard.farmer.myFarms'), t('common.community')], popular: false },
+    { name: t('pricing.premium'), monthly: 299, annual: 2990, desc: t('pricing.premiumPlan.description'), features: [t('landing.features.diseaseDetection'), t('landing.features.aiAssistant'), t('landing.features.weatherMonitoring'), t('dashboard.farmer.farmAnalytics'), t('landing.features.marketPrices'), t('reports.export'), t('pricing.premium')], popular: true },
+    { name: t('pricing.enterprise'), monthly: 4999, annual: 49990, desc: t('pricing.enterprisePlan.description'), features: [t('pricing.premium'), t('dashboard.farmer.myFarms'), t('dashboard.officer.analytics'), t('pricing.enterprisePlan.features')[3], t('pricing.enterprisePlan.features')[4], t('pricing.enterprisePlan.features')[6], t('pricing.enterprisePlan.features')[1], t('pricing.enterprisePlan.features')[5]], popular: false },
+  ];
+
+  const faqItems = [
+    { q: t('landing.faq.questions.q1'), a: t('landing.faq.questions.a1') },
+    { q: t('landing.faq.questions.q2'), a: t('landing.faq.questions.a2') },
+    { q: t('landing.faq.questions.q5'), a: t('landing.faq.questions.a5') },
+    { q: t('pricing.faq.q2'), a: t('pricing.faq.a2') },
+  ];
+
+  const testimonialsData = [
+    { quote: 'AgriPride AI caught a fungal infection in my maize before I could see it. Saved my entire season.', avatar: 'JK', name: 'James Kiprop', location: 'Eldoret', crop: t('crops.maize'), yield: '+42%', revenue: '+KES 180K' },
+    { quote: 'The weather predictions are spot-on. I now know exactly when to plant and harvest.', avatar: 'WN', name: 'Wanjiku Njoroge', location: 'Nakuru', crop: t('crops.coffee'), yield: '+35%', revenue: '+KES 250K' },
+    { quote: 'Market price alerts helped me sell my tomatoes at peak price. The AI recommendations are a game-changer.', avatar: 'DO', name: 'David Ochieng', location: 'Kisumu', crop: t('crops.tomatoes'), yield: '+28%', revenue: '+KES 95K' },
+  ];
 
   return (
     <div className="min-h-screen overflow-hidden">
@@ -172,9 +172,9 @@ export default function HomePage() {
                 </Button>
               </div>
               <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-emerald-300/60">
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> No credit card</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Free to use</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> Paystack payments</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> {t('landing.hero.noCreditCard')}</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> {t('landing.hero.freeToUse')}</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-emerald-400" /> {t('landing.hero.paystackPayments')}</span>
               </div>
             </motion.div>
 
@@ -198,15 +198,15 @@ export default function HomePage() {
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 rounded-full bg-emerald-500/10 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs text-emerald-400">
                       <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400" /><span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" /></span>
-                      <span className="hidden xs:inline">All Systems Normal</span>
+                      <span className="hidden xs:inline">{t('landing.hero.allSystemsNormal')}</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 xs:grid-cols-4 xs:gap-3">
                     {[
-                      { label: 'Active Farms', value: '12', change: '+3', icon: Sprout },
-                      { label: 'Crops Monitored', value: '24', change: '+8', icon: TreePine },
-                      { label: 'Diagnosis This Month', value: '47', change: '+12', icon: FileSearch },
-                      { label: 'Avg. Yield Increase', value: '35%', change: '+5%', icon: TrendingUp },
+                      { label: t('dashboard.farmer.totalFarms'), value: '12', change: '+3', icon: Sprout },
+                      { label: t('dashboard.farmer.totalCrops'), value: '24', change: '+8', icon: TreePine },
+                      { label: t('dashboard.farmer.diseaseDetection'), value: '47', change: '+12', icon: FileSearch },
+                      { label: t('landing.metrics.yield'), value: '35%', change: '+5%', icon: TrendingUp },
                     ].map((s, i) => (
                       <div key={i} className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06] hover:bg-white/[0.08] transition-colors">
                         <div className="flex items-center justify-between">
@@ -221,7 +221,7 @@ export default function HomePage() {
                   <div className="mt-2 sm:mt-3 grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
                     <div className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06]">
                       <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200 dark:text-gray-200">
-                        <span>Crop Health Index</span>
+                        <span>{t('dashboard.farmHealthScore')}</span>
                         <span className="text-emerald-400 font-medium">92%</span>
                       </div>
                       <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-white/[0.08]">
@@ -231,7 +231,7 @@ export default function HomePage() {
                     </div>
                     <div className="rounded-xl bg-white/[0.05] p-2 sm:p-3 border border-white/[0.06]">
                       <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-gray-200 dark:text-gray-200">
-                        <span>Current Weather</span>
+                        <span>{t('weather.currentWeather')}</span>
                         <span className="text-yellow-400"><CloudSun className="h-3 w-3 sm:h-3.5 sm:w-3.5" /></span>
                       </div>
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-white dark:text-white">
@@ -250,7 +250,7 @@ export default function HomePage() {
       {/* ===== TRUST BAR ===== */}
       <section className="relative border-b border-[var(--border)] bg-[var(--background)] py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Trusted by farmers and partners across Kenya</p>
+          <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">{t('landing.hero.trustBar')}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-14 gap-y-4 sm:gap-y-6">
             {['Kenya Farmers Association', 'Ministry of Agriculture', 'Safaricom', 'University of Nairobi', 'AgriFi Kenya', 'World Food Programme'].map((name) => (
               <div key={name} className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--muted-foreground)] transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
@@ -271,9 +271,9 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-3 sm:mb-4">Platform Impact</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Growing Africa&apos;s Agricultural Future</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">Real metrics from our growing platform deployment across Kenya.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">{t('landing.hero.platformImpact')}</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">{t('landing.hero.growingFuture')}</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">{t('landing.hero.realMetrics')}</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -308,9 +308,9 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-3 sm:mb-4">Everything You Need</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Powerful Tools for Modern Farming</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">From disease detection to market prices — one platform for your entire farming operation.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">{t('landing.hero.everythingYouNeed')}</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">{t('landing.hero.powerfulTools')}</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">{t('landing.hero.onePlatform')}</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -329,7 +329,7 @@ export default function HomePage() {
                   <h3 className="mb-3 text-xl font-bold text-[var(--foreground)]">{f.title}</h3>
                   <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">{f.description}</p>
                   <div className="mt-6 flex items-center gap-1 text-sm font-medium text-emerald-600 dark:text-emerald-400 opacity-0 transition-all duration-150 group-hover:opacity-100">
-                    Learn more <ArrowRight className="h-3.5 w-3.5" />
+                    {t('landing.hero.learnMore')} <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
               </motion.div>
@@ -349,15 +349,15 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-400/20 bg-emerald-500/10 text-emerald-300">Responsible AI</Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold text-white text-balance">AI You Can Trust</h2>
-              <p className="mt-3 sm:mt-4 text-base sm:text-lg text-emerald-200/60">Every diagnosis, recommendation, and insight is governed by our Responsible AI framework. No black boxes — full transparency.</p>
+              <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-400/20 bg-emerald-500/10 text-emerald-300">{t('landing.hero.governance.responsibleAI')}</Badge>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-balance">{t('landing.hero.governance.aiYouCanTrust')}</h2>
+              <p className="mt-3 sm:mt-4 text-base sm:text-lg text-emerald-200/60">{t('landing.hero.governance.governanceDesc')}</p>
               <div className="mt-8 space-y-4">
                 {[
-                  { label: 'TRACK', desc: 'Transparency & Accountability in every AI decision' },
-                  { label: 'OASIS', desc: 'Ownership & Security of your farm data' },
-                  { label: 'RANK', desc: 'Role-based access control' },
-                  { label: 'TRAIL', desc: 'Full audit trail for every AI interaction' },
+                  { label: 'TRACK', desc: t('landing.hero.governance.track') },
+                  { label: 'OASIS', desc: t('landing.hero.governance.oasis') },
+                  { label: 'RANK', desc: t('landing.hero.governance.rank') },
+                  { label: 'TRAIL', desc: t('landing.hero.governance.trail') },
                 ].map((f, i) => (
                   <motion.div
                     key={i}
@@ -373,7 +373,7 @@ export default function HomePage() {
                 ))}
               </div>
               <Button className="mt-6 sm:mt-8 bg-gradient-to-r from-emerald-500 to-emerald-400 text-emerald-950 hover:from-emerald-400 hover:to-emerald-300 shadow-xl shadow-emerald-500/20 w-full sm:w-auto" onClick={() => router.push('/governance')}>
-                Learn About Our AI
+                {t('landing.hero.governance.learnAboutAI')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </motion.div>
@@ -390,8 +390,8 @@ export default function HomePage() {
                     <Shield className="h-5 w-5 text-emerald-400" />
                   </div>
                   <div>
-                    <div className="font-semibold text-white">AI Audit Trail</div>
-                    <div className="text-xs text-emerald-300/50">Every decision tracked and verifiable</div>
+                    <div className="font-semibold text-white">{t('landing.hero.governance.auditTrail')}</div>
+                    <div className="text-xs text-emerald-300/50">{t('landing.hero.governance.auditDesc')}</div>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -427,9 +427,9 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-3 sm:mb-4">Farmer Success Stories</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Real Farmers, Real Results</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">Hear from farmers who are already transforming their farms with AgriPride AI.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">{t('landing.hero.farmerSuccess')}</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">{t('landing.hero.realFarmers')}</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">{t('landing.hero.hearFromFarmers')}</p>
           </motion.div>
           <motion.div
             variants={containerVariants}
@@ -438,26 +438,26 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="mt-16 grid gap-8 md:grid-cols-3"
           >
-            {testimonialsData.map((t, i) => (
+            {testimonialsData.map((item, i) => (
               <motion.div key={i} variants={itemVariants}>
                 <div className="group relative h-full rounded-xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
                   <Quote className="mb-4 h-8 w-8 text-emerald-200 dark:text-emerald-800" />
-                  <p className="mb-6 text-sm leading-relaxed text-[var(--muted-foreground)]">&ldquo;{t.quote}&rdquo;</p>
+                  <p className="mb-6 text-sm leading-relaxed text-[var(--muted-foreground)]">&ldquo;{item.quote}&rdquo;</p>
                   <div className="mb-4 flex items-center gap-4 border-t border-[var(--border)] pt-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{t.avatar}</div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-500 text-sm font-bold text-white shadow-lg shadow-emerald-500/20">{item.avatar}</div>
                     <div>
-                      <div className="font-semibold text-[var(--foreground)]">{t.name}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">{t.location} · {t.crop}</div>
+                      <div className="font-semibold text-[var(--foreground)]">{item.name}</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">{item.location} · {item.crop}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-3 dark:from-emerald-900/30 dark:to-emerald-800/20">
                     <div className="text-center">
-                      <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{t.yield}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">Yield Increase</div>
+                      <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{item.yield}</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">{t('landing.hero.yieldIncrease')}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{t.revenue}</div>
-                      <div className="text-xs text-[var(--muted-foreground)]">Revenue Gain</div>
+                      <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{item.revenue}</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">{t('landing.hero.revenueGain')}</div>
                     </div>
                   </div>
                 </div>
@@ -479,19 +479,19 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-80px' }}
             className="text-center"
           >
-            <Badge variant="primary" className="mb-3 sm:mb-4">Simple Pricing</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Plans for Every Farm</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">Start free, upgrade as you grow. All plans include core AI features.</p>
+            <Badge variant="primary" className="mb-3 sm:mb-4">{t('landing.hero.simplePricing')}</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">{t('landing.hero.plansForEveryFarm')}</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)]">{t('landing.hero.pricingSubtitle')}</p>
           </motion.div>
           <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3">
-            <span className={`text-sm font-medium transition-colors ${billing === 'monthly' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>Monthly</span>
+            <span className={`text-sm font-medium transition-colors ${billing === 'monthly' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>{t('landing.hero.monthly')}</span>
             <button
               onClick={() => setBilling(billing === 'monthly' ? 'annual' : 'monthly')}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${billing === 'annual' ? 'bg-emerald-600' : 'bg-[var(--border)]'}`}
             >
               <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${billing === 'annual' ? 'translate-x-6' : 'translate-x-0.5'}`} />
             </button>
-            <span className={`text-sm font-medium transition-colors ${billing === 'annual' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>Annual <span className="text-emerald-600 dark:text-emerald-400">Save 15%</span></span>
+            <span className={`text-sm font-medium transition-colors ${billing === 'annual' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>{t('landing.hero.annual')} <span className="text-emerald-600 dark:text-emerald-400">{t('landing.hero.saveAnnual', { percent: 15 })}</span></span>
           </div>
           <motion.div
             variants={containerVariants}
@@ -505,7 +505,7 @@ export default function HomePage() {
                 <div className={`relative rounded-xl border p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] ${plan.popular ? 'border-emerald-500/50 bg-[var(--card)] shadow-[var(--shadow-card)] ring-1 ring-emerald-500/20' : 'border-[var(--border)] bg-[var(--card)] hover:-translate-y-0.5'}`}>
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge variant="primary" className="px-4 py-1 text-xs shadow-lg shadow-emerald-500/20">Most Popular</Badge>
+                      <Badge variant="primary" className="px-4 py-1 text-xs shadow-lg shadow-emerald-500/20">{t('landing.hero.mostPopular')}</Badge>
                     </div>
                   )}
                   <div className="mb-6">
@@ -513,7 +513,7 @@ export default function HomePage() {
                     <p className="mt-1 text-sm text-[var(--muted-foreground)]">{plan.desc}</p>
                     <div className="mt-4 flex items-baseline gap-1">
                       <span className="text-4xl font-bold text-[var(--foreground)]">KES {billing === 'monthly' ? plan.monthly.toLocaleString() : plan.annual.toLocaleString()}</span>
-                      <span className="text-sm text-[var(--muted-foreground)]">/{billing === 'monthly' ? 'mo' : 'yr'}</span>
+                      <span className="text-sm text-[var(--muted-foreground)]">{billing === 'monthly' ? t('landing.hero.perMo') : t('landing.hero.perYr')}</span>
                     </div>
                   </div>
                   <ul className="mb-8 space-y-3">
@@ -529,10 +529,10 @@ export default function HomePage() {
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => router.push('/auth?tab=register')}
                   >
-                    {plan.monthly === 0 ? 'Get Started Free' : 'Subscribe'}
+                    {plan.monthly === 0 ? t('landing.hero.getStartedFree') : t('landing.hero.subscribe')}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                  {plan.monthly > 0 && <p className="mt-3 text-center text-xs text-[var(--muted-foreground)]">Powered by Paystack</p>}
+                  {plan.monthly > 0 && <p className="mt-3 text-center text-xs text-[var(--muted-foreground)]">{t('landing.hero.poweredByPaystack')}</p>}
                 </div>
               </motion.div>
             ))}
@@ -549,7 +549,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">Frequently Asked Questions</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance">{t('landing.hero.faqTitle')}</h2>
           </motion.div>
           <div className="mt-8 sm:mt-12 space-y-4">
             {faqItems.map((item, i) => (
@@ -589,15 +589,15 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-balance">Ready to Transform Your Farm?</h2>
-            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-emerald-100/80">Join thousands of Kenyan farmers using AI to increase yields, reduce losses, and make smarter decisions. Free to get started.</p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-balance">{t('landing.hero.ctaTitle')}</h2>
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-emerald-100/80">{t('landing.hero.ctaSubtitle')}</p>
             <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
               <Button size="xl" className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl shadow-black/10 hover:shadow-emerald-200/50 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
-                Get Started Free
+                {t('landing.hero.getStartedFree')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button size="xl" variant="outline" className="border-emerald-300/40 text-white hover:bg-emerald-500/20 hover:border-emerald-200/60 backdrop-blur-sm w-full xs:w-auto" onClick={() => router.push('/contact')}>
-                Talk to Our Team
+                {t('landing.hero.talkToTeam')}
               </Button>
             </div>
           </motion.div>

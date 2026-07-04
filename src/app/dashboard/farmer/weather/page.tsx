@@ -93,9 +93,9 @@ export default function WeatherPage() {
             <div className="rounded-full bg-emerald-50 p-4 mb-4">
               <CloudSun className="h-10 w-10 text-emerald-500" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">No Weather Data</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('weather.noData')}</h3>
             <p className="text-sm text-gray-500">
-              Weather information is not available right now.
+              {t('weather.noDataDesc')}
             </p>
           </CardContent>
         </Card>
@@ -107,7 +107,7 @@ export default function WeatherPage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <MapPin className="h-5 w-5 text-emerald-600" />
-                  Current Conditions — {currentWeather.location}
+                  {t('weather.currentConditions', { location: currentWeather.location })}
                 </CardTitle>
                 <ConditionIcon condition={currentWeather.condition} />
               </div>
@@ -119,7 +119,7 @@ export default function WeatherPage() {
                     <ThermometerSun className="h-6 w-6 text-amber-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Temperature</p>
+                    <p className="text-xs text-gray-500">{t('weather.temperature')}</p>
                     <p className="text-2xl font-bold text-gray-900">{currentWeather.temperature}&deg;C</p>
                     <p className="text-xs text-gray-400">{currentWeather.condition}</p>
                   </div>
@@ -129,7 +129,7 @@ export default function WeatherPage() {
                     <Droplets className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Humidity</p>
+                    <p className="text-xs text-gray-500">{t('weather.humidity')}</p>
                     <p className="text-2xl font-bold text-gray-900">{currentWeather.humidity}%</p>
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export default function WeatherPage() {
                     <Wind className="h-6 w-6 text-cyan-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Wind Speed</p>
+                    <p className="text-xs text-gray-500">{t('weather.windSpeed')}</p>
                     <p className="text-2xl font-bold text-gray-900">{currentWeather.wind_speed} km/h</p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ export default function WeatherPage() {
                     <Umbrella className="h-6 w-6 text-indigo-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Rainfall</p>
+                    <p className="text-xs text-gray-500">{t('weather.rainfall')}</p>
                     <p className="text-2xl font-bold text-gray-900">{currentWeather.rainfall_mm} mm</p>
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export default function WeatherPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <CloudSun className="h-5 w-5 text-emerald-600" />
-                  7-Day Forecast
+                  {t('weather.sevenDayForecast')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -197,11 +197,7 @@ export default function WeatherPage() {
           <Card className="border-amber-200 bg-amber-50">
             <CardContent className="flex items-start gap-3 p-4 text-sm text-amber-800">
               <span className="text-lg">⚠️</span>
-              <p>
-                <strong>Disclaimer:</strong> Weather Agent must never generate agronomic advice.
-                This data is for informational purposes only. Consult a local agricultural
-                extension officer for farm-specific recommendations.
-              </p>
+              <p>{t('weather.disclaimer')}</p>
             </CardContent>
           </Card>
         </>
