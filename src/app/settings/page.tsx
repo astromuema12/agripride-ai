@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,13 +19,14 @@ import { toast } from 'sonner';
 import { writeAuditLog } from '@/lib/server-auth';
 import { updateUserProfile, updateUserConsent } from '@/lib/db';
 
-const roleLabels: Record<string, string> = {
-  farmer: 'Farmer',
-  officer: 'Extension Officer',
-  admin: 'System Admin',
+const ROLE_KEYS: Record<string, string> = {
+  farmer: 'auth.farmer',
+  officer: 'auth.officer',
+  admin: 'auth.admin',
 };
 
 export default function SettingsPage() {
+  const { t } = useI18n();
   const { user, isDemoMode } = useAuth();
 
   const [name, setName] = useState(user?.name ?? '');
@@ -46,7 +48,7 @@ export default function SettingsPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-center">
           <User className="h-12 w-12 text-gray-300" />
-          <p className="text-sm font-medium text-gray-500">You must be logged in to view settings.</p>
+          <p className="text-sm font-medium text-gray-500">{t('settings.mustBeLoggedIn')}</p>
         </div>
       </div>
     );
@@ -57,7 +59,7 @@ export default function SettingsPage() {
     if (!user) return;
     try {
       await updateUserProfile(user.id, { name });
-      toast.success('Profile updated successfully');
+      toast.success(t('settings.profileUpdated'));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       writeAuditLog({
@@ -67,7 +69,7 @@ export default function SettingsPage() {
         details: { name },
       }).catch(() => {});
     } catch {
-      toast.error('Failed to save profile');
+      toast.error(t('settings.failedToSaveProfile'));
     }
   }
 
@@ -75,17 +77,17 @@ export default function SettingsPage() {
     e.preventDefault();
     if (!user) return;
     if (newPassword !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error(t('settings.passwordsDoNotMatch'));
       return;
     }
     if (newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters');
+      toast.error(t('settings.passwordMinLength'));
       return;
     }
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
-    toast.success('Password updated (demo mode - no server-side change)');
+    toast.success(t('settings.passwordUpdated'));
     writeAuditLog({
       user_id: user.id,
       action: 'change_password',
@@ -97,7 +99,7 @@ export default function SettingsPage() {
     if (!user) return;
     try {
       await updateUserConsent(user.id, type as any, granted);
-      toast.success(`Consent for ${type.replace(/_/g, ' ')} ${granted ? 'granted' : 'revoked'}`);
+      toast.success(t('settings.consentUpdated', { type: type.replace(/_/g, ' '), status: granted ? t('consent.granted') : t('consent.revoked') }));
       writeAuditLog({
         user_id: user.id,
         action: granted ? 'consent_granted' : 'consent_revoked',
@@ -105,16 +107,16 @@ export default function SettingsPage() {
         details: { type },
       }).catch(() => {});
     } catch {
-      toast.error('Failed to update consent');
+      toast.error(t('settings.failedToUpdateConsent'));
     }
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('settings.title')}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Manage your account, notifications, and privacy preferences.
+          {t('settings.description')}
         </p>
       </div>
 
@@ -124,31 +126,31 @@ export default function SettingsPage() {
             <User className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Profile</CardTitle>
-            <CardDescription>Your personal information and role</CardDescription>
+            <CardTitle className="text-lg">{t('settings.profileSection')}</CardTitle>
+            <CardDescription>{t('settings.profileSectionDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleProfileSave} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">{t('settings.fullName')}</Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('common.email')}</Label>
                 <Input id="email" value={email} disabled className="text-gray-400" />
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Role:</span>
+              <span className="text-sm text-gray-500">{t('common.type')}:</span>
               <Badge variant="primary" className="flex items-center gap-1">
                 <Shield className="h-3 w-3" />
-                {roleLabels[user.role] ?? user.role}
+                {t(ROLE_KEYS[user.role] ?? 'common.unknown')}
               </Badge>
             </div>
             <Button type="submit" size="sm">
-              {saved ? 'Saved!' : 'Save Changes'}
+              {saved ? t('common.saved') : t('common.save')}
             </Button>
           </form>
         </CardContent>
@@ -160,46 +162,46 @@ export default function SettingsPage() {
             <Key className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Password</CardTitle>
-            <CardDescription>Update your account password</CardDescription>
+            <CardTitle className="text-lg">{t('settings.passwordSection')}</CardTitle>
+            <CardDescription>{t('settings.passwordSectionDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="currentPassword">Current Password</Label>
+                <Label htmlFor="currentPassword">{t('settings.currentPassword')}</Label>
                 <Input
                   id="currentPassword"
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current password"
+                  placeholder={t('settings.currentPasswordPlaceholder')}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
+                <Label htmlFor="newPassword">{t('settings.newPassword')}</Label>
                 <Input
                   id="newPassword"
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
+                  placeholder={t('settings.newPasswordPlaceholder')}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">{t('settings.confirmPassword')}</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
+                  placeholder={t('settings.confirmPasswordPlaceholder')}
                 />
               </div>
             </div>
             <Button type="submit" size="sm" variant="outline">
-              Update Password
+              {t('settings.updatePassword')}
             </Button>
           </form>
         </CardContent>
@@ -211,29 +213,29 @@ export default function SettingsPage() {
             <Bell className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Notifications</CardTitle>
-            <CardDescription>Control what notifications you receive</CardDescription>
+            <CardTitle className="text-lg">{t('settings.notificationsSection')}</CardTitle>
+            <CardDescription>{t('settings.notificationsSectionDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">Email Notifications</p>
-              <p className="text-xs text-gray-500">Receive email updates about your account</p>
+              <p className="text-sm font-medium text-gray-900">{t('settings.emailNotifications')}</p>
+              <p className="text-xs text-gray-500">{t('settings.emailNotificationsDesc')}</p>
             </div>
             <Switch checked={emailNotif} onCheckedChange={setEmailNotif} />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">Weather Alerts</p>
-              <p className="text-xs text-gray-500">Get notified about severe weather in your area</p>
+              <p className="text-sm font-medium text-gray-900">{t('settings.weatherAlerts')}</p>
+              <p className="text-xs text-gray-500">{t('settings.weatherAlertsDesc')}</p>
             </div>
             <Switch checked={weatherAlerts} onCheckedChange={setWeatherAlerts} />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">Disease Alerts</p>
-              <p className="text-xs text-gray-500">Alerts when crop diseases are detected nearby</p>
+              <p className="text-sm font-medium text-gray-900">{t('settings.diseaseAlerts')}</p>
+              <p className="text-xs text-gray-500">{t('settings.diseaseAlertsDesc')}</p>
             </div>
             <Switch checked={diseaseAlerts} onCheckedChange={setDiseaseAlerts} />
           </div>
@@ -246,29 +248,29 @@ export default function SettingsPage() {
             <Shield className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Consent Management</CardTitle>
-            <CardDescription>Manage how your data is used by AI systems</CardDescription>
+            <CardTitle className="text-lg">{t('settings.consentSection')}</CardTitle>
+            <CardDescription>{t('settings.consentSectionDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">Data Collection</p>
-              <p className="text-xs text-gray-500">Allow collection of farm and crop data for analytics</p>
+              <p className="text-sm font-medium text-gray-900">{t('consent.type.data_collection')}</p>
+              <p className="text-xs text-gray-500">{t('settings.dataCollectionDesc')}</p>
             </div>
             <Switch checked={dataCollection} onCheckedChange={(v) => { setDataCollection(v); handleConsentChange('data_collection', v); }} />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">AI Processing</p>
-              <p className="text-xs text-gray-500">Allow AI agents to process your data for recommendations</p>
+              <p className="text-sm font-medium text-gray-900">{t('consent.type.ai_processing')}</p>
+              <p className="text-xs text-gray-500">{t('settings.aiProcessingDesc')}</p>
             </div>
             <Switch checked={aiProcessing} onCheckedChange={(v) => { setAiProcessing(v); handleConsentChange('ai_processing', v); }} />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-gray-100 p-4">
             <div>
-              <p className="text-sm font-medium text-gray-900">Disease Diagnosis</p>
-              <p className="text-xs text-gray-500">Allow AI-powered disease detection on crop images</p>
+              <p className="text-sm font-medium text-gray-900">{t('consent.type.disease_diagnosis')}</p>
+              <p className="text-xs text-gray-500">{t('settings.diseaseDiagnosisDesc')}</p>
             </div>
             <Switch checked={diseaseDiagnosis} onCheckedChange={(v) => { setDiseaseDiagnosis(v); handleConsentChange('disease_diagnosis', v); }} />
           </div>
@@ -283,8 +285,8 @@ export default function SettingsPage() {
             <Trash2 className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg text-red-700">Danger Zone</CardTitle>
-            <CardDescription>Irreversible actions for your account</CardDescription>
+            <CardTitle className="text-lg text-red-700">{t('settings.dangerZone')}</CardTitle>
+            <CardDescription>{t('settings.dangerZoneDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
@@ -292,27 +294,27 @@ export default function SettingsPage() {
             <DialogTrigger asChild>
               <Button variant="destructive" size="sm" className="gap-2">
                 <Trash2 className="h-4 w-4" />
-                Delete Account
+                {t('settings.deleteAccount')}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Delete Your Account</DialogTitle>
+                <DialogTitle>{t('settings.deleteAccountTitle')}</DialogTitle>
                 <DialogDescription>
-                  This action cannot be undone. All your data, farms, crops, and reports will be permanently removed.
+                  {t('settings.deleteAccountDesc')}
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-3">
                 <p className="text-sm text-gray-600">
-                  Are you sure you want to delete your account? Type <strong>DELETE</strong> below to confirm.
+                  {t('settings.deleteAccountConfirm')}
                 </p>
-                <Input placeholder='Type "DELETE" to confirm' />
+                <Input placeholder={t('settings.deleteAccountPlaceholder')} />
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" size="sm" onClick={() => setDeleteDialogOpen(false)}>
-                    Cancel
+                    {t('common.cancel')}
                   </Button>
                   <Button variant="destructive" size="sm" disabled>
-                    Delete My Account
+                    {t('settings.deleteMyAccount')}
                   </Button>
                 </div>
               </div>

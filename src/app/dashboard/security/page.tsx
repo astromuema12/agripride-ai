@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/lib/i18n';
 import { Shield, Smartphone, Monitor, Globe, Clock, Trash2, CheckCircle2, AlertCircle, Loader2, LogOut } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ import type { UserSession } from '@/types';
 
 export default function SecurityPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const { user, logout } = useAuth();
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(true);
@@ -48,7 +50,7 @@ export default function SecurityPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-center">
           <Shield className="h-12 w-12 text-gray-300" />
-          <p className="text-sm font-medium text-gray-500">Please sign in to view security settings.</p>
+          <p className="text-sm font-medium text-gray-500">{t('security.notSignedIn')}</p>
         </div>
       </div>
     );
@@ -65,7 +67,7 @@ export default function SecurityPage() {
     }
 
     setSessions((prev) => prev.filter((s) => s.id !== sessionId));
-    toast.success('Session revoked');
+    toast.success(t('security.sessionRevoked'));
   };
 
   const handleRevokeOtherSessions = async () => {
@@ -82,7 +84,7 @@ export default function SecurityPage() {
     }
 
     setSessions((prev) => prev.filter((s) => s.session_token === currentId));
-    toast.success('Other sessions revoked');
+    toast.success(t('security.otherSessionsRevoked'));
   };
 
   const formatDate = (dateStr: string) => {
@@ -93,18 +95,18 @@ export default function SecurityPage() {
     const diffHr = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMin < 1) return 'Just now';
-    if (diffMin < 60) return `${diffMin}m ago`;
-    if (diffHr < 24) return `${diffHr}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffMin < 1) return t('common.justNow');
+    if (diffMin < 60) return t('common.minutesAgo', { minutes: diffMin });
+    if (diffHr < 24) return t('common.hoursAgo', { hours: diffHr });
+    if (diffDays < 7) return t('common.daysAgo', { days: diffDays });
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Security</h1>
-        <p className="mt-1 text-sm text-gray-500">Manage your account security and active sessions.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('security.title')}</h1>
+        <p className="mt-1 text-sm text-gray-500">{t('security.subtitle')}</p>
       </div>
 
       {/* Authentication Methods */}
@@ -114,8 +116,8 @@ export default function SecurityPage() {
             <Shield className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg">Authentication Methods</CardTitle>
-            <CardDescription>Manage how you sign in to your account</CardDescription>
+            <CardTitle className="text-lg">{t('security.authenticationMethods')}</CardTitle>
+            <CardDescription>{t('security.authenticationMethodsDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -123,25 +125,25 @@ export default function SecurityPage() {
             <div className="flex items-start gap-3">
               <Smartphone className="mt-0.5 h-5 w-5 text-[var(--muted-foreground)]" />
               <div>
-                <p className="text-sm font-medium text-[var(--foreground)]">Two-Factor Authentication (2FA)</p>
-                <p className="text-xs text-[var(--muted-foreground)]">Add an extra layer of security with an authenticator app</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{t('security.mfa')}</p>
+                <p className="text-xs text-[var(--muted-foreground)]">{t('security.mfaDesc2')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               {mfaEnabled ? (
                 <Badge variant="primary" className="gap-1">
                   <CheckCircle2 className="h-3 w-3" />
-                  Enabled
+                  {t('security.enabled')}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="text-amber-600 border-amber-200">Not Set Up</Badge>
+                <Badge variant="outline" className="text-amber-600 border-amber-200">{t('security.notSetUp')}</Badge>
               )}
               <Button
                 variant={mfaEnabled ? 'outline' : 'default'}
                 size="sm"
                 onClick={() => router.push('/auth/mfa')}
               >
-                {mfaEnabled ? 'Manage' : 'Set Up'}
+                {mfaEnabled ? t('security.manage') : t('security.setUp')}
               </Button>
             </div>
           </div>
@@ -150,17 +152,17 @@ export default function SecurityPage() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="mt-0.5 h-5 w-5 text-[var(--muted-foreground)]" />
               <div>
-                <p className="text-sm font-medium text-[var(--foreground)]">Email Verification</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{t('security.emailVerification')}</p>
                 <p className="text-xs text-[var(--muted-foreground)]">{user.email}</p>
               </div>
             </div>
             {emailVerified ? (
               <Badge variant="primary" className="gap-1">
                 <CheckCircle2 className="h-3 w-3" />
-                Verified
+                {t('security.verified')}
               </Badge>
             ) : (
-              <Badge variant="outline" className="text-amber-600 border-amber-200">Unverified</Badge>
+              <Badge variant="outline" className="text-amber-600 border-amber-200">{t('security.unverified')}</Badge>
             )}
           </div>
         </CardContent>
@@ -173,13 +175,13 @@ export default function SecurityPage() {
             <Monitor className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <CardTitle className="text-lg">Active Sessions</CardTitle>
-            <CardDescription>Devices and browsers where you are signed in</CardDescription>
+            <CardTitle className="text-lg">{t('security.sessions')}</CardTitle>
+            <CardDescription>{t('security.sessionsDesc2')}</CardDescription>
           </div>
           {sessions.length > 1 && (
             <Button variant="outline" size="sm" onClick={handleRevokeOtherSessions} disabled={revoking === 'all'} className="gap-2">
               {revoking === 'all' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <LogOut className="h-3.5 w-3.5" />}
-              Sign Out Others
+              {t('security.signOutOthers')}
             </Button>
           )}
         </CardHeader>
@@ -191,7 +193,7 @@ export default function SecurityPage() {
           ) : sessions.length === 0 ? (
             <div className="flex flex-col items-center py-8 text-center">
               <Monitor className="mb-2 h-8 w-8 text-gray-300" />
-              <p className="text-sm text-gray-500">No active sessions found</p>
+              <p className="text-sm text-gray-500">{t('security.noSessions')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -211,10 +213,10 @@ export default function SecurityPage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-medium text-[var(--foreground)] truncate">
-                          {session.device_name || 'Unknown device'}
+                          {session.device_name || t('security.unknownDevice')}
                         </p>
                         {session.is_current && (
-                          <Badge variant="primary" className="text-[10px]">Current</Badge>
+                          <Badge variant="primary" className="text-[10px]">{t('security.current')}</Badge>
                         )}
                       </div>
                       <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--muted-foreground)]">
@@ -262,8 +264,8 @@ export default function SecurityPage() {
             <AlertCircle className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-lg text-red-700 dark:text-red-400">Danger Zone</CardTitle>
-            <CardDescription>Irreversible actions for your account security</CardDescription>
+            <CardTitle className="text-lg text-red-700 dark:text-red-400">{t('security.dangerZone')}</CardTitle>
+            <CardDescription>{t('security.dangerZoneDesc')}</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -274,7 +276,7 @@ export default function SecurityPage() {
             onClick={() => router.push('/settings')}
           >
             <Trash2 className="h-4 w-4" />
-            Delete Account
+            {t('security.deleteAccount')}
           </Button>
         </CardContent>
       </Card>

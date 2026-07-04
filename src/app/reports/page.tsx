@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FileText, Download, FileSpreadsheet, FileJson, Clock, Plus } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface ReportType {
   id: string;
@@ -25,37 +26,6 @@ interface GeneratedReport {
   status: 'completed' | 'processing';
 }
 
-const reportTypes: ReportType[] = [
-  {
-    id: 'farm',
-    title: 'Farm Report',
-    description: 'Comprehensive overview of all registered farms, acreage, crop distribution, and productivity metrics.',
-    format: 'PDF',
-    icon: FileText,
-  },
-  {
-    id: 'disease',
-    title: 'Disease Report',
-    description: 'Detailed analysis of disease outbreaks, affected crops, resolution rates, and regional distribution.',
-    format: 'CSV',
-    icon: FileSpreadsheet,
-  },
-  {
-    id: 'yield',
-    title: 'Yield Report',
-    description: 'Harvest yields over time, crop performance benchmarks, and comparison across regions and seasons.',
-    format: 'Excel',
-    icon: FileJson,
-  },
-  {
-    id: 'sustainability',
-    title: 'Sustainability Report',
-    description: 'Environmental impact metrics including soil health, water usage, biodiversity, and carbon footprint.',
-    format: 'PDF',
-    icon: FileText,
-  },
-];
-
 const recentReports: GeneratedReport[] = [
   { id: 'RPT-001', title: 'Farm Report - Q2 2026', format: 'PDF', date: '2026-06-02', status: 'completed' },
   { id: 'RPT-002', title: 'Disease Outbreak Analysis', format: 'CSV', date: '2026-06-01', status: 'completed' },
@@ -70,78 +40,111 @@ const formatBadgeVariant: Record<string, 'primary' | 'secondary' | 'default'> = 
   Excel: 'default',
 };
 
-function ReportCard({ report }: { report: ReportType }) {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const Icon = report.icon;
+export default function ReportsPage() {
+  const { t } = useI18n();
 
-  function handleDownload() {
-    toast.success(`Report generation started: ${report.title}`);
+  const reportTypes: ReportType[] = [
+    {
+      id: 'farm',
+      title: t('reports.types.farm'),
+      description: t('reports.farmReportDesc'),
+      format: 'PDF' as const,
+      icon: FileText,
+    },
+    {
+      id: 'disease',
+      title: t('reports.types.disease'),
+      description: t('reports.diseaseReportDesc'),
+      format: 'CSV' as const,
+      icon: FileSpreadsheet,
+    },
+    {
+      id: 'yield',
+      title: t('reports.types.yield'),
+      description: t('reports.yieldReportDesc'),
+      format: 'Excel' as const,
+      icon: FileJson,
+    },
+    {
+      id: 'sustainability',
+      title: t('reports.types.sustainability'),
+      description: t('reports.sustainabilityReportDesc'),
+      format: 'PDF' as const,
+      icon: FileText,
+    },
+  ];
+
+  function ReportCard({ report }: { report: ReportType }) {
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const Icon = report.icon;
+
+    function handleDownload() {
+      toast.success(t('reports.downloadStarted', { title: report.title }));
+    }
+
+    return (
+      <Card className="border-emerald-100 transition-shadow hover:shadow-md">
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
+                <Icon className="h-5 w-5" />
+              </div>
+              <div>
+                <CardTitle className="text-base">{report.title}</CardTitle>
+                <CardDescription className="mt-0.5 max-w-xs text-xs leading-relaxed">
+                  {report.description}
+                </CardDescription>
+              </div>
+            </div>
+            <Badge variant={formatBadgeVariant[report.format] ?? 'default'} className="shrink-0">
+              {report.format}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1">
+              <Label className="text-xs text-gray-500">{t('reports.startDate')}</Label>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="h-8 w-40 text-xs"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-gray-500">{t('reports.endDate')}</Label>
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="h-8 w-40 text-xs"
+              />
+            </div>
+            <Button size="sm" className="gap-1.5" onClick={handleDownload}>
+              <Download className="h-4 w-4" />
+              {t('common.download')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
-  return (
-    <Card className="border-emerald-100 transition-shadow hover:shadow-md">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
-              <Icon className="h-5 w-5" />
-            </div>
-            <div>
-              <CardTitle className="text-base">{report.title}</CardTitle>
-              <CardDescription className="mt-0.5 max-w-xs text-xs leading-relaxed">
-                {report.description}
-              </CardDescription>
-            </div>
-          </div>
-          <Badge variant={formatBadgeVariant[report.format] ?? 'default'} className="shrink-0">
-            {report.format}
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="space-y-1">
-            <Label className="text-xs text-gray-500">Start Date</Label>
-            <Input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="h-8 w-40 text-xs"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs text-gray-500">End Date</Label>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="h-8 w-40 text-xs"
-            />
-          </div>
-          <Button size="sm" className="gap-1.5" onClick={handleDownload}>
-            <Download className="h-4 w-4" />
-            Download
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function ReportsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports &amp; Exports</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('reports.pageTitle')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Generate and download detailed reports across farm operations, diseases, yields, and sustainability.
+            {t('reports.pageSubtitle')}
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-2">
           <Plus className="h-4 w-4" />
-          Schedule Report
+          {t('reports.scheduleReport')}
         </Button>
       </div>
 
@@ -160,8 +163,8 @@ export default function ReportsPage() {
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <CardTitle className="text-lg">Recent Reports</CardTitle>
-              <CardDescription>Previously generated reports available for download</CardDescription>
+              <CardTitle className="text-lg">{t('reports.recentReports')}</CardTitle>
+              <CardDescription>{t('reports.recentReportsDesc')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -169,9 +172,9 @@ export default function ReportsPage() {
           {recentReports.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
               <FileText className="mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-medium text-gray-500">No reports generated yet</p>
+              <p className="text-sm font-medium text-gray-500">{t('reports.noReports')}</p>
               <p className="text-xs text-gray-400">
-                Generate your first report using the cards above.
+                {t('reports.noReportsDesc')}
               </p>
             </div>
           ) : (
@@ -179,11 +182,11 @@ export default function ReportsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
-                    <th className="pb-3 pr-4">Report</th>
-                    <th className="pb-3 pr-4">Format</th>
-                    <th className="pb-3 pr-4">Date</th>
-                    <th className="pb-3 pr-4">Status</th>
-                    <th className="pb-3 text-right">Action</th>
+                    <th className="pb-3 pr-4">{t('reports.tableReport')}</th>
+                    <th className="pb-3 pr-4">{t('reports.tableFormat')}</th>
+                    <th className="pb-3 pr-4">{t('common.date')}</th>
+                    <th className="pb-3 pr-4">{t('common.status')}</th>
+                    <th className="pb-3 text-right">{t('reports.tableAction')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -198,7 +201,7 @@ export default function ReportsPage() {
                       <td className="py-3 pr-4 text-gray-500">{r.date}</td>
                       <td className="py-3 pr-4">
                         <Badge variant={r.status === 'completed' ? 'primary' : 'warning'}>
-                          {r.status === 'completed' ? 'Completed' : 'Processing'}
+                          {r.status === 'completed' ? t('common.completed') : t('reports.statusProcessing')}
                         </Badge>
                       </td>
                       <td className="py-3 text-right">
@@ -206,10 +209,10 @@ export default function ReportsPage() {
                           variant="ghost"
                           size="sm"
                           className="gap-1.5 text-emerald-600"
-                          onClick={() => toast.success(`Downloading ${r.title}`)}
+                          onClick={() => toast.success(t('reports.downloading', { title: r.title }))}
                         >
                           <Download className="h-3.5 w-3.5" />
-                          Download
+                          {t('common.download')}
                         </Button>
                       </td>
                     </tr>

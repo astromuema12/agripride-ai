@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/lib/i18n';
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/db';
 import type { Notification } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +27,7 @@ const typeColors: Record<string, string> = {
 };
 
 export default function NotificationsPage() {
+  const { t } = useI18n();
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,15 +59,15 @@ export default function NotificationsPage() {
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Notifications</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{t('notifications.title')}</h1>
           <p className="text-xs sm:text-sm text-gray-500">
-            {unreadCount > 0 ? 'You have ' + unreadCount + ' unread' : 'All caught up!'}
+            {unreadCount > 0 ? t('notifications.unreadCount', { count: unreadCount }) : t('notifications.noNotificationsDesc')}
           </p>
         </div>
         {unreadCount > 0 && (
           <Button variant="outline" size="sm" onClick={handleMarkAllRead} className="text-xs w-fit">
             <CheckCheck className="mr-1.5 h-3.5 w-3.5" />
-            Mark All Read
+            {t('notifications.markAllRead')}
           </Button>
         )}
       </div>
@@ -74,9 +76,9 @@ export default function NotificationsPage() {
         <CardHeader className="px-3 sm:px-6">
           <div className="flex items-center gap-2">
             <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 shrink-0" />
-            <CardTitle className="text-base sm:text-lg">All Notifications</CardTitle>
+            <CardTitle className="text-base sm:text-lg">{t('notifications.allNotifications')}</CardTitle>
             {unreadCount > 0 && (
-              <Badge variant="destructive" className="ml-auto text-[8px] sm:text-[10px]">{unreadCount} new</Badge>
+              <Badge variant="destructive" className="ml-auto text-[8px] sm:text-[10px]">{t('notifications.newCount', { count: unreadCount })}</Badge>
             )}
           </div>
         </CardHeader>
@@ -88,7 +90,7 @@ export default function NotificationsPage() {
           ) : notifications.length === 0 ? (
             <div className="py-8 sm:py-12 text-center">
               <Bell className="mx-auto mb-2 h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
-              <p className="text-xs sm:text-sm text-gray-500">No notifications yet</p>
+              <p className="text-xs sm:text-sm text-gray-500">{t('notifications.noNotifications')}</p>
             </div>
           ) : (
             <div className="-mx-3 sm:mx-0 divide-y divide-gray-100">

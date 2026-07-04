@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getFarms, updateFarm, getUsers } from '@/lib/db';
+import { useI18n } from '@/lib/i18n';
 import type { Farm, User } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export default function FarmsPage() {
+  const { t } = useI18n();
   const [farms, setFarms] = useState<Farm[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,7 +30,7 @@ export default function FarmsPage() {
         setFarms(allFarms);
         setUsers(allUsers);
       } catch {
-        toast.error('Failed to load farms');
+        toast.error(t('dashboard.admin.failedToLoadFarms'));
       } finally {
         setLoading(false);
       }
@@ -56,9 +58,9 @@ export default function FarmsPage() {
     try {
       await updateFarm(farm.id, { status: 'active' });
       setFarms((prev) => prev.map((f) => (f.id === farm.id ? { ...f, status: 'active' } : f)));
-      toast.success('Farm approved successfully');
+      toast.success(t('dashboard.admin.farmApproved'));
     } catch {
-      toast.error('Failed to approve farm');
+      toast.error(t('dashboard.admin.failedToApproveFarm'));
     }
   }
 
@@ -66,9 +68,9 @@ export default function FarmsPage() {
     try {
       await updateFarm(farm.id, { status: 'archived' });
       setFarms((prev) => prev.map((f) => (f.id === farm.id ? { ...f, status: 'archived' } : f)));
-      toast.success('Farm archived successfully');
+      toast.success(t('dashboard.admin.farmArchived'));
     } catch {
-      toast.error('Failed to archive farm');
+      toast.error(t('dashboard.admin.failedToArchiveFarm'));
     }
   }
 
@@ -90,8 +92,8 @@ export default function FarmsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Farm Management</h1>
-          <p className="text-sm text-gray-500">View and manage all registered farms</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('dashboard.admin.farmManagement')}</h1>
+          <p className="text-sm text-gray-500">{t('dashboard.admin.farmManagementDesc')}</p>
         </div>
       </div>
 
@@ -103,7 +105,7 @@ export default function FarmsPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-              <p className="text-sm text-gray-500">Total Farms</p>
+              <p className="text-sm text-gray-500">{t('dashboard.admin.totalFarms')}</p>
             </div>
           </CardContent>
         </Card>
@@ -114,7 +116,7 @@ export default function FarmsPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.active}</div>
-              <p className="text-sm text-gray-500">Active</p>
+              <p className="text-sm text-gray-500">{t('common.active')}</p>
             </div>
           </CardContent>
         </Card>
@@ -125,7 +127,7 @@ export default function FarmsPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.archived}</div>
-              <p className="text-sm text-gray-500">Archived</p>
+              <p className="text-sm text-gray-500">{t('common.archived')}</p>
             </div>
           </CardContent>
         </Card>
@@ -134,11 +136,11 @@ export default function FarmsPage() {
       <Card>
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <CardTitle className="text-base">All Farms</CardTitle>
+            <CardTitle className="text-base">{t('dashboard.admin.allFarms')}</CardTitle>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search by farm name..."
+                placeholder={t('dashboard.admin.searchFarmsPlaceholder')}
                 className="pl-8"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -150,8 +152,8 @@ export default function FarmsPage() {
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-12 text-gray-400">
               <Building2 className="h-10 w-10" />
-              <p className="text-sm font-medium">No farms found</p>
-              <p className="text-xs">{searchQuery ? 'Try a different search term' : 'No farms registered yet'}</p>
+              <p className="text-sm font-medium">{t('dashboard.admin.noFarmsFound')}</p>
+              <p className="text-xs">{searchQuery ? t('dashboard.admin.tryDifferentSearch') : t('dashboard.admin.noFarmsRegistered')}</p>
             </div>
           ) : (
             <>
@@ -162,18 +164,18 @@ export default function FarmsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-900">{farm.name}</span>
                       <Badge variant={farm.status === 'active' ? 'primary' : 'warning'} className="text-[10px]">
-                        {farm.status === 'active' ? 'Active' : 'Archived'}
+                        {farm.status === 'active' ? t('common.active') : t('common.archived')}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-600">
                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-medium text-emerald-700">
                         {(userMap.get(farm.user_id) || 'U')[0]}
                       </div>
-                      {userMap.get(farm.user_id) || 'Unknown'}
+                      {userMap.get(farm.user_id) || t('common.unknown')}
                     </div>
                     <div className="flex items-center gap-3 text-xs text-gray-500">
-                      <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{farm.location}</span>
-                      <span className="flex items-center gap-1"><Ruler className="h-3 w-3" />{farm.size_acres} acres</span>
+                          <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{farm.location}</span>
+                          <span className="flex items-center gap-1"><Ruler className="h-3 w-3" />{t('dashboard.admin.acres', { size: farm.size_acres })}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-1 text-gray-400">
@@ -183,12 +185,12 @@ export default function FarmsPage() {
                       {farm.status === 'archived' ? (
                         <Button variant="secondary" size="sm" className="h-7 text-xs" onClick={() => handleApprove(farm)}>
                           <CheckCircle className="mr-1 h-3 w-3" />
-                          Approve
+                          {t('common.approve')}
                         </Button>
                       ) : (
                         <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => handleArchive(farm)}>
                           <Archive className="mr-1 h-3 w-3" />
-                          Archive
+                          {t('common.archive')}
                         </Button>
                       )}
                     </div>
@@ -200,13 +202,13 @@ export default function FarmsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                      <th className="pb-3 pr-4 font-medium">Name</th>
-                      <th className="pb-3 pr-4 font-medium">Owner</th>
-                      <th className="pb-3 pr-4 font-medium">Location</th>
-                      <th className="pb-3 pr-4 font-medium">Size</th>
-                      <th className="pb-3 pr-4 font-medium">Status</th>
-                      <th className="pb-3 pr-4 font-medium">Created</th>
-                      <th className="pb-3 font-medium">Actions</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.name')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.owner')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.location')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.size')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.status')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.date')}</th>
+                      <th className="pb-3 font-medium">{t('common.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -220,7 +222,7 @@ export default function FarmsPage() {
                             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs font-medium text-emerald-700">
                               {(userMap.get(farm.user_id) || 'U')[0]}
                             </div>
-                            <span className="text-gray-600">{userMap.get(farm.user_id) || 'Unknown'}</span>
+                            <span className="text-gray-600">{userMap.get(farm.user_id) || t('common.unknown')}</span>
                           </div>
                         </td>
                         <td className="py-3 pr-4">
@@ -232,12 +234,12 @@ export default function FarmsPage() {
                         <td className="py-3 pr-4">
                           <div className="flex items-center gap-1.5 text-gray-600">
                             <Ruler className="h-3 w-3 text-gray-400" />
-                            {farm.size_acres} acres
+                            {t('dashboard.admin.acres', { size: farm.size_acres })}
                           </div>
                         </td>
                         <td className="py-3 pr-4">
                           <Badge variant={farm.status === 'active' ? 'primary' : 'warning'}>
-                            {farm.status === 'active' ? 'Active' : 'Archived'}
+                            {farm.status === 'active' ? t('common.active') : t('common.archived')}
                           </Badge>
                         </td>
                         <td className="py-3 pr-4">
@@ -251,12 +253,12 @@ export default function FarmsPage() {
                             {farm.status === 'archived' ? (
                               <Button variant="secondary" size="sm" onClick={() => handleApprove(farm)}>
                                 <CheckCircle className="mr-1 h-3.5 w-3.5" />
-                                Approve
+                                {t('common.approve')}
                               </Button>
                             ) : (
                               <Button variant="outline" size="sm" onClick={() => handleArchive(farm)}>
                                 <Archive className="mr-1 h-3.5 w-3.5" />
-                                Archive
+                                {t('common.archive')}
                               </Button>
                             )}
                           </div>

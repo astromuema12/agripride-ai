@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getUsers, getFarms } from '@/lib/db';
+import { useI18n } from '@/lib/i18n';
 import type { User, Farm } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import {
 import { toast } from 'sonner';
 
 export default function FarmersPage() {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [farms, setFarms] = useState<Farm[]>([]);
@@ -58,7 +60,7 @@ export default function FarmersPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-          <p className="text-sm text-gray-500">Loading farmers...</p>
+          <p className="text-sm text-gray-500">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -69,13 +71,13 @@ export default function FarmersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Farmers Monitoring</h1>
-          <p className="text-sm text-gray-500 mt-1">Monitor and manage all registered farmers</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.officer.farmersMonitoring')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.farmersMonitoringDesc')}</p>
         </div>
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search by name or email..."
+            placeholder={t('dashboard.officer.farmersSearchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 w-full"
@@ -89,7 +91,7 @@ export default function FarmersPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Farmers</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.totalFarmers')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{totalFarmers}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -102,7 +104,7 @@ export default function FarmersPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Farms</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.totalFarms')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{totalFarms}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -115,7 +117,7 @@ export default function FarmersPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Avg Farms / Farmer</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.avgFarmsPerFarmer')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{avgFarms}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-amber-100 flex items-center justify-center">
@@ -131,10 +133,10 @@ export default function FarmersPage() {
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Users className="h-12 w-12 text-gray-300 mb-3" />
           <p className="text-sm font-medium text-gray-500">
-            {search.trim() ? 'No farmers match your search' : 'No farmers registered'}
+            {search.trim() ? t('dashboard.officer.noFarmersSearch') : t('dashboard.officer.noFarmers')}
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            {search.trim() ? 'Try a different search term' : 'Farmers will appear here once they register'}
+            {search.trim() ? t('dashboard.officer.tryDifferentSearch') : t('dashboard.officer.noFarmersDesc')}
           </p>
         </div>
       ) : (
@@ -163,13 +165,13 @@ export default function FarmersPage() {
                       </div>
                     </div>
                     <Badge variant="primary" className="shrink-0 ml-2">
-                      {farmerFarms.length} {farmerFarms.length === 1 ? 'farm' : 'farms'}
+                      {farmerFarms.length} {farmerFarms.length === 1 ? t('dashboard.officer.farm') : t('dashboard.officer.farms')}
                     </Badge>
                   </div>
 
                   <div className="flex items-center gap-2 mt-3 text-xs text-gray-400">
                     <Calendar className="h-3 w-3" />
-                    <span>Registered {new Date(farmer.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                    <span>{t('dashboard.officer.registeredOn', { date: new Date(farmer.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) })}</span>
                   </div>
 
                   {farmerFarms.length > 0 && (
@@ -185,7 +187,7 @@ export default function FarmersPage() {
                         ) : (
                           <ChevronRight className="h-3 w-3 mr-1" />
                         )}
-                        {isExpanded ? 'Hide Farms' : 'View Farms'}
+                        {isExpanded ? t('dashboard.officer.hideFarms') : t('dashboard.officer.viewFarms')}
                       </Button>
                       {isExpanded && (
                         <div className="mt-2 space-y-2">
@@ -228,7 +230,7 @@ export default function FarmersPage() {
       {/* Pagination */}
       <div className="flex items-center justify-between pt-2">
         <p className="text-sm text-gray-500">
-          Page {page} of {Math.max(1, Math.ceil(total / 50))}
+          {t('dashboard.officer.pageOf', { page, total: Math.max(1, Math.ceil(total / 50)) })}
         </p>
         <div className="flex gap-2">
           <Button
@@ -237,7 +239,7 @@ export default function FarmersPage() {
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            Previous
+            {t('common.back')}
           </Button>
           <Button
             variant="outline"
@@ -245,7 +247,7 @@ export default function FarmersPage() {
             disabled={page * 50 >= total}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            {t('common.next')}
           </Button>
         </div>
       </div>

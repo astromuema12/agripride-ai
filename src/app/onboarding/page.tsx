@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ArrowRight, ArrowLeft, Leaf, MapPin, Sprout, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,25 +15,25 @@ import { onboardingService } from '@/services/onboarding.service';
 import { toast } from 'sonner';
 
 const steps = [
-  { id: 1, label: 'Personal Info', icon: MapPin },
-  { id: 2, label: 'Farm Details', icon: Sprout },
-  { id: 3, label: 'Your Goals', icon: Target },
-  { id: 4, label: 'AI Setup', icon: Leaf },
+  { id: 1, icon: MapPin },
+  { id: 2, icon: Sprout },
+  { id: 3, icon: Target },
+  { id: 4, icon: Leaf },
 ];
 
 const cropOptions = ['Maize', 'Wheat', 'Rice', 'Coffee', 'Tea', 'Sugar Cane', 'Cassava', 'Beans', 'Potatoes', 'Tomatoes', 'Bananas', 'Other'];
 
 
-const goalOptions = [
-  'Increase crop yield',
-  'Reduce disease loss',
-  'Optimize irrigation',
-  'Market access',
-  'Weather forecasting',
-  'Sustainable farming',
-  'AI crop diagnosis',
-  'Access to financing',
-  'Soil health monitoring',
+const GOAL_KEYS = [
+  'increaseCropYield',
+  'reduceDiseaseLoss',
+  'optimizeIrrigation',
+  'marketAccess',
+  'weatherForecasting',
+  'sustainableFarming',
+  'aiCropDiagnosis',
+  'accessToFinancing',
+  'soilHealthMonitoring',
 ];
 
 type FormData = {
@@ -47,6 +48,7 @@ type FormData = {
 };
 
 export default function OnboardingPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const { user } = useAuth();
   const [step, setStep] = useState(1);
@@ -93,7 +95,7 @@ export default function OnboardingPage() {
     arr.includes(item) ? arr.filter((i) => i !== item) : [...arr, item];
 
   const saveAndGo = async (next: number) => {
-    if (!user) { toast.error('Please sign in first'); return; }
+    if (!user) {       toast.error(t('onboarding.signInFirst')); return; }
     setSaving(true);
     try {
       await onboardingService.saveProgress(user.id, {
@@ -109,7 +111,7 @@ export default function OnboardingPage() {
       });
       setStep(next);
     } catch {
-      toast.error('Failed to save progress');
+      toast.error(t('onboarding.failedToSave'));
     } finally {
       setSaving(false);
     }
@@ -125,10 +127,10 @@ export default function OnboardingPage() {
       });
       await onboardingService.completeOnboarding(user.id);
       setCompleted(true);
-      toast.success('Onboarding complete! Welcome to AgriPride AI.');
+      toast.success(t('onboarding.complete'));
       setTimeout(() => router.push('/dashboard/farmer'), 1500);
     } catch {
-      toast.error('Failed to complete onboarding');
+      toast.error(t('onboarding.failedToComplete'));
     } finally {
       setSaving(false);
     }
@@ -143,8 +145,8 @@ export default function OnboardingPage() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
             <Check className="h-8 w-8 text-emerald-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">All Set!</h1>
-          <p className="mt-2 text-gray-500">Taking you to your dashboard...</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('onboarding.allSet')}</h1>
+          <p className="mt-2 text-gray-500">{t('onboarding.takingYouToDashboard')}</p>
         </div>
       </div>
     );
@@ -155,8 +157,8 @@ export default function OnboardingPage() {
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         {/* Progress */}
         <div className="mb-6 sm:mb-8 text-center">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Set Up Your Farm Profile</h1>
-          <p className="mt-1 text-sm text-gray-500">Step {step} of 4 — {steps[step - 1].label}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{t('onboarding.setUpFarmProfile')}</h1>
+          <p className="mt-1 text-sm text-gray-500">{t('onboarding.stepOf', { current: step, total: 4 })} — {t(`onboarding.step${step}`)}</p>
           <Progress value={progressPercent} className="mt-3 sm:mt-4 h-2" />
         </div>
 
@@ -176,7 +178,7 @@ export default function OnboardingPage() {
                 <s.icon className="h-4 w-4" />
               </div>
               <span className={`text-xs ${s.id === step ? 'font-semibold text-emerald-600' : 'text-gray-400'}`}>
-                {s.label}
+                {t(`onboarding.step${s.id}`)}
               </span>
             </div>
           ))}
@@ -193,31 +195,31 @@ export default function OnboardingPage() {
             >
               {step === 1 && (
                 <div className="space-y-4 sm:space-y-5">
-                  <h2 className="text-lg font-bold text-gray-900">Personal Information</h2>
+                  <h2 className="text-lg font-bold text-gray-900">{t('onboarding.personalInfo')}</h2>
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" value={form.name} onChange={(e) => updateForm({ name: e.target.value })} placeholder="Edwin Musau" />
+                    <Label htmlFor="name">{t('onboarding.fullName')}</Label>
+                    <Input id="name" value={form.name} onChange={(e) => updateForm({ name: e.target.value })} placeholder={t('onboarding.namePlaceholder')} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" value={form.phone} onChange={(e) => updateForm({ phone: e.target.value })} placeholder="+254 7XX XXX XXX" />
+                    <Label htmlFor="phone">{t('onboarding.phoneNumber')}</Label>
+                    <Input id="phone" value={form.phone} onChange={(e) => updateForm({ phone: e.target.value })} placeholder={t('onboarding.phonePlaceholder')} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="county">County / Region</Label>
-                    <Input id="county" value={form.county} onChange={(e) => updateForm({ county: e.target.value })} placeholder="Nairobi, Kenya" />
+                    <Label htmlFor="county">{t('onboarding.countyRegion')}</Label>
+                    <Input id="county" value={form.county} onChange={(e) => updateForm({ county: e.target.value })} placeholder={t('onboarding.countyPlaceholder')} />
                   </div>
                 </div>
               )}
 
               {step === 2 && (
                 <div className="space-y-4 sm:space-y-5">
-                  <h2 className="text-lg font-bold text-gray-900">Farm Details</h2>
+                  <h2 className="text-lg font-bold text-gray-900">{t('onboarding.farmDetails')}</h2>
                   <div className="space-y-2">
-                    <Label htmlFor="farm_size">Farm Size (Acres)</Label>
+                    <Label htmlFor="farm_size">{t('onboarding.farmSizeAcres')}</Label>
                     <Input id="farm_size" type="number" value={form.farm_size_acres} onChange={(e) => updateForm({ farm_size_acres: e.target.value })} placeholder="2.5" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Crops You Grow</Label>
+                    <Label>{t('onboarding.cropsYouGrow')}</Label>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {cropOptions.map((crop) => (
                         <button
@@ -240,21 +242,21 @@ export default function OnboardingPage() {
 
               {step === 3 && (
                 <div className="space-y-4 sm:space-y-5">
-                  <h2 className="text-lg font-bold text-gray-900">Your Farming Goals</h2>
-                  <p className="text-sm text-gray-500">Select all that apply</p>
+                  <h2 className="text-lg font-bold text-gray-900">{t('onboarding.yourGoals')}</h2>
+                  <p className="text-sm text-gray-500">{t('onboarding.selectAllThatApply')}</p>
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                    {goalOptions.map((goal) => (
+                    {GOAL_KEYS.map((key) => (
                       <button
-                        key={goal}
+                        key={key}
                         type="button"
-                        onClick={() => updateForm({ goals: toggleArray(form.goals, goal) })}
+                        onClick={() => updateForm({ goals: toggleArray(form.goals, t(`onboarding.goal.${key}`)) })}
                         className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
-                          form.goals.includes(goal)
+                          form.goals.includes(t(`onboarding.goal.${key}`))
                             ? 'bg-emerald-600 text-white'
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                       >
-                        {goal}
+                        {t(`onboarding.goal.${key}`)}
                       </button>
                     ))}
                   </div>
@@ -263,16 +265,16 @@ export default function OnboardingPage() {
 
               {step === 4 && (
                 <div className="space-y-4 sm:space-y-5">
-                  <h2 className="text-lg font-bold text-gray-900">AI Personalization</h2>
+                  <h2 className="text-lg font-bold text-gray-900">{t('onboarding.aiPersonalization')}</h2>
                   <p className="text-sm text-gray-500">
-                    Help us tailor AI recommendations to your farm. Your data stays private and secure.
+                    {t('onboarding.aiPersonalizationDesc')}
                   </p>
                   <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 sm:p-4">
-                    <h3 className="text-sm font-semibold text-emerald-800">Summary</h3>
+                    <h3 className="text-sm font-semibold text-emerald-800">{t('onboarding.summary')}</h3>
                     <ul className="mt-2 space-y-1 text-sm text-emerald-700">
-                      <li>📍 {form.county || 'County not set'}</li>
-                      <li>🌱 {form.crop_types.length || 0} crop types selected</li>
-                      <li>🎯 {form.goals.length || 0} goals selected</li>
+                      <li>📍 {form.county || t('onboarding.countyNotSet')}</li>
+                      <li>🌱 {t('onboarding.cropTypesSelected', { count: form.crop_types.length || 0 })}</li>
+                      <li>🎯 {t('onboarding.goalsSelected', { count: form.goals.length || 0 })}</li>
                     </ul>
                   </div>
                   <label className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 sm:p-4 cursor-pointer hover:bg-gray-50">
@@ -283,10 +285,9 @@ export default function OnboardingPage() {
                       className="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 shrink-0"
                     />
                     <div>
-                      <span className="text-sm font-medium text-gray-900">I consent to AI processing of my farm data</span>
+                      <span className="text-sm font-medium text-gray-900">{t('onboarding.consentLabel')}</span>
                       <p className="text-xs text-gray-500 mt-1">
-                        AgriPride AI will use your farm profile to provide personalized disease detection,
-                        weather alerts, and recommendations. You can revoke consent anytime in settings.
+                        {t('onboarding.consentDesc')}
                       </p>
                     </div>
                   </label>
@@ -304,19 +305,19 @@ export default function OnboardingPage() {
               disabled={step === 1 || saving}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
+              {t('common.back')}
             </Button>
             <Badge variant="primary" className="text-xs">
-              Step {step}/4
+              {t('onboarding.stepIndicator', { current: step, total: 4 })}
             </Badge>
             {step < 4 ? (
               <Button size="sm" onClick={() => saveAndGo(step + 1)} disabled={saving}>
-                {saving ? 'Saving...' : 'Continue'}
+                {saving ? t('common.saving') : t('onboarding.continue')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             ) : (
               <Button size="sm" onClick={handleComplete} disabled={saving || !form.consent_ai}>
-                {saving ? 'Saving...' : 'Complete Setup'}
+                {saving ? t('common.saving') : t('onboarding.completeSetup')}
                 <Check className="ml-2 h-4 w-4" />
               </Button>
             )}

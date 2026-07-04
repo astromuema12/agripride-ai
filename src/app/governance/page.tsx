@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import {
   Shield, Eye, Lock, GitBranch, CheckCircle,
@@ -129,15 +130,15 @@ const recentDecisions: Decision[] = [
   { id: 'D008', source_data: 'Irrigation schedule — Farm KSM-203', confidence_score: 79.8, timestamp: '2026-06-02T18:45:00Z', responsible_agent: 'Irrigation Agent (v1.2)', framework: 'TRACK, RANK', status: 'approved' },
 ];
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, t: (key: string, params?: Record<string, string | number>) => string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t('common.justNow');
+  if (mins < 60) return t('common.minutesAgo', { count: mins });
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return t('common.hoursAgo', { count: hours });
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return t('common.daysAgo', { count: days });
 }
 
 const containerVariants = {
@@ -168,6 +169,7 @@ const frameworkCardVariants = {
 };
 
 function FrameworkCard({ framework, index }: { framework: Framework; index: number }) {
+  const { t } = useI18n();
   const [expanded, setExpanded] = useState(false);
   const Icon = framework.icon;
 
@@ -220,7 +222,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
             <div className="space-y-3 border-t border-gray-100 pt-3">
               <div>
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  System Implementation
+                  {t('governance.systemImplementation')}
                 </p>
                 <p className="text-sm leading-relaxed text-gray-600">
                   {framework.implementation}
@@ -228,7 +230,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
               </div>
               <div>
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Core Principles
+                  {t('governance.corePrinciples')}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {framework.principles.map((p) => (
@@ -249,7 +251,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
             className="flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors hover:text-gray-600"
             onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
           >
-            {expanded ? 'Show less' : 'Show implementation details'}
+            {expanded ? t('governance.showLess') : t('governance.showDetails')}
             <motion.span
               animate={{ rotate: expanded ? 180 : 0 }}
               transition={{ duration: 0.2 }}
@@ -263,24 +265,25 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
   );
 }
 
-const statusConfig: Record<Decision['status'], { label: string; variant: 'primary' | 'warning' | 'destructive'; icon: React.ComponentType<{ className?: string }> }> = {
-  approved: { label: 'Approved', variant: 'primary', icon: CheckCircle },
-  pending: { label: 'Pending Review', variant: 'warning', icon: Clock },
-  flagged: { label: 'Flagged', variant: 'destructive', icon: AlertTriangle },
+const statusConfig: Record<Decision['status'], { labelKey: string; variant: 'primary' | 'warning' | 'destructive'; icon: React.ComponentType<{ className?: string }> }> = {
+  approved: { labelKey: 'governance.approved', variant: 'primary', icon: CheckCircle },
+  pending: { labelKey: 'governance.pendingReview', variant: 'warning', icon: Clock },
+  flagged: { labelKey: 'governance.flagged', variant: 'destructive', icon: AlertTriangle },
 };
 
 function DecisionTable() {
+  const { t } = useI18n();
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-gray-100 bg-gray-50/80">
-            <th className="px-4 py-3 font-semibold text-gray-700">Source Data</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">Confidence</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">Timestamp</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">Responsible Agent</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">Frameworks</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">Status</th>
+            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.sourceData')}</th>
+            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.confidence')}</th>
+            <th className="px-4 py-3 font-semibold text-gray-700">{t('common.timestamp')}</th>
+            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.responsibleAgent')}</th>
+            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.frameworksLabel')}</th>
+            <th className="px-4 py-3 font-semibold text-gray-700">{t('common.status')}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -320,7 +323,7 @@ function DecisionTable() {
                 <td className="whitespace-nowrap px-4 py-3 text-gray-600">
                   <div className="flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5 text-gray-400" />
-                    {timeAgo(d.timestamp)}
+                    {timeAgo(d.timestamp, t)}
                   </div>
                 </td>
                 <td className="max-w-[160px] truncate px-4 py-3 text-gray-600">
@@ -341,7 +344,7 @@ function DecisionTable() {
                 <td className="px-4 py-3">
                   <Badge variant={cfg.variant} className="flex w-fit items-center gap-1 text-xs">
                     <StatusIcon className="h-3 w-3" />
-                    {cfg.label}
+                    {t(cfg.labelKey)}
                   </Badge>
                 </td>
               </motion.tr>
@@ -354,6 +357,7 @@ function DecisionTable() {
 }
 
 export default function GovernancePage() {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState('frameworks');
 
   return (
@@ -367,26 +371,25 @@ export default function GovernancePage() {
       <motion.div variants={itemVariants} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
-            AI Governance Center
+            {t('governance.title')}
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Enterprise-grade governance frameworks ensuring ethical, transparent, and
-            compliant AI operations across AgriPride AI.
+            {t('governance.description')}
           </p>
         </div>
         <Badge variant="primary" className="w-fit shrink-0">
           <Shield className="mr-1 h-3.5 w-3.5" />
-          8 Frameworks Active
+          {t('governance.frameworksActive')}
         </Badge>
       </motion.div>
 
       {/* Governance Stats */}
       <motion.div variants={itemVariants} className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         {[
-          { label: 'Active Frameworks', value: '8', icon: Shield, color: 'text-emerald-600 bg-emerald-50' },
-          { label: 'Decisions Today', value: '47', icon: BrainCircuit, color: 'text-blue-600 bg-blue-50' },
-          { label: 'Compliance Score', value: '96%', icon: CheckCircle, color: 'text-cyan-600 bg-cyan-50' },
-          { label: 'Flagged Actions', value: '3', icon: AlertTriangle, color: 'text-amber-600 bg-amber-50' },
+          { label: t('governance.activeFrameworks'), value: '8', icon: Shield, color: 'text-emerald-600 bg-emerald-50' },
+          { label: t('governance.decisionsToday'), value: '47', icon: BrainCircuit, color: 'text-blue-600 bg-blue-50' },
+          { label: t('governance.complianceScore'), value: '96%', icon: CheckCircle, color: 'text-cyan-600 bg-cyan-50' },
+          { label: t('governance.flaggedActions'), value: '3', icon: AlertTriangle, color: 'text-amber-600 bg-amber-50' },
         ].map(({ label, value, icon: Icon, color }) => (
           <Card key={label}>
             <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
@@ -408,11 +411,11 @@ export default function GovernancePage() {
           <TabsList className="mb-4 sm:mb-6 w-full sm:w-auto overflow-x-auto">
             <TabsTrigger value="frameworks" className="flex items-center gap-2 flex-1 sm:flex-initial">
               <Shield className="h-4 w-4 shrink-0" />
-              <span className="whitespace-nowrap">Governance Frameworks</span>
+              <span className="whitespace-nowrap">{t('governance.governanceFrameworks')}</span>
             </TabsTrigger>
             <TabsTrigger value="decisions" className="flex items-center gap-2 flex-1 sm:flex-initial">
               <ScrollText className="h-4 w-4 shrink-0" />
-              <span className="whitespace-nowrap">AI Decisions Log</span>
+              <span className="whitespace-nowrap">{t('governance.aiDecisionsLog')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -433,11 +436,10 @@ export default function GovernancePage() {
                   <div>
                     <CardTitle className="flex items-center gap-2 text-base">
                       <ScrollText className="h-4 w-4 text-emerald-500 shrink-0" />
-                      Recent AI Decisions
+                      {t('governance.recentAiDecisions')}
                     </CardTitle>
                     <CardDescription className="mt-1 text-xs sm:text-sm">
-                      Every AI-driven decision is logged with its source data, confidence score,
-                      responsible agent, and governing frameworks.
+                      {t('governance.aiDecisionsDesc')}
                     </CardDescription>
                   </div>
                   <Button
@@ -446,7 +448,7 @@ export default function GovernancePage() {
                     className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 w-full sm:w-auto"
                   >
                     <Server className="mr-1.5 h-3.5 w-3.5" />
-                    Export Log
+                    {t('governance.exportLog')}
                   </Button>
                 </div>
               </CardHeader>
@@ -461,36 +463,33 @@ export default function GovernancePage() {
                 <CardHeader className="pb-2 pt-4">
                   <CardTitle className="flex items-center gap-2 text-sm text-emerald-800">
                     <CheckCircle className="h-4 w-4 text-emerald-600" />
-                    Full Traceability
+                    {t('governance.fullTraceability')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pb-4 text-xs leading-relaxed text-emerald-700">
-                  Every decision is linked back to its source data, model version, and human
-                  responsible party. No black-box outputs.
+                  {t('governance.fullTraceabilityDesc')}
                 </CardContent>
               </Card>
               <Card className="border-amber-100 bg-amber-50/40">
                 <CardHeader className="pb-2 pt-4">
                   <CardTitle className="flex items-center gap-2 text-sm text-amber-800">
                     <AlertTriangle className="h-4 w-4 text-amber-600" />
-                    Low Confidence Escalation
+                    {t('governance.lowConfidenceEscalation')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pb-4 text-xs leading-relaxed text-amber-700">
-                  Decisions below the 80% confidence threshold are automatically flagged for
-                  human review before execution.
+                  {t('governance.lowConfidenceEscalationDesc')}
                 </CardContent>
               </Card>
               <Card className="border-blue-100 bg-blue-50/40">
                 <CardHeader className="pb-2 pt-4">
                   <CardTitle className="flex items-center gap-2 text-sm text-blue-800">
                     <Key className="h-4 w-4 text-blue-600" />
-                    Consent-First Processing
+                    {t('governance.consentFirstProcessing')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pb-4 text-xs leading-relaxed text-blue-700">
-                  OASIS framework ensures no farmer data is processed without explicit,
-                  revocable consent. All AI operations check consent at runtime.
+                  {t('governance.consentFirstProcessingDesc')}
                 </CardContent>
               </Card>
             </div>

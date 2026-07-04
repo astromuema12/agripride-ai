@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { toast } from 'sonner';
 import { getUsers, getFarms, getDiseaseReports, getSustainabilityScores } from '@/lib/db';
 import type { User, Farm, DiseaseReport, SustainabilityScore } from '@/types';
@@ -29,6 +30,7 @@ function extractRegion(location: string): string {
 }
 
 export default function RegionalAnalyticsPage() {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [farms, setFarms] = useState<Farm[]>([]);
@@ -149,7 +151,7 @@ export default function RegionalAnalyticsPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-          <p className="text-sm text-gray-500">Loading analytics...</p>
+          <p className="text-sm text-gray-500">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -159,8 +161,8 @@ export default function RegionalAnalyticsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Regional Analytics</h1>
-        <p className="text-sm text-gray-500 mt-1">Overview of agricultural data across all regions</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.officer.regionalAnalytics')}</h1>
+        <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.regionalAnalyticsDesc')}</p>
       </div>
 
       {/* Stats */}
@@ -169,7 +171,7 @@ export default function RegionalAnalyticsPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Farmers</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.totalFarmers')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{totalFarmers}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -182,7 +184,7 @@ export default function RegionalAnalyticsPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Farms</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.totalFarms')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{farms.length}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -195,7 +197,7 @@ export default function RegionalAnalyticsPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Disease Reports</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.diseaseReports')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{diseaseReports.length}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-red-100 flex items-center justify-center">
@@ -208,7 +210,7 @@ export default function RegionalAnalyticsPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Resolution Rate</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.resolutionRate')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{resolutionRate}%</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -217,7 +219,7 @@ export default function RegionalAnalyticsPage() {
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs text-emerald-600">
               <TrendingUp className="h-3 w-3" />
-              <span>{resolvedCount} resolved out of {diseaseReports.length} reports</span>
+              <span>{t('dashboard.officer.resolvedOutOf', { resolved: resolvedCount, total: diseaseReports.length })}</span>
             </div>
           </CardContent>
         </Card>
@@ -228,15 +230,15 @@ export default function RegionalAnalyticsPage() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Activity className="h-5 w-5 text-emerald-600" />
-            Disease Reports by Region
+            {t('dashboard.officer.diseaseReportsByRegion')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {chartData.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <BarChart className="h-12 w-12 text-gray-300 mb-3" />
-              <p className="text-sm font-medium text-gray-500">No region data available</p>
-              <p className="text-xs text-gray-400 mt-1">Chart will display once farms are registered</p>
+                  <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.noRegionData')}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('dashboard.officer.noRegionDataDesc')}</p>
             </div>
           ) : (
             <div className="h-80">
@@ -267,15 +269,15 @@ export default function RegionalAnalyticsPage() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <MapPin className="h-5 w-5 text-emerald-600" />
-            Region-wise Breakdown
+            {t('dashboard.officer.regionWiseBreakdown')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {regionData.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <MapPin className="h-12 w-12 text-gray-300 mb-3" />
-              <p className="text-sm font-medium text-gray-500">No region data found</p>
-              <p className="text-xs text-gray-400 mt-1">Region breakdown will appear once farms have location data</p>
+                  <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.noRegionDataFound')}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('dashboard.officer.noRegionDataFoundDesc')}</p>
             </div>
           ) : (
             <>
@@ -289,19 +291,19 @@ export default function RegionalAnalyticsPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div>
-                        <span className="text-gray-500">Farmers: </span>
+                        <span className="text-gray-500">{t('dashboard.officer.farmers')}: </span>
                         <span className="font-medium text-gray-800">{row.farmers}</span>
                       </div>
                       <div>
-                        <span className="text-gray-500">Farms: </span>
+                        <span className="text-gray-500">{t('dashboard.officer.farms')}: </span>
                         <span className="font-medium text-gray-800">{row.farms}</span>
                       </div>
                       <div>
-                        <span className="text-gray-500">Disease: </span>
+                        <span className="text-gray-500">{t('dashboard.officer.disease')}: </span>
                         <span className={`font-medium ${row.diseaseReports > 0 ? 'text-red-600' : 'text-gray-800'}`}>{row.diseaseReports}</span>
                       </div>
                       <div>
-                        <span className="text-gray-500">Resolved: </span>
+                        <span className="text-gray-500">{t('dashboard.officer.resolved')}: </span>
                         {row.diseaseReports > 0 ? (
                           <Badge variant={row.resolved === row.diseaseReports ? 'primary' : 'warning'} className="text-[10px]">
                             {row.resolved}/{row.diseaseReports}
@@ -311,7 +313,7 @@ export default function RegionalAnalyticsPage() {
                         )}
                       </div>
                       <div>
-                        <span className="text-gray-500">Sustain: </span>
+                        <span className="text-gray-500">{t('dashboard.officer.sustainability')}: </span>
                         {row.sustainabilityAvg > 0 ? (
                           <span className="font-medium text-gray-800">{Math.round(row.sustainabilityAvg * 100)}%</span>
                         ) : (
@@ -327,12 +329,12 @@ export default function RegionalAnalyticsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Region</th>
-                      <th className="text-center px-4 py-3 font-medium text-gray-600">Farmers</th>
-                      <th className="text-center px-4 py-3 font-medium text-gray-600">Farms</th>
-                      <th className="text-center px-4 py-3 font-medium text-gray-600">Disease Reports</th>
-                      <th className="text-center px-4 py-3 font-medium text-gray-600">Resolved</th>
-                      <th className="text-center px-4 py-3 font-medium text-gray-600">Sustain. Avg</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('common.location')}</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.farmers')}</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.farms')}</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.diseaseReports')}</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.resolved')}</th>
+                      <th className="text-center px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.sustainabilityAvg')}</th>
                     </tr>
                   </thead>
                   <tbody>

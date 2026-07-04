@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   ThermometerSun, Droplets, Wind, CloudSun, Umbrella, MapPin,
 } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 const CONDITION_ICONS: Record<string, string> = {
   sunny: '☀️',
@@ -30,6 +31,7 @@ function ConditionIcon({ condition }: { condition: string }) {
 
 export default function WeatherPage() {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   const [weatherList, setWeatherList] = useState<WeatherData[]>([]);
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -44,7 +46,7 @@ export default function WeatherPage() {
           setSelectedLocation(data[0].location);
         }
       } catch {
-        toast.error('Failed to load weather data');
+        toast.error(t('errors.general'));
       } finally {
         setLoading(false);
       }
@@ -59,16 +61,16 @@ export default function WeatherPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Weather Intelligence</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('weather.intelligence')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Real-time weather data and 7-day forecast for your region
+            {t('weather.intelligenceDesc')}
           </p>
         </div>
         {weatherList.length > 1 && (
           <div className="w-full sm:w-64">
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
               <SelectTrigger>
-                <SelectValue placeholder="Select location" />
+                <SelectValue placeholder={t('weather.selectLocation')} />
               </SelectTrigger>
               <SelectContent>
                 {weatherList.map((w) => (

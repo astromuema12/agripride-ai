@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import { useI18n } from '@/lib/i18n';
 
 const faqs = [
   {
@@ -65,13 +66,14 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 export default function SupportPage() {
+  const { t } = useI18n();
   const [loading, setLoading] = useState(false);
   const [ticketForm, setTicketForm] = useState({ subject: '', message: '' });
 
   const handleTicketSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ticketForm.subject || !ticketForm.message) {
-      toast.error('Please fill in all fields');
+      toast.error(t('support.fillAllFields'));
       return;
     }
     setLoading(true);
@@ -88,7 +90,7 @@ export default function SupportPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to submit');
-      toast.success('Support ticket created! We will respond within 24 hours.');
+      toast.success(t('support.ticketCreated'));
       setTicketForm({ subject: '', message: '' });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to submit ticket');
@@ -101,10 +103,10 @@ export default function SupportPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 sm:mb-12 text-center">
-          <Badge variant="primary" className="mb-3 sm:mb-4">Help Center</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance">How Can We Help You?</h1>
+          <Badge variant="primary" className="mb-3 sm:mb-4">{t('support.title')}</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance">{t('support.title')}</h1>
           <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
-            Browse our FAQs, submit a support ticket, or reach out directly.
+            {t('support.subtitle')}
           </p>
         </motion.div>
 
@@ -112,7 +114,7 @@ export default function SupportPage() {
           <a href="mailto:musauedwin2004@gmail.com">
             <Button variant="outline" className="gap-2">
               <Mail className="h-4 w-4" />
-              Email Support
+              {t('support.contact.email')}
             </Button>
           </a>
           <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer">
@@ -127,11 +129,11 @@ export default function SupportPage() {
           <TabsList className="w-full">
             <TabsTrigger value="faq" className="flex-1 gap-2">
               <BookOpen className="h-4 w-4" />
-              FAQs
+              {t('support.faq')}
             </TabsTrigger>
             <TabsTrigger value="ticket" className="flex-1 gap-2">
               <HelpCircle className="h-4 w-4" />
-              Submit Ticket
+              {t('support.submitTicket')}
             </TabsTrigger>
           </TabsList>
 
@@ -148,28 +150,28 @@ export default function SupportPage() {
           <TabsContent value="ticket">
             <Card>
               <CardHeader>
-                <CardTitle>Submit a Support Ticket</CardTitle>
-                <p className="text-sm text-gray-500">We typically respond within 24 hours</p>
+                <CardTitle>{t('support.submitTicket')}</CardTitle>
+                <p className="text-sm text-gray-500">{t('support.contact.emailDesc')}</p>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleTicketSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="ticket-subject">Subject</Label>
+                    <Label htmlFor="ticket-subject">{t('support.subject')}</Label>
                     <Input
                       id="ticket-subject"
-                      placeholder="Brief description of your issue"
+                      placeholder={t('support.subjectPlaceholder')}
                       value={ticketForm.subject}
                       onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="ticket-message">Description</Label>
+                    <Label htmlFor="ticket-message">{t('common.description')}</Label>
                     <textarea
                       id="ticket-message"
                       rows={6}
                       className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      placeholder="Please describe your issue in detail..."
+                      placeholder={t('support.descriptionPlaceholder')}
                       value={ticketForm.message}
                       onChange={(e) => setTicketForm({ ...ticketForm, message: e.target.value })}
                       required
@@ -177,7 +179,7 @@ export default function SupportPage() {
                   </div>
                   <Button type="submit" disabled={loading}>
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-                    Submit Ticket
+                    {t('support.submitTicket')}
                   </Button>
                 </form>
               </CardContent>

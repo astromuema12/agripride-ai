@@ -54,7 +54,7 @@ export default function AIAssistant() {
           user_id: user.id,
           role: 'assistant',
           content: welcomeMessage,
-          agent_name: 'Msaidizi wa Akili Bandia',
+          agent_name: t('assistant.agentName'),
           confidence_score: 1,
           frameworks_used: ['AIM Framework'],
           created_at: new Date().toISOString(),
@@ -95,7 +95,7 @@ export default function AIAssistant() {
       user_id: user.id,
       role: 'assistant',
       content: '',
-      agent_name: 'AI Assistant',
+      agent_name: t('assistant.agentName'),
       frameworks_used: [],
       created_at: new Date().toISOString(),
     };
@@ -148,7 +148,7 @@ export default function AIAssistant() {
         user_id: user.id,
         role: 'assistant',
         content: fullText,
-        agent_name: 'AI Assistant',
+        agent_name: t('assistant.agentName'),
         confidence_score: 0.92,
         frameworks_used: ['AIM Framework', 'TRACK Framework'],
         created_at: new Date().toISOString(),
@@ -159,7 +159,7 @@ export default function AIAssistant() {
           user_id: user.id,
           role: 'assistant',
           content: fullText,
-          agent_name: 'AI Assistant',
+          agent_name: t('assistant.agentName'),
           confidence_score: 0.92,
           frameworks_used: ['AIM Framework', 'TRACK Framework'],
         });
@@ -205,7 +205,7 @@ export default function AIAssistant() {
             <div className="min-w-0">
               <CardTitle className="text-base sm:text-lg">{t('assistant.title')}</CardTitle>
               <p className="text-xs text-[var(--muted-foreground)]">
-                {process.env.NEXT_PUBLIC_OPENAI_API_KEY ? 'Powered by GPT-4o' : t('dashboard.aiInsights')}
+                {process.env.NEXT_PUBLIC_OPENAI_API_KEY ? t('assistant.poweredBy') : t('dashboard.aiInsights')}
               </p>
             </div>
           </div>
@@ -234,7 +234,7 @@ export default function AIAssistant() {
                         <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                       )}
                       <span className={`text-xs font-medium truncate ${msg.role === 'user' ? 'text-emerald-100' : 'text-[var(--muted-foreground)]'}`}>
-                        {msg.role === 'assistant' ? (msg.agent_name ?? 'AI Assistant') : t('common.signIn')}
+                        {msg.role === 'assistant' ? (msg.agent_name ?? t('assistant.agentName')) : t('common.signIn')}
                       </span>
                       {msg.role === 'assistant' && msg.content && (
                         <button

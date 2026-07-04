@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useI18n } from '@/lib/i18n';
 import type { GrowthStage, PossibleCause } from '@/types';
 
 type CropOption = { id: string; name: string; emoji?: string };
@@ -49,17 +50,16 @@ const uncertaintyColors: Record<string, string> = {
   high: 'bg-red-100 text-red-700 border-red-200',
 };
 
-const GROWTH_STAGES: GrowthStageOption[] = [
-  { value: 'unknown', label: 'Not sure' },
-  { value: 'seedling', label: 'Seedling' },
-  { value: 'vegetative', label: 'Vegetative' },
-  { value: 'flowering', label: 'Flowering' },
-  { value: 'fruiting', label: 'Fruiting' },
-];
-
 export function AiDemo() {
+  const { t } = useI18n();
   const [crops, setCrops] = useState<CropOption[]>([]);
-  const [growthStages, setGrowthStages] = useState<GrowthStageOption[]>(GROWTH_STAGES);
+  const [growthStages, setGrowthStages] = useState<GrowthStageOption[]>([
+    { value: 'unknown', label: t('landing.aiDemo.growthStageNotSure') },
+    { value: 'seedling', label: t('landing.aiDemo.growthStageSeedling') },
+    { value: 'vegetative', label: t('landing.aiDemo.growthStageVegetative') },
+    { value: 'flowering', label: t('landing.aiDemo.growthStageFlowering') },
+    { value: 'fruiting', label: t('landing.aiDemo.growthStageFruiting') },
+  ]);
   const [selectedCrop, setSelectedCrop] = useState('');
   const [selectedStage, setSelectedStage] = useState<GrowthStage>('unknown');
   const [symptoms, setSymptoms] = useState('');
@@ -91,10 +91,10 @@ export function AiDemo() {
       if (data.success) {
         setResult(data.data);
       } else {
-        setError(data.error || 'Diagnosis failed');
+        setError(data.error || t('landing.aiDemo.diagnosisFailed'));
       }
     } catch {
-      setError('Network error. Please try again.');
+      setError(t('landing.aiDemo.networkError'));
     } finally {
       setDiagnosing(false);
     }
@@ -111,13 +111,13 @@ export function AiDemo() {
         >
           <Badge variant="primary" className="mb-3 sm:mb-4">
             <Scan className="mr-1 h-3 w-3" />
-            Try It Now — No Login Required
+            {t('landing.aiDemo.badge')}
           </Badge>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 text-balance">
-            AI Crop Disease Diagnosis
+            {t('landing.aiDemo.heading')}
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm text-gray-500">
-            Select your crop and growth stage, describe the symptoms, and get an instant AI-powered diagnosis with treatment recommendations.
+            {t('landing.aiDemo.description')}
           </p>
         </motion.div>
 
@@ -125,10 +125,10 @@ export function AiDemo() {
           {/* Input */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">Describe the Problem</h3>
+              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">{t('landing.aiDemo.describeProblem')}</h3>
               {crops.length > 0 && (
                 <div className="mb-4">
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Select Crop</label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">{t('landing.aiDemo.selectCrop')}</label>
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {crops.map((crop) => (
                       <button
@@ -149,7 +149,7 @@ export function AiDemo() {
               )}
 
               <div className="mb-4">
-                <label className="mb-2 block text-sm font-medium text-gray-700">Growth Stage</label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">{t('landing.aiDemo.growthStage')}</label>
                 <select
                   value={selectedStage}
                   onChange={(e) => { setSelectedStage(e.target.value as GrowthStage); setResult(null); setError(''); }}
@@ -159,15 +159,15 @@ export function AiDemo() {
                     <option key={gs.value} value={gs.value}>{gs.label}</option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-gray-400">Growth stage affects diagnosis accuracy</p>
+                <p className="mt-1 text-xs text-gray-400">{t('landing.aiDemo.growthStageHint')}</p>
               </div>
 
               <div className="mb-3 sm:mb-4">
-                <label className="mb-2 block text-sm font-medium text-gray-700">Describe Symptoms</label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">{t('landing.aiDemo.describeSymptoms')}</label>
                 <textarea
                   rows={4}
                   className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="e.g., Yellow streaks on lower leaves, wilting in afternoon heat..."
+                  placeholder={t('landing.aiDemo.symptomsPlaceholder')}
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
                 />
@@ -178,13 +178,13 @@ export function AiDemo() {
                 disabled={diagnosing || !selectedCrop || symptoms.length < 5}
               >
                 {diagnosing ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Diagnosing...</>
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('landing.aiDemo.diagnosing')}</>
                 ) : (
-                  <><Scan className="mr-2 h-4 w-4" /> Diagnose Now</>
+                  <><Scan className="mr-2 h-4 w-4" /> {t('landing.aiDemo.diagnoseNow')}</>
                 )}
               </Button>
               <p className="mt-2 text-xs text-gray-400">
-                This is a demonstration. Results are simulated. One request at a time.
+                {t('landing.aiDemo.demoNotice')}
               </p>
             </CardContent>
           </Card>
@@ -192,11 +192,11 @@ export function AiDemo() {
           {/* Result */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">Diagnosis Result</h3>
+              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">{t('landing.aiDemo.diagnosisResult')}</h3>
               {diagnosing && (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12">
                   <Loader2 className="mb-3 h-8 w-8 sm:h-10 sm:w-10 animate-spin text-emerald-500" />
-                  <p className="text-sm text-gray-500">Analyzing symptoms...</p>
+                  <p className="text-sm text-gray-500">{t('landing.aiDemo.analyzingSymptoms')}</p>
                 </div>
               )}
               {error && (
@@ -208,7 +208,7 @@ export function AiDemo() {
               {!diagnosing && !error && !result && (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12">
                   <Sprout className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
-                  <p className="text-sm text-gray-400">Select a crop and describe symptoms to get a diagnosis.</p>
+                  <p className="text-sm text-gray-400">{t('landing.aiDemo.emptyState')}</p>
                 </div>
               )}
               {result && (
@@ -216,12 +216,12 @@ export function AiDemo() {
                   <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
                     <div className="min-w-0">
                       <div className="text-base sm:text-lg font-bold text-gray-900">
-                        {result.primaryDiagnosis?.name ?? 'Uncertain'}
+                        {result.primaryDiagnosis?.name ?? t('landing.aiDemo.uncertain')}
                       </div>
-                      <div className="text-xs text-gray-500 capitalize">{result.crop} — {result.growthStage} stage</div>
+                      <div className="text-xs text-gray-500 capitalize">{result.crop} — {t('landing.aiDemo.stageLabel', { stage: result.growthStage })}</div>
                     </div>
                     <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-gray-100 text-gray-600'} w-fit`}>
-                      {result.uncertaintyLevel.toUpperCase()} Uncertainty
+                      {t('landing.aiDemo.uncertaintyLabel', { level: result.uncertaintyLevel.toUpperCase() })}
                     </Badge>
                   </div>
 
@@ -229,9 +229,9 @@ export function AiDemo() {
                     <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 flex items-start gap-2">
                       <HelpCircle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-xs font-medium text-amber-800">More information recommended</p>
+                        <p className="text-xs font-medium text-amber-800">{t('landing.aiDemo.moreInfoTitle')}</p>
                         <p className="text-xs text-amber-700 mt-1">
-                          {result.missingInfo?.join(', ') || 'Provide more specific symptoms for accuracy.'}
+                          {result.missingInfo?.join(', ') || t('landing.aiDemo.moreInfoDesc')}
                         </p>
                       </div>
                     </div>
@@ -239,7 +239,7 @@ export function AiDemo() {
 
                   {result.possibleCauses.length > 0 && (
                     <div>
-                      <p className="text-xs font-semibold text-gray-700 mb-2">Possible Causes</p>
+                      <p className="text-xs font-semibold text-gray-700 mb-2">{t('landing.aiDemo.possibleCauses')}</p>
                       <div className="space-y-2">
                         {result.possibleCauses.slice(0, 4).map((cause, idx) => (
                           <div key={idx} className={`rounded-lg border p-2.5 ${
@@ -264,7 +264,7 @@ export function AiDemo() {
                   )}
 
                   <div className="rounded-lg bg-gray-50 p-3">
-                    <p className="text-xs font-semibold text-gray-700 mb-1">AI Reasoning</p>
+                    <p className="text-xs font-semibold text-gray-700 mb-1">{t('landing.aiDemo.aiReasoning')}</p>
                     <p className="text-xs text-gray-600">{result.reasoning.summary}</p>
                     {result.reasoning.uncertainties.length > 0 && (
                       <div className="mt-1.5">
@@ -278,7 +278,7 @@ export function AiDemo() {
                   {result.primaryDiagnosis?.treatment && (
                     <div>
                       <p className="mb-1 text-xs font-semibold text-gray-700">
-                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> Recommended Treatment
+                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> {t('landing.aiDemo.recommendedTreatment')}
                       </p>
                       <p className="text-sm text-gray-600">{result.primaryDiagnosis.treatment}</p>
                     </div>
@@ -287,7 +287,7 @@ export function AiDemo() {
                   {result.primaryDiagnosis?.prevention && (
                     <div>
                       <p className="mb-1 text-xs font-semibold text-gray-700">
-                        <Shield className="mr-1 inline h-3 w-3 text-blue-500" /> Prevention
+                        <Shield className="mr-1 inline h-3 w-3 text-blue-500" /> {t('landing.aiDemo.prevention')}
                       </p>
                       <p className="text-sm text-gray-600">{result.primaryDiagnosis.prevention}</p>
                     </div>
@@ -296,7 +296,7 @@ export function AiDemo() {
                   {!result.primaryDiagnosis && result.possibleCauses[0]?.treatment && (
                     <div>
                       <p className="mb-1 text-xs font-semibold text-gray-700">
-                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> Suggested Treatment
+                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> {t('landing.aiDemo.suggestedTreatment')}
                       </p>
                       <p className="text-sm text-gray-600">{result.possibleCauses[0].treatment}</p>
                     </div>
@@ -305,12 +305,12 @@ export function AiDemo() {
                   <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
                     <p className="text-xs text-amber-700">
                       <AlertTriangle className="mr-1 inline h-3 w-3" />
-                      This is a demo diagnosis. Results are simulated. Always consult a local agricultural extension officer before applying treatments.
+                      {t('landing.aiDemo.disclaimer')}
                     </p>
                   </div>
 
                   <Button variant="outline" className="w-full" onClick={() => { setResult(null); setSymptoms(''); }}>
-                    Try Another Diagnosis
+                    {t('landing.aiDemo.tryAnother')}
                   </Button>
                 </div>
               )}
@@ -325,8 +325,8 @@ export function AiDemo() {
           className="mt-8 sm:mt-12 text-center"
         >
           <p className="text-xs sm:text-sm text-gray-400">
-            Full AI disease detection with image upload available for registered users.{' '}
-            <a href="/auth?tab=register" className="text-emerald-600 underline hover:text-emerald-700">Get Started</a>
+            {t('landing.aiDemo.fullVersion')}{' '}
+            <a href="/auth?tab=register" className="text-emerald-600 underline hover:text-emerald-700">{t('landing.aiDemo.getStarted')}</a>
           </p>
         </motion.div>
       </div>

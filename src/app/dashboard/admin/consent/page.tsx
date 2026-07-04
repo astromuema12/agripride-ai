@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { getCollection, getDemoDataKey } from '@/lib/demo-store';
+import { useI18n } from '@/lib/i18n';
 import type { ConsentRecord, User } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,14 +18,10 @@ import {
 type ConsentType = ConsentRecord['type'];
 type ConsentStatus = 'granted' | 'revoked' | 'all';
 
-const CONSENT_TYPES: { value: ConsentType; label: string }[] = [
-  { value: 'data_collection', label: 'Data Collection' },
-  { value: 'ai_processing', label: 'AI Processing' },
-  { value: 'disease_diagnosis', label: 'Disease Diagnosis' },
-  { value: 'weather_monitoring', label: 'Weather Monitoring' },
-];
+const CONSENT_TYPE_VALUES: ConsentType[] = ['data_collection', 'ai_processing', 'disease_diagnosis', 'weather_monitoring'];
 
 export default function ConsentPage() {
+  const { t } = useI18n();
   const [records, setRecords] = useState<ConsentRecord[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -97,14 +94,14 @@ export default function ConsentPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Consent Management</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('consent.title')}</h1>
           <p className="text-sm text-gray-500">
-            Manage user consent records for data collection, AI processing, and monitoring
+            {t('consent.description')}
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-2" onClick={() => {}}>
           <Download className="h-4 w-4" />
-          Export
+          {t('common.export')}
         </Button>
       </div>
 
@@ -116,7 +113,7 @@ export default function ConsentPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-              <p className="text-sm text-gray-500">Total Consents</p>
+              <p className="text-sm text-gray-500">{t('consent.totalConsents')}</p>
             </div>
           </CardContent>
         </Card>
@@ -127,7 +124,7 @@ export default function ConsentPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.granted}</div>
-              <p className="text-sm text-gray-500">Granted</p>
+              <p className="text-sm text-gray-500">{t('consent.granted')}</p>
             </div>
           </CardContent>
         </Card>
@@ -138,7 +135,7 @@ export default function ConsentPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.revoked}</div>
-              <p className="text-sm text-gray-500">Revoked</p>
+              <p className="text-sm text-gray-500">{t('consent.revoked')}</p>
             </div>
           </CardContent>
         </Card>
@@ -149,10 +146,10 @@ export default function ConsentPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as ConsentType | 'all')}>
               <TabsList className="flex-wrap h-auto">
-                <TabsTrigger value="all">All Types</TabsTrigger>
-                {CONSENT_TYPES.map((t) => (
-                  <TabsTrigger key={t.value} value={t.value}>
-                    {t.label}
+                <TabsTrigger value="all">{t('consent.allTypes')}</TabsTrigger>
+                {CONSENT_TYPE_VALUES.map((type) => (
+                  <TabsTrigger key={type} value={type}>
+                    {t(`consent.type.${type}`)}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -160,7 +157,7 @@ export default function ConsentPage() {
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search by user email or name..."
+                placeholder={t('consent.searchPlaceholder')}
                 className="pl-8"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -170,7 +167,7 @@ export default function ConsentPage() {
         </CardHeader>
         <CardContent>
           <div className="mb-4 flex items-center gap-2">
-            <span className="text-xs font-medium text-gray-500">Status:</span>
+            <span className="text-xs font-medium text-gray-500">{t('common.status')}:</span>
             {(['all', 'granted', 'revoked'] as const).map((s) => (
               <Button
                 key={s}
@@ -181,18 +178,18 @@ export default function ConsentPage() {
               >
                 {s === 'granted' && <CheckCircle className="mr-1 h-3 w-3" />}
                 {s === 'revoked' && <XCircle className="mr-1 h-3 w-3" />}
-                {s}
+                {s === 'all' ? t('common.all') : s === 'granted' ? t('consent.granted') : t('consent.revoked')}
               </Button>
             ))}
           </div>
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-12 text-gray-400">
               <Shield className="h-10 w-10" />
-              <p className="text-sm font-medium">No consent records found</p>
+              <p className="text-sm font-medium">{t('consent.noRecords')}</p>
               <p className="text-xs">
                 {searchQuery || typeFilter !== 'all' || statusFilter !== 'all'
-                  ? 'Try adjusting your filters'
-                  : 'No consent records available'}
+                  ? t('consent.adjustFilters')
+                  : t('consent.noRecordsAvailable')}
               </p>
             </div>
           ) : (
@@ -208,17 +205,17 @@ export default function ConsentPage() {
                           <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
                             {(user?.name || 'U')[0]}
                           </div>
-                          <span className="text-sm font-medium text-gray-900 truncate">{user?.name || 'Unknown'}</span>
+                          <span className="text-sm font-medium text-gray-900 truncate">{user?.name || t('common.unknown')}</span>
                         </div>
                         {record.granted ? (
                           <Badge variant="primary" className="flex shrink-0 items-center gap-1 text-[10px]">
                             <CheckCircle className="h-3 w-3" />
-                            Granted
+                            {t('consent.granted')}
                           </Badge>
                         ) : (
                           <Badge variant="destructive" className="flex shrink-0 items-center gap-1 text-[10px]">
                             <XCircle className="h-3 w-3" />
-                            Revoked
+                            {t('consent.revoked')}
                           </Badge>
                         )}
                       </div>
@@ -244,12 +241,12 @@ export default function ConsentPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                      <th className="pb-3 pr-4 font-medium">User</th>
-                      <th className="pb-3 pr-4 font-medium">Email</th>
-                      <th className="pb-3 pr-4 font-medium">Consent Type</th>
-                      <th className="pb-3 pr-4 font-medium">Status</th>
-                      <th className="pb-3 pr-4 font-medium">Granted Date</th>
-                      <th className="pb-3 font-medium">Revoked Date</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.user')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.email')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('consent.consentType')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.status')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('consent.grantedDate')}</th>
+                      <th className="pb-3 font-medium">{t('consent.revokedDate')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -262,7 +259,7 @@ export default function ConsentPage() {
                               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
                                 {(user?.name || 'U')[0]}
                               </div>
-                              <span className="font-medium text-gray-900">{user?.name || 'Unknown'}</span>
+                              <span className="font-medium text-gray-900">{user?.name || t('common.unknown')}</span>
                             </div>
                           </td>
                           <td className="py-3 pr-4">
@@ -280,12 +277,12 @@ export default function ConsentPage() {
                             {record.granted ? (
                               <Badge variant="primary" className="flex w-fit items-center gap-1">
                                 <CheckCircle className="h-3 w-3" />
-                                Granted
+                                {t('consent.granted')}
                               </Badge>
                             ) : (
                               <Badge variant="destructive" className="flex w-fit items-center gap-1">
                                 <XCircle className="h-3 w-3" />
-                                Revoked
+                                {t('consent.revoked')}
                               </Badge>
                             )}
                           </td>

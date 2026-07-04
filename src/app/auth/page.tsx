@@ -16,25 +16,26 @@ import { UserRole } from '@/types';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
 import { OAuthButtons } from '@/components/auth/OAuthButtons';
 import { EmailVerificationBanner } from '@/components/auth/EmailVerificationBanner';
+import { useI18n } from '@/lib/i18n';
 
 const PASSWORD_MIN_LENGTH = 8;
 const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
 
-function validatePassword(password: string): string | null {
+function validatePassword(password: string, t: (key: string, params?: Record<string, string | number>) => string): string | null {
   if (password.length < PASSWORD_MIN_LENGTH) {
-    return `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
+    return t('auth.errors.invalidPassword', { min: PASSWORD_MIN_LENGTH });
   }
   if (!/[A-Z]/.test(password)) {
-    return 'Password must contain an uppercase letter';
+    return t('auth.errors.uppercase');
   }
   if (!/[a-z]/.test(password)) {
-    return 'Password must contain a lowercase letter';
+    return t('auth.errors.lowercase');
   }
   if (!/[0-9]/.test(password)) {
-    return 'Password must contain a digit';
+    return t('auth.errors.digit');
   }
   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    return 'Password must contain a special character';
+    return t('auth.errors.specialChar');
   }
   return null;
 }
@@ -89,6 +90,7 @@ function FormField({ id, label, type, placeholder, value, onChange, error, showT
 }
 
 function AuthForm() {
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, register, resetPassword, user, isDemoMode, refreshUser } = useAuth();
@@ -116,13 +118,13 @@ function AuthForm() {
 
   useEffect(() => {
     if (oauthSuccess === 'google' || oauthSuccess === 'github') {
-      toast.success(`Signed in with ${oauthSuccess === 'google' ? 'Google' : 'GitHub'}`);
+      toast.success(t('auth.signedInWith', { provider: oauthSuccess === 'google' ? 'Google' : 'GitHub' }));
       refreshUser();
     }
     if (oauthError) {
-      setError(oauthError === 'auth_callback_failed' ? 'Authentication failed. Please try again.' : oauthError);
+      setError(oauthError === 'auth_callback_failed' ? t('auth.errors.authenticationFailed') : oauthError);
     }
-  }, [oauthSuccess, oauthError, refreshUser]);
+  }, [oauthSuccess, oauthError, refreshUser, t]);
 
   useEffect(() => {
     if (user) {
@@ -145,10 +147,10 @@ function AuthForm() {
         setError(result.error);
         toast.error(result.error);
       } else {
-        toast.success('Welcome back!');
+        toast.success(t('auth.success.loggedIn'));
       }
     } catch {
-      setError('An unexpected error occurred');
+      setError(t('auth.errors.unexpected'));
     } finally {
       setLoading(false);
     }
@@ -158,20 +160,20 @@ function AuthForm() {
     e.preventDefault();
     setError('');
     if (!regName || !regEmail || !regPassword || !regConfirmPassword) {
-      setError('All fields are required');
+      setError(t('auth.errors.allRequired'));
       return;
     }
     if (regPassword !== regConfirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth.errors.passwordsDontMatch'));
       return;
     }
-    const passwordError = validatePassword(regPassword);
+    const passwordError = validatePassword(regPassword, t);
     if (passwordError) {
       setError(passwordError);
       return;
     }
     if (!agreeToTerms) {
-      setError('You must agree to the Terms of Service and Privacy Policy');
+      setError(t('auth.errors.agreeToTerms'));
       return;
     }
     setLoading(true);
@@ -181,10 +183,10 @@ function AuthForm() {
         setError(result.error);
         toast.error(result.error);
       } else {
-        toast.success('Account created successfully!');
+        toast.success(t('auth.success.registered'));
       }
     } catch {
-      setError('An unexpected error occurred');
+      setError(t('auth.errors.unexpected'));
     } finally {
       setLoading(false);
     }
@@ -194,7 +196,7 @@ function AuthForm() {
     e.preventDefault();
     setError('');
     if (!resetEmail) {
-      setError('Please enter your email');
+      setError(t('auth.errors.emailRequired'));
       return;
     }
     setLoading(true);
@@ -204,11 +206,11 @@ function AuthForm() {
         setError(result.error);
         toast.error(result.error);
       } else {
-        toast.success('Password reset link sent!');
+        toast.success(t('auth.success.resetSent'));
         setShowReset(false);
       }
     } catch {
-      setError('An unexpected error occurred');
+      setError(t('auth.errors.unexpected'));
     } finally {
       setLoading(false);
     }
@@ -250,7 +252,7 @@ function AuthForm() {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="text-2xl font-bold text-gray-900 dark:text-gray-100"
           >
-            Welcome to AgriPride AI
+            {t('common.welcomeMessage')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -258,7 +260,7 @@ function AuthForm() {
             transition={{ delay: 0.25, duration: 0.4 }}
             className="mt-1.5 text-sm text-gray-500 dark:text-gray-400"
           >
-            Empowering African agriculture with AI
+            {t('footer.description')}
           </motion.p>
           {isDemoMode && (
             <motion.div
@@ -268,7 +270,7 @@ function AuthForm() {
               className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
             >
               <AlertCircle className="h-3 w-3" />
-              Demo Mode Active
+              {t('auth.demoModeActive')}
             </motion.div>
           )}
         </div>
@@ -284,20 +286,20 @@ function AuthForm() {
             >
               <Card className="border-[var(--border)]/60 bg-[var(--card)]/80 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-black/20">
                 <CardHeader>
-                  <CardTitle className="text-lg">Reset Password</CardTitle>
-                  <CardDescription>Enter your email to receive a reset link</CardDescription>
+                  <CardTitle className="text-lg">{t('auth.resetPassword')}</CardTitle>
+                  <CardDescription>{t('auth.resetPassword')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleReset} className="space-y-4">
-                    <FormField id="reset-email" label="Email" type="email" placeholder="farmer@agripride.ai" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} autoComplete="email" />
+                    <FormField id="reset-email" label={t('auth.email')} type="email" placeholder="farmer@agripride.ai" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} autoComplete="email" />
                     {error && <p className="flex items-center gap-1 text-sm text-red-500"><AlertCircle className="h-4 w-4" />{error}</p>}
                     <Button type="submit" className="w-full gap-2" disabled={loading}>
                       {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                      Send Reset Link
+                      {t('auth.sendReset')}
                     </Button>
                     <Button type="button" variant="ghost" className="w-full gap-2" onClick={() => setShowReset(false)}>
                       <ArrowLeft className="h-4 w-4" />
-                      Back to Login
+                      {t('auth.backToLogin')}
                     </Button>
                   </form>
                 </CardContent>
@@ -316,15 +318,15 @@ function AuthForm() {
                   <Tabs value={tab} onValueChange={switchTab} className="w-full">
                     <div className="px-6 pt-6">
                       <TabsList className="grid w-full grid-cols-2 rounded-xl bg-[var(--muted)] p-1">
-                        <TabsTrigger value="login" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-emerald-600 data-[state=active]:shadow-sm dark:data-[state=active]:bg-emerald-900/30">Sign In</TabsTrigger>
-                        <TabsTrigger value="register" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-emerald-600 data-[state=active]:shadow-sm dark:data-[state=active]:bg-emerald-900/30">Create Account</TabsTrigger>
+                        <TabsTrigger value="login" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-emerald-600 data-[state=active]:shadow-sm dark:data-[state=active]:bg-emerald-900/30">{t('auth.title')}</TabsTrigger>
+                        <TabsTrigger value="register" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-emerald-600 data-[state=active]:shadow-sm dark:data-[state=active]:bg-emerald-900/30">{t('auth.register')}</TabsTrigger>
                       </TabsList>
                     </div>
 
                     <TabsContent value="login" className="px-6 pb-6 pt-4 mt-0">
                       <form onSubmit={handleLogin} className="space-y-4">
-                        <FormField id="email" label="Email" type="email" placeholder="farmer@agripride.ai" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} autoComplete="email" />
-                        <FormField id="password" label="Password" type="password" placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="current-password" />
+                        <FormField id="email" label={t('auth.email')} type="email" placeholder="farmer@agripride.ai" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} autoComplete="email" />
+                        <FormField id="password" label={t('auth.password')} type="password" placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="current-password" />
                         
                         <div className="flex items-center justify-between">
                           <label className="flex items-center gap-2 cursor-pointer">
@@ -334,21 +336,21 @@ function AuthForm() {
                               onChange={(e) => setRememberMe(e.target.checked)}
                               className="h-4 w-4 rounded border-[var(--border)] text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0"
                             />
-                            <span className="text-sm text-[var(--muted-foreground)]">Remember me</span>
+                            <span className="text-sm text-[var(--muted-foreground)]">{t('auth.rememberMe')}</span>
                           </label>
                           <button
                             type="button"
                             onClick={() => setShowReset(true)}
                             className="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
                           >
-                            Forgot password?
+                            {t('auth.forgotPassword')}
                           </button>
                         </div>
                         
                         {error && <p className="flex items-center gap-1 text-sm text-red-500"><AlertCircle className="h-4 w-4" />{error}</p>}
                         <Button type="submit" className="w-full gap-2 h-11 text-base" disabled={loading}>
                           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                          Sign In
+                          {t('auth.title')}
                         </Button>
                       </form>
 
@@ -357,26 +359,26 @@ function AuthForm() {
                       </div>
 
                       <p className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
-                        Don&apos;t have an account?{' '}
+                        {t('auth.noAccount')}{' '}
                         <button
                           type="button"
                           onClick={() => switchTab('register')}
                           className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
                         >
-                          Sign up
+                          {t('auth.signUp')}
                         </button>
                       </p>
                     </TabsContent>
 
                     <TabsContent value="register" className="px-6 pb-6 pt-4 mt-0">
                       <form onSubmit={handleRegister} className="space-y-4">
-                        <FormField id="reg-name" label="Full Name" type="text" placeholder="Enter your full name" value={regName} onChange={(e) => setRegName(e.target.value)} autoComplete="name" />
-                        <FormField id="reg-email" label="Email" type="email" placeholder="Enter your email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} autoComplete="email" />
+                        <FormField id="reg-name" label={t('auth.name')} type="text" placeholder="Enter your full name" value={regName} onChange={(e) => setRegName(e.target.value)} autoComplete="name" />
+                        <FormField id="reg-email" label={t('auth.email')} type="email" placeholder="Enter your email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} autoComplete="email" />
                         <div className="space-y-1.5">
-                          <FormField id="reg-password" label="Password" type="password" placeholder="Create a password" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="new-password" />
+                          <FormField id="reg-password" label={t('auth.password')} type="password" placeholder="Create a password" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="new-password" />
                           <PasswordStrengthMeter password={regPassword} />
                         </div>
-                        <FormField id="reg-confirm-password" label="Confirm Password" type="password" placeholder="Confirm your password" value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} showToggle showPassword={showConfirmPassword} onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} autoComplete="new-password" />
+                        <FormField id="reg-confirm-password" label={t('auth.confirmPassword')} type="password" placeholder="Confirm your password" value={regConfirmPassword} onChange={(e) => setRegConfirmPassword(e.target.value)} showToggle showPassword={showConfirmPassword} onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)} autoComplete="new-password" />
                         <label className="flex items-start gap-2 cursor-pointer">
                           <input
                             type="checkbox"
@@ -385,16 +387,13 @@ function AuthForm() {
                             className="mt-0.5 h-4 w-4 shrink-0 rounded border-[var(--border)] text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0"
                           />
                           <span className="text-sm text-[var(--muted-foreground)]">
-                            I agree to the{' '}
-                            <a href="/terms" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-2">Terms of Service</a>
-                            {' '}and{' '}
-                            <a href="/privacy" className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 underline underline-offset-2">Privacy Policy</a>
+                            {t('auth.agreeToTerms')}
                           </span>
                         </label>
                         {error && <p className="flex items-center gap-1 text-sm text-red-500"><AlertCircle className="h-4 w-4" />{error}</p>}
                         <Button type="submit" className="w-full gap-2 h-11 text-base" disabled={loading}>
                           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                          Create Account
+                          {t('auth.createAccount')}
                         </Button>
                       </form>
 
@@ -403,13 +402,13 @@ function AuthForm() {
                       </div>
 
                       <p className="mt-6 text-center text-sm text-[var(--muted-foreground)]">
-                        Already have an account?{' '}
+                        {t('auth.hasAccount')}{' '}
                         <button
                           type="button"
                           onClick={() => switchTab('login')}
                           className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
                         >
-                          Sign in
+                          {t('auth.signIn')}
                         </button>
                       </p>
                     </TabsContent>

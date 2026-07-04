@@ -16,6 +16,7 @@ import {
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import { useI18n } from '@/lib/i18n';
 
 const regions = [
   'All Regions', 'Rift Valley', 'Central', 'Coastal', 'Eastern', 'Western', 'Nyanza', 'North Eastern',
@@ -27,11 +28,11 @@ function TrendIcon({ trend }: { trend: MarketPrice['trend'] }) {
   return <Minus className="h-4 w-4 text-gray-400" />;
 }
 
-function TrendBadge({ trend }: { trend: MarketPrice['trend'] }) {
+function TrendBadge({ trend, t }: { trend: MarketPrice['trend']; t: (key: string, params?: Record<string, string | number>) => string }) {
   const map: Record<string, { variant: 'primary' | 'destructive' | 'default'; label: string }> = {
-    up: { variant: 'primary', label: 'Rising' },
-    down: { variant: 'destructive', label: 'Falling' },
-    stable: { variant: 'default', label: 'Stable' },
+    up: { variant: 'primary', label: t('market.trendingUp') },
+    down: { variant: 'destructive', label: t('market.trendingDown') },
+    stable: { variant: 'default', label: t('market.stable') },
   };
   const { variant, label } = map[trend];
   return <Badge variant={variant}>{label}</Badge>;
@@ -73,6 +74,7 @@ function PageSkeleton() {
 }
 
 export default function MarketPage() {
+  const { t } = useI18n();
   const [prices, setPrices] = useState<MarketPrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -132,9 +134,9 @@ export default function MarketPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Market Intelligence</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('market.title')}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Real-time crop prices and market trends across regions to help you make informed selling decisions.
+          {t('market.subtitle')}
         </p>
       </div>
 
@@ -146,11 +148,11 @@ export default function MarketPage() {
               <DollarSign className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Average Price</p>
+              <p className="text-sm font-medium text-gray-500">{t('market.averagePrice')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 KES {avgPrice.toFixed(0)}
               </p>
-              <p className="text-xs text-gray-400">per kg</p>
+              <p className="text-xs text-gray-400">{t('market.unit', { unit: 'kg' })}</p>
             </div>
           </CardContent>
         </Card>
@@ -161,7 +163,7 @@ export default function MarketPage() {
               <TrendingUp className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Highest Price</p>
+              <p className="text-sm font-medium text-gray-500">{t('market.bestPrice')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {highest ? `KES ${highest.price_per_kg.toFixed(0)}` : '---'}
               </p>
@@ -176,7 +178,7 @@ export default function MarketPage() {
               <TrendingDown className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Lowest Price</p>
+              <p className="text-sm font-medium text-gray-500">{t('market.lowestPrice')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {lowest ? `KES ${lowest.price_per_kg.toFixed(0)}` : '---'}
               </p>
@@ -191,9 +193,9 @@ export default function MarketPage() {
               <MapPin className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-500">Markets</p>
+              <p className="text-sm font-medium text-gray-500">{t('market.title')}</p>
               <p className="text-2xl font-bold text-gray-900">{uniqueMarkets}</p>
-              <p className="text-xs text-gray-400">active listings</p>
+              <p className="text-xs text-gray-400">{t('market.activeListings')}</p>
             </div>
           </CardContent>
         </Card>
@@ -206,7 +208,7 @@ export default function MarketPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <Input
-                placeholder="Search crops..."
+                placeholder={t('market.search')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
@@ -225,7 +227,7 @@ export default function MarketPage() {
                 </SelectContent>
               </Select>
             </div>
-            <Button variant="outline" size="icon" className="shrink-0" title="Export data">
+            <Button variant="outline" size="icon" className="shrink-0" title={t('common.export')}>
               <Download className="h-4 w-4" />
             </Button>
           </div>
@@ -235,18 +237,18 @@ export default function MarketPage() {
       {/* Prices Table */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Market Prices</CardTitle>
-          <span className="text-xs text-gray-400">{filtered.length} listing{filtered.length !== 1 ? 's' : ''}</span>
+          <CardTitle className="text-lg">{t('market.title')}</CardTitle>
+          <span className="text-xs text-gray-400">{t('market.listings', { count: filtered.length })}</span>
         </CardHeader>
         <CardContent className="p-0 sm:p-6">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center py-8 sm:py-12 text-center px-4">
               <DollarSign className="mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-medium text-gray-500">No market prices found</p>
+              <p className="text-sm font-medium text-gray-500">{t('market.noPrices')}</p>
               <p className="text-xs text-gray-400">
                 {search || regionFilter !== 'All Regions'
-                  ? 'Try adjusting your search or filter.'
-                  : 'Market data is being updated. Please check back later.'}
+                  ? t('market.noPricesSearch')
+                  : t('market.updating')}
               </p>
             </div>
           ) : (
@@ -265,7 +267,7 @@ export default function MarketPage() {
                       <span>{item.region}</span>
                       <div className="flex items-center gap-2">
                         <TrendIcon trend={item.trend} />
-                        <TrendBadge trend={item.trend} />
+                        <TrendBadge trend={item.trend} t={t} />
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -280,11 +282,11 @@ export default function MarketPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
-                      <th className="pb-3 pr-4">Crop</th>
-                      <th className="pb-3 pr-4">Region</th>
-                      <th className="pb-3 pr-4">Price per kg</th>
-                      <th className="pb-3 pr-4">Trend</th>
-                      <th className="pb-3 pr-4">Last Updated</th>
+                      <th className="pb-3 pr-4">{t('market.crop')}</th>
+                      <th className="pb-3 pr-4">{t('market.region')}</th>
+                      <th className="pb-3 pr-4">{t('market.pricePerKg')}</th>
+                      <th className="pb-3 pr-4">{t('market.trend')}</th>
+                      <th className="pb-3 pr-4">{t('market.lastUpdatedColumn')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -300,7 +302,7 @@ export default function MarketPage() {
                         <td className="py-3 pr-4">
                           <div className="flex items-center gap-2">
                             <TrendIcon trend={item.trend} />
-                            <TrendBadge trend={item.trend} />
+                            <TrendBadge trend={item.trend} t={t} />
                           </div>
                         </td>
                         <td className="py-3 text-gray-500">
@@ -322,13 +324,13 @@ export default function MarketPage() {
       {/* Price Comparison Chart */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Price Comparison by Crop</CardTitle>
+          <CardTitle className="text-lg">{t('market.priceHistory')}</CardTitle>
         </CardHeader>
         <CardContent>
           {chartData.length === 0 ? (
             <div className="flex flex-col items-center py-8 sm:py-12 text-center">
               <TrendingUp className="mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-medium text-gray-500">No data to display</p>
+              <p className="text-sm font-medium text-gray-500">{t('common.noData')}</p>
             </div>
           ) : (
             <div className="h-60 sm:h-80">

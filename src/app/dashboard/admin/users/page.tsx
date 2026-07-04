@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getUsers } from '@/lib/db';
+import { useI18n } from '@/lib/i18n';
 import type { User, UserRole } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ const roleColors: Record<UserRole, 'primary' | 'secondary' | 'default' | 'destru
 };
 
 export default function UsersPage() {
+  const { t } = useI18n();
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
@@ -127,8 +129,8 @@ export default function UsersPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">User Management</h1>
-          <p className="text-sm text-gray-500">Manage all platform users and their permissions</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('dashboard.admin.userManagement')}</h1>
+          <p className="text-sm text-gray-500">{t('dashboard.admin.userManagementDesc')}</p>
         </div>
       </div>
 
@@ -140,7 +142,7 @@ export default function UsersPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-              <p className="text-sm text-gray-500">Total Users</p>
+              <p className="text-sm text-gray-500">{t('dashboard.admin.totalUsers')}</p>
             </div>
           </CardContent>
         </Card>
@@ -151,7 +153,7 @@ export default function UsersPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.admins}</div>
-              <p className="text-sm text-gray-500">Admins</p>
+              <p className="text-sm text-gray-500">{t('dashboard.admin.admins')}</p>
             </div>
           </CardContent>
         </Card>
@@ -162,7 +164,7 @@ export default function UsersPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.officers}</div>
-              <p className="text-sm text-gray-500">Officers</p>
+              <p className="text-sm text-gray-500">{t('dashboard.admin.officers')}</p>
             </div>
           </CardContent>
         </Card>
@@ -173,7 +175,7 @@ export default function UsersPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{stats.farmers}</div>
-              <p className="text-sm text-gray-500">Farmers</p>
+              <p className="text-sm text-gray-500">{t('dashboard.admin.farmers')}</p>
             </div>
           </CardContent>
         </Card>
@@ -182,11 +184,11 @@ export default function UsersPage() {
       <Card>
         <CardHeader className="pb-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <CardTitle className="text-base">All Users</CardTitle>
+            <CardTitle className="text-base">{t('dashboard.admin.allUsers')}</CardTitle>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search by name or email..."
+                placeholder={t('dashboard.admin.searchUsersPlaceholder')}
                 className="pl-8"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -198,8 +200,8 @@ export default function UsersPage() {
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-12 text-gray-400">
               <UsersIcon className="h-10 w-10" />
-              <p className="text-sm font-medium">No users found</p>
-              <p className="text-xs">{searchQuery ? 'Try a different search term' : 'No users registered yet'}</p>
+              <p className="text-sm font-medium">{t('dashboard.admin.noUsersFound')}</p>
+              <p className="text-xs">{searchQuery ? t('dashboard.admin.tryDifferentSearch') : t('dashboard.admin.noUsersRegistered')}</p>
             </div>
           ) : (
             <>
@@ -224,7 +226,7 @@ export default function UsersPage() {
                     <div className="flex items-center gap-2 pt-1">
                       <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openEditDialog(user)}>
                         <Pencil className="mr-1 h-3 w-3" />
-                        Edit
+                        {t('common.edit')}
                       </Button>
                       <Button
                         variant={user.is_suspended ? 'secondary' : 'destructive'}
@@ -244,12 +246,12 @@ export default function UsersPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                      <th className="pb-3 pr-4 font-medium">Name</th>
-                      <th className="pb-3 pr-4 font-medium">Email</th>
-                      <th className="pb-3 pr-4 font-medium">Role</th>
-                      <th className="pb-3 pr-4 font-medium">Status</th>
-                      <th className="pb-3 pr-4 font-medium">Created</th>
-                      <th className="pb-3 font-medium">Actions</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.name')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.email')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.type')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.status')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.date')}</th>
+                      <th className="pb-3 font-medium">{t('common.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -266,7 +268,7 @@ export default function UsersPage() {
                         </td>
                         <td className="py-3 pr-4">
                           <Badge variant={user.is_suspended ? 'destructive' : 'primary'}>
-                            {user.is_suspended ? 'Suspended' : 'Active'}
+                        {user.is_suspended ? t('common.inactive') : t('common.active')}
                           </Badge>
                         </td>
                         <td className="py-3 pr-4 text-gray-500">
@@ -283,7 +285,7 @@ export default function UsersPage() {
                             </Button>
                             <Button variant={user.is_suspended ? 'secondary' : 'destructive'} size="sm" onClick={() => handleToggleSuspend(user)}>
                               {user.is_suspended ? <CheckCircle className="mr-1 h-3.5 w-3.5" /> : <Ban className="mr-1 h-3.5 w-3.5" />}
-                              {user.is_suspended ? 'Activate' : 'Suspend'}
+                        {user.is_suspended ? t('dashboard.admin.activate') : t('dashboard.admin.suspend')}
                             </Button>
                           </div>
                         </td>
@@ -298,8 +300,8 @@ export default function UsersPage() {
       </Card>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
-          Showing page {page} of {Math.ceil(total / pageSize)} ({total} total users)
+              <p className="text-sm text-gray-500">
+          {t('dashboard.admin.pageOf', { page, totalPages: Math.ceil(total / pageSize), total })}
         </p>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
@@ -314,29 +316,29 @@ export default function UsersPage() {
       <Dialog open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
-            <DialogDescription>Update user name and role</DialogDescription>
+            <DialogTitle>{t('dashboard.admin.editUser')}</DialogTitle>
+            <DialogDescription>{t('dashboard.admin.editUserDesc')}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">Name</label>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">{t('common.name')}</label>
               <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">Role</label>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700">{t('common.type')}</label>
               <select
                 className="flex h-9 w-full rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 value={editRole}
                 onChange={(e) => setEditRole(e.target.value as UserRole)}
               >
-                <option value="farmer">Farmer</option>
-                <option value="officer">Officer</option>
-                <option value="admin">Admin</option>
+                 <option value="farmer">{t('auth.farmer')}</option>
+                <option value="officer">{t('auth.officer')}</option>
+                <option value="admin">{t('auth.admin')}</option>
               </select>
             </div>
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="outline" onClick={() => setEditingUser(null)}>Cancel</Button>
-              <Button onClick={handleSaveEdit}>Save Changes</Button>
+              <Button variant="outline" onClick={() => setEditingUser(null)}>{t('common.cancel')}</Button>
+              <Button onClick={handleSaveEdit}>{t('common.save')}</Button>
             </div>
           </div>
         </DialogContent>

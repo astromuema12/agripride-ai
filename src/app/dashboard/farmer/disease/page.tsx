@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDiseaseReports, createDiseaseReport, getFarms } from '@/lib/db';
 import type { DiseaseReport, Farm, GrowthStage, PossibleCause } from '@/types';
@@ -25,13 +25,7 @@ import { speakText, stopSpeaking } from '@/lib/tts';
 
 const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Sorghum', 'Millet', 'Sweet Potato', 'Potato', 'Banana', 'Coffee', 'Tea', 'Sugarcane', 'Cotton', 'Tomato', 'Onion', 'Kale', 'Mango', 'Avocado', 'Groundnut', 'Sunflower', 'Cowpea', 'Pineapple', 'Passion Fruit', 'Orange', 'Coconut', 'Cashew', 'Macadamia', 'Sesame', 'Green Grams', 'Pigeon Peas', 'Cabbage', 'Spinach', 'Carrot', 'Watermelon', 'Pawpaw', 'Barley', 'French Beans', 'Capsicum', 'Arrow Roots', 'Yam', 'Pyrethrum', 'Sisal'];
 
-const GROWTH_STAGES: { value: GrowthStage; label: string }[] = [
-  { value: 'seedling', label: 'Seedling (first 2-4 weeks)' },
-  { value: 'vegetative', label: 'Vegetative (leaf/stem growth)' },
-  { value: 'flowering', label: 'Flowering (bloom/pollination)' },
-  { value: 'fruiting', label: 'Fruiting/Nut development' },
-  { value: 'unknown', label: 'Not sure' },
-];
+
 
 interface APIResponseData {
   primaryDiagnosis?: PossibleCause;
@@ -63,32 +57,35 @@ function RiskBadge({ risk }: { risk?: string }) {
 }
 
 function StatusBadge({ status }: { status: DiseaseReport['status'] }) {
+  const { t } = useI18n();
   const map: Record<string, { variant: 'warning' | 'secondary' | 'primary' | 'default'; label: string }> = {
-    submitted: { variant: 'warning', label: 'Submitted' },
-    reviewed: { variant: 'secondary', label: 'Reviewed' },
-    resolved: { variant: 'primary', label: 'Resolved' },
+    submitted: { variant: 'warning', label: t('visualDiagnosis.statusSubmitted') },
+    reviewed: { variant: 'secondary', label: t('visualDiagnosis.statusReviewed') },
+    resolved: { variant: 'primary', label: t('disease.resolved') },
   };
-  const { variant, label } = map[status] ?? { variant: 'default' as const, label: status || 'Unknown' };
+  const { variant, label } = map[status] ?? { variant: 'default' as const, label: status || t('common.unknown') };
   return <Badge variant={variant}>{label}</Badge>;
 }
 
 function UncertaintyBadge({ level }: { level?: string }) {
+  const { t } = useI18n();
   const map: Record<string, { variant: 'warning' | 'secondary' | 'destructive'; label: string }> = {
-    low: { variant: 'secondary', label: 'Low Uncertainty' },
-    moderate: { variant: 'warning', label: 'Moderate Uncertainty' },
-    high: { variant: 'destructive', label: 'High Uncertainty' },
+    low: { variant: 'secondary', label: t('visualDiagnosis.uncertaintyLow') },
+    moderate: { variant: 'warning', label: t('visualDiagnosis.uncertaintyModerate') },
+    high: { variant: 'destructive', label: t('visualDiagnosis.uncertaintyHigh') },
   };
-  const { variant, label } = map[level?.toLowerCase() ?? ''] ?? { variant: 'warning' as const, label: level || 'Moderate Uncertainty' };
+  const { variant, label } = map[level?.toLowerCase() ?? ''] ?? { variant: 'warning' as const, label: t('visualDiagnosis.uncertaintyModerate') };
   return <Badge variant={variant}>{label}</Badge>;
 }
 
 function LikelihoodBadge({ likelihood }: { likelihood?: string }) {
+  const { t } = useI18n();
   const map: Record<string, { variant: 'primary' | 'warning' | 'destructive'; label: string }> = {
-    high: { variant: 'primary', label: 'High Likelihood' },
-    medium: { variant: 'warning', label: 'Medium Likelihood' },
-    low: { variant: 'destructive', label: 'Low Likelihood' },
+    high: { variant: 'primary', label: t('visualDiagnosis.likelihoodHigh') },
+    medium: { variant: 'warning', label: t('visualDiagnosis.likelihoodMedium') },
+    low: { variant: 'destructive', label: t('visualDiagnosis.likelihoodLow') },
   };
-  const { variant, label } = map[likelihood?.toLowerCase() ?? ''] ?? { variant: 'warning' as const, label: likelihood || 'Unknown' };
+  const { variant, label } = map[likelihood?.toLowerCase() ?? ''] ?? { variant: 'warning' as const, label: likelihood || t('common.unknown') };
   return <Badge variant={variant}>{label}</Badge>;
 }
 
@@ -118,6 +115,13 @@ export default function DiseaseDiagnosisPage() {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [selectedFarmId, setSelectedFarmId] = useState('');
   const [showReasoning, setShowReasoning] = useState(false);
+  const growthStageOptions = useMemo(() => [
+    { value: 'seedling' as GrowthStage, label: t('visualDiagnosis.growthStageSeedling') },
+    { value: 'vegetative' as GrowthStage, label: t('visualDiagnosis.growthStageVegetative') },
+    { value: 'flowering' as GrowthStage, label: t('visualDiagnosis.growthStageFlowering') },
+    { value: 'fruiting' as GrowthStage, label: t('visualDiagnosis.growthStageFruiting') },
+    { value: 'unknown' as GrowthStage, label: t('visualDiagnosis.growthStageUnknown') },
+  ], [t]);
 
   useEffect(() => {
     if (!user) return;
@@ -266,7 +270,7 @@ export default function DiseaseDiagnosisPage() {
         symptoms: symptoms,
         growth_stage: growthStage,
         image_url: imagePreview ?? undefined,
-        disease_prediction: primary?.name ?? 'Uncertain - see possible causes',
+        disease_prediction: primary?.name ?? t('visualDiagnosis.uncertain'),
         possible_causes: d.possibleCauses,
         confidence_score: primary?.confidence ?? d.confidenceRange.max,
         risk_level: primary?.likelihood === 'high' ? 'high' : primary?.likelihood === 'medium' ? 'medium' : 'low',
@@ -346,7 +350,7 @@ export default function DiseaseDiagnosisPage() {
                     <SelectValue placeholder={t('visualDiagnosis.growthStagePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {GROWTH_STAGES.map((gs) => (
+                    {growthStageOptions.map((gs) => (
                       <SelectItem key={gs.value} value={gs.value}>{gs.label}</SelectItem>
                     ))}
                   </SelectContent>

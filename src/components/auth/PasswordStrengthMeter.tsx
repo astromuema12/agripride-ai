@@ -4,19 +4,12 @@ import { useState, useMemo } from 'react';
 import { evaluatePasswordStrength } from '@/lib/password-strength';
 import { Progress } from '@/components/ui/progress';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface PasswordStrengthMeterProps {
   password: string;
   showSuggestions?: boolean;
 }
-
-const labelMap: Record<string, string> = {
-  weak: 'Weak',
-  fair: 'Fair',
-  good: 'Good',
-  strong: 'Strong',
-  very_strong: 'Very Strong',
-};
 
 const progressMap: Record<string, number> = {
   weak: 15,
@@ -35,7 +28,16 @@ const barColor: Record<string, string> = {
 };
 
 export function PasswordStrengthMeter({ password, showSuggestions = true }: PasswordStrengthMeterProps) {
+  const { t } = useI18n();
   const result = useMemo(() => evaluatePasswordStrength(password), [password]);
+
+  const labelMap: Record<string, string> = {
+    weak: t('auth.weak'),
+    fair: t('auth.fair'),
+    good: t('auth.good'),
+    strong: t('auth.strong'),
+    very_strong: t('auth.veryStrong'),
+  };
 
   if (!password) return null;
 

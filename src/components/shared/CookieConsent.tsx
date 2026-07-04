@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 export function CookieConsent() {
+  const { t } = useI18n();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -38,16 +40,15 @@ export function CookieConsent() {
         >
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1 text-xs sm:text-sm text-[var(--muted-foreground)]">
-              We use essential cookies for authentication and security. Analytics cookies help us improve the platform.
-              By continuing, you agree to our{' '}
-              <Link href="/privacy" className="text-emerald-600 dark:text-emerald-400 underline hover:text-emerald-700 dark:hover:text-emerald-300">Privacy Policy</Link>.
+              {t('cookieConsent.message')}{' '}
+              <Link href="/privacy" className="text-emerald-600 dark:text-emerald-400 underline hover:text-emerald-700 dark:hover:text-emerald-300">{t('footer.privacy')}</Link>.
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Button variant="ghost" size="sm" className="text-xs sm:text-sm" onClick={reject}>
-                Reject All
+                {t('cookieConsent.reject')}
               </Button>
               <Button size="sm" onClick={accept}>
-                Accept All
+                {t('cookieConsent.accept')}
               </Button>
               <button onClick={reject} className="ml-1 rounded-full p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
                 <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />

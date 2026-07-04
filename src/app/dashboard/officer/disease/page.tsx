@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getDiseaseReports, getUsers } from '@/lib/db';
+import { useI18n } from '@/lib/i18n';
 import type { DiseaseReport, User } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,6 +42,7 @@ const statusBadgeClass = (status: string) => {
 };
 
 export default function DiseasePage() {
+  const { t } = useI18n();
   const { user: currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<DiseaseReport[]>([]);
@@ -135,7 +137,7 @@ export default function DiseasePage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-          <p className="text-sm text-gray-500">Loading disease reports...</p>
+          <p className="text-sm text-gray-500">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -145,13 +147,13 @@ export default function DiseasePage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Disease Monitoring</h1>
-          <p className="text-sm text-gray-500 mt-1">Track and manage disease reports from farmers</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.officer.diseaseMonitoring')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.diseaseMonitoringDesc')}</p>
         </div>
           <div className="relative w-full sm:w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Search crop or disease..."
+              placeholder={t('dashboard.officer.searchCropDisease')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9 w-full"
@@ -164,7 +166,7 @@ export default function DiseasePage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Reports</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.totalReports')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.total}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -177,7 +179,7 @@ export default function DiseasePage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Submitted</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.submitted')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.submitted}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-amber-100 flex items-center justify-center">
@@ -190,7 +192,7 @@ export default function DiseasePage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Reviewed</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.reviewed')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.reviewed}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -203,7 +205,7 @@ export default function DiseasePage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Resolved</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.resolved')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{statusCounts.resolved}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-green-100 flex items-center justify-center">
@@ -216,10 +218,10 @@ export default function DiseasePage() {
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as StatusTab)}>
         <TabsList className="flex-wrap h-auto">
-          <TabsTrigger value="all">All ({statusCounts.total})</TabsTrigger>
-          <TabsTrigger value="submitted">Submitted ({statusCounts.submitted})</TabsTrigger>
-          <TabsTrigger value="reviewed">Reviewed ({statusCounts.reviewed})</TabsTrigger>
-          <TabsTrigger value="resolved">Resolved ({statusCounts.resolved})</TabsTrigger>
+          <TabsTrigger value="all">{t('common.all')} ({statusCounts.total})</TabsTrigger>
+          <TabsTrigger value="submitted">{t('dashboard.officer.submitted')} ({statusCounts.submitted})</TabsTrigger>
+          <TabsTrigger value="reviewed">{t('dashboard.officer.reviewed')} ({statusCounts.reviewed})</TabsTrigger>
+          <TabsTrigger value="resolved">{t('dashboard.officer.resolved')} ({statusCounts.resolved})</TabsTrigger>
         </TabsList>
 
         <TabsContent value={tab} className="mt-4">
@@ -227,10 +229,10 @@ export default function DiseasePage() {
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <AlertTriangle className="h-12 w-12 text-gray-300 mb-3" />
               <p className="text-sm font-medium text-gray-500">
-                {search.trim() ? 'No reports match your search' : 'No disease reports'}
+                {search.trim() ? t('dashboard.officer.noReportsSearch') : t('dashboard.officer.noDiseaseReports')}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                {search.trim() ? 'Try a different search term' : 'Reports will appear here once submitted by farmers'}
+                {search.trim() ? t('dashboard.officer.tryDifferentSearch') : t('dashboard.officer.noDiseaseReportsDesc')}
               </p>
             </div>
           ) : (
@@ -280,13 +282,13 @@ export default function DiseasePage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Farmer</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Crop Type</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Disease Prediction</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Confidence</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Risk Level</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Date</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.farmer')}</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.cropType')}</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.diseasePrediction')}</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.confidenceLabel')}</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('dashboard.officer.riskLevel')}</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('common.status')}</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-600">{t('common.date')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -345,9 +347,9 @@ export default function DiseasePage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Disease Report Details</DialogTitle>
+            <DialogTitle>{t('dashboard.officer.diseaseReportDetails')}</DialogTitle>
             <DialogDescription>
-              Submitted by {selectedReport ? getFarmerName(selectedReport.user_id) : ''}
+              {t('dashboard.officer.submittedBy')} {selectedReport ? getFarmerName(selectedReport.user_id) : ''}
             </DialogDescription>
           </DialogHeader>
 
@@ -357,14 +359,14 @@ export default function DiseasePage() {
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
                     <FlaskConical className="h-3 w-3" />
-                    Crop Type
-                  </p>
+                    {t('dashboard.officer.cropType')}
+                   </p>
                   <p className="text-sm font-medium text-gray-900">{selectedReport.crop_type}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
                     <AlertTriangle className="h-3 w-3" />
-                    Risk Level
+                    {t('dashboard.officer.riskLevel')}
                   </p>
                   <Badge className={riskBadgeClass(selectedReport.risk_level)}>
                     {selectedReport.risk_level || 'unknown'}
@@ -373,14 +375,14 @@ export default function DiseasePage() {
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
-                    Location
-                  </p>
+                    {t('common.location')}
+                   </p>
                   <p className="text-sm text-gray-900">{getFarmLocation(selectedReport.farm_id)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    Status
+                    {t('common.status')}
                   </p>
                   <Badge className={statusBadgeClass(selectedReport.status)}>
                     {selectedReport.status}
@@ -389,39 +391,39 @@ export default function DiseasePage() {
               </div>
 
               <div className="space-y-1">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Disease Prediction</p>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dashboard.officer.diseasePrediction')}</p>
                 <p className="text-sm font-medium text-gray-900">
-                  {selectedReport.disease_prediction || 'Not specified'}
+                  {selectedReport.disease_prediction || t('common.unknown')}
                 </p>
                 {selectedReport.confidence_score !== undefined && (
                   <p className="text-xs text-gray-500">
-                    Confidence: {Math.round(selectedReport.confidence_score * 100)}%
+                    {t('dashboard.officer.confidenceLabel')}: {Math.round(selectedReport.confidence_score * 100)}%
                   </p>
                 )}
               </div>
 
               <div className="space-y-1">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Symptoms</p>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dashboard.officer.symptoms')}</p>
                 <p className="text-sm text-gray-700">{selectedReport.symptoms}</p>
               </div>
 
               {selectedReport.explanation && (
                 <div className="space-y-1">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">AI Explanation</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dashboard.officer.aiExplanation')}</p>
                   <p className="text-sm text-gray-700">{selectedReport.explanation}</p>
                 </div>
               )}
 
               {selectedReport.treatment && (
                 <div className="space-y-1">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Treatment</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dashboard.officer.treatment')}</p>
                   <p className="text-sm text-gray-700">{selectedReport.treatment}</p>
                 </div>
               )}
 
               {selectedReport.prevention && (
                 <div className="space-y-1">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Prevention</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{t('dashboard.officer.prevention')}</p>
                   <p className="text-sm text-gray-700">{selectedReport.prevention}</p>
                 </div>
               )}
@@ -429,19 +431,19 @@ export default function DiseasePage() {
               <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                 <div className="flex items-center gap-1 text-xs text-gray-400">
                   <Calendar className="h-3 w-3" />
-                  <span>Reported: {new Date(selectedReport.created_at).toLocaleString()}</span>
+                  <span>{t('dashboard.officer.reportedOn')}: {new Date(selectedReport.created_at).toLocaleString()}</span>
                   {selectedReport.reviewed_at && (
                     <>
                       <span className="mx-1">·</span>
                       <CheckCircle className="h-3 w-3" />
-                      <span>Reviewed: {new Date(selectedReport.reviewed_at).toLocaleString()}</span>
+                      <span>{t('dashboard.officer.reviewedOn')}: {new Date(selectedReport.reviewed_at).toLocaleString()}</span>
                     </>
                   )}
                 </div>
                 {selectedReport.status === 'submitted' && (
                   <Button size="sm" onClick={handleMarkReviewed}>
                     <CheckCircle className="h-4 w-4 mr-1" />
-                    Mark as Reviewed
+                    {t('dashboard.officer.markAsReviewed')}
                   </Button>
                 )}
               </div>

@@ -1,8 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import { Wheat, Mail, MapPin } from 'lucide-react';
 import { FaWhatsapp, FaLinkedinIn, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { useI18n } from '@/lib/i18n';
 
 export function Footer() {
+  const { t } = useI18n();
+
   return (
     <footer className="border-t border-gray-800 dark:border-gray-800 bg-gray-950 dark:bg-gray-950 text-gray-300 dark:text-gray-300">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
@@ -15,32 +20,32 @@ export function Footer() {
               <span className="text-lg font-bold text-white dark:text-slate-900">AgriPride AI</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-gray-400 dark:text-gray-400">
-              Empowering African agriculture with responsible artificial intelligence. Built in Kenya, for Africa.
+              {t('footer.description')}
             </p>
           </div>
           <div>
-            <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">Platform</h4>
+            <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">{t('footer.platform')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/governance" className="transition-colors hover:text-emerald-400">AI Governance</Link></li>
-              <li><Link href="/analytics" className="transition-colors hover:text-emerald-400">Analytics</Link></li>
-              <li><Link href="/market" className="transition-colors hover:text-emerald-400">Market Intelligence</Link></li>
-              <li><Link href="/horizon" className="transition-colors hover:text-emerald-400">Impact Dashboard</Link></li>
-              <li><Link href="/pricing" className="transition-colors hover:text-emerald-400">Pricing</Link></li>
+              <li><Link href="/governance" className="transition-colors hover:text-emerald-400">{t('nav.governance')}</Link></li>
+              <li><Link href="/analytics" className="transition-colors hover:text-emerald-400">{t('nav.analytics')}</Link></li>
+              <li><Link href="/market" className="transition-colors hover:text-emerald-400">{t('nav.market')}</Link></li>
+              <li><Link href="/horizon" className="transition-colors hover:text-emerald-400">{t('nav.analytics')}</Link></li>
+              <li><Link href="/pricing" className="transition-colors hover:text-emerald-400">{t('nav.pricing')}</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">Company</h4>
+            <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">{t('footer.company')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/contact" className="transition-colors hover:text-emerald-400">Contact</Link></li>
-              <li><Link href="/support" className="transition-colors hover:text-emerald-400">Support</Link></li>
-              <li><Link href="/testimonials" className="transition-colors hover:text-emerald-400">Testimonials</Link></li>
-              <li><Link href="/privacy" className="transition-colors hover:text-emerald-400">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="transition-colors hover:text-emerald-400">Terms of Service</Link></li>
-              <li><Link href="/account-deletion" className="transition-colors hover:text-emerald-400">Account Deletion Policy</Link></li>
+              <li><Link href="/contact" className="transition-colors hover:text-emerald-400">{t('nav.contact')}</Link></li>
+              <li><Link href="/support" className="transition-colors hover:text-emerald-400">{t('nav.support')}</Link></li>
+              <li><Link href="/testimonials" className="transition-colors hover:text-emerald-400">{t('nav.testimonials')}</Link></li>
+              <li><Link href="/privacy" className="transition-colors hover:text-emerald-400">{t('footer.privacy')}</Link></li>
+              <li><Link href="/terms" className="transition-colors hover:text-emerald-400">{t('footer.terms')}</Link></li>
+              <li><Link href="/account-deletion" className="transition-colors hover:text-emerald-400">{t('footer.terms')}</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">Contact & Social</h4>
+            <h4 className="mb-3 sm:mb-4 text-sm font-semibold tracking-wide text-white dark:text-slate-900">{t('footer.contactUs')}</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="mailto:musauedwin2004@gmail.com" className="group flex items-center gap-2 transition-colors hover:text-emerald-400"><Mail className="h-4 w-4 text-emerald-400 transition-transform group-hover:scale-110" /> <span className="break-all">musauedwin2004@gmail.com</span></a></li>
               <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-400 shrink-0" /> Nairobi, Kenya</li>
@@ -52,7 +57,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-10 sm:mt-12 flex flex-col items-center gap-4 border-t border-gray-800 dark:border-gray-800 pt-8 text-center text-sm sm:flex-row sm:justify-between">
-          <p className="text-gray-300 dark:text-gray-300">&copy; {new Date().getFullYear()} AgriPride AI Ltd. All rights reserved.</p>
+          <p className="text-gray-300 dark:text-gray-300">&copy; {new Date().getFullYear()} AgriPride AI Ltd. {t('footer.rights')}</p>
         </div>
       </div>
     </footer>

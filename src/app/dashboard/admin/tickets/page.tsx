@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { MessageCircle, CheckCircle, Loader2, User, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,18 +13,19 @@ import type { SupportTicket } from '@/types';
 import { toast } from 'sonner';
 
 export default function AdminTicketsPage() {
+  const { t } = useI18n();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [response, setResponse] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    supportTicketService.getAll().then((data) => { setTickets(data); setLoading(false); }).catch(() => { setLoading(false); toast.error('Failed to load tickets'); });
+    supportTicketService.getAll().then((data) => { setTickets(data); setLoading(false); }).catch(() => { setLoading(false); toast.error(t('dashboard.admin.failedToLoadTickets')); });
   }, []);
 
   const handleResolve = async (id: string) => {
     await supportTicketService.resolveTicket(id);
     setTickets((prev) => prev.filter((t) => t.id !== id));
-    toast.success('Ticket resolved');
+    toast.success(t('dashboard.admin.ticketResolved'));
   };
 
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-emerald-500" /></div>;
@@ -31,14 +33,14 @@ export default function AdminTicketsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Support Tickets</h1>
-        <p className="text-sm text-gray-500">Respond to and resolve user support requests.</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t('tickets.title')}</h1>
+        <p className="text-sm text-gray-500">{t('tickets.description')}</p>
       </div>
 
       <Card>
         <CardContent className="p-6">
           {tickets.length === 0 ? (
-            <p className="text-sm text-gray-400">No support tickets yet.</p>
+            <p className="text-sm text-gray-400">{t('tickets.noTickets')}</p>
           ) : (
             <div className="space-y-4">
               {tickets.map((ticket) => (
@@ -59,15 +61,15 @@ export default function AdminTicketsPage() {
                     </div>
                   </div>
                   <div className="mt-3 space-y-2">
-                    <Label className="text-xs">Admin Response</Label>
+                    <Label className="text-xs">{t('tickets.adminResponse')}</Label>
                     <div className="flex gap-2">
                       <Input
-                        placeholder="Type your response..."
+                        placeholder={t('tickets.responsePlaceholder')}
                         value={response[ticket.id] || ''}
                         onChange={(e) => setResponse((prev) => ({ ...prev, [ticket.id]: e.target.value }))}
                       />
                       <Button size="sm" onClick={() => handleResolve(ticket.id)} disabled={!response[ticket.id]?.trim()}>
-                        <CheckCircle className="mr-1 h-4 w-4" /> Resolve
+                        <CheckCircle className="mr-1 h-4 w-4" /> {t('tickets.resolve')}
                       </Button>
                     </div>
                   </div>

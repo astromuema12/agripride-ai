@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useI18n } from '@/lib/i18n';
 import { Shield, Loader2, AlertCircle, CheckCircle2, Copy, Download, ArrowLeft, Smartphone, Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +23,7 @@ import type { MfaSetupResult } from '@/types';
 
 export default function MfaPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const { user } = useAuth();
   const [step, setStep] = useState<'intro' | 'scan' | 'verify' | 'codes' | 'done'>('intro');
   const [setup, setSetup] = useState<MfaSetupResult | null>(null);
@@ -49,8 +51,8 @@ export default function MfaPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-center">
           <Shield className="h-12 w-12 text-gray-300" />
-          <p className="text-sm font-medium text-gray-500">Please sign in to manage MFA.</p>
-          <Button variant="outline" size="sm" onClick={() => router.push('/auth')}>Sign In</Button>
+          <p className="text-sm font-medium text-gray-500">{t('auth.mfa.notSignedIn')}</p>
+          <Button variant="outline" size="sm" onClick={() => router.push('/auth')}>{t('common.signIn')}</Button>
         </div>
       </div>
     );
@@ -67,7 +69,7 @@ export default function MfaPage() {
     setVerifyError('');
 
     if (!verifyToken || verifyToken.length !== 6) {
-      setVerifyError('Please enter a 6-digit code');
+      setVerifyError(t('auth.mfa.errors.invalidCode'));
       return;
     }
 
@@ -76,7 +78,7 @@ export default function MfaPage() {
     setSaving(false);
 
     if (!valid) {
-      setVerifyError('Invalid code. Try again or wait for a new code.');
+      setVerifyError(t('auth.mfa.errors.invalid'));
       return;
     }
 
@@ -104,11 +106,11 @@ export default function MfaPage() {
 
     setMfaEnabled(true);
     setStep('done');
-    toast.success('Two-factor authentication enabled');
+    toast.success(t('auth.mfa.errors.enabled'));
   };
 
   const handleDisable = async () => {
-    if (!confirm('Are you sure you want to disable two-factor authentication?')) return;
+    if (!confirm(t('auth.mfa.disableConfirm'))) return;
 
     setSaving(true);
     const result = await disableMfa(user.id);
@@ -121,7 +123,7 @@ export default function MfaPage() {
 
     setMfaEnabled(false);
     setStep('intro');
-    toast.success('Two-factor authentication disabled');
+    toast.success(t('auth.mfa.errors.disabled'));
   };
 
   const handleCopyCodes = async () => {
@@ -129,10 +131,10 @@ export default function MfaPage() {
     try {
       await navigator.clipboard.writeText(setup.recoveryCodes.join('\n'));
       setCodesCopied(true);
-      toast.success('Recovery codes copied to clipboard');
+      toast.success(t('auth.mfa.codesCopied'));
       setTimeout(() => setCodesCopied(false), 3000);
     } catch {
-      toast.error('Failed to copy to clipboard');
+      toast.error(t('auth.mfa.codesCopyFailed'));
     }
   };
 
@@ -172,8 +174,8 @@ export default function MfaPage() {
                 <Shield className="h-5 w-5" />
               </div>
               <div>
-                <CardTitle className="text-lg">Two-Factor Authentication</CardTitle>
-                <CardDescription>Add an extra layer of security to your account</CardDescription>
+                <CardTitle className="text-lg">{t('auth.mfa.title')}</CardTitle>
+                <CardDescription>{t('security.mfaDesc')}</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -184,11 +186,11 @@ export default function MfaPage() {
                   <div className="flex items-start gap-3">
                     <Smartphone className="mt-0.5 h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     <div>
-                      <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">How it works</p>
+                      <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">{t('auth.mfa.howItWorks')}</p>
                       <ul className="mt-2 space-y-1 text-xs text-emerald-700 dark:text-emerald-400">
-                        <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />Use an authenticator app like Google Authenticator or Authy</li>
-                        <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />Enter a 6-digit code from the app when signing in</li>
-                        <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />Save your recovery codes in case you lose access to your device</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />{t('auth.mfa.step1')}</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />{t('auth.mfa.step2')}</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />{t('auth.mfa.step3')}</li>
                       </ul>
                     </div>
                   </div>
@@ -198,17 +200,17 @@ export default function MfaPage() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 rounded-lg bg-emerald-50 p-3 dark:bg-emerald-900/20">
                       <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">Two-factor authentication is active</span>
+                      <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">{t('auth.mfa.isActive')}</span>
                     </div>
                     <Button variant="destructive" onClick={handleDisable} disabled={saving} className="gap-2">
                       {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                      Disable 2FA
+                      {t('auth.mfa.disable')}
                     </Button>
                   </div>
                 ) : (
                   <Button onClick={handleStartSetup} className="w-full gap-2">
                     <Shield className="h-4 w-4" />
-                    Set Up Two-Factor Authentication
+                    {t('auth.mfa.setupIntro')}
                   </Button>
                 )}
               </div>
@@ -220,9 +222,9 @@ export default function MfaPage() {
                   <div className="flex items-start gap-3">
                     <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600 dark:text-amber-400" />
                     <div>
-                      <p className="text-sm font-medium text-amber-800 dark:text-amber-300">Scan or enter the code manually</p>
+                      <p className="text-sm font-medium text-amber-800 dark:text-amber-300">{t('auth.mfa.scanOrEnter')}</p>
                       <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
-                        Open your authenticator app and scan the QR code, or enter the setup key manually.
+                        {t('auth.mfa.scanDesc')}
                       </p>
                     </div>
                   </div>
@@ -233,7 +235,7 @@ export default function MfaPage() {
                     <Key className="h-12 w-12 text-emerald-400" />
                   </div>
                   <p className="text-xs text-[var(--muted-foreground)]">
-                    Setup key:{' '}
+                    {t('auth.mfa.setupKey')}:{' '}
                     <code className="rounded bg-[var(--muted)] px-2 py-0.5 font-mono text-emerald-600 dark:text-emerald-400">
                       {setup.secret.slice(0, 8)}...{setup.secret.slice(-4)}
                     </code>
@@ -241,7 +243,7 @@ export default function MfaPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="verify-token">Enter 6-digit code from authenticator app</Label>
+                  <Label htmlFor="verify-token">{t('auth.mfa.enterCode')}</Label>
                   <Input
                     id="verify-token"
                     type="text"
@@ -263,11 +265,11 @@ export default function MfaPage() {
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={() => setStep('intro')} className="flex-1 gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Back
+                    {t('common.back')}
                   </Button>
                   <Button onClick={handleVerify} disabled={saving || verifyToken.length !== 6} className="flex-1 gap-2">
                     {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                    Verify &amp; Continue
+                    {t('auth.mfa.verifyAndContinue')}
                   </Button>
                 </div>
               </div>
@@ -279,9 +281,9 @@ export default function MfaPage() {
                   <div className="flex items-start gap-3">
                     <AlertCircle className="mt-0.5 h-5 w-5 text-red-600 dark:text-red-400" />
                     <div>
-                      <p className="text-sm font-medium text-red-800 dark:text-red-300">Save your recovery codes</p>
+                      <p className="text-sm font-medium text-red-800 dark:text-red-300">{t('auth.mfa.saveRecovery')}</p>
                       <p className="mt-1 text-xs text-red-700 dark:text-red-400">
-                        Each code can only be used once. Store them securely — if you lose access to your authenticator app, these codes are the only way to recover your account.
+                        {t('auth.mfa.recoveryDesc')}
                       </p>
                     </div>
                   </div>
@@ -300,22 +302,22 @@ export default function MfaPage() {
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={handleCopyCodes} className="flex-1 gap-2">
                     {codesCopied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    {codesCopied ? 'Copied!' : 'Copy Codes'}
+                    {codesCopied ? t('auth.mfa.copied') : t('auth.mfa.copyCodes')}
                   </Button>
                   <Button variant="outline" onClick={handleDownloadCodes} className="flex-1 gap-2">
                     <Download className="h-4 w-4" />
-                    Download
+                    {t('common.download')}
                   </Button>
                 </div>
 
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={() => setStep('intro')} className="flex-1 gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Back
+                    {t('common.back')}
                   </Button>
                   <Button onClick={handleEnable} disabled={saving} className="flex-1 gap-2">
                     {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield className="h-4 w-4" />}
-                    Enable 2FA
+                    {t('auth.mfa.enable')}
                   </Button>
                 </div>
               </div>
@@ -329,12 +331,12 @@ export default function MfaPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">Two-factor authentication is now active</p>
-                  <p className="mt-1 text-sm text-gray-500">Your account is now more secure. You will need a 6-digit code from your authenticator app when signing in.</p>
+                  <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('auth.mfa.activeTitle')}</p>
+                  <p className="mt-1 text-sm text-gray-500">{t('auth.mfa.activeDesc')}</p>
                 </div>
                 <Button onClick={() => router.push('/dashboard/security')} className="gap-2">
                   <Shield className="h-4 w-4" />
-                  Go to Security Settings
+                  {t('auth.mfa.goToSecurity')}
                 </Button>
               </div>
             )}

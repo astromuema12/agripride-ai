@@ -273,7 +273,7 @@ export default function CropsPage() {
                   type="number"
                   min="0"
                   step="0.1"
-                  placeholder="e.g., 5"
+                  placeholder={t('crops.areaPlaceholder')}
                   value={areaAcres}
                   onChange={(e) => setAreaAcres(e.target.value)}
                 />

@@ -5,6 +5,7 @@ import { AlertTriangle, Loader2, Mail, CheckCircle2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { checkEmailVerified, sendVerificationEmail } from '@/lib/email-verification';
 import { toast } from 'sonner';
+import { useI18n } from '@/lib/i18n';
 
 interface EmailVerificationBannerProps {
   userId: string;
@@ -12,6 +13,7 @@ interface EmailVerificationBannerProps {
 }
 
 export function EmailVerificationBanner({ userId, email }: EmailVerificationBannerProps) {
+  const { t } = useI18n();
   const [verified, setVerified] = useState<boolean | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -42,7 +44,7 @@ export function EmailVerificationBanner({ userId, email }: EmailVerificationBann
       toast.error(result.error);
     } else {
       setSent(true);
-      toast.success('Verification email sent! Check your inbox.');
+      toast.success(t('auth.verifyEmail.success'));
     }
   };
 
@@ -55,10 +57,10 @@ export function EmailVerificationBanner({ userId, email }: EmailVerificationBann
         <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
-            Verify your email address
+            {t('auth.verifyEmail.title')}
           </p>
           <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
-            Please check <span className="font-medium">{email}</span> for a verification link to access all features.
+            {t('auth.verifyEmail.description', { email })}
           </p>
           <div className="mt-3 flex items-center gap-3">
             <Button
@@ -75,7 +77,7 @@ export function EmailVerificationBanner({ userId, email }: EmailVerificationBann
               ) : (
                 <Mail className="h-3.5 w-3.5" />
               )}
-              {sent ? 'Sent!' : 'Resend Email'}
+              {sent ? t('auth.verifyEmail.sent') : t('auth.verifyEmail.resend')}
             </Button>
           </div>
         </div>

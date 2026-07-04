@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 interface OAuthButtonsProps {
   mode?: 'login' | 'register';
@@ -29,6 +30,7 @@ function GitHubIcon({ className }: { className?: string }) {
 }
 
 export function OAuthButtons({ mode = 'login', redirectTo }: OAuthButtonsProps) {
+  const { t } = useI18n();
   const [loading, setLoading] = useState<'google' | 'github' | null>(null);
 
   const handleOAuth = async (provider: 'google' | 'github') => {
@@ -70,7 +72,7 @@ export function OAuthButtons({ mode = 'login', redirectTo }: OAuthButtonsProps) 
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-[var(--background)] px-2 text-[var(--muted-foreground)]">
-            {mode === 'register' ? 'or sign up with' : 'or continue with'}
+            {mode === 'register' ? t('auth.orSignUpWith') : t('auth.orContinueWith')}
           </span>
         </div>
       </div>

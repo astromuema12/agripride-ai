@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getAuditLogs, getUsers } from '@/lib/db';
+import { useI18n } from '@/lib/i18n';
 import type { AuditLog, User } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,18 +23,19 @@ const CATEGORIES: Record<string, string[]> = {
 
 type TabName = 'AI Logs' | 'User Logs' | 'System Logs';
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, t: (key: string, params?: Record<string, string | number>) => string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t('common.justNow');
+  if (mins < 60) return t('common.minutesAgo', { count: mins });
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return t('common.hoursAgo', { count: hours });
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return t('common.daysAgo', { count: days });
 }
 
 export default function AuditPage() {
+  const { t } = useI18n();
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,7 +49,7 @@ export default function AuditPage() {
         setLogs(auditLogs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
         setUsers(allUsers);
       } catch {
-        toast.error('Failed to load audit logs');
+        toast.error(t('audit.failedToLoad'));
       } finally {
         setLoading(false);
       }
@@ -95,8 +97,8 @@ export default function AuditPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Audit Center</h1>
-          <p className="text-sm text-gray-500">Comprehensive audit trail of all platform activities</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('audit.title')}</h1>
+          <p className="text-sm text-gray-500">{t('audit.description')}</p>
         </div>
       </div>
 
@@ -108,7 +110,7 @@ export default function AuditPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{logs.length}</div>
-              <p className="text-sm text-gray-500">Total Audit Events</p>
+              <p className="text-sm text-gray-500">{t('audit.totalEvents')}</p>
             </div>
           </CardContent>
         </Card>
@@ -119,7 +121,7 @@ export default function AuditPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{uniqueUsers}</div>
-              <p className="text-sm text-gray-500">Unique Users</p>
+              <p className="text-sm text-gray-500">{t('audit.uniqueUsers')}</p>
             </div>
           </CardContent>
         </Card>
@@ -130,7 +132,7 @@ export default function AuditPage() {
             </div>
             <div>
               <div className="text-2xl font-bold text-gray-900">{actionsToday}</div>
-              <p className="text-sm text-gray-500">Actions Today</p>
+              <p className="text-sm text-gray-500">{t('audit.actionsToday')}</p>
             </div>
           </CardContent>
         </Card>
@@ -143,22 +145,22 @@ export default function AuditPage() {
               <TabsList>
                 <TabsTrigger value="AI Logs" className="flex items-center gap-1.5">
                   <Bot className="h-3.5 w-3.5" />
-                  AI Logs
+                  {t('audit.aiLogs')}
                 </TabsTrigger>
                 <TabsTrigger value="User Logs" className="flex items-center gap-1.5">
                   <UserIcon className="h-3.5 w-3.5" />
-                  User Logs
+                  {t('audit.userLogs')}
                 </TabsTrigger>
                 <TabsTrigger value="System Logs" className="flex items-center gap-1.5">
                   <Activity className="h-3.5 w-3.5" />
-                  System Logs
+                  {t('audit.systemLogs')}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search by action, resource, or user..."
+                placeholder={t('audit.searchPlaceholder')}
                 className="pl-8"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -170,8 +172,8 @@ export default function AuditPage() {
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-12 text-gray-400">
               <Shield className="h-10 w-10" />
-              <p className="text-sm font-medium">No audit logs found</p>
-              <p className="text-xs">{searchQuery ? 'Try a different search term' : `No ${activeTab.toLowerCase()} recorded yet`}</p>
+              <p className="text-sm font-medium">{t('audit.noLogsFound')}</p>
+              <p className="text-xs">{searchQuery ? t('audit.tryDifferentSearch') : t('audit.noLogsForTab', { tab: activeTab })}</p>
             </div>
           ) : (
             <>
@@ -185,7 +187,7 @@ export default function AuditPage() {
                       </Badge>
                       <div className="flex items-center gap-1.5 text-xs text-gray-500">
                         <Clock className="h-3 w-3" />
-                        {timeAgo(log.created_at)}
+                            {timeAgo(log.created_at, t)}
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-xs">
@@ -199,7 +201,7 @@ export default function AuditPage() {
                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-[10px] font-medium text-gray-600">
                         {(userMap.get(log.user_id) || 'U')[0]}
                       </div>
-                      {userMap.get(log.user_id) || 'Unknown'}
+                      {userMap.get(log.user_id) || t('common.unknown')}
                     </div>
                   </div>
                 ))}
@@ -209,11 +211,11 @@ export default function AuditPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
-                      <th className="pb-3 pr-4 font-medium">Action</th>
-                      <th className="pb-3 pr-4 font-medium">Resource</th>
-                      <th className="pb-3 pr-4 font-medium">User</th>
-                      <th className="pb-3 pr-4 font-medium">IP Address</th>
-                      <th className="pb-3 font-medium">Timestamp</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.action')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.resource')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.user')}</th>
+                      <th className="pb-3 pr-4 font-medium">{t('common.ipAddress')}</th>
+                      <th className="pb-3 font-medium">{t('common.timestamp')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -230,7 +232,7 @@ export default function AuditPage() {
                             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
                               {(userMap.get(log.user_id) || 'U')[0]}
                             </div>
-                            <span className="text-gray-600">{userMap.get(log.user_id) || 'Unknown'}</span>
+                            <span className="text-gray-600">{userMap.get(log.user_id) || t('common.unknown')}</span>
                           </div>
                         </td>
                         <td className="py-3 pr-4">
@@ -242,7 +244,7 @@ export default function AuditPage() {
                         <td className="py-3">
                           <div className="flex items-center gap-1.5 text-gray-500">
                             <Clock className="h-3 w-3" />
-                            {timeAgo(log.created_at)}
+                        {timeAgo(log.created_at, t)}
                           </div>
                         </td>
                       </tr>

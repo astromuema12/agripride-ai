@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { useI18n } from '@/lib/i18n';
 
 interface Plan {
   tier: string;
@@ -113,17 +114,18 @@ const plans: Plan[] = [
 ];
 
 function PricingPageContent() {
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
 
   const payment = searchParams.get('payment');
   const statusMap: Record<string, { variant: 'success' | 'error' | 'warning' | 'default'; message: string }> = {
-    success: { variant: 'success', message: 'Payment successful! Your premium features are now active.' },
-    failed: { variant: 'error', message: 'Payment failed. Please try again.' },
-    cancelled: { variant: 'warning', message: 'Payment was cancelled.' },
-    pending: { variant: 'warning', message: 'Your payment is being processed. This may take a moment.' },
-    already_active: { variant: 'success', message: 'Your subscription is already active.' },
+    success: { variant: 'success', message: t('pricing.paymentSuccess') },
+    failed: { variant: 'error', message: t('pricing.paymentFailed') },
+    cancelled: { variant: 'warning', message: t('pricing.paymentCancelled') },
+    pending: { variant: 'warning', message: t('pricing.paymentPending') },
+    already_active: { variant: 'success', message: t('pricing.alreadyActive') },
   };
 
   const statusMessage = payment ? statusMap[payment] : null;
@@ -142,8 +144,8 @@ function PricingPageContent() {
           body: JSON.stringify({ tier, userId: user?.id }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Subscription failed');
-        toast.success(data.data?.message || 'Subscription activated!');
+        if (!res.ok) throw new Error(data.error || t('pricing.subscriptionActivated'));
+        toast.success(data.data?.message || t('pricing.subscriptionActivated'));
         router.push('/auth');
         return;
       }
@@ -192,13 +194,12 @@ function PricingPageContent() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 sm:mb-12 text-center"
         >
-          <Badge variant="primary" className="mb-3 sm:mb-4">Pricing</Badge>
+          <Badge variant="primary" className="mb-3 sm:mb-4">{t('nav.pricing')}</Badge>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 text-balance">
-            Simple, Transparent Pricing
+            {t('pricing.title')}
           </h1>
           <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
-            Start free and upgrade as your farm grows. All plans include our core AI features.
-            Pay securely with Paystack.
+            {t('pricing.subtitle')}
           </p>
         </motion.div>
 
@@ -216,7 +217,7 @@ function PricingPageContent() {
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <Badge variant="primary" className="px-4 py-1 text-xs font-semibold shadow-lg">
-                      Most Popular
+                      {t('pricing.mostPopular')}
                     </Badge>
                   </div>
                 )}
@@ -231,9 +232,9 @@ function PricingPageContent() {
                     <CardDescription className="text-sm text-white/80">{plan.description}</CardDescription>
                     <div className="mt-4 flex items-baseline gap-1">
                       <span className="text-4xl font-bold">
-                        {plan.price === 0 ? 'Free' : `KES ${plan.price.toLocaleString()}`}
+                        {plan.price === 0 ? t('pricing.free') : `KES ${plan.price.toLocaleString()}`}
                       </span>
-                      {plan.price > 0 && <span className="text-sm text-white/70">{plan.period}</span>}
+                      {plan.price > 0 && <span className="text-sm text-white/70">{t('pricing.perMonth')}</span>}
                     </div>
                   </CardHeader>
                   <CardContent className="p-6">
@@ -269,11 +270,11 @@ function PricingPageContent() {
                         {loading === plan.tier ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : plan.price === 0 ? (
-                          'Get Started Free'
+                          t('landing.hero.cta')
                         ) : (
                           <>
                             <CreditCard className="mr-2 h-4 w-4" />
-                            Pay with Paystack
+                            {t('pricing.payWithPaystack')}
                           </>
                         )}
                       </Button>
@@ -281,7 +282,7 @@ function PricingPageContent() {
 
                     {plan.price > 0 && (
                       <p className="mt-2 text-center text-xs text-gray-400">
-                        Secure payment via Paystack
+                        {t('pricing.securePayment')}
                       </p>
                     )}
                   </CardContent>

@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Sprout, TrendingUp, Calculator, History, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useI18n } from '@/lib/i18n';
 
 const YIELD_FACTORS: Record<string, { base: number; factors: string[] }> = {
   Maize: { base: 2500, factors: ['Soil fertility score', 'Rainfall patterns', 'Temperature range', 'Planting density', 'Pest pressure'] },
@@ -25,6 +26,7 @@ const YIELD_FACTORS: Record<string, { base: number; factors: string[] }> = {
 
 export default function YieldPredictor() {
   const { user } = useAuth();
+  const { t } = useI18n();
   const [farms, setFarms] = useState<Farm[]>([]);
   const [crops, setCrops] = useState<Crop[]>([]);
   const [predictions, setPredictions] = useState<YieldPrediction[]>([]);
@@ -44,7 +46,7 @@ export default function YieldPredictor() {
       setFarms(f);
       setPredictions(p.filter((pr) => pr.farm_id && f.some((fm) => fm.id === pr.farm_id)));
     }).catch(() => {
-      toast.error('Failed to load farm data');
+      toast.error(t('yield.failedToLoadFarmData'));
     }).finally(() => {
       setLoading(false);
     });
@@ -90,7 +92,7 @@ export default function YieldPredictor() {
       const allPreds = await getYieldPredictions();
       setPredictions(allPreds.filter((pr) => pr.farm_id && farms.some((fm) => fm.id === pr.farm_id)));
     } catch {
-      toast.error('Failed to save prediction');
+      toast.error(t('yield.failedToSavePrediction'));
     }
     setPredicting(false);
   };
@@ -100,8 +102,8 @@ export default function YieldPredictor() {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Crop Yield Predictor</h1>
-        <p className="text-xs sm:text-sm text-gray-500">Estimate expected crop yields based on farm data and environmental factors</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{t('yield.title')}</h1>
+        <p className="text-xs sm:text-sm text-gray-500">{t('yield.subtitle')}</p>
       </div>
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
@@ -109,15 +111,15 @@ export default function YieldPredictor() {
           <CardHeader className="px-3 sm:px-6">
             <div className="flex items-center gap-2">
               <Calculator className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 shrink-0" />
-              <CardTitle className="text-base sm:text-lg">New Prediction</CardTitle>
+              <CardTitle className="text-base sm:text-lg">{t('yield.newPrediction')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-4 px-3 sm:px-6">
             <div className="space-y-1.5 sm:space-y-2">
-              <Label className="text-xs sm:text-sm">Farm</Label>
+              <Label className="text-xs sm:text-sm">{t('yield.farm')}</Label>
               <Select value={selectedFarm} onValueChange={setSelectedFarm}>
                 <SelectTrigger className="text-xs sm:text-sm">
-                  <SelectValue placeholder="Select farm" />
+                  <SelectValue placeholder={t('yield.selectFarm')} />
                 </SelectTrigger>
                 <SelectContent>
                   {farms.map((f) => (
@@ -128,14 +130,14 @@ export default function YieldPredictor() {
             </div>
 
             <div className="space-y-1.5 sm:space-y-2">
-              <Label className="text-xs sm:text-sm">Crop</Label>
+              <Label className="text-xs sm:text-sm">{t('yield.crop')}</Label>
               <Select value={selectedCrop} onValueChange={setSelectedCrop} disabled={!selectedFarm}>
                 <SelectTrigger className="text-xs sm:text-sm">
-                  <SelectValue placeholder={selectedFarm ? 'Select crop' : 'Select a farm first'} />
+                  <SelectValue placeholder={selectedFarm ? t('yield.selectCrop') : t('yield.selectFarmFirst')} />
                 </SelectTrigger>
                 <SelectContent>
                   {crops.length === 0 && selectedFarm ? (
-                    <div className="px-2 py-4 text-xs text-gray-400 text-center">No crops found for this farm</div>
+                    <div className="px-2 py-4 text-xs text-gray-400 text-center">{t('yield.noCropsForFarm')}</div>
                   ) : (
                     crops.map((c) => (
                       <SelectItem key={c.id} value={c.id} className="text-xs sm:text-sm">{c.name} &ndash; {c.variety}</SelectItem>
@@ -146,33 +148,33 @@ export default function YieldPredictor() {
             </div>
 
             <div className="space-y-1.5 sm:space-y-2">
-              <Label className="text-xs sm:text-sm">Planned Planting Date</Label>
+              <Label className="text-xs sm:text-sm">{t('yield.plantingDate')}</Label>
               <Input type="date" value={plantingDate} onChange={(e) => setPlantingDate(e.target.value)} className="text-xs sm:text-sm" />
             </div>
 
             <Button className="w-full text-xs sm:text-sm" onClick={handlePredict} disabled={!selectedFarm || !selectedCrop || !plantingDate || predicting}>
               {predicting ? (
-                <><Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> Predicting...</>
+                <><Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> {t('yield.predictingYield')}</>
               ) : (
-                <><TrendingUp className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Predict Yield</>
+                <><TrendingUp className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> {t('yield.predict')}</>
               )}
             </Button>
 
             {result && (
               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 sm:p-4 space-y-2 sm:space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs sm:text-sm font-medium text-emerald-800">Predicted Yield</span>
+                  <span className="text-xs sm:text-sm font-medium text-emerald-800">{t('yield.predicted')}</span>
                   <span className="text-lg sm:text-2xl font-bold text-emerald-700">{result.yield.toLocaleString()} kg</span>
                 </div>
                 <div className="space-y-0.5 sm:space-y-1">
                   <div className="flex justify-between text-[10px] sm:text-xs text-emerald-700">
-                    <span>Confidence</span>
+                    <span>{t('yield.confidence')}</span>
                     <span>{(result.confidence * 100).toFixed(0)}%</span>
                   </div>
                   <Progress value={result.confidence * 100} className="bg-emerald-200 h-1.5 sm:h-2" />
                 </div>
                 <div>
-                  <span className="text-[10px] sm:text-xs font-medium text-emerald-700">Factors Considered:</span>
+                  <span className="text-[10px] sm:text-xs font-medium text-emerald-700">{t('yield.factorsConsidered')}</span>
                   <ul className="mt-1 space-y-0.5 sm:space-y-1">
                     {result.factors.map((f, i) => (
                       <li key={i} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-emerald-600">
@@ -190,7 +192,7 @@ export default function YieldPredictor() {
           <CardHeader className="px-3 sm:px-6">
             <div className="flex items-center gap-2">
               <History className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 shrink-0" />
-              <CardTitle className="text-base sm:text-lg">Recent Predictions</CardTitle>
+              <CardTitle className="text-base sm:text-lg">{t('yield.recentPredictions')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-3 sm:px-6">
@@ -202,7 +204,7 @@ export default function YieldPredictor() {
             ) : predictions.length === 0 ? (
               <div className="py-6 sm:py-8 text-center">
                 <TrendingUp className="mx-auto mb-2 h-6 w-6 sm:h-8 sm:w-8 text-gray-300" />
-                <p className="text-xs sm:text-sm text-gray-500">No predictions yet</p>
+                <p className="text-xs sm:text-sm text-gray-500">{t('yield.noPredictions')}</p>
               </div>
             ) : (
               <div className="space-y-2 sm:space-y-3">

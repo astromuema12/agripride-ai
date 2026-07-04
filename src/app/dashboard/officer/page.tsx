@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUsers, getFarms, getDiseaseReports, getDashboardStats } from '@/lib/db';
 import type { User, Farm, DiseaseReport, DashboardStats } from '@/types';
@@ -18,6 +19,7 @@ import {
 export default function OfficerDashboard() {
   const { user } = useAuth();
   const router = useRouter();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -93,10 +95,10 @@ export default function OfficerDashboard() {
   };
 
   const quickActions = [
-    { label: 'View All Farmers', icon: Users, href: '/dashboard/officer/farmers', desc: 'Browse and manage registered farmers' },
-    { label: 'Monitor Diseases', icon: AlertTriangle, href: '/dashboard/officer/disease', desc: 'Track disease reports and outbreaks' },
-    { label: 'Generate Reports', icon: ScrollText, href: '/dashboard/officer/reports', desc: 'Create extension service reports' },
-    { label: 'Regional Analytics', icon: BarChart3, href: '/dashboard/officer/analytics', desc: 'View regional data and insights' },
+    { label: t('dashboard.officer.quickActions.viewFarmers'), icon: Users, href: '/dashboard/officer/farmers', desc: t('dashboard.officer.quickActions.viewFarmersDesc') },
+    { label: t('dashboard.officer.quickActions.monitorDiseases'), icon: AlertTriangle, href: '/dashboard/officer/disease', desc: t('dashboard.officer.quickActions.monitorDiseasesDesc') },
+    { label: t('dashboard.officer.quickActions.generateReports'), icon: ScrollText, href: '/dashboard/officer/reports', desc: t('dashboard.officer.quickActions.generateReportsDesc') },
+    { label: t('dashboard.officer.quickActions.regionalAnalytics'), icon: BarChart3, href: '/dashboard/officer/analytics', desc: t('dashboard.officer.quickActions.regionalAnalyticsDesc') },
   ];
 
   if (loading) {
@@ -104,7 +106,7 @@ export default function OfficerDashboard() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
-          <p className="text-sm text-gray-500">Loading dashboard...</p>
+          <p className="text-sm text-gray-500">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -115,8 +117,8 @@ export default function OfficerDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Extension Officer Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Welcome back, {user?.name || 'Officer'}</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.officer.title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.welcomeBack', { name: user?.name || 'Officer' })}</p>
         </div>
         <Badge variant="primary" className="text-xs w-fit">
           <Clock className="mr-1 h-3 w-3" />
@@ -130,7 +132,7 @@ export default function OfficerDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Farmers Monitored</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.farmersMonitored')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{farmersCount}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -139,7 +141,7 @@ export default function OfficerDashboard() {
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs text-emerald-600">
               <TrendingUp className="h-3 w-3" />
-              <span>{stats?.user_growth ?? 0}% this month</span>
+              <span>{t('dashboard.officer.thisMonth', { value: stats?.user_growth ?? 0 })}</span>
             </div>
           </CardContent>
         </Card>
@@ -148,7 +150,7 @@ export default function OfficerDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Active Farms</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.activeFarms')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{activeFarms}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -157,7 +159,7 @@ export default function OfficerDashboard() {
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs text-blue-600">
               <Activity className="h-3 w-3" />
-              <span>{farms.length} total registered</span>
+              <span>{t('dashboard.officer.totalRegistered', { count: farms.length })}</span>
             </div>
           </CardContent>
         </Card>
@@ -166,7 +168,7 @@ export default function OfficerDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Disease Reports</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.diseaseReports')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{diseaseReports.length}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-red-100 flex items-center justify-center">
@@ -175,7 +177,7 @@ export default function OfficerDashboard() {
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs text-red-600">
               <AlertTriangle className="h-3 w-3" />
-              <span>{pendingCount} pending review</span>
+              <span>{t('dashboard.officer.pendingReview', { count: pendingCount })}</span>
             </div>
           </CardContent>
         </Card>
@@ -184,7 +186,7 @@ export default function OfficerDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Resolved Cases</p>
+                <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.resolvedCases')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{resolvedCases}</p>
               </div>
               <div className="h-12 w-12 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -193,7 +195,7 @@ export default function OfficerDashboard() {
             </div>
             <div className="mt-3">
               <div className="flex items-center justify-between text-xs mb-1">
-                <span className="text-emerald-600 font-medium">{resolutionRate}% resolution rate</span>
+                <span className="text-emerald-600 font-medium">{t('dashboard.officer.resolutionRate', { value: resolutionRate })}</span>
               </div>
               <Progress value={resolutionRate} />
             </div>
@@ -204,7 +206,7 @@ export default function OfficerDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-lg">{t('common.quickActions')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -237,18 +239,18 @@ export default function OfficerDashboard() {
         <div className="lg:col-span-2">
           <Card className="h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-lg">Recent Disease Reports</CardTitle>
+              <CardTitle className="text-lg">{t('dashboard.officer.recentReports')}</CardTitle>
               <Button variant="ghost" size="sm" className="text-emerald-600" onClick={() => router.push('/dashboard/officer/disease')}>
                 <Eye className="h-4 w-4 mr-1" />
-                View All
+                {t('common.seeAll')}
               </Button>
             </CardHeader>
             <CardContent>
               {latestReports.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <FileSearch className="h-10 w-10 text-gray-300 mb-2" />
-                  <p className="text-sm font-medium text-gray-500">No disease reports yet</p>
-                  <p className="text-xs text-gray-400 mt-1">Reports will appear here once submitted by farmers</p>
+                  <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.noReports')}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('dashboard.officer.noReportsDesc')}</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -266,7 +268,7 @@ export default function OfficerDashboard() {
                         </div>
                         {report.disease_prediction && (
                           <p className="text-xs text-gray-600 mt-1">
-                            Prediction: <span className="font-medium">{report.disease_prediction}</span>
+                            {t('dashboard.officer.prediction')} <span className="font-medium">{report.disease_prediction}</span>
                           </p>
                         )}
                       </div>
@@ -290,14 +292,14 @@ export default function OfficerDashboard() {
         <div className="lg:col-span-1">
           <Card className="h-full">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg">Regional Overview</CardTitle>
+              <CardTitle className="text-lg">{t('dashboard.officer.regionalOverview')}</CardTitle>
             </CardHeader>
             <CardContent>
               {Object.keys(regionCounts).length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                   <MapPin className="h-10 w-10 text-gray-300 mb-2" />
-                  <p className="text-sm font-medium text-gray-500">No regions found</p>
-                  <p className="text-xs text-gray-400 mt-1">Farm locations will appear here</p>
+                  <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.noRegions')}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('dashboard.officer.noRegionsDesc')}</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -311,7 +313,7 @@ export default function OfficerDashboard() {
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
                           <span className="text-sm font-bold text-gray-900">{count}</span>
-                          <span className="text-xs text-gray-500">farms</span>
+                          <span className="text-xs text-gray-500">{t('dashboard.officer.farms')}</span>
                         </div>
                       </div>
                     ))}
@@ -326,19 +328,19 @@ export default function OfficerDashboard() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div>
-            <CardTitle className="text-lg">Pending Reviews</CardTitle>
-            <p className="text-sm text-gray-500 mt-1">Disease reports awaiting your review</p>
+            <CardTitle className="text-lg">{t('dashboard.officer.pendingReviews')}</CardTitle>
+            <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.pendingReviewsDesc')}</p>
           </div>
           {pendingReviews.length > 0 && (
-            <Badge variant="warning">{pendingReviews.length} pending</Badge>
+            <Badge variant="warning">{t('dashboard.officer.countPending', { count: pendingReviews.length })}</Badge>
           )}
         </CardHeader>
         <CardContent>
           {pendingReviews.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <CheckCircle className="h-10 w-10 text-emerald-300 mb-2" />
-              <p className="text-sm font-medium text-gray-500">All caught up!</p>
-              <p className="text-xs text-gray-400 mt-1">No disease reports are pending review</p>
+                  <p className="text-sm font-medium text-gray-500">{t('dashboard.officer.allCaughtUp')}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('dashboard.officer.noPendingReviews')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -364,7 +366,7 @@ export default function OfficerDashboard() {
                       <p className="text-xs text-gray-600 mt-1">
                         Prediction: <span className="font-medium">{report.disease_prediction}</span>
                         {report.confidence_score !== undefined && (
-                          <span className="text-gray-400"> ({Math.round(report.confidence_score * 100)}% confidence)</span>
+                          <span className="text-gray-400"> ({t('dashboard.officer.confidence', { value: Math.round(report.confidence_score * 100) })})</span>
                         )}
                       </p>
                     )}
@@ -374,7 +376,7 @@ export default function OfficerDashboard() {
                       {report.risk_level || 'unknown'}
                     </Badge>
                     <Button size="sm" variant="outline" onClick={() => router.push('/dashboard/officer/disease')}>
-                      Review
+                      {t('dashboard.officer.review')}
                     </Button>
                   </div>
                 </div>

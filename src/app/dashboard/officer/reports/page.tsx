@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -75,6 +76,7 @@ const formatBadgeVariant: Record<string, 'primary' | 'secondary' | 'default'> = 
 };
 
 function ReportCard({ report }: { report: ReportType }) {
+  const { t } = useI18n();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const Icon = report.icon;
@@ -106,7 +108,7 @@ function ReportCard({ report }: { report: ReportType }) {
       <CardContent>
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1 flex-1 min-w-[120px]">
-            <Label className="text-xs text-gray-500">Start Date</Label>
+            <Label className="text-xs text-gray-500">{t('reports.startDate')}</Label>
             <Input
               type="date"
               value={startDate}
@@ -115,7 +117,7 @@ function ReportCard({ report }: { report: ReportType }) {
             />
           </div>
           <div className="space-y-1 flex-1 min-w-[120px]">
-            <Label className="text-xs text-gray-500">End Date</Label>
+            <Label className="text-xs text-gray-500">{t('reports.endDate')}</Label>
             <Input
               type="date"
               value={endDate}
@@ -125,7 +127,7 @@ function ReportCard({ report }: { report: ReportType }) {
           </div>
           <Button size="sm" className="gap-1.5" onClick={handleDownload}>
             <Download className="h-4 w-4" />
-            Generate
+            {t('reports.generate')}
           </Button>
         </div>
       </CardContent>
@@ -134,20 +136,21 @@ function ReportCard({ report }: { report: ReportType }) {
 }
 
 export default function OfficerReportsPage() {
+  const { t } = useI18n();
   const [reports] = useState<GeneratedReport[]>(recentReports);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Officer Reports</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('reports.title')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Generate and manage reports for farmer monitoring, disease tracking, and regional analysis
+            {t('dashboard.officer.reportsDesc')}
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-2">
           <Plus className="h-4 w-4" />
-          Schedule Report
+          {t('dashboard.officer.scheduleReport')}
         </Button>
       </div>
 
@@ -164,8 +167,8 @@ export default function OfficerReportsPage() {
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <CardTitle className="text-lg">Recent Reports</CardTitle>
-              <CardDescription>Previously generated reports available for download</CardDescription>
+              <CardTitle className="text-lg">{t('reports.recent')}</CardTitle>
+              <CardDescription>{t('dashboard.officer.recentReportsDesc')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -173,9 +176,9 @@ export default function OfficerReportsPage() {
           {reports.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
               <FileText className="mb-3 h-10 w-10 text-gray-300" />
-              <p className="text-sm font-medium text-gray-500">No reports generated yet</p>
+              <p className="text-sm font-medium text-gray-500">{t('reports.noReports')}</p>
               <p className="text-xs text-gray-400">
-                Generate your first report using the cards above.
+                {t('dashboard.officer.noReportsGeneratedDesc')}
               </p>
             </div>
           ) : (
@@ -201,7 +204,7 @@ export default function OfficerReportsPage() {
                       onClick={() => toast.success(`Downloading ${r.title}`)}
                     >
                       <Download className="h-3 w-3" />
-                      Download
+                      {t('common.download')}
                     </Button>
                   </div>
                 ))}
@@ -211,11 +214,11 @@ export default function OfficerReportsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-500">
-                      <th className="pb-3 pr-4">Report</th>
-                      <th className="pb-3 pr-4">Format</th>
-                      <th className="pb-3 pr-4">Date</th>
-                      <th className="pb-3 pr-4">Status</th>
-                      <th className="pb-3 text-right">Action</th>
+                      <th className="pb-3 pr-4">{t('reports.report')}</th>
+                      <th className="pb-3 pr-4">{t('reports.format')}</th>
+                      <th className="pb-3 pr-4">{t('common.date')}</th>
+                      <th className="pb-3 pr-4">{t('common.status')}</th>
+                      <th className="pb-3 text-right">{t('common.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -230,7 +233,7 @@ export default function OfficerReportsPage() {
                         <td className="py-3 pr-4 text-gray-500">{r.date}</td>
                         <td className="py-3 pr-4">
                           <Badge variant={r.status === 'completed' ? 'primary' : 'warning'}>
-                            {r.status === 'completed' ? 'Completed' : 'Processing'}
+                        {r.status === 'completed' ? t('common.completed') : t('common.pending')}
                           </Badge>
                         </td>
                         <td className="py-3 text-right">

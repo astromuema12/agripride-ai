@@ -38,28 +38,19 @@ const translationsMap: Record<Language, Translations> = {
   sw,
 };
 
-function detectBrowserLanguage(): Language {
-  if (typeof window === 'undefined') return 'en';
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY) as Language | null;
-    if (stored === 'en' || stored === 'sw') return stored;
-
-    const languages = navigator.languages || [navigator.language];
-    for (const lang of languages) {
-      const code = lang.toLowerCase().slice(0, 2);
-      if (code === 'sw') return 'sw';
-    }
-  } catch {
-    // localStorage unavailable or error
-  }
-  return 'en';
-}
-
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en');
 
   useEffect(() => {
-    setLanguageState(detectBrowserLanguage());
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY) as Language | null;
+      if (stored === 'en' || stored === 'sw') {
+        setLanguageState(stored);
+      }
+    } catch {
+      // localStorage unavailable
+    }
   }, []);
 
   const setLanguage = useCallback((lang: Language) => {

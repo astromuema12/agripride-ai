@@ -21,16 +21,18 @@ import {
 import { cn } from '@/lib/utils';
 import { getNotifications } from '@/lib/db';
 import { Notification } from '@/types';
+import { useI18n } from '@/lib/i18n';
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/governance', label: 'AI Governance' },
-  { href: '/contact', label: 'Contact' },
-  { href: '/support', label: 'Support' },
+const navLinkKeys = [
+  { href: '/', key: 'nav.home' },
+  { href: '/pricing', key: 'nav.pricing' },
+  { href: '/governance', key: 'nav.governance' },
+  { href: '/contact', key: 'nav.contact' },
+  { href: '/support', key: 'nav.support' },
 ];
 
 export function Navbar() {
+  const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const pathname = usePathname();
@@ -75,7 +77,7 @@ export function Navbar() {
             </span>
           </Link>
           <div className="hidden md:flex md:items-center md:gap-6">
-            {navLinks.map((link) => (
+            {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -86,7 +88,7 @@ export function Navbar() {
                     : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 )}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
           </div>
@@ -99,7 +101,7 @@ export function Navbar() {
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={t('nav.switchTo', { mode: theme === 'dark' ? t('common.light') : t('common.dark') })}
           >
             {theme === 'dark' ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
           </Button>
@@ -117,7 +119,7 @@ export function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-72 sm:w-80">
-                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('nav.notifications')}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {notifications.slice(0, 5).map((n) => (
                     <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-1 py-2">
@@ -132,7 +134,7 @@ export function Navbar() {
                   ))}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')} className="justify-center text-sm text-emerald-600 dark:text-emerald-400 font-medium">
-                    View All Notifications
+                    {t('nav.viewAll')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -158,20 +160,20 @@ export function Navbar() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push(dashboardHref)}>
                     <Shield className="mr-2 h-4 w-4" />
-                    Dashboard
+                    {t('nav.dashboard')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/settings')}>
                     <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                    {t('nav.settings')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push('/dashboard/security')}>
                     <Lock className="mr-2 h-4 w-4" />
-                    Security
+                    {t('nav.security')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    {t('nav.logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -179,10 +181,10 @@ export function Navbar() {
           ) : (
             <div className="flex items-center gap-1 sm:gap-2">
               <Button variant="ghost" size="sm" className="hidden xs:inline-flex" onClick={() => router.push('/auth')}>
-                Sign In
+                {t('nav.signIn')}
               </Button>
               <Button size="sm" onClick={() => router.push('/auth?tab=register')}>
-                Get Started
+                {t('nav.getStarted')}
               </Button>
             </div>
           )}
@@ -196,7 +198,7 @@ export function Navbar() {
       {mobileOpen && (
         <div className="border-t border-[var(--border)] bg-[var(--background)] md:hidden">
           <div className="space-y-1 px-3 sm:px-4 py-2 sm:py-3">
-            {navLinks.map((link) => (
+            {navLinkKeys.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -208,7 +210,7 @@ export function Navbar() {
                     : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]'
                 )}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
           </div>
