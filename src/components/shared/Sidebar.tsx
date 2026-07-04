@@ -87,15 +87,6 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-3 top-[60px] sm:top-[68px] z-40 hidden lg:flex"
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
-      </Button>
-
-      <Button
-        variant="ghost"
-        size="icon"
         className="fixed left-3 top-[60px] sm:top-[68px] z-50 flex lg:hidden"
         onClick={() => setMobileOpen(!mobileOpen)}
       >
@@ -114,14 +105,24 @@ export function Sidebar() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        <div className={cn('flex items-center gap-2 border-b border-[var(--border)] px-4 py-3', collapsed && 'justify-center')}>
-          <Wheat className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          {!collapsed && (
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm font-semibold text-[var(--foreground)] capitalize truncate">{user?.role}</span>
-              <Badge variant="primary" className="text-[10px] shrink-0">{t('nav.sidebar.dashboard')}</Badge>
-            </div>
-          )}
+        <div className={cn('flex items-center gap-3 border-b border-[var(--border)] py-3', collapsed && 'justify-center')}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hidden lg:flex shrink-0"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
+          </Button>
+          <div className="flex items-center gap-2 min-w-0">
+            <Wheat className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            {!collapsed && (
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-sm font-semibold text-[var(--foreground)] capitalize truncate">{user?.role}</span>
+                <Badge variant="primary" className="text-[10px] shrink-0">{t('nav.sidebar.dashboard')}</Badge>
+              </div>
+            )}
+          </div>
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto p-2 scrollbar-hide">
