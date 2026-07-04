@@ -1,7 +1,7 @@
 'use client';
 
 import { useI18n } from '@/lib/i18n';
-import { Languages, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -30,7 +30,7 @@ export function LanguageSwitcher() {
           className="gap-2 border-[var(--border)] bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] font-medium text-xs sm:text-sm px-2 sm:px-3"
           title={t('common.language')}
         >
-          <Languages className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <span>{current.flag}</span>
           <span>{current.label}</span>
         </Button>
       </DropdownMenuTrigger>
