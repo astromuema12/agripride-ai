@@ -1100,6 +1100,11 @@ export const sw: Translations = {
     enterprisePlan: {
       description: 'Jukwaa la kiwango cha biashara kwa mashirika',
       features: ['Kila kitu katika Cooperative', 'Chaguo la lebo nyeupe', 'Ufikiaji wa API', 'Viunganisho maalum', 'Dhamana ya SLA', 'Msaada wa 24/7', 'Uwekaji ndani ya kampuni'],
+      whiteLabel: 'Chaguo la lebo nyeupe',
+      customIntegrations: 'Viunganisho maalum',
+      slaGuarantee: 'Dhamana ya SLA',
+      onPremise: 'Uwekaji ndani ya kampuni',
+      support247: 'Msaada wa 24/7',
     },
     faq: {
       title: 'Maswali Yanayoulizwa Mara kwa Mara',

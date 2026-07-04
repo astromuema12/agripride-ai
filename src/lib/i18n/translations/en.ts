@@ -1219,6 +1219,11 @@ export const en = {
     enterprisePlan: {
       description: 'Enterprise-grade platform for organizations',
       features: ['Everything in Cooperative', 'White-label option', 'API access', 'Custom integrations', 'SLA guarantee', '24/7 support', 'On-premise deployment'],
+      whiteLabel: 'White-label option',
+      customIntegrations: 'Custom integrations',
+      slaGuarantee: 'SLA guarantee',
+      onPremise: 'On-premise deployment',
+      support247: '24/7 support',
     },
     faq: {
       title: 'Frequently Asked Questions',

@@ -88,7 +88,7 @@ export default function HomePage() {
   const pricingPlans = [
     { name: t('pricing.free'), monthly: 0, annual: 0, desc: t('pricing.freePlan.description'), features: [t('landing.features.diseaseDetection'), t('landing.features.weatherMonitoring'), t('landing.features.marketPrices'), t('dashboard.farmer.myFarms'), t('common.community')], popular: false },
     { name: t('pricing.premium'), monthly: 299, annual: 2990, desc: t('pricing.premiumPlan.description'), features: [t('landing.features.diseaseDetection'), t('landing.features.aiAssistant'), t('landing.features.weatherMonitoring'), t('dashboard.farmer.farmAnalytics'), t('landing.features.marketPrices'), t('reports.export'), t('pricing.premium')], popular: true },
-    { name: t('pricing.enterprise'), monthly: 4999, annual: 49990, desc: t('pricing.enterprisePlan.description'), features: [t('pricing.premium'), t('dashboard.farmer.myFarms'), t('dashboard.officer.analytics'), t('pricing.enterprisePlan.features')[3], t('pricing.enterprisePlan.features')[4], t('pricing.enterprisePlan.features')[6], t('pricing.enterprisePlan.features')[1], t('pricing.enterprisePlan.features')[5]], popular: false },
+    { name: t('pricing.enterprise'), monthly: 4999, annual: 49990, desc: t('pricing.enterprisePlan.description'), features: [t('pricing.premium'), t('dashboard.farmer.myFarms'), t('dashboard.officer.analytics'), t('pricing.enterprisePlan.customIntegrations'), t('pricing.enterprisePlan.slaGuarantee'), t('pricing.enterprisePlan.onPremise'), t('pricing.enterprisePlan.whiteLabel'), t('pricing.enterprisePlan.support247')], popular: false },
   ];
 
   const faqItems = [
