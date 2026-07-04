@@ -19,10 +19,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription,
 } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import {
-  Sprout, Plus, Calendar, MapPin, Ruler, Package, Sparkles,
-  Sun, CloudSun, Wind, Cherry,
-} from 'lucide-react';
+import { Sprout, Plus, Calendar, MapPin, Ruler, Package, Sparkles, Sun, Wind, Cherry } from 'lucide-react';
 
 const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Coffee', 'Tea', 'Cotton', 'Sorghum', 'Millet', 'Groundnuts', 'Sunflower', 'Sugarcane', 'Sweet Potato'];
 
@@ -129,6 +126,23 @@ export default function CropsPage() {
   const [expectedYield, setExpectedYield] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  const cropLabels: Record<string, string> = {
+    'Maize': t('crops.types.maize'),
+    'Wheat': t('crops.types.wheat'),
+    'Rice': t('crops.types.rice'),
+    'Cassava': t('crops.types.cassava'),
+    'Beans': t('crops.types.beans'),
+    'Coffee': t('crops.types.coffee'),
+    'Tea': t('crops.types.tea'),
+    'Cotton': t('crops.types.cotton'),
+    'Sorghum': t('crops.types.sorghum'),
+    'Millet': t('crops.types.millet'),
+    'Groundnuts': t('crops.types.groundnut'),
+    'Sunflower': t('crops.types.sunflower'),
+    'Sugarcane': t('crops.types.sugarcane'),
+    'Sweet Potato': t('crops.types.sweetPotato'),
+  };
+
   useEffect(() => {
     if (!user) return;
     (async () => {
@@ -230,7 +244,7 @@ export default function CropsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {CROP_TYPES.map((c) => (
-                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                      <SelectItem key={c} value={c}>{cropLabels[c]}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

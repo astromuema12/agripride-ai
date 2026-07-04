@@ -96,6 +96,52 @@ export default function DiseaseDiagnosisPage() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
+  const cropLabels: Record<string, string> = {
+    'Maize': t('crops.types.maize'),
+    'Wheat': t('crops.types.wheat'),
+    'Rice': t('crops.types.rice'),
+    'Cassava': t('crops.types.cassava'),
+    'Beans': t('crops.types.beans'),
+    'Sorghum': t('crops.types.sorghum'),
+    'Millet': t('crops.types.millet'),
+    'Sweet Potato': t('crops.types.sweetPotato'),
+    'Potato': t('crops.types.potato'),
+    'Banana': t('crops.types.banana'),
+    'Coffee': t('crops.types.coffee'),
+    'Tea': t('crops.types.tea'),
+    'Sugarcane': t('crops.types.sugarcane'),
+    'Cotton': t('crops.types.cotton'),
+    'Tomato': t('crops.types.tomato'),
+    'Onion': t('crops.types.onion'),
+    'Kale': t('crops.types.kale'),
+    'Mango': t('crops.types.mango'),
+    'Avocado': t('crops.types.avocado'),
+    'Groundnut': t('crops.types.groundnut'),
+    'Sunflower': t('crops.types.sunflower'),
+    'Cowpea': t('crops.types.cowpea'),
+    'Pineapple': t('crops.types.pineapple'),
+    'Passion Fruit': t('crops.types.passionFruit'),
+    'Orange': t('crops.types.orange'),
+    'Coconut': t('crops.types.coconut'),
+    'Cashew': t('crops.types.cashew'),
+    'Macadamia': t('crops.types.macadamia'),
+    'Sesame': t('crops.types.sesame'),
+    'Green Grams': t('crops.types.greenGrams'),
+    'Pigeon Peas': t('crops.types.pigeonPeas'),
+    'Cabbage': t('crops.types.cabbage'),
+    'Spinach': t('crops.types.spinach'),
+    'Carrot': t('crops.types.carrot'),
+    'Watermelon': t('crops.types.watermelon'),
+    'Pawpaw': t('crops.types.pawpaw'),
+    'Barley': t('crops.types.barley'),
+    'French Beans': t('crops.types.frenchBeans'),
+    'Capsicum': t('crops.types.capsicum'),
+    'Arrow Roots': t('crops.types.arrowRoots'),
+    'Yam': t('crops.types.yam'),
+    'Pyrethrum': t('crops.types.pyrethrum'),
+    'Sisal': t('crops.types.sisal'),
+  };
+
   const [cropType, setCropType] = useState('');
   const [growthStage, setGrowthStage] = useState<GrowthStage>('unknown');
   const [symptoms, setSymptoms] = useState('');
@@ -337,7 +383,7 @@ export default function DiseaseDiagnosisPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {CROP_TYPES.map((crop) => (
-                      <SelectItem key={crop} value={crop}>{crop}</SelectItem>
+                      <SelectItem key={crop} value={crop}>{cropLabels[crop]}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
