@@ -252,7 +252,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="mb-6 sm:mb-8 text-center text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">{t('landing.hero.trustBar')}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-14 gap-y-4 sm:gap-y-6">
-            {['Kenya Farmers Association', 'Ministry of Agriculture', 'Safaricom', 'University of Nairobi', 'AgriFi Kenya', 'World Food Programme'].map((name) => (
+            {['Kenya Farmers Association', 'Ministry of Agriculture', 'Safaricom', 'University of Nairobi', 'AgriFi Kenya'].map((name) => (
               <div key={name} className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-[var(--muted-foreground)] transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
                 <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:scale-110" /> {name}
               </div>
