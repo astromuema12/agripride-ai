@@ -31,21 +31,21 @@ interface GeneratedReport {
 
 const reportTypes: ReportType[] = [
   {
-    id: 'farmer-activity',
+    id: 'farmerActivity',
     title: 'Farmer Activity Report',
     description: 'Comprehensive overview of farmer registrations, farm counts, crop distribution, and engagement metrics across all regions.',
     format: 'PDF',
     icon: Users,
   },
   {
-    id: 'disease-outbreak',
+    id: 'diseaseOutbreak',
     title: 'Disease Outbreak Report',
     description: 'Detailed analysis of active disease outbreaks, affected regions, crops at risk, resolution progress, and containment effectiveness.',
     format: 'CSV',
     icon: AlertTriangle,
   },
   {
-    id: 'regional-summary',
+    id: 'regionalSummary',
     title: 'Regional Summary',
     description: 'Regional breakdown of agricultural activity, yield performance, disease prevalence, and sustainability scores by area.',
     format: 'Excel',
@@ -82,7 +82,7 @@ function ReportCard({ report }: { report: ReportType }) {
   const Icon = report.icon;
 
   function handleDownload() {
-    toast.success(`Report generation started: ${report.title}`);
+    toast.success(t('reports.downloadStarted', { title: t(`reports.officerTypes.${report.id}.title`) }));
   }
 
   return (
@@ -94,9 +94,9 @@ function ReportCard({ report }: { report: ReportType }) {
               <Icon className="h-5 w-5" />
             </div>
             <div>
-              <CardTitle className="text-base">{report.title}</CardTitle>
+              <CardTitle className="text-base">{t(`reports.officerTypes.${report.id}.title`)}</CardTitle>
               <CardDescription className="mt-0.5 max-w-xs text-xs leading-relaxed">
-                {report.description}
+                {t(`reports.officerTypes.${report.id}.desc`)}
               </CardDescription>
             </div>
           </div>
@@ -194,14 +194,14 @@ export default function OfficerReportsPage() {
                     <div className="flex items-center justify-between text-xs text-gray-500">
                       <span>{r.date}</span>
                       <Badge variant={r.status === 'completed' ? 'primary' : 'warning'}>
-                        {r.status === 'completed' ? 'Completed' : 'Processing'}
+                        {r.status === 'completed' ? t('common.completed') : t('reports.statusProcessing')}
                       </Badge>
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="gap-1.5 text-emerald-600 h-8 px-0 text-xs"
-                      onClick={() => toast.success(`Downloading ${r.title}`)}
+                      onClick={() => toast.success(t('reports.downloading', { title: r.title }))}
                     >
                       <Download className="h-3 w-3" />
                       {t('common.download')}
@@ -241,10 +241,10 @@ export default function OfficerReportsPage() {
                             variant="ghost"
                             size="sm"
                             className="gap-1.5 text-emerald-600"
-                            onClick={() => toast.success(`Downloading ${r.title}`)}
+                            onClick={() => toast.success(t('reports.downloading', { title: r.title }))}
                           >
                             <Download className="h-3.5 w-3.5" />
-                            Download
+                            {t('common.download')}
                           </Button>
                         </td>
                       </tr>

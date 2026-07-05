@@ -22,6 +22,7 @@ const steps = [
 ];
 
 const cropOptions = ['Maize', 'Wheat', 'Rice', 'Coffee', 'Tea', 'Sugar Cane', 'Cassava', 'Beans', 'Potatoes', 'Tomatoes', 'Bananas', 'Other'];
+const cropToKey = (crop: string) => crop.toLowerCase().replace(/\s+/g, '_');
 
 
 const GOAL_KEYS = [
@@ -232,7 +233,7 @@ export default function OnboardingPage() {
                               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                           }`}
                         >
-                          {crop}
+                          {t(`onboarding.crops.${cropToKey(crop)}`)}
                         </button>
                       ))}
                     </div>

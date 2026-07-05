@@ -124,6 +124,16 @@ export default function FarmsPage() {
 
   if (!user) return null;
 
+  const soilTypeLabels: Record<string, string> = {
+    'Loamy': t('farms.soilTypes.loamy'),
+    'Sandy': t('farms.soilTypes.sandy'),
+    'Clay': t('farms.soilTypes.clay'),
+    'Silty': t('farms.soilTypes.silty'),
+    'Peaty': t('farms.soilTypes.peaty'),
+    'Chalky': t('farms.soilTypes.chalky'),
+    'Saline': t('farms.soilTypes.saline'),
+  };
+
   const stats = [
     { icon: Sprout, label: t('dashboard.farmer.totalFarms'), value: farms.length, color: 'text-emerald-600 bg-emerald-50' },
     { icon: Ruler, label: t('farms.totalAcres'), value: totalAcres.toFixed(1), color: 'text-blue-600 bg-blue-50' },
@@ -193,7 +203,7 @@ export default function FarmsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {SOIL_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                      <SelectItem key={type} value={type}>{soilTypeLabels[type]}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -288,7 +298,7 @@ export default function FarmsPage() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Leaf className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  <span>{farm.soil_type}</span>
+                  <span>{soilTypeLabels[farm.soil_type] || farm.soil_type}</span>
                 </div>
                 {farm.crops_grown.length > 0 && (
                   <div className="flex items-start gap-2 text-sm text-gray-600">

@@ -274,7 +274,7 @@ export default function OfficerDashboard() {
                       </div>
                       <div className="flex items-center gap-2 ml-4 shrink-0">
                         <Badge className={riskBadgeClass(report.risk_level)}>
-                          {report.risk_level || 'unknown'}
+                      {report.risk_level || t('common.unknown')}
                         </Badge>
                         <Badge className={statusBadgeClass(report.status)}>
                           {report.status}
@@ -364,7 +364,7 @@ export default function OfficerDashboard() {
                     </div>
                     {report.disease_prediction && (
                       <p className="text-xs text-gray-600 mt-1">
-                        Prediction: <span className="font-medium">{report.disease_prediction}</span>
+                        {t('dashboard.officer.prediction')}: <span className="font-medium">{report.disease_prediction}</span>
                         {report.confidence_score !== undefined && (
                           <span className="text-gray-400"> ({t('dashboard.officer.confidence', { value: Math.round(report.confidence_score * 100) })})</span>
                         )}

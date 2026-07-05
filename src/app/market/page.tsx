@@ -21,6 +21,7 @@ import { useI18n } from '@/lib/i18n';
 const regions = [
   'All Regions', 'Rift Valley', 'Central', 'Coastal', 'Eastern', 'Western', 'Nyanza', 'North Eastern',
 ];
+const regionToKey = (r: string) => r.toLowerCase().replace(/\s+/g, '_');
 
 function TrendIcon({ trend }: { trend: MarketPrice['trend'] }) {
   if (trend === 'up') return <TrendingUp className="h-4 w-4 text-emerald-600" />;
@@ -222,7 +223,7 @@ export default function MarketPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {regions.map((r) => (
-                    <SelectItem key={r} value={r}>{r}</SelectItem>
+                    <SelectItem key={r} value={r}>{t(`market.regions.${regionToKey(r)}`)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

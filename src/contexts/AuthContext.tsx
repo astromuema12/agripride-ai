@@ -5,6 +5,7 @@ import { User, UserRole } from '@/types';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { demoLogin, demoRegister } from '@/lib/demo-auth';
 import { recordSession } from '@/lib/sessions';
+import { useI18n } from '@/lib/i18n';
 
 const SESSION_TIMEOUT_MS = 10 * 60 * 1000;
 const ACTIVITY_CHECK_INTERVAL_MS = 10 * 1000;
@@ -60,6 +61,7 @@ async function ensureUserProfile(authUser: { id: string; email?: string; user_me
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window === 'undefined') return null;
     try {
@@ -188,7 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
       if (error) return { error: error.message };
-      return { error: 'Failed to load user profile' };
+      return { error: t('auth.errors.profileLoadFailed') };
     }
 
     const demoUser = demoLogin(email, password);
@@ -201,7 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {};
     }
 
-    return { error: 'Invalid email or password' };
+    return { error: t('auth.errors.invalidCredentials') };
   }, [touchActivity]);
 
   const register = useCallback(async (email: string, password: string, name: string, _role: UserRole): Promise<{ error?: string }> => {
@@ -225,7 +227,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
       if (error) return { error: error.message };
-      return { error: 'Registration succeeded but profile creation failed' };
+      return { error: t('auth.errors.registrationProfileFailed') };
     }
 
     const newUser = demoRegister(email, password, name, forcedRole);
@@ -254,7 +256,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) return { error: error.message };
       return {};
     }
-    return { error: 'Password reset unavailable in demo mode' };
+    return { error: t('auth.errors.resetUnavailable') };
   }, []);
 
   const signInWithOAuth = useCallback(async (provider: 'google' | 'github') => {

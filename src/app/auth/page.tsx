@@ -118,7 +118,7 @@ function AuthForm() {
 
   useEffect(() => {
     if (oauthSuccess === 'google' || oauthSuccess === 'github') {
-      toast.success(t('auth.signedInWith', { provider: oauthSuccess === 'google' ? 'Google' : 'GitHub' }));
+      toast.success(t('auth.signedInWith', { provider: oauthSuccess === 'google' ? t('auth.providers.google') : t('auth.providers.github') }));
       refreshUser();
     }
     if (oauthError) {

@@ -32,7 +32,7 @@ export default function FarmersPage() {
         setFarms(f);
         setTotal(t);
       } catch (err) {
-        toast.error('Failed to load farmers data');
+        toast.error(t('dashboard.officer.failedToLoadFarmers'));
       } finally {
         setLoading(false);
       }
@@ -206,7 +206,7 @@ export default function FarmersPage() {
                                   <span className="text-xs text-gray-500 truncate">{farm.location}</span>
                                 </div>
                                 <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
-                                  <span>{farm.size_acres} acres</span>
+                                  <span>{farm.size_acres} {t('farms.acres')}</span>
                                   <span>·</span>
                                   <span>{farm.soil_type}</span>
                                 </div>

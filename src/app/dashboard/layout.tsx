@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { useAuth } from '@/contexts/AuthContext';
 import { SidebarProvider, useSidebar } from '@/lib/sidebar-context';
+import { useI18n } from '@/lib/i18n';
 import { Loader2, AlertCircle } from 'lucide-react';
 
 function DashboardContent({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const { user, loading, isDemoMode } = useAuth();
   const { collapsed } = useSidebar();
   const router = useRouter();
@@ -37,7 +39,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
         {isDemoMode && (
           <div className="flex items-center justify-center gap-2 bg-amber-50 px-3 sm:px-4 py-2 text-xs sm:text-sm text-amber-700 border-b border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800">
             <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-            <span className="text-center">Demo Mode Active &mdash; Data is simulated and not persisted to the cloud</span>
+            <span className="text-center">{t('dashboard.demoBanner')}</span>
           </div>
         )}
         <div className="px-3 py-3 sm:px-6 sm:py-4 lg:px-8">

@@ -52,6 +52,25 @@ export default function DiseasePage() {
   const [selectedReport, setSelectedReport] = useState<DiseaseReport | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const statusLabel = (status: string) => {
+    switch (status) {
+      case 'submitted': return t('dashboard.officer.submitted');
+      case 'reviewed': return t('dashboard.officer.reviewed');
+      case 'resolved': return t('dashboard.officer.resolved');
+      default: return status;
+    }
+  };
+
+  const riskLevelLabel = (level?: string) => {
+    switch (level) {
+      case 'low': return t('common.low');
+      case 'medium': return t('common.medium');
+      case 'high': return t('common.high');
+      case 'critical': return t('common.critical');
+      default: return t('common.unknown');
+    }
+  };
+
   useEffect(() => {
     async function load() {
       try {
@@ -59,7 +78,7 @@ export default function DiseasePage() {
         setReports(r);
         setUsers(u);
       } catch {
-        toast.error('Failed to load disease reports');
+        toast.error(t('dashboard.officer.failedToLoadDisease'));
       } finally {
         setLoading(false);
       }
@@ -68,15 +87,15 @@ export default function DiseasePage() {
   }, []);
 
   const getFarmerName = (userId: string) =>
-    users.find((u) => u.id === userId)?.name || 'Unknown Farmer';
+    users.find((u) => u.id === userId)?.name || t('common.unknown') + ' ' + t('dashboard.officer.farmer');
 
   const getFarmLocation = (farmId: string) => {
     try {
       const store = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('agripride_demo_data') || '{}') : {};
       const farm = store.farms?.find((f: { id: string; location: string }) => f.id === farmId);
-      return farm?.location || 'Unknown Region';
+      return farm?.location || t('common.unknown') + ' ' + t('common.location');
     } catch {
-      return 'Unknown Region';
+      return t('common.unknown') + ' ' + t('common.location');
     }
   };
 
@@ -119,7 +138,7 @@ export default function DiseasePage() {
         setSelectedReport((prev) =>
           prev ? { ...prev, status: 'reviewed', reviewed_at: new Date().toISOString() } : null
         );
-        toast.success('Report marked as reviewed');
+        toast.success(t('dashboard.officer.reportMarkedReviewed'));
         writeAuditLog({
           user_id: currentUser?.id || 'unknown',
           action: 'review_disease_report',
@@ -128,7 +147,7 @@ export default function DiseasePage() {
         }).catch(() => {});
       }
     } catch {
-      toast.error('Failed to update report');
+      toast.error(t('dashboard.officer.failedToUpdateReport'));
     }
   };
 
@@ -257,7 +276,7 @@ export default function DiseasePage() {
                         </div>
                         <span className="text-sm font-medium text-gray-800 truncate">{getFarmerName(report.user_id)}</span>
                       </div>
-                      <Badge className={statusBadgeClass(report.status) + ' shrink-0'}>{report.status}</Badge>
+                      <Badge className={statusBadgeClass(report.status) + ' shrink-0'}>{statusLabel(report.status)}</Badge>
                     </div>
                     <div className="flex items-center justify-between text-xs text-gray-600">
                       <span>{report.crop_type}{report.disease_prediction ? ` - ${report.disease_prediction}` : ''}</span>
@@ -267,7 +286,7 @@ export default function DiseasePage() {
                     </div>
                     <div className="flex items-center justify-between text-xs">
                       <Badge className={riskBadgeClass(report.risk_level)}>
-                        {report.risk_level || 'unknown'}
+                        {riskLevelLabel(report.risk_level)}
                       </Badge>
                       <div className="flex items-center gap-1 text-gray-500">
                         <Calendar className="h-3 w-3" />
@@ -320,12 +339,12 @@ export default function DiseasePage() {
                         </td>
                         <td className="px-4 py-3">
                           <Badge className={riskBadgeClass(report.risk_level)}>
-                            {report.risk_level || 'unknown'}
+                            {riskLevelLabel(report.risk_level)}
                           </Badge>
                         </td>
                         <td className="px-4 py-3">
                           <Badge className={statusBadgeClass(report.status)}>
-                            {report.status}
+                            {statusLabel(report.status)}
                           </Badge>
                         </td>
                         <td className="px-4 py-3 text-gray-500">
@@ -369,7 +388,7 @@ export default function DiseasePage() {
                     {t('dashboard.officer.riskLevel')}
                   </p>
                   <Badge className={riskBadgeClass(selectedReport.risk_level)}>
-                    {selectedReport.risk_level || 'unknown'}
+                    {riskLevelLabel(selectedReport.risk_level)}
                   </Badge>
                 </div>
                 <div className="space-y-1">
@@ -385,7 +404,7 @@ export default function DiseasePage() {
                     {t('common.status')}
                   </p>
                   <Badge className={statusBadgeClass(selectedReport.status)}>
-                    {selectedReport.status}
+                    {statusLabel(selectedReport.status)}
                   </Badge>
                 </div>
               </div>

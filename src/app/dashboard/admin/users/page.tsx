@@ -48,7 +48,7 @@ export default function UsersPage() {
         setUsers(data);
         setTotal(totalUsers);
       } catch {
-        toast.error('Failed to load users');
+        toast.error(t('dashboard.admin.failedToLoadUsers'));
       } finally {
         setLoading(false);
       }
@@ -74,7 +74,7 @@ export default function UsersPage() {
     try {
       const updated: User = { ...user, is_suspended: !user.is_suspended, updated_at: new Date().toISOString() };
       setUsers((prev) => prev.map((u) => (u.id === user.id ? updated : u)));
-      toast.success(`User ${updated.is_suspended ? 'suspended' : 'activated'} successfully`);
+      toast.success(updated.is_suspended ? t('dashboard.admin.userSuspended', { name: updated.name }) : t('dashboard.admin.userActivated', { name: updated.name }));
       writeAuditLog({
         user_id: currentUser?.id || 'unknown',
         action: updated.is_suspended ? 'suspend_user' : 'activate_user',
@@ -82,7 +82,7 @@ export default function UsersPage() {
         resource_id: user.id,
       }).catch(() => {});
     } catch {
-      toast.error('Failed to update user status');
+      toast.error(t('dashboard.admin.failedToUpdateUserStatus'));
     }
   }
 
@@ -98,7 +98,7 @@ export default function UsersPage() {
       const updated: User = { ...editingUser, name: editName, role: editRole, updated_at: new Date().toISOString() };
       setUsers((prev) => prev.map((u) => (u.id === editingUser.id ? updated : u)));
       setEditingUser(null);
-      toast.success('User updated successfully');
+      toast.success(t('dashboard.admin.userUpdated'));
       writeAuditLog({
         user_id: currentUser?.id || 'unknown',
         action: 'update_user',
@@ -107,7 +107,7 @@ export default function UsersPage() {
         details: { role: editRole },
       }).catch(() => {});
     } catch {
-      toast.error('Failed to update user');
+      toast.error(t('dashboard.admin.failedToUpdateUser'));
     }
   }
 
@@ -216,7 +216,7 @@ export default function UsersPage() {
                     <div className="text-xs text-gray-600 truncate">{user.email}</div>
                     <div className="flex items-center justify-between text-xs">
                       <Badge variant={user.is_suspended ? 'destructive' : 'primary'} className="text-[10px]">
-                        {user.is_suspended ? 'Suspended' : 'Active'}
+                        {user.is_suspended ? t('common.inactive') : t('common.active')}
                       </Badge>
                       <div className="flex items-center gap-1.5 text-gray-500">
                         <Clock className="h-3 w-3" />
@@ -235,7 +235,7 @@ export default function UsersPage() {
                         onClick={() => handleToggleSuspend(user)}
                       >
                         {user.is_suspended ? <CheckCircle className="mr-1 h-3 w-3" /> : <Ban className="mr-1 h-3 w-3" />}
-                        {user.is_suspended ? 'Activate' : 'Suspend'}
+                        {user.is_suspended ? t('dashboard.admin.activate') : t('dashboard.admin.suspend')}
                       </Button>
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export default function UsersPage() {
                           <div className="flex items-center gap-2">
                             <Button variant="ghost" size="sm" onClick={() => openEditDialog(user)}>
                               <Pencil className="mr-1 h-3.5 w-3.5" />
-                              Edit
+                              {t('common.edit')}
                             </Button>
                             <Button variant={user.is_suspended ? 'secondary' : 'destructive'} size="sm" onClick={() => handleToggleSuspend(user)}>
                               {user.is_suspended ? <CheckCircle className="mr-1 h-3.5 w-3.5" /> : <Ban className="mr-1 h-3.5 w-3.5" />}
@@ -305,10 +305,10 @@ export default function UsersPage() {
         </p>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-            Previous
+            {t('common.previous')}
           </Button>
           <Button variant="outline" size="sm" disabled={page >= Math.ceil(total / pageSize)} onClick={() => setPage(p => p + 1)}>
-            Next
+            {t('common.next')}
           </Button>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useI18n } from '@/lib/i18n';
 import { getDashboardStats, getFarms, getSustainabilityScores } from '@/lib/db';
 import type { DashboardStats, Farm, SustainabilityScore } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -23,17 +24,12 @@ const stagger = {
   animate: { transition: { staggerChildren: 0.08 } },
 };
 
-const sdgGoals = [
-  { number: 2, label: 'Zero Hunger', color: 'bg-amber-100 text-amber-800 border-amber-200' },
-  { number: 13, label: 'Climate Action', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
-  { number: 15, label: 'Life on Land', color: 'bg-green-100 text-green-800 border-green-200' },
-];
-
 export default function HorizonImpactPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [farms, setFarms] = useState<Farm[]>([]);
   const [scores, setScores] = useState<SustainabilityScore[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
 
   useEffect(() => {
     async function load() {
@@ -77,6 +73,12 @@ export default function HorizonImpactPage() {
   const waterSavings = avgWater >= 70 ? 38 : Math.round(avgWater * 0.5);
   const biodiversityGain = avgBio >= 60 ? 28 : Math.round(avgBio * 0.4);
 
+  const sdgGoals = [
+    { number: 2, label: t('horizon.sdg.zeroHunger'), color: 'bg-amber-100 text-amber-800 border-amber-200' },
+    { number: 13, label: t('horizon.sdg.climateAction'), color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+    { number: 15, label: t('horizon.sdg.lifeOnLand'), color: 'bg-green-100 text-green-800 border-green-200' },
+  ];
+
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -85,7 +87,7 @@ export default function HorizonImpactPage() {
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-emerald-100 border-t-emerald-600" />
             <Leaf className="absolute inset-0 m-auto h-5 w-5 text-emerald-600" />
           </div>
-          <p className="text-sm font-medium text-emerald-700">Loading Horizon Impact...</p>
+          <p className="text-sm font-medium text-emerald-700">{t('horizon.loading')}</p>
         </div>
       </div>
     );
@@ -100,10 +102,10 @@ export default function HorizonImpactPage() {
             <div className="rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 p-2 shadow-lg">
               <BarChart3 className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">HORIZON Impact Dashboard</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('horizon.title')}</h1>
           </div>
           <p className="mt-1 text-sm text-gray-500">
-            Projected impact across farmers, communities, and the environment
+            {t('horizon.subtitle')}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -131,11 +133,11 @@ export default function HorizonImpactPage() {
             </div>
             <div className="mt-3">
               <div className="text-2xl font-bold text-gray-900">{(stats?.total_users ?? 0).toLocaleString()}</div>
-              <p className="text-sm text-gray-500">Total Farmers</p>
+              <p className="text-sm text-gray-500">{t('horizon.kpi.totalFarmers')}</p>
             </div>
             <div className="mt-2 flex items-center gap-1 text-xs text-emerald-600">
               <ArrowRight className="h-3 w-3" />
-              Projected: {projectedFarmers.toLocaleString()}
+              {t('horizon.kpi.projected', { value: projectedFarmers.toLocaleString() })}
             </div>
           </CardContent>
         </Card>
@@ -147,16 +149,16 @@ export default function HorizonImpactPage() {
                 <Globe className="h-5 w-5" />
               </div>
               <Badge variant="secondary" className="text-xs">
-                {regions.length} Regions
+                {t('horizon.kpi.regions', { count: regions.length })}
               </Badge>
             </div>
             <div className="mt-3">
               <div className="text-2xl font-bold text-gray-900">{(stats?.total_farms ?? 0).toLocaleString()}</div>
-              <p className="text-sm text-gray-500">Active Farms</p>
+              <p className="text-sm text-gray-500">{t('horizon.kpi.activeFarms')}</p>
             </div>
             <div className="mt-2 flex items-center gap-1 text-xs text-emerald-600">
               <ArrowRight className="h-3 w-3" />
-              Projected: {projectedFarms.toLocaleString()}
+              {t('horizon.kpi.projected', { value: projectedFarms.toLocaleString() })}
             </div>
           </CardContent>
         </Card>
@@ -168,12 +170,12 @@ export default function HorizonImpactPage() {
                 <TreePine className="h-5 w-5" />
               </div>
               <Badge variant="primary" className="text-xs">
-                {avgScore}% Overall
+                {avgScore}% {t('horizon.kpi.overall')}
               </Badge>
             </div>
             <div className="mt-3">
               <div className="text-2xl font-bold text-gray-900">{scores.length.toLocaleString()}</div>
-              <p className="text-sm text-gray-500">Sustainability Records</p>
+              <p className="text-sm text-gray-500">{t('horizon.kpi.sustainabilityRecords')}</p>
             </div>
             <Progress value={avgScore} className="mt-2 h-1.5" />
           </CardContent>
@@ -186,18 +188,18 @@ export default function HorizonImpactPage() {
                 <Leaf className="h-5 w-5" />
               </div>
               <Badge variant="warning" className="text-xs">
-                Impact Score
+                {t('horizon.kpi.impactScore')}
               </Badge>
             </div>
             <div className="mt-3">
               <div className="text-2xl font-bold text-gray-900">
                 {Math.round((avgSoil + avgWater + avgBio + (100 - avgCarbon)) / 4)}%
               </div>
-              <p className="text-sm text-gray-500">Environmental Health</p>
+              <p className="text-sm text-gray-500">{t('horizon.kpi.environmentalHealth')}</p>
             </div>
             <div className="mt-2 flex items-center gap-1 text-xs text-emerald-600">
               <CheckCircle className="h-3 w-3" />
-              {carbonReduction}% CO₂ reduction projected
+              {t('horizon.kpi.co2ReductionProjected', { value: carbonReduction })}
             </div>
           </CardContent>
         </Card>
@@ -212,8 +214,8 @@ export default function HorizonImpactPage() {
                 <Target className="h-5 w-5 text-emerald-700" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">UN Sustainable Development Goals Alignment</p>
-                <p className="text-xs text-gray-500">AgriPride AI contributes directly to SDG 2, 13, and 15</p>
+                <p className="text-sm font-semibold text-gray-900">{t('horizon.sdgAlignment.title')}</p>
+                <p className="text-xs text-gray-500">{t('horizon.sdgAlignment.description')}</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -233,15 +235,15 @@ export default function HorizonImpactPage() {
           <TabsList className="mb-6 w-full justify-start gap-1 rounded-xl border border-emerald-100 bg-emerald-50/50 p-1">
             <TabsTrigger value="farmers" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
               <Users className="h-4 w-4" />
-              Farmers
+              {t('horizon.tabs.farmers')}
             </TabsTrigger>
             <TabsTrigger value="communities" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
               <Heart className="h-4 w-4" />
-              Communities
+              {t('horizon.tabs.communities')}
             </TabsTrigger>
             <TabsTrigger value="environment" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
               <TreePine className="h-4 w-4" />
-              Environment
+              {t('horizon.tabs.environment')}
             </TabsTrigger>
           </TabsList>
 
@@ -254,27 +256,27 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
                       <Users className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Farmer Adoption</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.farmers.farmerAdoption')}</CardTitle>
                   </div>
-                  <CardDescription>Current vs projected farmer count</CardDescription>
+                  <CardDescription>{t('horizon.farmers.farmerAdoptionDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-gray-900">{(stats?.total_users ?? 0).toLocaleString()}</span>
-                    <span className="text-sm text-gray-400">current</span>
+                    <span className="text-sm text-gray-400">{t('horizon.farmers.current')}</span>
                   </div>
                   <div className="mt-3 space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Projected (next quarter)</span>
+                      <span className="text-gray-600">{t('horizon.farmers.projectedNextQuarter')}</span>
                       <span className="font-semibold text-emerald-700">{projectedFarmers.toLocaleString()}</span>
                     </div>
                     <Progress value={Math.min(100, stats ? (stats.total_users / projectedFarmers) * 100 : 0)} className="h-2" />
                   </div>
                   <p className="mt-3 text-xs leading-relaxed text-gray-500">
-                    Farmer adoption growing at {stats?.user_growth ?? 0}% per quarter, driven by AI crop advisory and disease detection.
+                    {t('horizon.farmers.growthNarrative', { growth: stats?.user_growth ?? 0 })}
                   </p>
                   <Button variant="link" size="sm" className="mt-2 h-auto p-0 text-emerald-600">
-                    View farmer insights <ArrowRight className="ml-1 h-3 w-3" />
+                    {t('horizon.farmers.viewInsights')} <ArrowRight className="ml-1 h-3 w-3" />
                   </Button>
                 </CardContent>
               </Card>
@@ -285,18 +287,18 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-emerald-50 p-2 text-emerald-600">
                       <Globe className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Farm Network</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.farmers.farmNetwork')}</CardTitle>
                   </div>
-                  <CardDescription>Registered farms and growth</CardDescription>
+                  <CardDescription>{t('horizon.farmers.farmNetworkDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-gray-900">{(stats?.total_farms ?? 0).toLocaleString()}</span>
-                    <span className="text-sm text-gray-400">farms</span>
+                    <span className="text-sm text-gray-400">{t('horizon.farmers.farms')}</span>
                   </div>
                   <div className="mt-3 space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Projected (next quarter)</span>
+                      <span className="text-gray-600">{t('horizon.farmers.projectedNextQuarter')}</span>
                       <span className="font-semibold text-emerald-700">{projectedFarms.toLocaleString()}</span>
                     </div>
                     <Progress value={stats ? (stats.total_farms / projectedFarms) * 100 : 0} className="h-2" />
@@ -318,22 +320,22 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-green-50 p-2 text-green-600">
                       <Leaf className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Sustainability Score</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.farmers.sustainabilityScore')}</CardTitle>
                   </div>
-                  <CardDescription>Average across all farms</CardDescription>
+                  <CardDescription>{t('horizon.farmers.sustainabilityScoreDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-gray-900">{avgScore}%</span>
-                    <span className="text-sm text-gray-400">overall</span>
+                    <span className="text-sm text-gray-400">{t('horizon.farmers.overall')}</span>
                   </div>
                   <Progress value={avgScore} className="mt-3 h-2" />
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     {[
-                      { label: 'Soil Health', value: avgSoil },
-                      { label: 'Water Usage', value: avgWater },
-                      { label: 'Biodiversity', value: avgBio },
-                      { label: 'Carbon Footprint', value: 100 - avgCarbon },
+                      { label: t('horizon.farmers.soilHealth'), value: avgSoil },
+                      { label: t('horizon.farmers.waterUsage'), value: avgWater },
+                      { label: t('horizon.farmers.biodiversity'), value: avgBio },
+                      { label: t('horizon.farmers.carbonFootprint'), value: 100 - avgCarbon },
                     ].map((m) => (
                       <div key={m.label}>
                         <div className="flex items-center justify-between text-xs">
@@ -354,25 +356,29 @@ export default function HorizonImpactPage() {
                 <div className="flex-1">
                   <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
                     <CheckCircle className="h-5 w-5 text-emerald-600" />
-                    Farmer Impact Summary
+                    {t('horizon.farmers.summary')}
                   </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    With <strong>{stats?.total_users ?? 0} farmers</strong> across <strong>{regions.length} regions</strong>,
-                    AgriPride AI is driving measurable improvements in farm productivity and sustainability.
-                    Projected growth of <strong>{stats?.user_growth ?? 0}%</strong> next quarter will expand reach
-                    to an estimated <strong>{projectedFarmers.toLocaleString()} farmers</strong> managing{' '}
-                    <strong>{projectedFarms.toLocaleString()} farms</strong>.
-                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-600"
+                     dangerouslySetInnerHTML={{
+                       __html: t('horizon.farmers.summaryNarrative', {
+                         farmers: `<strong>${stats?.total_users ?? 0}</strong>`,
+                         regions: `<strong>${regions.length}</strong>`,
+                         growth: `<strong>${stats?.user_growth ?? 0}%</strong>`,
+                         projectedFarmers: `<strong>${projectedFarmers.toLocaleString()}</strong>`,
+                         projectedFarms: `<strong>${projectedFarms.toLocaleString()}</strong>`,
+                       })
+                     }}
+                  />
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-emerald-700">{avgScore}%</div>
-                    <p className="text-xs text-gray-500">Avg Sustainability</p>
+                    <p className="text-xs text-gray-500">{t('horizon.farmers.avgSustainability')}</p>
                   </div>
                   <div className="h-10 w-px bg-emerald-200" />
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-700">{stats?.user_growth ?? 0}%</div>
-                    <p className="text-xs text-gray-500">Growth Rate</p>
+                    <p className="text-xs text-gray-500">{t('horizon.farmers.growthRate')}</p>
                   </div>
                 </div>
               </CardContent>
@@ -388,18 +394,18 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-purple-50 p-2 text-purple-600">
                       <Globe className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Regional Coverage</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.communities.regionalCoverage')}</CardTitle>
                   </div>
-                  <CardDescription>Geographic reach of AgriPride AI</CardDescription>
+                  <CardDescription>{t('horizon.communities.regionalCoverageDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-gray-900">{regions.length}</span>
-                    <span className="text-sm text-gray-400">regions</span>
+                    <span className="text-sm text-gray-400">{t('horizon.communities.regions')}</span>
                   </div>
                   <Progress value={Math.min(100, (regions.length / 10) * 100)} className="mt-3 h-2" />
                   <p className="mt-2 text-xs text-gray-500">
-                    Target: 10 regions — currently at {Math.round((regions.length / 10) * 100)}% coverage
+                    {t('horizon.communities.targetCoverage', { percent: Math.round((regions.length / 10) * 100) })}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {regions.map((r) => (
@@ -415,22 +421,22 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-amber-50 p-2 text-amber-600">
                       <Sun className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Food Security Impact</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.communities.foodSecurity')}</CardTitle>
                   </div>
-                  <CardDescription>Crop yield and food availability</CardDescription>
+                  <CardDescription>{t('horizon.communities.foodSecurityDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-gray-900">{foodSecurityImpact}%</span>
-                    <span className="text-sm text-gray-400">security index</span>
+                    <span className="text-sm text-gray-400">{t('horizon.communities.securityIndex')}</span>
                   </div>
                   <Progress value={foodSecurityImpact} className="mt-3 h-2" />
                   <p className="mt-2 text-xs leading-relaxed text-gray-500">
-                    AI-driven crop advisory and disease detection are improving yields across {regions.length} regions.
+                    {t('horizon.communities.foodSecurityNarrative', { regions: regions.length })}
                   </p>
                   <div className="mt-3 flex items-center gap-2 rounded-lg bg-amber-50 p-3">
                     <Target className="h-4 w-4 text-amber-600" />
-                    <span className="text-xs font-medium text-amber-800">SDG 2: Zero Hunger</span>
+                    <span className="text-xs font-medium text-amber-800">{t('horizon.communities.sdg2Label')}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -441,22 +447,22 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-rose-50 p-2 text-rose-600">
                       <Heart className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Community Wellbeing</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.communities.wellbeing')}</CardTitle>
                   </div>
-                  <CardDescription>Socio-economic impact metrics</CardDescription>
+                  <CardDescription>{t('horizon.communities.wellbeingDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Farmers supported</span>
+                        <span className="text-gray-600">{t('horizon.communities.farmersSupported')}</span>
                         <span className="font-semibold text-gray-900">{(stats?.total_users ?? 0).toLocaleString()}</span>
                       </div>
                       <Progress value={100} className="mt-1 h-1.5" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Disease resolution</span>
+                        <span className="text-gray-600">{t('horizon.communities.diseaseResolution')}</span>
                         <span className="font-semibold text-gray-900">
                           {stats ? Math.round(stats.disease_resolution_rate * 100) : 0}%
                         </span>
@@ -465,7 +471,7 @@ export default function HorizonImpactPage() {
                     </div>
                     <div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Active farms</span>
+                        <span className="text-gray-600">{t('horizon.communities.activeFarms')}</span>
                         <span className="font-semibold text-gray-900">{(stats?.total_farms ?? 0).toLocaleString()}</span>
                       </div>
                       <Progress value={100} className="mt-1 h-1.5" />
@@ -481,15 +487,17 @@ export default function HorizonImpactPage() {
                 <div className="flex-1">
                   <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
                     <CheckCircle className="h-5 w-5 text-emerald-600" />
-                    Community Impact Summary
+                    {t('horizon.communities.summary')}
                   </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    Spanning <strong>{regions.length} regions</strong>, AgriPride AI is strengthening food security
-                    (index: <strong>{foodSecurityImpact}%</strong>) by equipping smallholder farmers with
-                    AI-powered disease detection, weather forecasting, and sustainable farming recommendations.
-                    Our <strong>{stats ? Math.round(stats.disease_resolution_rate * 100) : 0}% disease resolution rate</strong>{' '}
-                    means fewer crop losses and more stable food supplies.
-                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-600"
+                     dangerouslySetInnerHTML={{
+                       __html: t('horizon.communities.summaryNarrative', {
+                         regions: `<strong>${regions.length}</strong>`,
+                         index: `<strong>${foodSecurityImpact}</strong>`,
+                         resolution: `<strong>${stats ? Math.round(stats.disease_resolution_rate * 100) : 0}</strong>`,
+                       })
+                     }}
+                  />
                 </div>
                 <div className="flex shrink-0 items-center gap-4">
                   <Badge variant="primary" className="flex items-center gap-1 px-3 py-1.5 text-sm">
@@ -514,23 +522,22 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-emerald-50 p-2 text-emerald-600">
                       <Leaf className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Carbon Footprint Reduction</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.environment.carbonReduction')}</CardTitle>
                   </div>
-                  <CardDescription>Projected CO₂ savings</CardDescription>
+                  <CardDescription>{t('horizon.environment.carbonReductionDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-emerald-700">{carbonReduction}%</span>
-                    <span className="text-sm text-gray-400">reduction</span>
+                    <span className="text-sm text-gray-400">{t('horizon.environment.reduction')}</span>
                   </div>
                   <Progress value={carbonReduction} className="mt-3 h-2" />
                   <p className="mt-2 text-xs leading-relaxed text-gray-500">
-                    Sustainable farming practices and reduced chemical usage are lowering carbon emissions
-                    across the agricultural value chain.
+                    {t('horizon.environment.carbonNarrative')}
                   </p>
                   <div className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-50 p-3">
                     <Target className="h-4 w-4 text-emerald-600" />
-                    <span className="text-xs font-medium text-emerald-800">SDG 13: Climate Action</span>
+                    <span className="text-xs font-medium text-emerald-800">{t('horizon.environment.sdg13Label')}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -541,23 +548,22 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
                       <Droplets className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Water Savings</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.environment.waterSavings')}</CardTitle>
                   </div>
-                  <CardDescription>Efficient irrigation impact</CardDescription>
+                  <CardDescription>{t('horizon.environment.waterSavingsDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-blue-700">{waterSavings}%</span>
-                    <span className="text-sm text-gray-400">savings</span>
+                    <span className="text-sm text-gray-400">{t('horizon.environment.savings')}</span>
                   </div>
                   <Progress value={waterSavings} className="mt-3 h-2" />
                   <p className="mt-2 text-xs leading-relaxed text-gray-500">
-                    AI-optimized irrigation scheduling and drought-resistant crop recommendations
-                    are reducing water usage across farms.
+                    {t('horizon.environment.waterNarrative')}
                   </p>
                   <div className="mt-3 flex items-center gap-2 rounded-lg bg-blue-50 p-3">
                     <Droplets className="h-4 w-4 text-blue-600" />
-                    <span className="text-xs font-medium text-blue-800">Avg water score: {avgWater}%</span>
+                    <span className="text-xs font-medium text-blue-800">{t('horizon.environment.avgWaterScore', { value: avgWater })}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -568,23 +574,22 @@ export default function HorizonImpactPage() {
                     <div className="rounded-lg bg-green-50 p-2 text-green-600">
                       <TreePine className="h-4 w-4" />
                     </div>
-                    <CardTitle className="text-sm font-semibold">Biodiversity Impact</CardTitle>
+                    <CardTitle className="text-sm font-semibold">{t('horizon.environment.biodiversity')}</CardTitle>
                   </div>
-                  <CardDescription>Ecosystem health projection</CardDescription>
+                  <CardDescription>{t('horizon.environment.biodiversityDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-green-700">{biodiversityGain}%</span>
-                    <span className="text-sm text-gray-400">improvement</span>
+                    <span className="text-sm text-gray-400">{t('horizon.environment.improvement')}</span>
                   </div>
                   <Progress value={biodiversityGain} className="mt-3 h-2" />
                   <p className="mt-2 text-xs leading-relaxed text-gray-500">
-                    Reduced pesticide use and diversified cropping systems are promoting
-                    biodiversity and soil health across farmlands.
+                    {t('horizon.environment.biodiversityNarrative')}
                   </p>
                   <div className="mt-3 flex items-center gap-2 rounded-lg bg-green-50 p-3">
                     <Target className="h-4 w-4 text-green-600" />
-                    <span className="text-xs font-medium text-green-800">SDG 15: Life on Land</span>
+                    <span className="text-xs font-medium text-green-800">{t('horizon.environment.sdg15Label')}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -596,16 +601,16 @@ export default function HorizonImpactPage() {
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold">
                     <BarChart3 className="h-4 w-4 text-emerald-500" />
-                    Sustainability Score Breakdown
+                    {t('horizon.environment.scoreBreakdown')}
                   </CardTitle>
-                  <CardDescription>Average scores across all sustainability dimensions</CardDescription>
+                  <CardDescription>{t('horizon.environment.scoreBreakdownDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {[
-                    { label: 'Soil Health', value: avgSoil, icon: Sun, color: 'text-amber-600 bg-amber-50' },
-                    { label: 'Water Usage Efficiency', value: avgWater, icon: Droplets, color: 'text-blue-600 bg-blue-50' },
-                    { label: 'Biodiversity', value: avgBio, icon: TreePine, color: 'text-green-600 bg-green-50' },
-                    { label: 'Carbon Footprint (inverse)', value: 100 - avgCarbon, icon: Leaf, color: 'text-emerald-600 bg-emerald-50' },
+                    { label: t('horizon.farmers.soilHealth'), value: avgSoil, icon: Sun, color: 'text-amber-600 bg-amber-50' },
+                    { label: t('horizon.environment.waterUsageEfficiency'), value: avgWater, icon: Droplets, color: 'text-blue-600 bg-blue-50' },
+                    { label: t('horizon.farmers.biodiversity'), value: avgBio, icon: TreePine, color: 'text-green-600 bg-green-50' },
+                    { label: t('horizon.environment.carbonFootprintInverse'), value: 100 - avgCarbon, icon: Leaf, color: 'text-emerald-600 bg-emerald-50' },
                   ].map((item) => (
                     <div key={item.label}>
                       <div className="mb-1 flex items-center justify-between text-sm">
@@ -627,16 +632,16 @@ export default function HorizonImpactPage() {
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold">
                     <Target className="h-4 w-4 text-emerald-500" />
-                    Environmental Goals & Projections
+                    {t('horizon.environment.goals')}
                   </CardTitle>
-                  <CardDescription>2030 targets and current progress</CardDescription>
+                  <CardDescription>{t('horizon.environment.goalsDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
                   {[
-                    { label: 'Carbon Neutral Farming', current: carbonReduction, target: 60, unit: '% reduction' },
-                    { label: 'Water Conservation', current: waterSavings, target: 50, unit: '% savings' },
-                    { label: 'Biodiversity Restoration', current: biodiversityGain, target: 40, unit: '% improvement' },
-                    { label: 'Sustainable Farms', current: avgScore, target: 85, unit: '% avg score' },
+                    { label: t('horizon.environment.goalCarbonNeutral'), current: carbonReduction, target: 60, unit: '% reduction' },
+                    { label: t('horizon.environment.goalWaterConservation'), current: waterSavings, target: 50, unit: '% savings' },
+                    { label: t('horizon.environment.goalBiodiversity'), current: biodiversityGain, target: 40, unit: '% improvement' },
+                    { label: t('horizon.environment.goalSustainableFarms'), current: avgScore, target: 85, unit: '% avg score' },
                   ].map((g) => (
                     <div key={g.label}>
                       <div className="mb-1 flex items-center justify-between text-sm">
@@ -645,7 +650,7 @@ export default function HorizonImpactPage() {
                       </div>
                       <Progress value={(g.current / g.target) * 100} className="h-2" />
                       <p className="mt-0.5 text-xs text-gray-400">
-                        {g.current >= g.target ? 'Target achieved' : `${Math.round((g.current / g.target) * 100)}% of target`}
+                        {g.current >= g.target ? t('horizon.environment.targetAchieved') : t('horizon.environment.percentOfTarget', { percent: Math.round((g.current / g.target) * 100) })}
                       </p>
                     </div>
                   ))}
@@ -659,22 +664,27 @@ export default function HorizonImpactPage() {
                 <div className="flex-1">
                   <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
                     <CheckCircle className="h-5 w-5 text-emerald-600" />
-                    Environmental Impact Summary
+                    {t('horizon.environment.summary')}
                   </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    AgriPride AI is projected to deliver a <strong>{carbonReduction}% reduction</strong> in carbon
-                    footprint, <strong>{waterSavings}% water savings</strong>, and a{' '}
-                    <strong>{biodiversityGain}% biodiversity improvement</strong> across {regions.length} regions.
-                    These gains align directly with <strong>SDG 13 (Climate Action)</strong> and{' '}
-                    <strong>SDG 15 (Life on Land)</strong>, supporting a regenerative agricultural future.
-                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-600"
+                     dangerouslySetInnerHTML={{
+                       __html: t('horizon.environment.summaryNarrative', {
+                         carbon: `<strong>${carbonReduction}</strong>`,
+                         water: `<strong>${waterSavings}</strong>`,
+                         biodiversity: `<strong>${biodiversityGain}</strong>`,
+                         regions: regions.length,
+                         sdg13: `<strong>SDG 13 (${t('horizon.sdg.climateAction')})</strong>`,
+                         sdg15: `<strong>SDG 15 (${t('horizon.sdg.lifeOnLand')})</strong>`,
+                       })
+                     }}
+                  />
                 </div>
                 <div className="flex shrink-0 flex-col items-center gap-1">
                   <div className="flex items-center gap-1 text-2xl font-bold text-emerald-700">
                     <Leaf className="h-6 w-6" />
                     {avgScore}%
                   </div>
-                  <p className="text-xs text-gray-500">Planet Health Score</p>
+                  <p className="text-xs text-gray-500">{t('horizon.environment.planetHealthScore')}</p>
                 </div>
               </CardContent>
             </Card>
@@ -687,14 +697,14 @@ export default function HorizonImpactPage() {
         <Card className="border-emerald-100 bg-gradient-to-r from-emerald-600 to-emerald-800 shadow-lg">
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center md:flex-row md:text-left">
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-white">Driving Impact Across Every Dimension</h2>
+              <h2 className="text-xl font-bold text-white">{t('horizon.cta.title')}</h2>
               <p className="mt-1 text-sm text-emerald-100">
-                From farmer livelihoods to planetary health — AgriPride AI is building a sustainable, food-secure future.
+                {t('horizon.cta.subtitle')}
               </p>
             </div>
             <Button variant="secondary" size="lg" className="shrink-0 gap-2 bg-white text-emerald-800 hover:bg-emerald-50">
               <BarChart3 className="h-4 w-4" />
-              View Full Report
+              {t('horizon.cta.viewFullReport')}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </CardContent>

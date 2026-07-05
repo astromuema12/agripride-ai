@@ -27,13 +27,13 @@ const CATEGORY_COLORS: Record<string, string> = {
   other: 'from-gray-400 to-gray-500',
 };
 
-function formatKES(amount: number): string {
-  return `KES ${amount.toLocaleString()}`;
-}
-
 export default function FarmFinancePage() {
   const { user } = useAuth();
   const { t } = useI18n();
+
+  const formatKES = (amount: number): string => {
+    return `${t('common.currency')} ${amount.toLocaleString()}`;
+  };
   const [farms, setFarms] = useState<Farm[]>([]);
   const [expenses, setExpenses] = useState<FarmExpense[]>([]);
   const [revenues, setRevenues] = useState<FarmRevenue[]>([]);

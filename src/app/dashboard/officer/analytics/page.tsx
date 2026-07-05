@@ -51,7 +51,7 @@ export default function RegionalAnalyticsPage() {
         setDiseaseReports(d);
         setSustainabilityScores(s);
       } catch (err) {
-        toast.error('Failed to load analytics data');
+        toast.error(t('dashboard.officer.failedToLoadAnalytics'));
       } finally {
         setLoading(false);
       }

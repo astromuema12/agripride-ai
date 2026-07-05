@@ -16,8 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'AgriPride AI - Agricultural Intelligence Platform',
-  description: 'Empowering African farmers with AI-driven agricultural intelligence, disease diagnosis, weather monitoring, and sustainable farming practices.',
+  title: 'AgriPride AI - Jukwaa la Akili ya Kilimo',
+  description: 'Kuwapa wakulima wa Afrika uwezo wa akili ya kilimo inayoendeshwa na AI, utambuzi wa magonjwa, ufuatiliaji wa hali ya hewa, na mazoea ya kilimo endelevu.',
   keywords: 'agriculture, AI, farming, crop disease, weather, Africa, sustainability',
 };
 
