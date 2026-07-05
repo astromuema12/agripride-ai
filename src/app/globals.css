@@ -12,8 +12,8 @@
   --color-emerald-300: #6ee7b7;
   --color-emerald-400: #34d399;
   --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-emerald-700: #047857;
+  --color-emerald-600: #047857;
+  --color-emerald-700: #036141;
   --color-emerald-800: #065f46;
   --color-emerald-900: #064e3b;
 
@@ -53,6 +53,12 @@
   --color-slate-800: #1e293b;
   --color-slate-900: #0f172a;
   --color-slate-950: #020617;
+
+  /* WCAG contrast fixes — overrides default Tailwind values */
+  --color-gray-400: #6b7685;
+  --color-red-500: #dc2626;
+  --color-green-600: #15803d;
+  --color-amber-600: #b45309;
 }
 
 @layer base {
@@ -64,23 +70,23 @@
     --popover: #ffffff;
     --popover-foreground: #0f172a;
     --muted: #f1f5f9;
-    --muted-foreground: #64748b;
+    --muted-foreground: #5a6a7d;
     --border: #e2e8f0;
-    --ring: #059669;
+    --ring: #047857;
     --radius: 0.75rem;
 
     --color-bg: #f8fafc;
     --color-card: #ffffff;
     --color-border: #e2e8f0;
     --color-text: #0f172a;
-    --color-text-secondary: #64748b;
+    --color-text-secondary: #5a6a7d;
     --color-input: #ffffff;
-    --color-accent: #059669;
-    --color-accent-hover: #047857;
+    --color-accent: #047857;
+    --color-accent-hover: #036141;
     --color-accent-soft: #ecfdf5;
-    --color-accent-text: #047857;
-    --color-success: #059669;
-    --color-warning: #d97706;
+    --color-accent-text: #036141;
+    --color-success: #047857;
+    --color-warning: #b45309;
     --color-danger: #dc2626;
     --color-info: #0284c7;
 
@@ -260,7 +266,7 @@ html {
 
 /* Text gradient */
 .text-gradient {
-  background: linear-gradient(135deg, #059669, #34d399);
+  background: linear-gradient(135deg, #047857, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -429,7 +435,7 @@ html {
   width: 3px;
   height: 60%;
   border-radius: 0 3px 3px 0;
-  background: linear-gradient(180deg, #10b981, #059669);
+  background: linear-gradient(180deg, #10b981, #047857);
 }
 
 /* Stagger grid animation */
@@ -460,7 +466,7 @@ html {
 
 /* Gradient badge */
 .badge-gradient {
-  background: linear-gradient(135deg, #059669, #10b981);
+  background: linear-gradient(135deg, #047857, #036141);
   color: white;
   border: none;
 }
