@@ -47,9 +47,9 @@ export default function TermsPage() {
             <AlertTriangle className="mx-auto mb-2 h-6 w-6 text-amber-600" />
             <p className="text-sm font-medium text-amber-800">{t('legal.terms.cards.termsApply')}</p>
           </div>
-          <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4 text-center">
-            <CheckCircle className="mx-auto mb-2 h-6 w-6 text-emerald-600" />
-            <p className="text-sm font-medium text-emerald-800">{t('legal.terms.cards.dataStaysYours')}</p>
+          <div className="rounded-lg border border-[#ccccbe] bg-[#c4d4e4]/30 p-4 text-center">
+            <CheckCircle className="mx-auto mb-2 h-6 w-6 text-[#445c8c]" />
+            <p className="text-sm font-medium text-[#364a70]">{t('legal.terms.cards.dataStaysYours')}</p>
           </div>
           <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-4 text-center">
             <ScrollText className="mx-auto mb-2 h-6 w-6 text-blue-600" />

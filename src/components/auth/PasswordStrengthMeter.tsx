@@ -22,9 +22,9 @@ const progressMap: Record<string, number> = {
 const barColor: Record<string, string> = {
   weak: 'bg-red-500',
   fair: 'bg-amber-500',
-  good: 'bg-blue-500',
-  strong: 'bg-emerald-500',
-  very_strong: 'bg-emerald-600',
+  good: 'bg-[#445c8c]',
+  strong: 'bg-[#a4dca7]',
+  very_strong: 'bg-[#72c477]',
 };
 
 export function PasswordStrengthMeter({ password, showSuggestions = true }: PasswordStrengthMeterProps) {

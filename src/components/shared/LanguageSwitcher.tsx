@@ -49,7 +49,7 @@ export function LanguageSwitcher() {
               <span className={lang.code === language ? 'font-medium' : ''}>{lang.label}</span>
             </span>
             {lang.code === language && (
-              <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <Check className="h-4 w-4 text-[#445c8c] dark:text-[#a4dca7] shrink-0" />
             )}
           </DropdownMenuItem>
         ))}

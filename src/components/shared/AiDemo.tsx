@@ -32,20 +32,20 @@ type DemoResult = {
 };
 
 const riskColors: Record<string, string> = {
-  low: 'bg-green-100 text-green-700 border-green-200',
-  medium: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  low: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]',
+  medium: 'bg-amber-100 text-amber-700 border-amber-200',
   high: 'bg-orange-100 text-orange-700 border-orange-200',
   critical: 'bg-red-100 text-red-700 border-red-200',
 };
 
 const likelihoodColors: Record<string, string> = {
-  high: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  high: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]',
   medium: 'bg-amber-100 text-amber-700 border-amber-200',
   low: 'bg-red-100 text-red-700 border-red-200',
 };
 
 const uncertaintyColors: Record<string, string> = {
-  low: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  low: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]',
   moderate: 'bg-amber-100 text-amber-700 border-amber-200',
   high: 'bg-red-100 text-red-700 border-red-200',
 };
@@ -101,7 +101,7 @@ export function AiDemo() {
   };
 
   return (
-    <section className="bg-gradient-to-b from-emerald-50 to-white py-16 sm:py-20">
+    <section className="bg-gradient-to-b from-[#f0f4f8] to-white py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -113,10 +113,10 @@ export function AiDemo() {
             <Scan className="mr-1 h-3 w-3" />
             {t('landing.aiDemo.badge')}
           </Badge>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 text-balance">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1f2937] text-balance">
             {t('landing.aiDemo.heading')}
           </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm text-gray-500">
+          <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm text-[#5a6a7d]">
             {t('landing.aiDemo.description')}
           </p>
         </motion.div>
@@ -125,10 +125,10 @@ export function AiDemo() {
           {/* Input */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">{t('landing.aiDemo.describeProblem')}</h3>
+              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-[#1f2937]">{t('landing.aiDemo.describeProblem')}</h3>
               {crops.length > 0 && (
                 <div className="mb-4">
-                  <label className="mb-2 block text-sm font-medium text-gray-700">{t('landing.aiDemo.selectCrop')}</label>
+                  <label className="mb-2 block text-sm font-medium text-[#1f2937]">{t('landing.aiDemo.selectCrop')}</label>
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {crops.map((crop) => (
                       <button
@@ -137,8 +137,8 @@ export function AiDemo() {
                         onClick={() => { setSelectedCrop(crop.id); setResult(null); setError(''); }}
                         className={`flex items-center gap-1 rounded-full px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-colors touch-manipulation ${
                           selectedCrop === crop.id
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-[#445c8c] text-white'
+                            : 'bg-[#f0f4f8] text-[#5a6a7d] hover:bg-[#c4d4e4]'
                         }`}
                       >
                         {crop.emoji && <span>{crop.emoji}</span>} {crop.name}
@@ -149,24 +149,24 @@ export function AiDemo() {
               )}
 
               <div className="mb-4">
-                <label className="mb-2 block text-sm font-medium text-gray-700">{t('landing.aiDemo.growthStage')}</label>
+                <label className="mb-2 block text-sm font-medium text-[#1f2937]">{t('landing.aiDemo.growthStage')}</label>
                 <select
                   value={selectedStage}
                   onChange={(e) => { setSelectedStage(e.target.value as GrowthStage); setResult(null); setError(''); }}
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full rounded-lg border border-[#c4d4e4] bg-white px-3 py-2 text-sm text-[#1f2937] focus:outline-none focus:ring-2 focus:ring-[#445c8c] focus:border-transparent"
                 >
                   {growthStages.map((gs) => (
                     <option key={gs.value} value={gs.value}>{gs.label}</option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-gray-400">{t('landing.aiDemo.growthStageHint')}</p>
+                <p className="mt-1 text-xs text-[#5a6a7d]">{t('landing.aiDemo.growthStageHint')}</p>
               </div>
 
               <div className="mb-3 sm:mb-4">
-                <label className="mb-2 block text-sm font-medium text-gray-700">{t('landing.aiDemo.describeSymptoms')}</label>
+                <label className="mb-2 block text-sm font-medium text-[#1f2937]">{t('landing.aiDemo.describeSymptoms')}</label>
                 <textarea
                   rows={4}
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full rounded-lg border border-[#c4d4e4] bg-white px-3 py-2 text-sm text-[#1f2937] placeholder:text-[#5a6a7d] focus:outline-none focus:ring-2 focus:ring-[#445c8c] focus:border-transparent"
                   placeholder={t('landing.aiDemo.symptomsPlaceholder')}
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
@@ -183,7 +183,7 @@ export function AiDemo() {
                   <><Scan className="mr-2 h-4 w-4" /> {t('landing.aiDemo.diagnoseNow')}</>
                 )}
               </Button>
-              <p className="mt-2 text-xs text-gray-400">
+              <p className="mt-2 text-xs text-[#5a6a7d]">
                 {t('landing.aiDemo.demoNotice')}
               </p>
             </CardContent>
@@ -192,11 +192,11 @@ export function AiDemo() {
           {/* Result */}
           <Card>
             <CardContent className="p-4 sm:p-6">
-              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-gray-900">{t('landing.aiDemo.diagnosisResult')}</h3>
+              <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-[#1f2937]">{t('landing.aiDemo.diagnosisResult')}</h3>
               {diagnosing && (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-                  <Loader2 className="mb-3 h-8 w-8 sm:h-10 sm:w-10 animate-spin text-emerald-500" />
-                  <p className="text-sm text-gray-500">{t('landing.aiDemo.analyzingSymptoms')}</p>
+                  <Loader2 className="mb-3 h-8 w-8 sm:h-10 sm:w-10 animate-spin text-[#445c8c]" />
+                  <p className="text-sm text-[#5a6a7d]">{t('landing.aiDemo.analyzingSymptoms')}</p>
                 </div>
               )}
               {error && (
@@ -207,20 +207,20 @@ export function AiDemo() {
               )}
               {!diagnosing && !error && !result && (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-                  <Sprout className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
-                  <p className="text-sm text-gray-400">{t('landing.aiDemo.emptyState')}</p>
+                  <Sprout className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-[#ccccbe]" />
+                  <p className="text-sm text-[#5a6a7d]">{t('landing.aiDemo.emptyState')}</p>
                 </div>
               )}
               {result && (
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="text-base sm:text-lg font-bold text-gray-900">
+                      <div className="text-base sm:text-lg font-bold text-[#1f2937]">
                         {result.primaryDiagnosis?.name ?? t('landing.aiDemo.uncertain')}
                       </div>
-                      <div className="text-xs text-gray-500 capitalize">{result.crop} — {t('landing.aiDemo.stageLabel', { stage: result.growthStage })}</div>
+                      <div className="text-xs text-[#5a6a7d] capitalize">{result.crop} — {t('landing.aiDemo.stageLabel', { stage: result.growthStage })}</div>
                     </div>
-                    <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-gray-100 text-gray-600'} w-fit`}>
+                    <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-[#f0f4f8] text-[#5a6a7d]'} w-fit`}>
                       {t('landing.aiDemo.uncertaintyLabel', { level: result.uncertaintyLevel.toUpperCase() })}
                     </Badge>
                   </div>
@@ -239,20 +239,20 @@ export function AiDemo() {
 
                   {result.possibleCauses.length > 0 && (
                     <div>
-                      <p className="text-xs font-semibold text-gray-700 mb-2">{t('landing.aiDemo.possibleCauses')}</p>
+                      <p className="text-xs font-semibold text-[#1f2937] mb-2">{t('landing.aiDemo.possibleCauses')}</p>
                       <div className="space-y-2">
                         {result.possibleCauses.slice(0, 4).map((cause, idx) => (
                           <div key={idx} className={`rounded-lg border p-2.5 ${
-                            idx === 0 && cause.likelihood === 'high' ? 'border-emerald-200 bg-emerald-50' : 'border-gray-200'
+                            idx === 0 && cause.likelihood === 'high' ? 'border-[#a4dca7] bg-[#eef8ef]' : 'border-[#ccccbe]'
                           }`}>
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-1.5 min-w-0">
-                                <span className="text-xs font-medium text-gray-900">{idx + 1}. {cause.name}</span>
-                                <Badge className={`${likelihoodColors[cause.likelihood] || 'bg-gray-100'} text-[10px]`}>
+                                <span className="text-xs font-medium text-[#1f2937]">{idx + 1}. {cause.name}</span>
+                                <Badge className={`${likelihoodColors[cause.likelihood] || 'bg-[#f0f4f8]'} text-[10px]`}>
                                   {cause.likelihood}
                                 </Badge>
                               </div>
-                              <span className="text-[10px] font-semibold text-gray-500 shrink-0">
+                              <span className="text-[10px] font-semibold text-[#5a6a7d] shrink-0">
                                 {Math.round(cause.confidence * 100)}%
                               </span>
                             </div>
@@ -263,9 +263,9 @@ export function AiDemo() {
                     </div>
                   )}
 
-                  <div className="rounded-lg bg-gray-50 p-3">
-                    <p className="text-xs font-semibold text-gray-700 mb-1">{t('landing.aiDemo.aiReasoning')}</p>
-                    <p className="text-xs text-gray-600">{result.reasoning.summary}</p>
+                  <div className="rounded-lg bg-[#f0f4f8] p-3">
+                    <p className="text-xs font-semibold text-[#1f2937] mb-1">{t('landing.aiDemo.aiReasoning')}</p>
+                    <p className="text-xs text-[#5a6a7d]">{result.reasoning.summary}</p>
                     {result.reasoning.uncertainties.length > 0 && (
                       <div className="mt-1.5">
                         {result.reasoning.uncertainties.slice(0, 2).map((u, i) => (
@@ -277,28 +277,28 @@ export function AiDemo() {
 
                   {result.primaryDiagnosis?.treatment && (
                     <div>
-                      <p className="mb-1 text-xs font-semibold text-gray-700">
-                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> {t('landing.aiDemo.recommendedTreatment')}
+                      <p className="mb-1 text-xs font-semibold text-[#1f2937]">
+                        <AlertTriangle className="mr-1 inline h-3 w-3 text-[#945c34]" /> {t('landing.aiDemo.recommendedTreatment')}
                       </p>
-                      <p className="text-sm text-gray-600">{result.primaryDiagnosis.treatment}</p>
+                      <p className="text-sm text-[#5a6a7d]">{result.primaryDiagnosis.treatment}</p>
                     </div>
                   )}
 
                   {result.primaryDiagnosis?.prevention && (
                     <div>
-                      <p className="mb-1 text-xs font-semibold text-gray-700">
-                        <Shield className="mr-1 inline h-3 w-3 text-blue-500" /> {t('landing.aiDemo.prevention')}
+                      <p className="mb-1 text-xs font-semibold text-[#1f2937]">
+                        <Shield className="mr-1 inline h-3 w-3 text-[#445c8c]" /> {t('landing.aiDemo.prevention')}
                       </p>
-                      <p className="text-sm text-gray-600">{result.primaryDiagnosis.prevention}</p>
+                      <p className="text-sm text-[#5a6a7d]">{result.primaryDiagnosis.prevention}</p>
                     </div>
                   )}
 
                   {!result.primaryDiagnosis && result.possibleCauses[0]?.treatment && (
                     <div>
-                      <p className="mb-1 text-xs font-semibold text-gray-700">
-                        <AlertTriangle className="mr-1 inline h-3 w-3 text-orange-500" /> {t('landing.aiDemo.suggestedTreatment')}
+                      <p className="mb-1 text-xs font-semibold text-[#1f2937]">
+                        <AlertTriangle className="mr-1 inline h-3 w-3 text-[#945c34]" /> {t('landing.aiDemo.suggestedTreatment')}
                       </p>
-                      <p className="text-sm text-gray-600">{result.possibleCauses[0].treatment}</p>
+                      <p className="text-sm text-[#5a6a7d]">{result.possibleCauses[0].treatment}</p>
                     </div>
                   )}
 
@@ -324,9 +324,9 @@ export function AiDemo() {
           viewport={{ once: true }}
           className="mt-8 sm:mt-12 text-center"
         >
-          <p className="text-xs sm:text-sm text-gray-400">
+          <p className="text-xs sm:text-sm text-[#5a6a7d]">
             {t('landing.aiDemo.fullVersion')}{' '}
-            <a href="/auth?tab=register" className="text-emerald-600 underline hover:text-emerald-700">{t('landing.aiDemo.getStarted')}</a>
+            <a href="/auth?tab=register" className="text-[#445c8c] underline hover:text-[#364a70]">{t('landing.aiDemo.getStarted')}</a>
           </p>
         </motion.div>
       </div>

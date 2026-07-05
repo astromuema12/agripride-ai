@@ -188,7 +188,7 @@ export default function SecurityPage() {
         <CardContent>
           {sessionsLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+              <Loader2 className="h-6 w-6 animate-spin text-[#445c8c]" />
             </div>
           ) : sessions.length === 0 ? (
             <div className="flex flex-col items-center py-8 text-center">
@@ -203,7 +203,7 @@ export default function SecurityPage() {
                   className="flex items-center justify-between rounded-lg border border-[var(--border)] p-4 transition-colors hover:bg-[var(--muted)]/50"
                 >
                   <div className="flex items-start gap-3 min-w-0">
-                    <div className={`rounded-lg p-2 ${session.is_current ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-gray-50 text-gray-400 dark:bg-gray-800/50'}`}>
+                    <div className={`rounded-lg p-2 ${session.is_current ? 'bg-[#c4d4e4] text-[#445c8c] dark:bg-emerald-900/30 dark:text-[#a4dca7]' : 'bg-gray-50 text-gray-400 dark:bg-gray-800/50'}`}>
                       {session.device_type === 'mobile' ? (
                         <Smartphone className="h-5 w-5" />
                       ) : (

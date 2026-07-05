@@ -199,8 +199,8 @@ export default function AIAssistant() {
       <Card className="flex h-[70vh] sm:h-[calc(100vh-18rem)] flex-col">
         <CardHeader className="border-b border-[var(--border)] px-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/50 shrink-0">
-              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-[#c4d4e4] dark:bg-[#445c8c]/30 shrink-0">
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-[#445c8c] dark:text-[#a4dca7]" />
             </div>
             <div className="min-w-0">
               <CardTitle className="text-base sm:text-lg">{t('assistant.title')}</CardTitle>
@@ -224,22 +224,22 @@ export default function AIAssistant() {
                 <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[90%] sm:max-w-[80%] rounded-2xl p-3 sm:p-4 ${
                     msg.role === 'user'
-                      ? 'bg-emerald-600 text-white rounded-br-sm'
+                      ? 'bg-[#445c8c] text-white rounded-br-sm'
                       : 'bg-[var(--muted)] border border-[var(--border)] rounded-bl-sm'
                   }`}>
                     <div className="flex items-center gap-2 mb-1.5">
                       {msg.role === 'assistant' ? (
-                        <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 shrink-0" />
+                        <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#445c8c] shrink-0" />
                       ) : (
                         <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                       )}
-                      <span className={`text-xs font-medium truncate ${msg.role === 'user' ? 'text-emerald-100' : 'text-[var(--muted-foreground)]'}`}>
+                      <span className={`text-xs font-medium truncate ${msg.role === 'user' ? 'text-[#c4d4e4]' : 'text-[var(--muted-foreground)]'}`}>
                         {msg.role === 'assistant' ? (msg.agent_name ?? t('assistant.agentName')) : t('common.signIn')}
                       </span>
                       {msg.role === 'assistant' && msg.content && (
                         <button
                           onClick={() => handleSpeak(msg.content, msg.id)}
-                          className="ml-auto shrink-0 text-[var(--muted-foreground)] hover:text-emerald-600 transition-colors"
+                          className="ml-auto shrink-0 text-[var(--muted-foreground)] hover:text-[#445c8c] transition-colors"
                           title={speakingId === msg.id ? t('assistant.stopSpeaking') : t('assistant.readAloud')}
                         >
                           {speakingId === msg.id ? (

@@ -20,7 +20,7 @@ const sectionKeys = [
 const summaryCardKeys = [
   { key: 'permanentDeletion', icon: Trash2, color: 'border-red-100 bg-red-50/50', iconColor: 'text-red-600', titleColor: 'text-red-800' },
   { key: 'sevenBusinessDays', icon: Clock, color: 'border-amber-100 bg-amber-50/50', iconColor: 'text-amber-600', titleColor: 'text-amber-800' },
-  { key: 'secureProcess', icon: ShieldCheck, color: 'border-emerald-100 bg-emerald-50/50', iconColor: 'text-emerald-600', titleColor: 'text-emerald-800' },
+  { key: 'secureProcess', icon: ShieldCheck, color: 'border-[#c4d4e4] bg-[#c4d4e4]/30', iconColor: 'text-[#445c8c]', titleColor: 'text-[#445c8c]' },
 ] as const;
 
 export default function AccountDeletionPage() {
@@ -85,8 +85,8 @@ export default function AccountDeletionPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
-                  <Mail className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#c4d4e4] dark:bg-[#445c8c]/30">
+                  <Mail className="h-5 w-5 text-[#445c8c] dark:text-[#a4dca7]" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-[var(--foreground)]">{t('legal.accountDeletion.readyToSubmit')}</h3>

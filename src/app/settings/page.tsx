@@ -122,7 +122,7 @@ export default function SettingsPage() {
 
       <Card>
         <CardHeader className="flex flex-row items-center gap-3">
-          <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
+          <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
             <User className="h-5 w-5" />
           </div>
           <div>

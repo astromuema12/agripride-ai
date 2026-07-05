@@ -56,7 +56,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-earth-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#c4d4e4] via-white to-[#f5ede6]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -82,13 +82,13 @@ export default function ContactPage() {
               return (
                 <Card key={item.labelKey} className="transition-shadow hover:shadow-md">
                   <CardContent className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5">
-                    <div className="rounded-lg bg-emerald-50 p-2.5 sm:p-3 text-emerald-600 shrink-0">
+                    <div className="rounded-lg bg-[#c4d4e4] p-2.5 sm:p-3 text-[#445c8c] shrink-0">
                       <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs sm:text-sm font-medium text-gray-500">{t(labelKey)}</p>
                       {item.href ? (
-                        <a href={item.href} className="text-sm font-semibold text-gray-900 hover:text-emerald-600 transition-colors truncate block">
+                        <a href={item.href} className="text-sm font-semibold text-gray-900 hover:text-[#445c8c] transition-colors truncate block">
                           {item.value}
                         </a>
                       ) : (
@@ -100,13 +100,13 @@ export default function ContactPage() {
               );
             })}
 
-            <Card className="bg-emerald-600 border-emerald-600">
+            <Card className="bg-[#445c8c] border-[#445c8c]">
               <CardContent className="p-4 sm:p-5 text-center">
                 <FaWhatsapp className="mx-auto mb-2 h-6 w-6 sm:h-8 sm:w-8 text-white" />
                 <p className="font-semibold text-white text-sm sm:text-base">{t('contact.whatsappResponse')}</p>
-                <p className="mt-1 text-xs sm:text-sm text-emerald-100">{t('contact.whatsappResponseTime')}</p>
+                <p className="mt-1 text-xs sm:text-sm text-[#c4d4e4]">{t('contact.whatsappResponseTime')}</p>
                 <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer">
-                  <Button variant="secondary" className="mt-3 w-full bg-white text-emerald-700 hover:bg-emerald-50">
+                  <Button variant="secondary" className="mt-3 w-full bg-white text-[#445c8c] hover:bg-[#f0f4f8]">
                     <FaWhatsapp className="mr-2 h-4 w-4" />
                     {t('contact.chatOnWhatsApp')}
                   </Button>
@@ -118,9 +118,9 @@ export default function ContactPage() {
               <CardContent className="p-4 sm:p-5">
                 <p className="mb-3 text-sm font-semibold text-gray-900">{t('footer.followUs')}</p>
                 <div className="flex flex-wrap gap-2">
-                  <a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-blue-50 px-2.5 sm:px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors">LinkedIn</a>
-                  <a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-blue-50 px-2.5 sm:px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors">Facebook</a>
-                  <a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-pink-50 px-2.5 sm:px-3 py-2 text-xs font-medium text-pink-700 hover:bg-pink-100 transition-colors">Instagram</a>
+                  <a href="https://www.linkedin.com/in/edwin-musau-b8363a318" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-[#c4d4e4] px-2.5 sm:px-3 py-2 text-xs font-medium text-[#445c8c] hover:bg-[#d4e0ec] transition-colors">LinkedIn</a>
+                  <a href="https://www.facebook.com/share/18D8KpS3Ut/" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-[#c4d4e4] px-2.5 sm:px-3 py-2 text-xs font-medium text-[#445c8c] hover:bg-[#d4e0ec] transition-colors">Facebook</a>
+                  <a href="https://www.instagram.com/edwin_musau" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-[#f5ede6] px-2.5 sm:px-3 py-2 text-xs font-medium text-[#945c34] hover:bg-[#e8d4c0] transition-colors">Instagram</a>
                 </div>
               </CardContent>
             </Card>
@@ -135,8 +135,8 @@ export default function ContactPage() {
               <CardContent className="p-5 sm:p-8">
                 {submitted ? (
                   <div className="flex flex-col items-center py-8 sm:py-12 text-center">
-                    <div className="mb-4 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-emerald-100">
-                      <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-600" />
+                    <div className="mb-4 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-[#eef8ef]">
+                      <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-[#a4dca7]" />
                     </div>
                     <h3 className="text-lg sm:text-xl font-bold text-gray-900">{t('contact.success')}</h3>
                     <p className="mt-2 max-w-md text-sm sm:text-base text-gray-500">
@@ -175,7 +175,7 @@ export default function ContactPage() {
                       <textarea
                         id="message"
                         rows={5}
-                        className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        className="w-full rounded-lg border border-[#c4d4e4] bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#445c8c] focus:border-transparent"
                         placeholder={t('contact.messagePlaceholder')}
                         value={form.message}
                         onChange={(e) => setForm({ ...form, message: e.target.value })}

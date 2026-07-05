@@ -155,8 +155,8 @@ export default function AdminAnalyticsPage() {
                 <p className="mt-1 text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
                 <p className="mt-1 text-xs text-gray-400">{t('adminAnalytics.avgPerRecord', { avg: avgYield.toFixed(1) })}</p>
               </div>
-              <div className="rounded-lg bg-emerald-50 p-3">
-                <Sprout className="h-5 w-5 text-emerald-600" />
+              <div className="rounded-lg bg-[#c4d4e4] p-3">
+                <Sprout className="h-5 w-5 text-[#445c8c]" />
               </div>
             </div>
           </CardContent>
@@ -183,7 +183,7 @@ export default function AdminAnalyticsPage() {
               <div>
                 <p className="text-sm font-medium text-gray-500">{t('adminAnalytics.totalUsers')}</p>
                 <p className="mt-1 text-2xl font-bold text-gray-900">{users.length}</p>
-                <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
+                <p className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
                   <TrendingUp className="h-3 w-3" />
                   {t('adminAnalytics.percentGrowth', { growth: stats?.user_growth ?? 0 })}
                 </p>
@@ -206,8 +206,8 @@ export default function AdminAnalyticsPage() {
                   {t('adminAnalytics.farmsScored', { count: sustainabilityScores.length })}
                 </p>
               </div>
-              <div className="rounded-lg bg-emerald-50 p-3">
-                <Leaf className="h-5 w-5 text-emerald-600" />
+              <div className="rounded-lg bg-[#c4d4e4] p-3">
+                <Leaf className="h-5 w-5 text-[#445c8c]" />
               </div>
             </div>
           </CardContent>
@@ -217,7 +217,7 @@ export default function AdminAnalyticsPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
+            <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
               <Users className="h-5 w-5" />
             </div>
             <div>
@@ -293,7 +293,7 @@ export default function AdminAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{users.length}</p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
+                <div className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
                   <TrendingUp className="h-3 w-3" />
                   {stats?.user_growth ?? 0}% growth
                 </div>
@@ -393,7 +393,7 @@ export default function AdminAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{resolvedDiseases}</p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
+                <div className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
                   <TrendingUp className="h-3 w-3" />
                   {t('adminAnalytics.percentResolution', { percent: totalDiseases > 0 ? ((resolvedDiseases / totalDiseases) * 100).toFixed(0) : 0 })}
                 </div>
@@ -459,13 +459,13 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <Sprout className="h-4 w-4 text-emerald-500" />
+                  <Sprout className="h-4 w-4 text-[#445c8c]" />
                   {t('adminAnalytics.totalYield')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
+                <div className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
                   <TrendingUp className="h-3 w-3" />
                   {t('adminAnalytics.acrossAllRecords')}
                 </div>
@@ -474,7 +474,7 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <BarChart3 className="h-4 w-4 text-emerald-500" />
+                  <BarChart3 className="h-4 w-4 text-[#445c8c]" />
                   {t('adminAnalytics.averageYield')}
                 </CardTitle>
               </CardHeader>
@@ -486,7 +486,7 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <LineChart className="h-4 w-4 text-emerald-500" />
+                  <LineChart className="h-4 w-4 text-[#445c8c]" />
                   {t('common.records')}
                 </CardTitle>
               </CardHeader>
@@ -547,7 +547,7 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <Leaf className="h-4 w-4 text-emerald-500" />
+                  <Leaf className="h-4 w-4 text-[#445c8c]" />
                   {t('adminAnalytics.soilHealth')}
                 </CardTitle>
               </CardHeader>
@@ -636,7 +636,7 @@ export default function AdminAnalyticsPage() {
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#c4d4e4]0" />
                       {t('adminAnalytics.sustainabilityGood')}
                     </span>
                     <span className="font-medium text-gray-900">{good}</span>

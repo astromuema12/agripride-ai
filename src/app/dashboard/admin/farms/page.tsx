@@ -100,7 +100,7 @@ export default function FarmsPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
           <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
+            <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
               <Building2 className="h-5 w-5" />
             </div>
             <div>
@@ -168,7 +168,7 @@ export default function FarmsPage() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-600">
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-medium text-emerald-700">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#c4d4e4] text-[10px] font-medium text-[#445c8c]">
                         {(userMap.get(farm.user_id) || 'U')[0]}
                       </div>
                       {userMap.get(farm.user_id) || t('common.unknown')}
@@ -219,7 +219,7 @@ export default function FarmsPage() {
                         </td>
                         <td className="py-3 pr-4">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs font-medium text-emerald-700">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#c4d4e4] text-xs font-medium text-[#445c8c]">
                               {(userMap.get(farm.user_id) || 'U')[0]}
                             </div>
                             <span className="text-gray-600">{userMap.get(farm.user_id) || t('common.unknown')}</span>

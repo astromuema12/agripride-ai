@@ -108,7 +108,7 @@ export default function ConsentPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
           <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-600">
+            <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
               <FileText className="h-5 w-5" />
             </div>
             <div>

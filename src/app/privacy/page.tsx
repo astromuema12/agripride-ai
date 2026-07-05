@@ -46,9 +46,9 @@ export default function PrivacyPage() {
         </motion.div>
 
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 dark:border-emerald-900 dark:bg-emerald-950/30 p-4 text-center">
-            <Lock className="mx-auto mb-2 h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-            <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">{t('legal.privacy.cards.encryptedStorage')}</p>
+          <div className="rounded-lg border border-[#ccccbe] bg-[#c4d4e4]/30 dark:border-[#445c8c] dark:bg-[#283854] p-4 text-center">
+            <Lock className="mx-auto mb-2 h-6 w-6 text-[#445c8c] dark:text-[#a4dca7]" />
+            <p className="text-sm font-medium text-[#364a70] dark:text-[#a4dca7]">{t('legal.privacy.cards.encryptedStorage')}</p>
           </div>
           <div className="rounded-lg border border-blue-100 bg-blue-50/50 dark:border-blue-900 dark:bg-blue-950/30 p-4 text-center">
             <Eye className="mx-auto mb-2 h-6 w-6 text-blue-600 dark:text-blue-400" />

@@ -141,10 +141,10 @@ export default function OnboardingPage() {
 
   if (completed) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-emerald-50 to-white">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#c4d4e4] to-white">
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-            <Check className="h-8 w-8 text-emerald-600" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#eef8ef]">
+            <Check className="h-8 w-8 text-[#a4dca7]" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">{t('onboarding.allSet')}</h1>
           <p className="mt-2 text-gray-500">{t('onboarding.takingYouToDashboard')}</p>
@@ -154,7 +154,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12">
+    <div className="min-h-screen bg-gradient-to-b from-[#f0f4f8] to-white py-8 sm:py-12">
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         {/* Progress */}
         <div className="mb-6 sm:mb-8 text-center">
@@ -170,15 +170,15 @@ export default function OnboardingPage() {
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
                   s.id === step
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-[#445c8c] text-white'
                     : s.id < step
-                      ? 'bg-emerald-100 text-emerald-600'
-                      : 'bg-gray-100 text-gray-400'
+                      ? 'bg-[#c4d4e4] text-[#445c8c]'
+                      : 'bg-[#f0f4f8] text-gray-400'
                 }`}
               >
                 <s.icon className="h-4 w-4" />
               </div>
-              <span className={`text-xs ${s.id === step ? 'font-semibold text-emerald-600' : 'text-gray-400'}`}>
+              <span className={`text-xs ${s.id === step ? 'font-semibold text-[#445c8c]' : 'text-gray-400'}`}>
                 {t(`onboarding.step${s.id}`)}
               </span>
             </div>
@@ -186,7 +186,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Step content */}
-        <div className="rounded-xl border border-gray-200 bg-white p-5 sm:p-8">
+        <div className="rounded-xl border border-[#ccccbe] bg-white p-5 sm:p-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -229,8 +229,8 @@ export default function OnboardingPage() {
                           onClick={() => updateForm({ crop_types: toggleArray(form.crop_types, crop) })}
                           className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
                             form.crop_types.includes(crop)
-                              ? 'bg-emerald-600 text-white'
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              ? 'bg-[#445c8c] text-white'
+                              : 'bg-[#f0f4f8] text-gray-600 hover:bg-[#c4d4e4]'
                           }`}
                         >
                           {t(`onboarding.crops.${cropToKey(crop)}`)}
@@ -253,8 +253,8 @@ export default function OnboardingPage() {
                         onClick={() => updateForm({ goals: toggleArray(form.goals, t(`onboarding.goal.${key}`)) })}
                         className={`rounded-full px-2.5 sm:px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation ${
                           form.goals.includes(t(`onboarding.goal.${key}`))
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-[#445c8c] text-white'
+                            : 'bg-[#f0f4f8] text-gray-600 hover:bg-[#c4d4e4]'
                         }`}
                       >
                         {t(`onboarding.goal.${key}`)}
@@ -270,20 +270,20 @@ export default function OnboardingPage() {
                   <p className="text-sm text-gray-500">
                     {t('onboarding.aiPersonalizationDesc')}
                   </p>
-                  <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 sm:p-4">
-                    <h3 className="text-sm font-semibold text-emerald-800">{t('onboarding.summary')}</h3>
-                    <ul className="mt-2 space-y-1 text-sm text-emerald-700">
+                  <div className="rounded-lg border border-[#a4dca7] bg-[#eef8ef] p-3 sm:p-4">
+                    <h3 className="text-sm font-semibold text-[#408c45]">{t('onboarding.summary')}</h3>
+                    <ul className="mt-2 space-y-1 text-sm text-[#59a85e]">
                       <li>📍 {form.county || t('onboarding.countyNotSet')}</li>
                       <li>🌱 {t('onboarding.cropTypesSelected', { count: form.crop_types.length || 0 })}</li>
                       <li>🎯 {t('onboarding.goalsSelected', { count: form.goals.length || 0 })}</li>
                     </ul>
                   </div>
-                  <label className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 sm:p-4 cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-start gap-3 rounded-lg border border-[#ccccbe] p-3 sm:p-4 cursor-pointer hover:bg-[#f0f4f8]">
                     <input
                       type="checkbox"
                       checked={form.consent_ai}
                       onChange={(e) => updateForm({ consent_ai: e.target.checked })}
-                      className="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 shrink-0"
+                      className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#445c8c] focus:ring-[#445c8c] shrink-0"
                     />
                     <div>
                       <span className="text-sm font-medium text-gray-900">{t('onboarding.consentLabel')}</span>
@@ -298,7 +298,7 @@ export default function OnboardingPage() {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="mt-6 sm:mt-8 flex items-center justify-between border-t border-gray-100 pt-5 sm:pt-6">
+          <div className="mt-6 sm:mt-8 flex items-center justify-between border-t border-[#ccccbe] pt-5 sm:pt-6">
             <Button
               variant="outline"
               size="sm"

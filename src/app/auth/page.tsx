@@ -66,7 +66,7 @@ function FormField({ id, label, type, placeholder, value, onChange, error, showT
           value={value}
           onChange={onChange}
           autoComplete={autoComplete}
-          className={`h-10 bg-[var(--card)]/50 backdrop-blur-sm border-[var(--border)] text-sm transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 ${error ? 'border-red-400 focus:border-red-400 focus:ring-red-500/20' : ''}`}
+          className={`h-10 bg-[var(--card)]/50 backdrop-blur-sm border-[var(--border)] text-sm transition-all duration-200 focus:border-[#445c8c] focus:ring-2 focus:ring-[#445c8c]/20 ${error ? 'border-red-400 focus:border-red-400 focus:ring-red-500/20' : ''}`}
         />
         {showToggle && (
           <button
@@ -222,12 +222,12 @@ function AuthForm() {
   }, []);
 
   return (
-    <div className="relative flex min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-earth-50 dark:from-emerald-950/30 dark:via-slate-950 dark:to-earth-950/30 px-4 py-8 sm:py-12">
+    <div className="relative flex min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-gradient-to-br from-[#c4d4e4] via-white to-[#f5ede6] dark:from-[#283854] dark:via-[#1a2638] dark:to-[#2c140c]/30 px-4 py-8 sm:py-12">
       {/* Background decorations */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-emerald-100/40 blur-3xl dark:bg-emerald-900/20" />
-        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-earth-100/30 blur-3xl dark:bg-earth-900/20" />
-        <div className="absolute left-1/2 top-1/2 h-60 w-60 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-200/20 blur-3xl dark:bg-emerald-800/10" />
+        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-[#c4d4e4]/40 blur-3xl dark:bg-[#445c8c]/20" />
+        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-[#f5ede6]/30 blur-3xl dark:bg-[#603820]/20" />
+        <div className="absolute left-1/2 top-1/2 h-60 w-60 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#a4dca7]/20 blur-3xl dark:bg-[#a4dca7]/10" />
       </div>
 
       <motion.div
@@ -242,7 +242,7 @@ function AuthForm() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, duration: 0.4 }}
-            className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-200/50 dark:shadow-emerald-900/30"
+            className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#445c8c] to-[#364a70] shadow-lg shadow-[#445c8c]/30 dark:shadow-[#445c8c]/30"
           >
             <Wheat className="h-8 w-8 text-white" />
           </motion.div>
@@ -318,8 +318,8 @@ function AuthForm() {
                   <Tabs value={tab} onValueChange={switchTab} className="w-full">
                     <div className="px-6 pt-6">
                       <TabsList className="grid w-full grid-cols-2 rounded-xl bg-[var(--muted)] p-1">
-                        <TabsTrigger value="login" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-emerald-600 data-[state=active]:shadow-sm dark:data-[state=active]:bg-emerald-900/30">{t('auth.title')}</TabsTrigger>
-                        <TabsTrigger value="register" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-emerald-600 data-[state=active]:shadow-sm dark:data-[state=active]:bg-emerald-900/30">{t('auth.register')}</TabsTrigger>
+                        <TabsTrigger value="login" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-[#445c8c] data-[state=active]:shadow-sm dark:data-[state=active]:bg-[#445c8c]/30">{t('auth.title')}</TabsTrigger>
+                        <TabsTrigger value="register" className="rounded-lg text-sm font-medium data-[state=active]:bg-[var(--card)] data-[state=active]:text-[#445c8c] data-[state=active]:shadow-sm dark:data-[state=active]:bg-[#445c8c]/30">{t('auth.register')}</TabsTrigger>
                       </TabsList>
                     </div>
 
@@ -334,14 +334,14 @@ function AuthForm() {
                               type="checkbox"
                               checked={rememberMe}
                               onChange={(e) => setRememberMe(e.target.checked)}
-                              className="h-4 w-4 rounded border-[var(--border)] text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0"
+                              className="h-4 w-4 rounded border-[var(--border)] text-[#445c8c] focus:ring-[#445c8c] focus:ring-offset-0"
                             />
                             <span className="text-sm text-[var(--muted-foreground)]">{t('auth.rememberMe')}</span>
                           </label>
                           <button
                             type="button"
                             onClick={() => setShowReset(true)}
-                            className="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
+                            className="text-sm text-[#445c8c] hover:text-[#364a70] dark:text-[#a4dca7] dark:hover:text-[#bce8c1] font-medium"
                           >
                             {t('auth.forgotPassword')}
                           </button>
@@ -363,7 +363,7 @@ function AuthForm() {
                         <button
                           type="button"
                           onClick={() => switchTab('register')}
-                          className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
+                          className="text-[#445c8c] hover:text-[#364a70] dark:text-[#a4dca7] dark:hover:text-[#bce8c1] font-medium"
                         >
                           {t('auth.signUp')}
                         </button>
@@ -384,7 +384,7 @@ function AuthForm() {
                             type="checkbox"
                             checked={agreeToTerms}
                             onChange={(e) => setAgreeToTerms(e.target.checked)}
-                            className="mt-0.5 h-4 w-4 shrink-0 rounded border-[var(--border)] text-emerald-600 focus:ring-emerald-500 focus:ring-offset-0"
+                            className="mt-0.5 h-4 w-4 shrink-0 rounded border-[var(--border)] text-[#445c8c] focus:ring-[#445c8c] focus:ring-offset-0"
                           />
                           <span className="text-sm text-[var(--muted-foreground)]">
                             {t('auth.agreeToTerms')}
@@ -406,7 +406,7 @@ function AuthForm() {
                         <button
                           type="button"
                           onClick={() => switchTab('login')}
-                          className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium"
+                          className="text-[#445c8c] hover:text-[#364a70] dark:text-[#a4dca7] dark:hover:text-[#bce8c1] font-medium"
                         >
                           {t('auth.signIn')}
                         </button>
@@ -426,12 +426,12 @@ function AuthForm() {
 export default function AuthPage() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-earth-50 dark:from-emerald-950/30 dark:via-slate-950 dark:to-earth-950/30">
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-gradient-to-br from-[#c4d4e4] via-white to-[#f5ede6] dark:from-[#283854] dark:via-[#1a2638] dark:to-[#2c140c]/30">
         <div className="flex flex-col items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-lg">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#445c8c] to-[#364a70] shadow-lg">
             <Wheat className="h-8 w-8 text-white" />
           </div>
-          <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-[#445c8c]" />
         </div>
       </div>
     }>
