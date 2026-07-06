@@ -254,9 +254,9 @@ export default function RegionalAnalyticsPage() {
                       borderRadius: '8px',
                       fontSize: '13px',
                     }}
-                    cursor={{ fill: 'rgba(5, 150, 105, 0.08)' }}
+                    cursor={{ fill: 'rgba(15, 118, 110, 0.08)' }}
                   />
-                  <Bar dataKey="Reports" fill="#059669" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                  <Bar dataKey="Reports" fill="#0f766e" radius={[4, 4, 0, 0]} maxBarSize={60} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

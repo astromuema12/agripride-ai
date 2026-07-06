@@ -98,7 +98,7 @@ function ConfidenceScore({ score }: { score?: number }) {
 
 function FarmHealthScore({ score }: { score: number }) {
   const healthColor = score >= 80 ? 'text-emerald-500' : score >= 60 ? 'text-amber-500' : 'text-red-500';
-  const strokeColor = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
+  const strokeColor = score >= 80 ? '#14b8a6' : score >= 60 ? '#f59e0b' : '#ef4444';
 
   return (
     <div className="flex items-center gap-4">

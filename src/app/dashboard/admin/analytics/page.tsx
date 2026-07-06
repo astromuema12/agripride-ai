@@ -21,8 +21,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getDiseaseReports, getYieldRecords, getUsers, getSustainabilityScores, getDashboardStats } from '@/lib/db';
 import type { YieldRecord, DiseaseReport, User, SustainabilityScore, DashboardStats } from '@/types';
 
-const COLORS = ['#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
-const PIE_COLORS = ['#059669', '#fbbf24', '#ef4444'];
+const COLORS = ['#0f766e', '#14b8a6', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
+const PIE_COLORS = ['#0f766e', '#f59e0b', '#ef4444'];
 
 function groupByMonth<T extends { created_at: string }>(items: T[], valueKey: keyof T): { month: string; value: number }[] {
   const map = new Map<string, number>();
@@ -156,7 +156,7 @@ export default function AdminAnalyticsPage() {
                 <p className="mt-1 text-xs text-gray-400">{t('adminAnalytics.avgPerRecord', { avg: avgYield.toFixed(1) })}</p>
               </div>
               <div className="rounded-lg bg-[#c4d4e4] p-3">
-                <Sprout className="h-5 w-5 text-[#445c8c]" />
+                <Sprout className="h-5 w-5 text-[#0f766e]" />
               </div>
             </div>
           </CardContent>
@@ -183,7 +183,7 @@ export default function AdminAnalyticsPage() {
               <div>
                 <p className="text-sm font-medium text-gray-500">{t('adminAnalytics.totalUsers')}</p>
                 <p className="mt-1 text-2xl font-bold text-gray-900">{users.length}</p>
-                <p className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
+                <p className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                   <TrendingUp className="h-3 w-3" />
                   {t('adminAnalytics.percentGrowth', { growth: stats?.user_growth ?? 0 })}
                 </p>
@@ -207,7 +207,7 @@ export default function AdminAnalyticsPage() {
                 </p>
               </div>
               <div className="rounded-lg bg-[#c4d4e4] p-3">
-                <Leaf className="h-5 w-5 text-[#445c8c]" />
+                <Leaf className="h-5 w-5 text-[#0f766e]" />
               </div>
             </div>
           </CardContent>
@@ -217,7 +217,7 @@ export default function AdminAnalyticsPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
+            <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#0f766e]">
               <Users className="h-5 w-5" />
             </div>
             <div>
@@ -293,7 +293,7 @@ export default function AdminAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{users.length}</p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
+                <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                   <TrendingUp className="h-3 w-3" />
                   {stats?.user_growth ?? 0}% growth
                 </div>
@@ -343,8 +343,8 @@ export default function AdminAnalyticsPage() {
                 <ResponsiveContainer width="100%" height={400}>
                   <ReLineChart data={userByMonth}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
+                    <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+                    <YAxis stroke="#6b7280" fontSize={12} />
                     <Tooltip
                       contentStyle={{
                         background: '#fff',
@@ -356,9 +356,9 @@ export default function AdminAnalyticsPage() {
                     <Line
                       type="monotone"
                       dataKey="value"
-                      stroke="#3b82f6"
+                      stroke="#2563eb"
                       strokeWidth={2}
-                      dot={{ fill: '#3b82f6', r: 4 }}
+                      dot={{ fill: '#2563eb', r: 4 }}
                       activeDot={{ r: 6 }}
                       name={t('adminAnalytics.newUsers')}
                     />
@@ -393,7 +393,7 @@ export default function AdminAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{resolvedDiseases}</p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
+                <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                   <TrendingUp className="h-3 w-3" />
                   {t('adminAnalytics.percentResolution', { percent: totalDiseases > 0 ? ((resolvedDiseases / totalDiseases) * 100).toFixed(0) : 0 })}
                 </div>
@@ -431,8 +431,8 @@ export default function AdminAnalyticsPage() {
                 <ResponsiveContainer width="100%" height={400}>
                   <ReBarChart data={diseaseChartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="crop" stroke="#9ca3af" fontSize={12} />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
+                    <XAxis dataKey="crop" stroke="#6b7280" fontSize={12} />
+                    <YAxis stroke="#6b7280" fontSize={12} />
                     <Tooltip
                       contentStyle={{
                         background: '#fff',
@@ -459,13 +459,13 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <Sprout className="h-4 w-4 text-[#445c8c]" />
+                  <Sprout className="h-4 w-4 text-[#0f766e]" />
                   {t('adminAnalytics.totalYield')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
-                <div className="mt-1 flex items-center gap-1 text-xs text-[#445c8c]">
+                <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                   <TrendingUp className="h-3 w-3" />
                   {t('adminAnalytics.acrossAllRecords')}
                 </div>
@@ -474,7 +474,7 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <BarChart3 className="h-4 w-4 text-[#445c8c]" />
+                  <BarChart3 className="h-4 w-4 text-[#0f766e]" />
                   {t('adminAnalytics.averageYield')}
                 </CardTitle>
               </CardHeader>
@@ -486,7 +486,7 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <LineChart className="h-4 w-4 text-[#445c8c]" />
+                  <LineChart className="h-4 w-4 text-[#0f766e]" />
                   {t('common.records')}
                 </CardTitle>
               </CardHeader>
@@ -515,8 +515,8 @@ export default function AdminAnalyticsPage() {
                 <ResponsiveContainer width="100%" height={400}>
                   <ReLineChart data={yieldByMonth}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
+                    <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+                    <YAxis stroke="#6b7280" fontSize={12} />
                     <Tooltip
                       contentStyle={{
                         background: '#fff',
@@ -528,9 +528,9 @@ export default function AdminAnalyticsPage() {
                     <Line
                       type="monotone"
                       dataKey="value"
-                      stroke="#059669"
+                      stroke="#0f766e"
                       strokeWidth={2}
-                      dot={{ fill: '#059669', r: 4 }}
+                      dot={{ fill: '#0f766e', r: 4 }}
                       activeDot={{ r: 6 }}
                       name={t('adminAnalytics.yieldKg')}
                     />
@@ -547,7 +547,7 @@ export default function AdminAnalyticsPage() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                  <Leaf className="h-4 w-4 text-[#445c8c]" />
+                  <Leaf className="h-4 w-4 text-[#0f766e]" />
                   {t('adminAnalytics.soilHealth')}
                 </CardTitle>
               </CardHeader>

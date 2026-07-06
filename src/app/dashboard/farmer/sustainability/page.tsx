@@ -32,7 +32,7 @@ function CircularScore({ score, size = 160 }: { score: number; size?: number }) 
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const offset = circumference - (pct / 100) * circumference;
-  const color = pct >= 70 ? '#059669' : pct >= 40 ? '#f59e0b' : '#ef4444';
+  const color = pct >= 70 ? '#0f766e' : pct >= 40 ? '#f59e0b' : '#ef4444';
 
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
@@ -253,8 +253,8 @@ export default function SustainabilityPage() {
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} />
-                    <YAxis domain={[0, 100]} stroke="#9ca3af" fontSize={12} />
+                    <XAxis dataKey="date" stroke="#6b7280" fontSize={12} />
+                    <YAxis domain={[0, 100]} stroke="#6b7280" fontSize={12} />
                     <Tooltip
                       contentStyle={{
                         background: '#fff',
@@ -263,10 +263,10 @@ export default function SustainabilityPage() {
                         boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                       }}
                     />
-                    <Line type="monotone" dataKey="score" stroke="#059669" strokeWidth={2.5} dot={{ fill: '#059669', r: 4 }} name={t('sustainability.overallScore')} />
+                    <Line type="monotone" dataKey="score" stroke="#0f766e" strokeWidth={2.5} dot={{ fill: '#0f766e', r: 4 }} name={t('sustainability.overallScore')} />
                     <Line type="monotone" dataKey="soil" stroke="#6ee7b7" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.soilHealth.label')} />
                     <Line type="monotone" dataKey="water" stroke="#60a5fa" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.waterUsage.label')} />
-                    <Line type="monotone" dataKey="biodiversity" stroke="#fbbf24" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.biodiversity.label')} />
+                    <Line type="monotone" dataKey="biodiversity" stroke="#f59e0b" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.biodiversity.label')} />
                     <Line type="monotone" dataKey="carbon" stroke="#a78bfa" strokeWidth={1.5} dot={false} name={t('sustainability.subScores.carbonFootprint.label')} />
                   </LineChart>
                 </ResponsiveContainer>

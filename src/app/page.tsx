@@ -312,7 +312,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== AI GOVERNANCE ===== */}
-      <section className="relative overflow-hidden py-16 sm:py-24" style={{ background: 'linear-gradient(135deg, #445c8c, #a4dca7)' }}>
+      <section className="relative overflow-hidden py-16 sm:py-24" style={{ background: 'linear-gradient(135deg, #0f766e, #14b8a6)' }}>
         <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -544,9 +544,9 @@ export default function HomePage() {
       </section>
 
       {/* ===== CTA ===== */}
-      <section className="relative overflow-hidden py-16 sm:py-24" style={{ background: 'linear-gradient(135deg, #445c8c, #a4dca7)' }}>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#a4dca7]/30 via-transparent to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-[#c4d4e4]/20 via-transparent to-transparent" />
+      <section className="relative overflow-hidden py-16 sm:py-24" style={{ background: 'linear-gradient(135deg, #0f766e, #14b8a6)' }}>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#14b8a6]/30 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-[#6ee7b7]/20 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -556,7 +556,7 @@ export default function HomePage() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white text-balance">{t('landing.hero.ctaTitle')}</h2>
             <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-white/80">{t('landing.hero.ctaSubtitle')}</p>
             <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 sm:gap-4">
-              <Button size="xl" className="bg-white text-[#445c8c] hover:bg-[#f0f4f8] shadow-2xl shadow-black/10 hover:shadow-[#a4dca7]/50 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
+              <Button size="xl" className="bg-white text-[#0f766e] hover:bg-[#f2f5f2] shadow-2xl shadow-black/10 hover:shadow-[#14b8a6]/50 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
                 {t('landing.hero.getStartedFree')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>

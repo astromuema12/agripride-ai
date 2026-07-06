@@ -337,7 +337,7 @@ export default function MarketPage() {
             <div className="h-60 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                   <XAxis
                     dataKey="crop"
                     tick={{ fontSize: 11, fill: '#6b7280' }}
@@ -360,9 +360,9 @@ export default function MarketPage() {
                       border: '1px solid #e5e7eb',
                       boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                     }}
-                    cursor={{ fill: '#f0fdf4' }}
+                    cursor={{ fill: '#ecfdf6' }}
                   />
-                  <Bar dataKey="price" fill="#059669" radius={[4, 4, 0, 0]} maxBarSize={48} />
+                  <Bar dataKey="price" fill="#0f766e" radius={[4, 4, 0, 0]} maxBarSize={48} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
