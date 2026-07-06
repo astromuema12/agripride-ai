@@ -102,11 +102,11 @@ export default function WeatherPage() {
       ) : (
         <>
           {/* Current Conditions */}
-          <Card className="border-emerald-200">
-            <CardHeader className="bg-emerald-50 border-b border-emerald-100 rounded-t-xl">
+          <Card className="border-emerald-200 dark:border-emerald-800">
+            <CardHeader className="bg-emerald-50 border-b border-emerald-100 rounded-t-xl dark:bg-emerald-950 dark:border-emerald-900">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <MapPin className="h-5 w-5 text-emerald-600" />
+                  <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   {t('weather.currentConditions', { location: currentWeather.location })}
                 </CardTitle>
                 <ConditionIcon condition={currentWeather.condition} />
@@ -119,9 +119,9 @@ export default function WeatherPage() {
                     <ThermometerSun className="h-6 w-6 text-amber-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('weather.temperature')}</p>
-                    <p className="text-2xl font-bold text-gray-900">{currentWeather.temperature}&deg;C</p>
-                    <p className="text-xs text-gray-400">{currentWeather.condition}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('weather.temperature')}</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.temperature}&deg;C</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">{currentWeather.condition}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
@@ -129,8 +129,8 @@ export default function WeatherPage() {
                     <Droplets className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('weather.humidity')}</p>
-                    <p className="text-2xl font-bold text-gray-900">{currentWeather.humidity}%</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('weather.humidity')}</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.humidity}%</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
@@ -138,8 +138,8 @@ export default function WeatherPage() {
                     <Wind className="h-6 w-6 text-cyan-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('weather.windSpeed')}</p>
-                    <p className="text-2xl font-bold text-gray-900">{currentWeather.wind_speed} km/h</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('weather.windSpeed')}</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.wind_speed} km/h</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
@@ -147,8 +147,8 @@ export default function WeatherPage() {
                     <Umbrella className="h-6 w-6 text-indigo-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('weather.rainfall')}</p>
-                    <p className="text-2xl font-bold text-gray-900">{currentWeather.rainfall_mm} mm</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('weather.rainfall')}</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.rainfall_mm} mm</p>
                   </div>
                 </div>
               </div>
@@ -160,7 +160,7 @@ export default function WeatherPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <CloudSun className="h-5 w-5 text-emerald-600" />
+                  <CloudSun className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   {t('weather.sevenDayForecast')}
                 </CardTitle>
               </CardHeader>
@@ -169,18 +169,18 @@ export default function WeatherPage() {
                   {currentWeather.forecast.map((day) => (
                     <div
                       key={day.date}
-                      className="flex flex-col items-center rounded-lg bg-gray-50 p-4 text-center transition-colors hover:bg-gray-100"
+                      className="flex flex-col items-center rounded-lg bg-gray-50 p-4 text-center transition-colors hover:bg-gray-100 dark:bg-[var(--muted)] dark:hover:bg-[var(--border)]"
                     >
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
                       </span>
                       <span className="my-2 text-2xl">
                         <ConditionIcon condition={day.condition} />
                       </span>
                       <div className="flex items-center gap-1 text-sm">
-                        <span className="font-semibold text-gray-900">{day.temp_high}&deg;</span>
-                        <span className="text-gray-400">/</span>
-                        <span className="text-gray-500">{day.temp_low}&deg;</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">{day.temp_high}&deg;</span>
+                        <span className="text-gray-400 dark:text-gray-500">/</span>
+                        <span className="text-gray-500 dark:text-gray-400">{day.temp_low}&deg;</span>
                       </div>
                       <div className="mt-1 flex items-center gap-1 text-xs text-blue-600">
                         <Umbrella className="h-3 w-3" />
@@ -194,8 +194,8 @@ export default function WeatherPage() {
           )}
 
           {/* Disclaimer */}
-          <Card className="border-amber-200 bg-amber-50">
-            <CardContent className="flex items-start gap-3 p-4 text-sm text-amber-800">
+          <Card className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
+            <CardContent className="flex items-start gap-3 p-4 text-sm text-amber-800 dark:text-amber-300">
               <span className="text-lg">⚠️</span>
               <p>{t('weather.disclaimer')}</p>
             </CardContent>

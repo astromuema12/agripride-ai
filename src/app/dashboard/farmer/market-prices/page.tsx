@@ -57,8 +57,8 @@ export default function MarketPrices() {
         <Card>
           <CardContent className="p-3 sm:p-4">
             <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500 mb-1" />
-            <p className="text-lg sm:text-2xl font-bold text-emerald-600 leading-tight">{trendingUp}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500">{t('market.trendingUp')}</p>
+            <p className="text-lg sm:text-2xl font-bold text-emerald-600 leading-tight dark:text-emerald-400">{trendingUp}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">{t('market.trendingUp')}</p>
           </CardContent>
         </Card>
         <Card>
@@ -75,7 +75,7 @@ export default function MarketPrices() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <CardTitle className="text-base sm:text-lg">{t('market.title')}</CardTitle>
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
               <Input
                 placeholder={t('market.search')}
                 value={search}
@@ -91,7 +91,7 @@ export default function MarketPrices() {
               {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-10 sm:h-12 w-full" />)}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500">
+            <div className="py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
               {t('market.noPricesFound')}{search ? ` "${search}"` : ''}
             </div>
           ) : (
@@ -103,9 +103,9 @@ export default function MarketPrices() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="text-lg">{cropEmojis[p.crop] ?? '\u{1F33F}'}</span>
-                        <span className="text-sm font-medium text-gray-900">{p.crop}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">{p.crop}</span>
                       </div>
-                      <span className="text-sm font-bold text-gray-900">KES {p.price_per_kg.toFixed(2)}</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">KES {p.price_per_kg.toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-500">{p.region}</span>
@@ -122,10 +122,10 @@ export default function MarketPrices() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-100">
-                      <th className="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase">{t('market.crop')}</th>
-                      <th className="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase">{t('market.region')}</th>
-                      <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase">{t('market.price')}</th>
-                      <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase">{t('market.trend')}</th>
+                      <th className="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{t('market.crop')}</th>
+                      <th className="text-left py-3 px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{t('market.region')}</th>
+                      <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{t('market.price')}</th>
+                      <th className="text-right py-3 px-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{t('market.trend')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -134,12 +134,12 @@ export default function MarketPrices() {
                         <td className="py-3 px-3">
                           <div className="flex items-center gap-2">
                             <span className="text-xl">{cropEmojis[p.crop] ?? '\u{1F33F}'}</span>
-                            <span className="text-sm font-medium text-gray-900">{p.crop}</span>
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">{p.crop}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-3 text-xs text-gray-500">{p.region}</td>
+                        <td className="py-3 px-3 text-xs text-gray-500 dark:text-gray-400">{p.region}</td>
                         <td className="py-3 px-3 text-right">
-                          <span className="text-sm font-bold text-gray-900">KES {p.price_per_kg.toFixed(2)}</span>
+                          <span className="text-sm font-bold text-gray-900 dark:text-white">KES {p.price_per_kg.toFixed(2)}</span>
                         </td>
                         <td className="py-3 px-3 text-right">
                           <Badge variant={p.trend === 'up' ? 'primary' : p.trend === 'down' ? 'destructive' : 'secondary'} className="text-[10px]">

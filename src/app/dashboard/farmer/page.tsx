@@ -574,7 +574,7 @@ export default function FarmerDashboard() {
                       return (
                         <div key={crop} className="flex items-center justify-between rounded-lg border border-[var(--border)] px-3 py-2.5">
                           <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full ${riskColors[data.risk] || 'bg-gray-300'}`} />
+                            <div className={`w-2 h-2 rounded-full ${riskColors[data.risk] || 'bg-gray-300 dark:bg-gray-500'}`} />
                             <span className="text-sm font-medium text-[var(--foreground)]">{crop}</span>
                             <span className="text-xs text-[var(--muted-foreground)]">({data.count})</span>
                           </div>

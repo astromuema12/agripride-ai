@@ -59,8 +59,8 @@ function CircularScore({ score, size = 160 }: { score: number; size?: number }) 
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl font-bold text-gray-900">{pct}%</span>
-        <span className="text-xs font-medium text-gray-500">{t('sustainability.overallScore')}</span>
+        <span className="text-4xl font-bold text-gray-900 dark:text-white">{pct}%</span>
+        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{t('sustainability.overallScore')}</span>
       </div>
     </div>
   );
@@ -169,8 +169,8 @@ export default function SustainabilityPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('sustainability.title')}</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sustainability.title')}</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {t('sustainability.subtitle')}
           </p>
         </div>
@@ -180,11 +180,11 @@ export default function SustainabilityPage() {
       {!latestScore ? (
         <Card>
           <CardContent className="flex flex-col items-center py-16 text-center">
-            <div className="rounded-full bg-emerald-50 p-4 mb-4">
-              <Leaf className="h-10 w-10 text-emerald-500" />
+            <div className="rounded-full bg-emerald-50 p-4 mb-4 dark:bg-emerald-950">
+              <Leaf className="h-10 w-10 text-emerald-500 dark:text-emerald-400" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('sustainability.noDataTitle')}</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1 dark:text-white">{t('sustainability.noDataTitle')}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {t('sustainability.noDataDescription')}
             </p>
           </CardContent>
@@ -205,14 +205,14 @@ export default function SustainabilityPage() {
                     <div className="mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Icon className={`h-5 w-5 ${color}`} />
-                        <span className="font-medium text-gray-900">{label}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">{label}</span>
                       </div>
-                      <span className="text-lg font-bold text-gray-900">{pct}%</span>
+                      <span className="text-lg font-bold text-gray-900 dark:text-white">{pct}%</span>
                     </div>
                     <Progress value={pct} className="h-2.5" />
-                    <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-emerald-50 p-2.5">
-                      <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                      <p className="text-xs text-emerald-800 leading-relaxed">{tip}</p>
+                    <div className="mt-3 flex items-start gap-1.5 rounded-lg bg-emerald-50 p-2.5 dark:bg-emerald-950">
+                      <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                      <p className="text-xs text-emerald-800 leading-relaxed dark:text-emerald-300">{tip}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -225,7 +225,7 @@ export default function SustainabilityPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>{t('sustainability.historicalScores')}</CardTitle>
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
                     <span className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-emerald-500" />
                       {t('sustainability.overallScore')}

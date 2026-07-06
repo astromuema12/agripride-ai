@@ -373,10 +373,10 @@ html {
 
 /* Dark mode color overrides — Tailwind utility classes adapt automatically */
 .dark {
-  --color-gray-50: #183028;
-  --color-gray-100: #1a2e26;
-  --color-gray-200: #234037;
-  --color-gray-300: #2d5246;
+  --color-gray-50: #1c382e;
+  --color-gray-100: #234037;
+  --color-gray-200: #2d5246;
+  --color-gray-300: #3f6b56;
   --color-gray-400: #94a3b8;
   --color-gray-500: #94a3b8;
   --color-gray-600: #cbd5e1;

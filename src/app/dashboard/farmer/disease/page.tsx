@@ -429,7 +429,7 @@ export default function DiseaseDiagnosisPage() {
                   id="symptoms"
                   rows={4}
                   placeholder={t('visualDiagnosis.symptomsPlaceholder')}
-                  className="flex w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[var(--card)] dark:border-[var(--border)] dark:placeholder:text-[var(--muted-foreground)]"
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
                 />
@@ -438,7 +438,7 @@ export default function DiseaseDiagnosisPage() {
               <div className="space-y-2">
                 <Label>{t('visualDiagnosis.uploadPhoto')}</Label>
                 {imagePreview ? (
-                  <div className="relative rounded-xl overflow-hidden border border-gray-200 group">
+                  <div className="relative rounded-xl overflow-hidden border border-gray-200 group dark:border-[var(--border)]">
                     <Image src={imagePreview ?? ''} alt={t('visualDiagnosis.cropPreview')} width={400} height={200} className="w-full h-52 object-cover" unoptimized />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                     <button
@@ -456,28 +456,28 @@ export default function DiseaseDiagnosisPage() {
                     onDragLeave={handleDragLeave}
                     className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed py-10 transition-all ${
                       dragOver
-                        ? 'border-emerald-400 bg-emerald-50 scale-[1.02]'
-                        : 'border-gray-300 bg-gray-50 hover:border-emerald-400 hover:bg-emerald-50'
+                        ? 'border-emerald-400 bg-emerald-50 scale-[1.02] dark:border-emerald-600 dark:bg-emerald-950'
+                        : 'border-gray-300 bg-gray-50 hover:border-emerald-400 hover:bg-emerald-50 dark:border-[var(--border)] dark:bg-[var(--muted)] dark:hover:border-emerald-600 dark:hover:bg-emerald-950'
                     }`}
                   >
                     {dragOver ? (
                       <>
-                        <Upload className="mb-3 h-10 w-10 text-emerald-500" />
-                        <p className="text-sm font-medium text-emerald-600">{t('visualDiagnosis.dropHere')}</p>
+                        <Upload className="mb-3 h-10 w-10 text-emerald-500 dark:text-emerald-400" />
+                        <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{t('visualDiagnosis.dropHere')}</p>
                       </>
                     ) : (
                       <>
-                        <ImagePlus className="mb-3 h-10 w-10 text-gray-400" />
-                        <p className="text-sm font-medium text-gray-600">{t('visualDiagnosis.uploadClick')}</p>
-                        <p className="text-xs text-gray-400 mt-1">{t('visualDiagnosis.supportedFormats')}</p>
+                        <ImagePlus className="mb-3 h-10 w-10 text-gray-400 dark:text-gray-500" />
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('visualDiagnosis.uploadClick')}</p>
+                        <p className="text-xs text-gray-400 mt-1 dark:text-gray-400">{t('visualDiagnosis.supportedFormats')}</p>
                         <div className="flex gap-2 mt-4">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors dark:bg-[var(--card)] dark:border-[var(--border)]">
                             <Upload className="w-3.5 h-3.5" />
                             {t('visualDiagnosis.uploadPhoto')}
                           </span>
                           <span
                             onClick={(e) => { e.stopPropagation(); cameraInputRef.current?.click(); }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors dark:bg-[var(--card)] dark:border-[var(--border)]"
                           >
                             <Camera className="w-3.5 h-3.5" />
                             {t('visualDiagnosis.capturePhoto')}
@@ -525,23 +525,23 @@ export default function DiseaseDiagnosisPage() {
             <Card className="premium-card">
               <CardContent className="flex flex-col items-center justify-center py-10 sm:py-16">
                 <div className="relative">
-                  <Loader2 className="mb-3 h-10 w-10 sm:h-12 sm:w-12 animate-spin text-emerald-500" />
+                  <Loader2 className="mb-3 h-10 w-10 sm:h-12 sm:w-12 animate-spin text-emerald-500 dark:text-emerald-400" />
                   <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-amber-400 animate-pulse" />
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900">{t('visualDiagnosis.analyzing')}</h3>
-                <p className="text-xs sm:text-sm text-gray-500 mt-1">{t('visualDiagnosis.analyzingDesc')}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{t('visualDiagnosis.analyzing')}</h3>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 dark:text-gray-400">{t('visualDiagnosis.analyzingDesc')}</p>
               </CardContent>
             </Card>
           )}
 
           {result ? (
             <>
-              <Card className="border-emerald-200 overflow-hidden premium-card">
-                <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 border-b border-emerald-100 rounded-t-xl px-3 sm:px-6">
+              <Card className="border-emerald-200 overflow-hidden premium-card dark:border-emerald-800">
+                <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 border-b border-emerald-100 rounded-t-xl px-3 sm:px-6 dark:from-emerald-950 dark:to-green-950 dark:border-emerald-900">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-[10px] sm:text-xs font-medium text-emerald-600 uppercase tracking-wide">{t('visualDiagnosis.diagnosisResult')}</p>
-                      <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mt-0.5 sm:mt-1 break-words">
+                      <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mt-0.5 sm:mt-1 break-words dark:text-white">
                         {result.data.primaryDiagnosis?.name ?? t('visualDiagnosis.uncertain')}
                       </h2>
                       <div className="flex flex-wrap items-center gap-2 mt-1">
@@ -573,17 +573,17 @@ export default function DiseaseDiagnosisPage() {
                 </CardHeader>
                 <CardContent className="space-y-4 sm:space-y-5 pt-4 sm:pt-6 px-3 sm:px-6">
                   {imagePreview && (
-                    <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
-                      <Image src={imagePreview} alt={t('visualDiagnosis.cropPreview')} width={600} height={300} className="w-full max-h-64 object-contain bg-gray-50" unoptimized />
+                    <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm dark:border-[var(--border)]">
+                      <Image src={imagePreview} alt={t('visualDiagnosis.cropPreview')} width={600} height={300} className="w-full max-h-64 object-contain bg-gray-50 dark:bg-[var(--muted)]" unoptimized />
                     </div>
                   )}
 
                   {result.data.requestMoreInfo && (
-                    <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 flex items-start gap-2">
-                      <HelpCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 flex items-start gap-2 dark:bg-amber-950 dark:border-amber-800">
+                      <HelpCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5 dark:text-amber-400" />
                       <div>
-                        <p className="text-sm font-medium text-amber-800">{t('visualDiagnosis.moreInfo')}</p>
-                        <p className="text-xs text-amber-700 mt-1">
+                        <p className="text-sm font-medium text-amber-800 dark:text-amber-300">{t('visualDiagnosis.moreInfo')}</p>
+                        <p className="text-xs text-amber-700 mt-1 dark:text-amber-400">
                           {result.data.missingInfo?.join(', ') || t('visualDiagnosis.moreInfoDesc')}
                         </p>
                       </div>
@@ -601,22 +601,22 @@ export default function DiseaseDiagnosisPage() {
                             key={idx}
                             className={`rounded-xl border p-3 transition-all ${
                               idx === 0 && cause.likelihood === 'high'
-                                ? 'border-emerald-200 bg-emerald-50 shadow-sm'
-                                : 'border-gray-200 bg-white hover:shadow-sm'
+                                ? 'border-emerald-200 bg-emerald-50 shadow-sm dark:border-emerald-800 dark:bg-emerald-950'
+                                : 'border-gray-200 bg-white hover:shadow-sm dark:border-[var(--border)] dark:bg-[var(--card)]'
                             }`}
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="text-sm font-medium text-gray-900">
+                                  <span className="text-sm font-medium text-gray-900 dark:text-white">
                                     {idx + 1}. {cause.name}
                                   </span>
                                   <LikelihoodBadge likelihood={cause.likelihood} />
                                 </div>
-                                <p className="text-xs text-gray-500 mt-0.5 capitalize">{cause.type.replace('_', ' ')}</p>
+                                <p className="text-xs text-gray-500 mt-0.5 capitalize dark:text-gray-400">{cause.type.replace('_', ' ')}</p>
                               </div>
                               <div className="text-right shrink-0">
-                                <span className="text-xs font-semibold text-gray-600">
+                                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
                                   {Math.round(cause.confidence * 100)}%
                                 </span>
                               </div>
@@ -632,7 +632,7 @@ export default function DiseaseDiagnosisPage() {
                               />
                             </div>
                             {cause.treatment && idx < 2 && (
-                              <div className="mt-2 text-xs text-gray-600">
+                              <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
                                 <span className="font-medium">{t('visualDiagnosis.treatment')}: </span>
                                 {cause.treatment.slice(0, 100)}{cause.treatment.length > 100 ? '...' : ''}
                               </div>
@@ -644,46 +644,46 @@ export default function DiseaseDiagnosisPage() {
                   )}
 
                   {result.data.primaryDiagnosis?.treatment && (
-                    <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 p-4 border border-emerald-100">
-                      <h3 className="text-sm font-semibold text-emerald-800 mb-1">{t('visualDiagnosis.treatment')}</h3>
-                      <p className="text-sm text-emerald-700 leading-relaxed">
+                    <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 p-4 border border-emerald-100 dark:from-emerald-950 dark:to-green-950 dark:border-emerald-900">
+                      <h3 className="text-sm font-semibold text-emerald-800 mb-1 dark:text-emerald-300">{t('visualDiagnosis.treatment')}</h3>
+                      <p className="text-sm text-emerald-700 leading-relaxed dark:text-emerald-200">
                         {result.data.primaryDiagnosis.treatment}
                       </p>
                     </div>
                   )}
 
                   {result.data.primaryDiagnosis?.prevention && (
-                    <div className="rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border border-blue-100">
-                      <h3 className="text-sm font-semibold text-blue-800 mb-1">{t('visualDiagnosis.prevention')}</h3>
-                      <p className="text-sm text-blue-700 leading-relaxed">
+                    <div className="rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border border-blue-100 dark:from-blue-950 dark:to-indigo-950 dark:border-blue-900">
+                      <h3 className="text-sm font-semibold text-blue-800 mb-1 dark:text-blue-300">{t('visualDiagnosis.prevention')}</h3>
+                      <p className="text-sm text-blue-700 leading-relaxed dark:text-blue-200">
                         {result.data.primaryDiagnosis.prevention}
                       </p>
                     </div>
                   )}
 
                   {!result.data.primaryDiagnosis && result.data.possibleCauses[0]?.treatment && (
-                    <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 p-4 border border-emerald-100">
-                      <h3 className="text-sm font-semibold text-emerald-800 mb-1">{t('visualDiagnosis.treatment')}</h3>
-                      <p className="text-sm text-emerald-700 leading-relaxed">
+                    <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 p-4 border border-emerald-100 dark:from-emerald-950 dark:to-green-950 dark:border-emerald-900">
+                      <h3 className="text-sm font-semibold text-emerald-800 mb-1 dark:text-emerald-300">{t('visualDiagnosis.treatment')}</h3>
+                      <p className="text-sm text-emerald-700 leading-relaxed dark:text-emerald-200">
                         {result.data.possibleCauses[0].treatment}
                       </p>
                     </div>
                   )}
 
-                  <div className="rounded-lg bg-gray-50 border border-gray-100 p-4">
+                  <div className="rounded-lg bg-gray-50 border border-gray-100 p-4 dark:bg-[var(--muted)] dark:border-[var(--border)]">
                     <button
                       onClick={() => setShowReasoning(!showReasoning)}
                       className="flex items-center justify-between w-full text-left"
                     >
-                      <h3 className="text-sm font-semibold text-gray-800">{t('visualDiagnosis.aiReasoning')}</h3>
-                      {showReasoning ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
+                      <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t('visualDiagnosis.aiReasoning')}</h3>
+                      {showReasoning ? <ChevronUp className="h-4 w-4 text-gray-500 dark:text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
                     </button>
                     {showReasoning && (
-                      <div className="mt-2 space-y-2 text-sm text-gray-600 leading-relaxed">
+                      <div className="mt-2 space-y-2 text-sm text-gray-600 leading-relaxed dark:text-gray-300">
                         <p>{result.data.reasoning.summary}</p>
                         {result.data.reasoning.symptomInfluences.length > 0 && (
                           <div>
-                            <p className="font-medium text-gray-700 text-xs mt-2">{t('visualDiagnosis.symptomsDetected')}</p>
+                            <p className="font-medium text-gray-700 text-xs mt-2 dark:text-gray-300">{t('visualDiagnosis.symptomsDetected')}</p>
                             <ul className="list-disc pl-4 text-xs space-y-0.5 mt-1">
                               {result.data.reasoning.symptomInfluences.map((s, i) => (
                                 <li key={i}>{s}</li>
@@ -693,8 +693,8 @@ export default function DiseaseDiagnosisPage() {
                         )}
                         {result.data.reasoning.uncertainties.length > 0 && (
                           <div>
-                            <p className="font-medium text-gray-700 text-xs mt-2">{t('visualDiagnosis.uncertainties')}</p>
-                            <ul className="list-disc pl-4 text-xs space-y-0.5 mt-1 text-amber-700">
+                            <p className="font-medium text-gray-700 text-xs mt-2 dark:text-gray-300">{t('visualDiagnosis.uncertainties')}</p>
+                            <ul className="list-disc pl-4 text-xs space-y-0.5 mt-1 text-amber-700 dark:text-amber-400">
                               {result.data.reasoning.uncertainties.map((u, i) => (
                                 <li key={i}>{u}</li>
                               ))}
@@ -702,22 +702,22 @@ export default function DiseaseDiagnosisPage() {
                           </div>
                         )}
                         {result.data.reasoning.growthStageNote && (
-                          <p className="text-xs text-gray-500 mt-1 italic">{result.data.reasoning.growthStageNote}</p>
+                          <p className="text-xs text-gray-500 mt-1 italic dark:text-gray-400">{result.data.reasoning.growthStageNote}</p>
                         )}
                       </div>
                     )}
                   </div>
 
-                  <div className="border-t border-gray-100 pt-4 space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="border-t border-gray-100 pt-4 space-y-2 dark:border-[var(--border)]">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                       <Shield className="h-3.5 w-3.5" />
-                      <span>{t('visualDiagnosis.responsibleAgent')}: <strong className="text-gray-700">{result.responsible_agent}</strong></span>
+                      <span>{t('visualDiagnosis.responsibleAgent')}: <strong className="text-gray-700 dark:text-gray-300">{result.responsible_agent}</strong></span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                       <BrainCircuit className="h-3.5 w-3.5" />
                       <span>{t('visualDiagnosis.frameworks')}: {result.frameworks_used?.join(', ')}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                       <Clock className="h-3.5 w-3.5" />
                       <span>{t('visualDiagnosis.diagnosedAt')}: {result.timestamp ? formatDate(result.timestamp) : t('common.justNow')}</span>
                     </div>
@@ -750,11 +750,11 @@ export default function DiseaseDiagnosisPage() {
           ) : !diagnosing ? (
             <Card className="h-full premium-card">
               <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="rounded-full bg-gradient-to-br from-emerald-50 to-green-50 p-5 mb-4 shadow-sm">
-                  <Scan className="h-10 w-10 text-emerald-500" />
+                <div className="rounded-full bg-gradient-to-br from-emerald-50 to-green-50 p-5 mb-4 shadow-sm dark:from-emerald-900 dark:to-green-900">
+                  <Scan className="h-10 w-10 text-emerald-500 dark:text-emerald-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('visualDiagnosis.readyToDiagnose')}</h3>
-                <p className="text-sm text-gray-500 max-w-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-1 dark:text-white">{t('visualDiagnosis.readyToDiagnose')}</h3>
+                <p className="text-sm text-gray-500 max-w-sm dark:text-gray-400">
                   {t('visualDiagnosis.readyDesc')}
                 </p>
               </CardContent>
@@ -771,26 +771,26 @@ export default function DiseaseDiagnosisPage() {
             <CardContent className="px-3 sm:px-6">
               {reports.length === 0 ? (
                 <div className="flex flex-col items-center py-6 sm:py-8 text-center">
-                  <FileSearch className="mb-2 h-6 w-6 sm:h-8 sm:w-8 text-gray-300" />
-                  <p className="text-xs sm:text-sm text-gray-500">{t('visualDiagnosis.noDiagnoses')}</p>
-                  <p className="text-[10px] sm:text-xs text-gray-400 mt-1">{t('visualDiagnosis.noDiagnosesDesc')}</p>
+                  <FileSearch className="mb-2 h-6 w-6 sm:h-8 sm:w-8 text-gray-300 dark:text-gray-500" />
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t('visualDiagnosis.noDiagnoses')}</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400 mt-1 dark:text-gray-500">{t('visualDiagnosis.noDiagnosesDesc')}</p>
                 </div>
               ) : (
                 <div className="space-y-2 sm:space-y-3">
                   {reports.slice(0, 10).map((report) => (
                     <div
                       key={report.id}
-                      className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-2.5 sm:p-3 transition-all hover:bg-gray-100 hover:shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 p-2.5 sm:p-3 transition-all hover:bg-gray-100 hover:shadow-sm dark:border-[var(--border)] dark:bg-[var(--muted)] dark:hover:bg-[var(--border)]"
                     >
                       <div className="min-w-0 flex-1 mr-2">
                         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
-                          <span className="text-xs sm:text-sm font-medium text-gray-900">{report.crop_type}</span>
+                          <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">{report.crop_type}</span>
                           {report.risk_level && <RiskBadge risk={report.risk_level} />}
                           {report.uncertainty_level && <UncertaintyBadge level={report.uncertainty_level} />}
                           <StatusBadge status={report.status} />
                         </div>
-                        <p className="text-[10px] sm:text-sm text-gray-600 truncate">
-                          {report.disease_prediction || <span className="italic text-gray-400">{t('visualDiagnosis.pending')}</span>}
+                        <p className="text-[10px] sm:text-sm text-gray-600 truncate dark:text-gray-400">
+                          {report.disease_prediction || <span className="italic text-gray-400 dark:text-gray-500">{t('visualDiagnosis.pending')}</span>}
                         </p>
                       </div>
                       <div className="text-right shrink-0">
