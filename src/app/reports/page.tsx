@@ -78,11 +78,11 @@ export default function ReportsPage() {
     }
 
     return (
-      <Card className="border-[#ccccbe] transition-shadow hover:shadow-md">
+      <Card className="border-[#d1d5db] transition-shadow hover:shadow-md">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
+              <div className="rounded-lg bg-[#e2f0ee] p-2.5 text-[#0f766e]">
                 <Icon className="h-5 w-5" />
               </div>
               <div>
@@ -202,7 +202,7 @@ export default function ReportsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="gap-1.5 text-[#445c8c]"
+                          className="gap-1.5 text-[#0f766e]"
                           onClick={() => toast.success(t('reports.downloading', { title: r.title }))}
                         >
                           <Download className="h-3.5 w-3.5" />

@@ -135,7 +135,7 @@ export default function FarmsPage() {
   };
 
   const stats = [
-    { icon: Sprout, label: t('dashboard.farmer.totalFarms'), value: farms.length, color: 'text-[#445c8c] bg-[#c4d4e4]' },
+    { icon: Sprout, label: t('dashboard.farmer.totalFarms'), value: farms.length, color: 'text-[#0f766e] bg-[#e2f0ee]' },
     { icon: Ruler, label: t('farms.totalAcres'), value: totalAcres.toFixed(1), color: 'text-blue-600 bg-blue-50' },
     { icon: Leaf, label: t('farms.activeFarms'), value: activeFarms, color: 'text-green-600 bg-green-50' },
   ];
@@ -264,8 +264,8 @@ export default function FarmsPage() {
       ) : farms.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center py-16 text-center">
-            <div className="rounded-full bg-[#c4d4e4] p-4 mb-4">
-              <Sprout className="h-10 w-10 text-[#445c8c]" />
+            <div className="rounded-full bg-[#e2f0ee] p-4 mb-4">
+              <Sprout className="h-10 w-10 text-[#0f766e]" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('dashboard.farmer.noFarms')}</h3>
             <p className="text-sm text-gray-500 mb-4">

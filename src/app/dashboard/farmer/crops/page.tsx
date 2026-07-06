@@ -75,7 +75,7 @@ function GrowthStageBar({ crop }: { crop: Crop }) {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <Icon className="w-3.5 h-3.5 text-[#445c8c]" />
+          <Icon className="w-3.5 h-3.5 text-[#0f766e]" />
           <span className="text-xs font-medium text-gray-700">
             {t(`cropsEnhanced.stage.${growth.stageName}`)}
           </span>
@@ -84,7 +84,7 @@ function GrowthStageBar({ crop }: { crop: Crop }) {
       </div>
       <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#a4dca7] via-[#72c477] to-[#445c8c] transition-all duration-700"
+          className="h-full rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#0f766e] transition-all duration-700"
           style={{ width: `${growth.pct}%` }}
         />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -99,9 +99,9 @@ function GrowthStageBar({ crop }: { crop: Crop }) {
         <span>{t('cropsEnhanced.stage.harvesting')}</span>
       </div>
       <div className="relative" style={{ left: `${Math.min(growth.pct, 95)}%`, width: 0, height: 0 }}>
-        <div className="absolute -translate-x-1/2 -top-1 w-3 h-3 rounded-full bg-[#c4d4e4]0 border-2 border-white shadow-sm" />
+        <div className="absolute -translate-x-1/2 -top-1 w-3 h-3 rounded-full bg-[#e2f0ee]0 border-2 border-white shadow-sm" />
       </div>
-      <p className="text-[10px] text-[#445c8c] italic">
+      <p className="text-[10px] text-[#0f766e] italic">
         <Sparkles className="w-3 h-3 inline mr-0.5" />
         {t(`cropsEnhanced.taskTips.${growth.stageName}`)}
       </p>
@@ -198,7 +198,7 @@ export default function CropsPage() {
   const failed = crops.filter((c) => c.status === 'failed').length;
 
   const stats = [
-    { icon: Sprout, label: t('crops.total'), value: totalCrops, color: 'text-[#445c8c] bg-[#c4d4e4]' },
+    { icon: Sprout, label: t('crops.total'), value: totalCrops, color: 'text-[#0f766e] bg-[#e2f0ee]' },
     { icon: Sprout, label: t('crops.statuses.growing'), value: growing, color: 'text-green-600 bg-green-50' },
     { icon: Package, label: t('crops.statuses.harvested'), value: harvested, color: 'text-amber-600 bg-amber-50' },
     { icon: Sprout, label: t('crops.statuses.failed'), value: failed, color: 'text-red-600 bg-red-50' },
@@ -206,7 +206,7 @@ export default function CropsPage() {
 
   return (
     <div className="space-y-6 page-enter">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#445c8c] via-[#364a70] to-[#283854] p-8">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f766e] via-[#183028] to-[#0a201c] p-8">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
         <div className="relative">
           <div className="flex items-center gap-2 mb-2">
@@ -216,7 +216,7 @@ export default function CropsPage() {
             </span>
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">{t('crops.title')}</h1>
-          <p className="mt-2 text-[#c4d4e4]/80 max-w-xl">{t('crops.subtitle')}</p>
+          <p className="mt-2 text-[#e2f0ee]/80 max-w-xl">{t('crops.subtitle')}</p>
         </div>
       </div>
 
@@ -356,7 +356,7 @@ export default function CropsPage() {
             <Card className="premium-card">
               <CardContent className="flex flex-col items-center py-16 text-center">
                 <div className="empty-state-icon">
-                  <Sprout className="h-7 w-7 text-[#445c8c]" />
+                  <Sprout className="h-7 w-7 text-[#0f766e]" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">
                   {statusFilter === 'all' ? t('crops.noCrops') : t('crops.noCropsStatus').replace('{status}', statusFilter)}
@@ -381,7 +381,7 @@ export default function CropsPage() {
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <CardTitle className="text-base flex items-center gap-2">
-                          <Sprout className="h-4 w-4 text-[#445c8c]" />
+                          <Sprout className="h-4 w-4 text-[#0f766e]" />
                           {crop.name}
                         </CardTitle>
                         <StatusBadge status={crop.status} />
@@ -413,7 +413,7 @@ export default function CropsPage() {
                       {crop.status === 'growing' && (
                         <div className="pt-2 border-t border-gray-100">
                           <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                            <Sprout className="w-3.5 h-3.5 text-[#445c8c]" />
+                            <Sprout className="w-3.5 h-3.5 text-[#0f766e]" />
                             {t('cropsEnhanced.growthStages')}
                           </p>
                           <GrowthStageBar crop={crop} />

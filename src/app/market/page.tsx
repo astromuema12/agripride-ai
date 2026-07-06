@@ -24,7 +24,7 @@ const regions = [
 const regionToKey = (r: string) => r.toLowerCase().replace(/\s+/g, '_');
 
 function TrendIcon({ trend }: { trend: MarketPrice['trend'] }) {
-  if (trend === 'up') return <TrendingUp className="h-4 w-4 text-[#445c8c]" />;
+  if (trend === 'up') return <TrendingUp className="h-4 w-4 text-[#0f766e]" />;
   if (trend === 'down') return <TrendingDown className="h-4 w-4 text-red-500" />;
   return <Minus className="h-4 w-4 text-gray-400" />;
 }
@@ -145,7 +145,7 @@ export default function MarketPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-lg bg-[#c4d4e4] p-3 text-[#445c8c]">
+            <div className="rounded-lg bg-[#e2f0ee] p-3 text-[#0f766e]">
               <DollarSign className="h-6 w-6" />
             </div>
             <div>
@@ -160,7 +160,7 @@ export default function MarketPage() {
 
         <Card>
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-lg bg-[#c4d4e4] p-3 text-[#445c8c]">
+            <div className="rounded-lg bg-[#e2f0ee] p-3 text-[#0f766e]">
               <TrendingUp className="h-6 w-6" />
             </div>
             <div>
@@ -175,7 +175,7 @@ export default function MarketPage() {
 
         <Card>
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-lg bg-[#c4d4e4] p-3 text-[#445c8c]">
+            <div className="rounded-lg bg-[#e2f0ee] p-3 text-[#0f766e]">
               <TrendingDown className="h-6 w-6" />
             </div>
             <div>
@@ -190,7 +190,7 @@ export default function MarketPage() {
 
         <Card>
           <CardContent className="flex items-center gap-4 p-6">
-            <div className="rounded-lg bg-[#c4d4e4] p-3 text-[#445c8c]">
+            <div className="rounded-lg bg-[#e2f0ee] p-3 text-[#0f766e]">
               <MapPin className="h-6 w-6" />
             </div>
             <div>

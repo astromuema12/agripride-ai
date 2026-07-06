@@ -23,7 +23,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
   if (loading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#445c8c]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#0f766e]" />
       </div>
     );
   }

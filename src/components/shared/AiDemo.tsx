@@ -32,20 +32,20 @@ type DemoResult = {
 };
 
 const riskColors: Record<string, string> = {
-  low: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]',
+  low: 'bg-[#e2f0ee] text-[#0f766e] border-[#14b8a6]',
   medium: 'bg-amber-100 text-amber-700 border-amber-200',
   high: 'bg-orange-100 text-orange-700 border-orange-200',
   critical: 'bg-red-100 text-red-700 border-red-200',
 };
 
 const likelihoodColors: Record<string, string> = {
-  high: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]',
+  high: 'bg-[#e2f0ee] text-[#0f766e] border-[#14b8a6]',
   medium: 'bg-amber-100 text-amber-700 border-amber-200',
   low: 'bg-red-100 text-red-700 border-red-200',
 };
 
 const uncertaintyColors: Record<string, string> = {
-  low: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]',
+  low: 'bg-[#e2f0ee] text-[#0f766e] border-[#14b8a6]',
   moderate: 'bg-amber-100 text-amber-700 border-amber-200',
   high: 'bg-red-100 text-red-700 border-red-200',
 };
@@ -101,7 +101,7 @@ export function AiDemo() {
   };
 
   return (
-    <section className="bg-gradient-to-b from-[#f0f4f8] to-white py-16 sm:py-20">
+    <section className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -137,8 +137,8 @@ export function AiDemo() {
                         onClick={() => { setSelectedCrop(crop.id); setResult(null); setError(''); }}
                         className={`flex items-center gap-1 rounded-full px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-colors touch-manipulation ${
                           selectedCrop === crop.id
-                            ? 'bg-[#445c8c] text-white'
-                            : 'bg-[#f0f4f8] text-[#5a6a7d] hover:bg-[#c4d4e4]'
+                            ? 'bg-[#0f766e] text-white'
+                            : 'bg-gray-100 text-[#5a6a7d] hover:bg-[#e2f0ee]'
                         }`}
                       >
                         {crop.emoji && <span>{crop.emoji}</span>} {crop.name}
@@ -153,7 +153,7 @@ export function AiDemo() {
                 <select
                   value={selectedStage}
                   onChange={(e) => { setSelectedStage(e.target.value as GrowthStage); setResult(null); setError(''); }}
-                  className="w-full rounded-lg border border-[#c4d4e4] bg-white px-3 py-2 text-sm text-[#1f2937] focus:outline-none focus:ring-2 focus:ring-[#445c8c] focus:border-transparent"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#0f766e] focus:border-transparent"
                 >
                   {growthStages.map((gs) => (
                     <option key={gs.value} value={gs.value}>{gs.label}</option>
@@ -166,7 +166,7 @@ export function AiDemo() {
                 <label className="mb-2 block text-sm font-medium text-[#1f2937]">{t('landing.aiDemo.describeSymptoms')}</label>
                 <textarea
                   rows={4}
-                  className="w-full rounded-lg border border-[#c4d4e4] bg-white px-3 py-2 text-sm text-[#1f2937] placeholder:text-[#5a6a7d] focus:outline-none focus:ring-2 focus:ring-[#445c8c] focus:border-transparent"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0f766e] focus:border-transparent"
                   placeholder={t('landing.aiDemo.symptomsPlaceholder')}
                   value={symptoms}
                   onChange={(e) => setSymptoms(e.target.value)}
@@ -195,7 +195,7 @@ export function AiDemo() {
               <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-bold text-[#1f2937]">{t('landing.aiDemo.diagnosisResult')}</h3>
               {diagnosing && (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-                  <Loader2 className="mb-3 h-8 w-8 sm:h-10 sm:w-10 animate-spin text-[#445c8c]" />
+                  <Loader2 className="mb-3 h-8 w-8 sm:h-10 sm:w-10 animate-spin text-[#0f766e]" />
                   <p className="text-sm text-[#5a6a7d]">{t('landing.aiDemo.analyzingSymptoms')}</p>
                 </div>
               )}
@@ -207,7 +207,7 @@ export function AiDemo() {
               )}
               {!diagnosing && !error && !result && (
                 <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-                  <Sprout className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-[#ccccbe]" />
+                  <Sprout className="mb-3 h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
                   <p className="text-sm text-[#5a6a7d]">{t('landing.aiDemo.emptyState')}</p>
                 </div>
               )}
@@ -220,7 +220,7 @@ export function AiDemo() {
                       </div>
                       <div className="text-xs text-[#5a6a7d] capitalize">{result.crop} — {t('landing.aiDemo.stageLabel', { stage: result.growthStage })}</div>
                     </div>
-                    <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-[#f0f4f8] text-[#5a6a7d]'} w-fit`}>
+                    <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-gray-100 text-gray-500'} w-fit`}>
                       {t('landing.aiDemo.uncertaintyLabel', { level: result.uncertaintyLevel.toUpperCase() })}
                     </Badge>
                   </div>
@@ -243,12 +243,12 @@ export function AiDemo() {
                       <div className="space-y-2">
                         {result.possibleCauses.slice(0, 4).map((cause, idx) => (
                           <div key={idx} className={`rounded-lg border p-2.5 ${
-                            idx === 0 && cause.likelihood === 'high' ? 'border-[#a4dca7] bg-[#eef8ef]' : 'border-[#ccccbe]'
+                            idx === 0 && cause.likelihood === 'high' ? 'border-[#14b8a6] bg-[#e2f0ee]' : 'border-gray-300'
                           }`}>
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-1.5 min-w-0">
                                 <span className="text-xs font-medium text-[#1f2937]">{idx + 1}. {cause.name}</span>
-                                <Badge className={`${likelihoodColors[cause.likelihood] || 'bg-[#f0f4f8]'} text-[10px]`}>
+                                <Badge className={`${likelihoodColors[cause.likelihood] || 'bg-gray-100'} text-[10px]`}>
                                   {cause.likelihood}
                                 </Badge>
                               </div>
@@ -263,7 +263,7 @@ export function AiDemo() {
                     </div>
                   )}
 
-                  <div className="rounded-lg bg-[#f0f4f8] p-3">
+                  <div className="rounded-lg bg-gray-50 p-3">
                     <p className="text-xs font-semibold text-[#1f2937] mb-1">{t('landing.aiDemo.aiReasoning')}</p>
                     <p className="text-xs text-[#5a6a7d]">{result.reasoning.summary}</p>
                     {result.reasoning.uncertainties.length > 0 && (
@@ -287,7 +287,7 @@ export function AiDemo() {
                   {result.primaryDiagnosis?.prevention && (
                     <div>
                       <p className="mb-1 text-xs font-semibold text-[#1f2937]">
-                        <Shield className="mr-1 inline h-3 w-3 text-[#445c8c]" /> {t('landing.aiDemo.prevention')}
+                        <Shield className="mr-1 inline h-3 w-3 text-[#0f766e]" /> {t('landing.aiDemo.prevention')}
                       </p>
                       <p className="text-sm text-[#5a6a7d]">{result.primaryDiagnosis.prevention}</p>
                     </div>
@@ -326,7 +326,7 @@ export function AiDemo() {
         >
           <p className="text-xs sm:text-sm text-[#5a6a7d]">
             {t('landing.aiDemo.fullVersion')}{' '}
-            <a href="/auth?tab=register" className="text-[#445c8c] underline hover:text-[#364a70]">{t('landing.aiDemo.getStarted')}</a>
+            <a href="/auth?tab=register" className="text-[#0f766e] underline hover:text-[#0b5c54]">{t('landing.aiDemo.getStarted')}</a>
           </p>
         </motion.div>
       </div>

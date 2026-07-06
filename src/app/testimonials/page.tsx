@@ -89,7 +89,7 @@ export default function TestimonialsPage() {
                 <textarea
                   id="tcontent"
                   rows={4}
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#445c8c] focus:border-transparent"
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0f766e] focus:border-transparent"
                   placeholder={t('testimonials.submitSubtitle')}
                   value={form.content}
                   onChange={(e) => setForm({ ...form, content: e.target.value })}

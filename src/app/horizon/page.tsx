@@ -75,7 +75,7 @@ export default function HorizonImpactPage() {
 
   const sdgGoals = [
     { number: 2, label: t('horizon.sdg.zeroHunger'), color: 'bg-amber-100 text-amber-800 border-amber-200' },
-    { number: 13, label: t('horizon.sdg.climateAction'), color: 'bg-[#eef8ef] text-[#408c45] border-[#a4dca7]' },
+    { number: 13, label: t('horizon.sdg.climateAction'), color: 'bg-[#e2f0ee] text-[#0f766e] border-[#14b8a6]' },
     { number: 15, label: t('horizon.sdg.lifeOnLand'), color: 'bg-green-100 text-green-800 border-green-200' },
   ];
 
@@ -84,10 +84,10 @@ export default function HorizonImpactPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="relative">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#c4d4e4] border-t-[#445c8c]" />
-            <Leaf className="absolute inset-0 m-auto h-5 w-5 text-[#445c8c]" />
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#e2f0ee] border-t-[#0f766e]" />
+            <Leaf className="absolute inset-0 m-auto h-5 w-5 text-[#0f766e]" />
           </div>
-          <p className="text-sm font-medium text-[#445c8c]">{t('horizon.loading')}</p>
+          <p className="text-sm font-medium text-[#0f766e]">{t('horizon.loading')}</p>
         </div>
       </div>
     );
@@ -99,7 +99,7 @@ export default function HorizonImpactPage() {
       <motion.div variants={fadeUp} className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <div className="rounded-lg bg-gradient-to-br from-[#445c8c] to-[#364a70] p-2 shadow-lg">
+            <div className="rounded-lg bg-gradient-to-br from-[#0f766e] to-[#183028] p-2 shadow-lg">
               <BarChart3 className="h-5 w-5 text-white" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('horizon.title')}</h1>
@@ -120,10 +120,10 @@ export default function HorizonImpactPage() {
 
       {/* Top-Level KPI Cards */}
       <motion.div variants={fadeUp} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-[#ccccbe] shadow-sm">
+        <Card className="border-[#d1d5db] shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
-              <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
+              <div className="rounded-lg bg-[#e2f0ee] p-2.5 text-[#0f766e]">
                 <Users className="h-5 w-5" />
               </div>
               <Badge variant="primary" className="flex items-center gap-0.5 text-xs">
@@ -135,17 +135,17 @@ export default function HorizonImpactPage() {
               <div className="text-2xl font-bold text-gray-900">{(stats?.total_users ?? 0).toLocaleString()}</div>
               <p className="text-sm text-gray-500">{t('horizon.kpi.totalFarmers')}</p>
             </div>
-            <div className="mt-2 flex items-center gap-1 text-xs text-[#445c8c]">
+            <div className="mt-2 flex items-center gap-1 text-xs text-[#0f766e]">
               <ArrowRight className="h-3 w-3" />
               {t('horizon.kpi.projected', { value: projectedFarmers.toLocaleString() })}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-[#ccccbe] shadow-sm">
+        <Card className="border-[#d1d5db] shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
-              <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#445c8c]">
+              <div className="rounded-lg bg-[#e2f0ee] p-2.5 text-[#0f766e]">
                 <Globe className="h-5 w-5" />
               </div>
               <Badge variant="secondary" className="text-xs">
@@ -156,17 +156,17 @@ export default function HorizonImpactPage() {
               <div className="text-2xl font-bold text-gray-900">{(stats?.total_farms ?? 0).toLocaleString()}</div>
               <p className="text-sm text-gray-500">{t('horizon.kpi.activeFarms')}</p>
             </div>
-            <div className="mt-2 flex items-center gap-1 text-xs text-[#445c8c]">
+            <div className="mt-2 flex items-center gap-1 text-xs text-[#0f766e]">
               <ArrowRight className="h-3 w-3" />
               {t('horizon.kpi.projected', { value: projectedFarms.toLocaleString() })}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-[#ccccbe] shadow-sm">
+        <Card className="border-[#d1d5db] shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
-              <div className="rounded-lg bg-[#eef8ef] p-2.5 text-[#a4dca7]">
+              <div className="rounded-lg bg-[#e2f0ee] p-2.5 text-[#14b8a6]">
                 <TreePine className="h-5 w-5" />
               </div>
               <Badge variant="primary" className="text-xs">
@@ -181,7 +181,7 @@ export default function HorizonImpactPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-[#ccccbe] shadow-sm">
+        <Card className="border-[#d1d5db] shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
               <div className="rounded-lg bg-[#f5ede6] p-2.5 text-[#945c34]">
@@ -197,7 +197,7 @@ export default function HorizonImpactPage() {
               </div>
               <p className="text-sm text-gray-500">{t('horizon.kpi.environmentalHealth')}</p>
             </div>
-            <div className="mt-2 flex items-center gap-1 text-xs text-[#445c8c]">
+            <div className="mt-2 flex items-center gap-1 text-xs text-[#0f766e]">
               <CheckCircle className="h-3 w-3" />
               {t('horizon.kpi.co2ReductionProjected', { value: carbonReduction })}
             </div>
@@ -207,11 +207,11 @@ export default function HorizonImpactPage() {
 
       {/* SDG Alignment Banner */}
       <motion.div variants={fadeUp}>
-        <Card className="border-[#ccccbe] bg-gradient-to-r from-[#c4d4e4] via-white to-[#eef8ef] shadow-sm">
+        <Card className="border-[#d1d5db] bg-gradient-to-r from-[#e2f0ee] via-white to-[#e2f0ee] shadow-sm">
           <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div className="flex items-center gap-3">
-              <div className="rounded-full bg-[#c4d4e4] p-2">
-                <Target className="h-5 w-5 text-[#445c8c]" />
+              <div className="rounded-full bg-[#e2f0ee] p-2">
+                <Target className="h-5 w-5 text-[#0f766e]" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">{t('horizon.sdgAlignment.title')}</p>
@@ -232,7 +232,7 @@ export default function HorizonImpactPage() {
       {/* Tabs Section */}
       <motion.div variants={fadeUp}>
         <Tabs defaultValue="farmers" className="w-full">
-          <TabsList className="mb-6 w-full justify-start gap-1 rounded-xl border border-[#ccccbe] bg-[#c4d4e4]/30 p-1">
+          <TabsList className="mb-6 w-full justify-start gap-1 rounded-xl border border-[#d1d5db] bg-[#e2f0ee]/30 p-1">
             <TabsTrigger value="farmers" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
               <Users className="h-4 w-4" />
               {t('horizon.tabs.farmers')}
@@ -250,7 +250,7 @@ export default function HorizonImpactPage() {
           {/* === FARMERS TAB === */}
           <TabsContent value="farmers" className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
@@ -268,23 +268,23 @@ export default function HorizonImpactPage() {
                   <div className="mt-3 space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">{t('horizon.farmers.projectedNextQuarter')}</span>
-                      <span className="font-semibold text-[#445c8c]">{projectedFarmers.toLocaleString()}</span>
+                      <span className="font-semibold text-[#0f766e]">{projectedFarmers.toLocaleString()}</span>
                     </div>
                     <Progress value={Math.min(100, stats ? (stats.total_users / projectedFarmers) * 100 : 0)} className="h-2" />
                   </div>
                   <p className="mt-3 text-xs leading-relaxed text-gray-500">
                     {t('horizon.farmers.growthNarrative', { growth: stats?.user_growth ?? 0 })}
                   </p>
-                  <Button variant="link" size="sm" className="mt-2 h-auto p-0 text-[#445c8c] dark:text-[#a4dca7]">
+                  <Button variant="link" size="sm" className="mt-2 h-auto p-0 text-[#0f766e] dark:text-[#14b8a6]">
                     {t('horizon.farmers.viewInsights')} <ArrowRight className="ml-1 h-3 w-3" />
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
-                    <div className="rounded-lg bg-[#eef8ef] p-2 text-[#445c8c]">
+                    <div className="rounded-lg bg-[#e2f0ee] p-2 text-[#0f766e]">
                       <Globe className="h-4 w-4" />
                     </div>
                     <CardTitle className="text-sm font-semibold">{t('horizon.farmers.farmNetwork')}</CardTitle>
@@ -299,7 +299,7 @@ export default function HorizonImpactPage() {
                   <div className="mt-3 space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">{t('horizon.farmers.projectedNextQuarter')}</span>
-                      <span className="font-semibold text-[#445c8c]">{projectedFarms.toLocaleString()}</span>
+                      <span className="font-semibold text-[#0f766e]">{projectedFarms.toLocaleString()}</span>
                     </div>
                     <Progress value={stats ? (stats.total_farms / projectedFarms) * 100 : 0} className="h-2" />
                   </div>
@@ -314,7 +314,7 @@ export default function HorizonImpactPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm sm:col-span-2 lg:col-span-1">
+              <Card className="border-[#d1d5db] shadow-sm sm:col-span-2 lg:col-span-1">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-green-50 p-2 text-green-600">
@@ -351,11 +351,11 @@ export default function HorizonImpactPage() {
             </div>
 
             {/* Farmer Impact Description */}
-            <Card className="border-[#ccccbe] bg-gradient-to-br from-blue-50 to-[#eef8ef] shadow-sm">
+            <Card className="border-[#d1d5db] bg-gradient-to-br from-blue-50 to-[#e2f0ee] shadow-sm">
               <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
                 <div className="flex-1">
                   <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
-                    <CheckCircle className="h-5 w-5 text-[#445c8c]" />
+                    <CheckCircle className="h-5 w-5 text-[#0f766e]" />
                     {t('horizon.farmers.summary')}
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600"
@@ -372,10 +372,10 @@ export default function HorizonImpactPage() {
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-[#445c8c]">{avgScore}%</div>
+                    <div className="text-2xl font-bold text-[#0f766e]">{avgScore}%</div>
                     <p className="text-xs text-gray-500">{t('horizon.farmers.avgSustainability')}</p>
                   </div>
-                  <div className="h-10 w-px bg-[#ccccbe]" />
+                  <div className="h-10 w-px bg-[#d1d5db]" />
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-700">{stats?.user_growth ?? 0}%</div>
                     <p className="text-xs text-gray-500">{t('horizon.farmers.growthRate')}</p>
@@ -388,7 +388,7 @@ export default function HorizonImpactPage() {
           {/* === COMMUNITIES TAB === */}
           <TabsContent value="communities" className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-purple-50 p-2 text-purple-600">
@@ -415,7 +415,7 @@ export default function HorizonImpactPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-amber-50 p-2 text-amber-600">
@@ -441,7 +441,7 @@ export default function HorizonImpactPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-rose-50 p-2 text-rose-600">
@@ -482,11 +482,11 @@ export default function HorizonImpactPage() {
             </div>
 
             {/* Community Impact Description */}
-            <Card className="border-[#ccccbe] bg-gradient-to-br from-purple-50 to-amber-50 shadow-sm">
+            <Card className="border-[#d1d5db] bg-gradient-to-br from-purple-50 to-amber-50 shadow-sm">
               <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
                 <div className="flex-1">
                   <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
-                    <CheckCircle className="h-5 w-5 text-[#445c8c]" />
+                    <CheckCircle className="h-5 w-5 text-[#0f766e]" />
                     {t('horizon.communities.summary')}
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600"
@@ -516,10 +516,10 @@ export default function HorizonImpactPage() {
           {/* === ENVIRONMENT TAB === */}
           <TabsContent value="environment" className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
-                    <div className="rounded-lg bg-[#eef8ef] p-2 text-[#445c8c]">
+                    <div className="rounded-lg bg-[#e2f0ee] p-2 text-[#0f766e]">
                       <Leaf className="h-4 w-4" />
                     </div>
                     <CardTitle className="text-sm font-semibold">{t('horizon.environment.carbonReduction')}</CardTitle>
@@ -528,21 +528,21 @@ export default function HorizonImpactPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-[#445c8c]">{carbonReduction}%</span>
+                    <span className="text-3xl font-bold text-[#0f766e]">{carbonReduction}%</span>
                     <span className="text-sm text-gray-400">{t('horizon.environment.reduction')}</span>
                   </div>
                   <Progress value={carbonReduction} className="mt-3 h-2" />
                   <p className="mt-2 text-xs leading-relaxed text-gray-500">
                     {t('horizon.environment.carbonNarrative')}
                   </p>
-                  <div className="mt-3 flex items-center gap-2 rounded-lg bg-[#eef8ef] p-3">
-                    <Target className="h-4 w-4 text-[#445c8c]" />
-                    <span className="text-xs font-medium text-[#445c8c]">{t('horizon.environment.sdg13Label')}</span>
+                  <div className="mt-3 flex items-center gap-2 rounded-lg bg-[#e2f0ee] p-3">
+                    <Target className="h-4 w-4 text-[#0f766e]" />
+                    <span className="text-xs font-medium text-[#0f766e]">{t('horizon.environment.sdg13Label')}</span>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
@@ -568,7 +568,7 @@ export default function HorizonImpactPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="rounded-lg bg-green-50 p-2 text-green-600">
@@ -597,10 +597,10 @@ export default function HorizonImpactPage() {
 
             {/* Environment Detailed Metrics */}
             <div className="grid gap-4 sm:grid-cols-2">
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <BarChart3 className="h-4 w-4 text-[#445c8c]" />
+                    <BarChart3 className="h-4 w-4 text-[#0f766e]" />
                     {t('horizon.environment.scoreBreakdown')}
                   </CardTitle>
                   <CardDescription>{t('horizon.environment.scoreBreakdownDesc')}</CardDescription>
@@ -610,7 +610,7 @@ export default function HorizonImpactPage() {
                     { label: t('horizon.farmers.soilHealth'), value: avgSoil, icon: Sun, color: 'text-amber-600 bg-amber-50' },
                     { label: t('horizon.environment.waterUsageEfficiency'), value: avgWater, icon: Droplets, color: 'text-blue-600 bg-blue-50' },
                     { label: t('horizon.farmers.biodiversity'), value: avgBio, icon: TreePine, color: 'text-green-600 bg-green-50' },
-                    { label: t('horizon.environment.carbonFootprintInverse'), value: 100 - avgCarbon, icon: Leaf, color: 'text-[#445c8c] bg-[#eef8ef]' },
+                    { label: t('horizon.environment.carbonFootprintInverse'), value: 100 - avgCarbon, icon: Leaf, color: 'text-[#0f766e] bg-[#e2f0ee]' },
                   ].map((item) => (
                     <div key={item.label}>
                       <div className="mb-1 flex items-center justify-between text-sm">
@@ -628,10 +628,10 @@ export default function HorizonImpactPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-[#ccccbe] shadow-sm">
+              <Card className="border-[#d1d5db] shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-                    <Target className="h-4 w-4 text-[#445c8c]" />
+                    <Target className="h-4 w-4 text-[#0f766e]" />
                     {t('horizon.environment.goals')}
                   </CardTitle>
                   <CardDescription>{t('horizon.environment.goalsDesc')}</CardDescription>
@@ -659,11 +659,11 @@ export default function HorizonImpactPage() {
             </div>
 
             {/* Environment Impact Description */}
-            <Card className="border-[#ccccbe] bg-gradient-to-br from-green-50 to-[#eef8ef] shadow-sm">
+            <Card className="border-[#d1d5db] bg-gradient-to-br from-green-50 to-[#e2f0ee] shadow-sm">
               <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
                 <div className="flex-1">
                   <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
-                    <CheckCircle className="h-5 w-5 text-[#445c8c]" />
+                    <CheckCircle className="h-5 w-5 text-[#0f766e]" />
                     {t('horizon.environment.summary')}
                   </h3>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600"
@@ -680,7 +680,7 @@ export default function HorizonImpactPage() {
                   />
                 </div>
                 <div className="flex shrink-0 flex-col items-center gap-1">
-                  <div className="flex items-center gap-1 text-2xl font-bold text-[#445c8c]">
+                  <div className="flex items-center gap-1 text-2xl font-bold text-[#0f766e]">
                     <Leaf className="h-6 w-6" />
                     {avgScore}%
                   </div>
@@ -694,15 +694,15 @@ export default function HorizonImpactPage() {
 
       {/* Bottom CTA */}
       <motion.div variants={fadeUp}>
-        <Card className="border-[#ccccbe] bg-gradient-to-r from-[#445c8c] to-[#364a70] shadow-lg">
+        <Card className="border-[#d1d5db] bg-gradient-to-r from-[#0f766e] to-[#183028] shadow-lg">
           <CardContent className="flex flex-col items-center gap-4 p-8 text-center md:flex-row md:text-left">
             <div className="flex-1">
               <h2 className="text-xl font-bold text-white">{t('horizon.cta.title')}</h2>
-              <p className="mt-1 text-sm text-[#c4d4e4]">
+              <p className="mt-1 text-sm text-[#e2f0ee]">
                 {t('horizon.cta.subtitle')}
               </p>
             </div>
-            <Button variant="secondary" size="lg" className="shrink-0 gap-2 bg-white text-[#445c8c] hover:bg-[#eef8ef]">
+            <Button variant="secondary" size="lg" className="shrink-0 gap-2 bg-white text-[#0f766e] hover:bg-[#e2f0ee]">
               <BarChart3 className="h-4 w-4" />
               {t('horizon.cta.viewFullReport')}
               <ArrowRight className="h-4 w-4" />

@@ -159,7 +159,7 @@ export default function MfaPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#445c8c]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#0f766e]" />
       </div>
     );
   }
@@ -182,12 +182,12 @@ export default function MfaPage() {
           <CardContent className="space-y-6">
             {step === 'intro' && (
               <div className="space-y-4">
-                <div className="rounded-lg bg-[#c4d4e4] p-4 dark:bg-emerald-900/20">
+                <div className="rounded-lg bg-[#e2f0ee] p-4 dark:bg-emerald-900/20">
                   <div className="flex items-start gap-3">
-                    <Smartphone className="mt-0.5 h-5 w-5 text-[#445c8c] dark:text-[#a4dca7]" />
+                    <Smartphone className="mt-0.5 h-5 w-5 text-[#0f766e] dark:text-[#14b8a6]" />
                     <div>
-                      <p className="text-sm font-medium text-[#364a70] dark:text-[#a4dca7]">{t('auth.mfa.howItWorks')}</p>
-                      <ul className="mt-2 space-y-1 text-xs text-[#445c8c] dark:text-[#a4dca7]">
+                      <p className="text-sm font-medium text-[#183028] dark:text-[#14b8a6]">{t('auth.mfa.howItWorks')}</p>
+                      <ul className="mt-2 space-y-1 text-xs text-[#0f766e] dark:text-[#14b8a6]">
                         <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />{t('auth.mfa.step1')}</li>
                         <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />{t('auth.mfa.step2')}</li>
                         <li className="flex items-start gap-1.5"><CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0" />{t('auth.mfa.step3')}</li>
@@ -198,9 +198,9 @@ export default function MfaPage() {
 
                 {mfaEnabled ? (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 rounded-lg bg-[#c4d4e4] p-3 dark:bg-emerald-900/20">
-                      <CheckCircle2 className="h-5 w-5 text-[#445c8c] dark:text-[#a4dca7]" />
-                      <span className="text-sm font-medium text-[#445c8c] dark:text-[#a4dca7]">{t('auth.mfa.isActive')}</span>
+                    <div className="flex items-center gap-2 rounded-lg bg-[#e2f0ee] p-3 dark:bg-emerald-900/20">
+                      <CheckCircle2 className="h-5 w-5 text-[#0f766e] dark:text-[#14b8a6]" />
+                      <span className="text-sm font-medium text-[#0f766e] dark:text-[#14b8a6]">{t('auth.mfa.isActive')}</span>
                     </div>
                     <Button variant="destructive" onClick={handleDisable} disabled={saving} className="gap-2">
                       {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
@@ -231,12 +231,12 @@ export default function MfaPage() {
                 </div>
 
                 <div className="flex flex-col items-center gap-3 rounded-lg border-2 border-dashed border-[var(--border)] p-6">
-                  <div className="flex h-48 w-48 items-center justify-center rounded-xl bg-[#c4d4e4] dark:bg-emerald-900/20">
-                    <Key className="h-12 w-12 text-[#a4dca7]" />
+                  <div className="flex h-48 w-48 items-center justify-center rounded-xl bg-[#e2f0ee] dark:bg-emerald-900/20">
+                    <Key className="h-12 w-12 text-[#14b8a6]" />
                   </div>
                   <p className="text-xs text-[var(--muted-foreground)]">
                     {t('auth.mfa.setupKey')}:{' '}
-                    <code className="rounded bg-[var(--muted)] px-2 py-0.5 font-mono text-[#445c8c] dark:text-[#a4dca7]">
+                    <code className="rounded bg-[var(--muted)] px-2 py-0.5 font-mono text-[#0f766e] dark:text-[#14b8a6]">
                       {setup.secret.slice(0, 8)}...{setup.secret.slice(-4)}
                     </code>
                   </p>
@@ -326,8 +326,8 @@ export default function MfaPage() {
             {step === 'done' && (
               <div className="space-y-4 text-center">
                 <div className="flex justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#c4d4e4] dark:bg-emerald-900/30">
-                    <CheckCircle2 className="h-8 w-8 text-[#445c8c] dark:text-[#a4dca7]" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#e2f0ee] dark:bg-emerald-900/30">
+                    <CheckCircle2 className="h-8 w-8 text-[#0f766e] dark:text-[#14b8a6]" />
                   </div>
                 </div>
                 <div>

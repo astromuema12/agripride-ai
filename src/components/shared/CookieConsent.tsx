@@ -41,7 +41,7 @@ export function CookieConsent() {
           <div className="mx-auto flex max-w-7xl flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1 text-xs sm:text-sm text-[var(--muted-foreground)]">
               {t('cookieConsent.message')}{' '}
-              <Link href="/privacy" className="text-[#445c8c] dark:text-[#a4dca7] underline hover:text-[#364a70] dark:hover:text-[#bce8c1]">{t('footer.privacy')}</Link>.
+              <Link href="/privacy" className="text-[#0f766e] dark:text-[#14b8a6] underline hover:text-[#0b5c54] dark:hover:text-[#6ee7b7]">{t('footer.privacy')}</Link>.
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Button variant="ghost" size="sm" className="text-xs sm:text-sm" onClick={reject}>

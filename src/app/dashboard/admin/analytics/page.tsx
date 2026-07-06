@@ -155,7 +155,7 @@ export default function AdminAnalyticsPage() {
                 <p className="mt-1 text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
                 <p className="mt-1 text-xs text-gray-400">{t('adminAnalytics.avgPerRecord', { avg: avgYield.toFixed(1) })}</p>
               </div>
-              <div className="rounded-lg bg-[#c4d4e4] p-3">
+              <div className="rounded-lg bg-[#e2f0ee] p-3">
                 <Sprout className="h-5 w-5 text-[#0f766e]" />
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function AdminAnalyticsPage() {
                   {t('adminAnalytics.farmsScored', { count: sustainabilityScores.length })}
                 </p>
               </div>
-              <div className="rounded-lg bg-[#c4d4e4] p-3">
+              <div className="rounded-lg bg-[#e2f0ee] p-3">
                 <Leaf className="h-5 w-5 text-[#0f766e]" />
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function AdminAnalyticsPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="flex items-center gap-4 p-5">
-            <div className="rounded-lg bg-[#c4d4e4] p-2.5 text-[#0f766e]">
+            <div className="rounded-lg bg-[#e2f0ee] p-2.5 text-[#0f766e]">
               <Users className="h-5 w-5" />
             </div>
             <div>
@@ -636,7 +636,7 @@ export default function AdminAnalyticsPage() {
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-[#c4d4e4]0" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-[#e2f0ee]0" />
                       {t('adminAnalytics.sustainabilityGood')}
                     </span>
                     <span className="font-medium text-gray-900">{good}</span>

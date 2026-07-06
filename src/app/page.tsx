@@ -77,12 +77,12 @@ export default function HomePage() {
   ];
 
   const features = [
-    { icon: FileSearch, title: t('landing.features.diseaseDetection'), description: t('landing.features.diseaseDetectionDesc'), color: 'text-[#445c8c]', bg: 'bg-[#c4d4e4]' },
-    { icon: CloudSun, title: t('landing.features.weatherMonitoring'), description: t('landing.features.weatherMonitoringDesc'), color: 'text-[#445c8c]', bg: 'bg-[#c4d4e4]' },
-    { icon: ScrollText, title: t('landing.features.aiAssistant'), description: t('landing.features.aiAssistantDesc'), color: 'text-[#a4dca7]', bg: 'bg-[#eef8ef]' },
-    { icon: BarChart3, title: t('dashboard.farmer.farmAnalytics'), description: t('landing.features.yieldPredictionDesc'), color: 'text-[#445c8c]', bg: 'bg-[#c4d4e4]' },
+    { icon: FileSearch, title: t('landing.features.diseaseDetection'), description: t('landing.features.diseaseDetectionDesc'), color: 'text-[#0f766e]', bg: 'bg-[#e2f0ee]' },
+    { icon: CloudSun, title: t('landing.features.weatherMonitoring'), description: t('landing.features.weatherMonitoringDesc'), color: 'text-[#0f766e]', bg: 'bg-[#e2f0ee]' },
+    { icon: ScrollText, title: t('landing.features.aiAssistant'), description: t('landing.features.aiAssistantDesc'), color: 'text-[#14b8a6]', bg: 'bg-[#e2f0ee]' },
+    { icon: BarChart3, title: t('dashboard.farmer.farmAnalytics'), description: t('landing.features.yieldPredictionDesc'), color: 'text-[#0f766e]', bg: 'bg-[#e2f0ee]' },
     { icon: Globe, title: t('landing.features.marketPrices'), description: t('landing.features.marketPricesDesc'), color: 'text-[#945c34]', bg: 'bg-[#f5ede6]' },
-    { icon: Shield, title: t('landing.features.sustainability'), description: t('landing.features.sustainabilityDesc'), color: 'text-[#a4dca7]', bg: 'bg-[#eef8ef]' },
+    { icon: Shield, title: t('landing.features.sustainability'), description: t('landing.features.sustainabilityDesc'), color: 'text-[#14b8a6]', bg: 'bg-[#e2f0ee]' },
   ];
 
   const pricingPlans = [
@@ -101,14 +101,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen overflow-hidden">
       {/* ===== HERO ===== */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white to-[#c4d4e4]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#c4d4e4]/40 via-transparent to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-[#a4dca7]/20 via-transparent to-transparent" />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-[#c4d4e4]/30 blur-3xl max-xs:h-80 max-xs:w-80" />
+      <section className="relative overflow-hidden bg-gradient-to-b from-white to-[#e2f0ee]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#e2f0ee]/40 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-[#14b8a6]/20 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-[#e2f0ee]/30 blur-3xl max-xs:h-80 max-xs:w-80" />
 
         <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#445c8c] to-[#445c8c] shadow-lg shadow-[#445c8c]/25">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#0f766e] to-[#0f766e] shadow-lg shadow-[#0f766e]/25">
               <Wheat className="h-5 w-5 text-white dark:text-white" />
             </div>
             <span className="text-lg font-bold text-[#1f2937] dark:text-white">AgriPride AI</span>
@@ -117,14 +117,14 @@ export default function HomePage() {
             {[t('landing.features.title'), t('nav.pricing'), t('nav.governance'), t('nav.contact')].map((l, i) => {
               const ids = ['features', 'pricing', 'governance', 'contact'];
               return (
-                <a key={ids[i]} href={`#${ids[i]}`} className="text-sm font-medium text-[#5a6a7d] transition-all hover:text-[#445c8c] relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[#a4dca7] after:transition-all hover:after:w-full">{l}</a>
+                <a key={ids[i]} href={`#${ids[i]}`} className="text-sm font-medium text-[#5a6a7d] transition-all hover:text-[#0f766e] relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[#14b8a6] after:transition-all hover:after:w-full">{l}</a>
               );
             })}
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Button variant="ghost" className="text-[#5a6a7d] hover:text-[#445c8c] hover:bg-[#c4d4e4]/50 hidden xs:inline-flex" onClick={() => router.push('/auth')}>{t('nav.signIn')}</Button>
-            <Button size="sm" className="bg-[#445c8c] text-white hover:bg-[#364a70] shadow-xl shadow-[#445c8c]/20 sm:hidden" onClick={() => router.push('/auth?tab=register')}>{t('common.getStarted')}</Button>
-            <Button className="bg-[#445c8c] text-white hover:bg-[#364a70] shadow-xl shadow-[#445c8c]/20 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>{t('landing.hero.cta')}</Button>
+            <Button variant="ghost" className="text-[#5a6a7d] hover:text-[#0f766e] hover:bg-[#e2f0ee]/50 hidden xs:inline-flex" onClick={() => router.push('/auth')}>{t('nav.signIn')}</Button>
+            <Button size="sm" className="bg-[#0f766e] text-white hover:bg-[#183028] shadow-xl shadow-[#0f766e]/20 sm:hidden" onClick={() => router.push('/auth?tab=register')}>{t('common.getStarted')}</Button>
+            <Button className="bg-[#0f766e] text-white hover:bg-[#183028] shadow-xl shadow-[#0f766e]/20 hidden sm:inline-flex" onClick={() => router.push('/auth?tab=register')}>{t('landing.hero.cta')}</Button>
           </div>
         </nav>
 
@@ -139,14 +139,14 @@ export default function HomePage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-[#a4dca7]/50 bg-[#a4dca7]/15 px-3 py-1 text-xs sm:px-4 sm:py-1.5 sm:text-sm font-medium text-[#408c45] backdrop-blur-md"
+                className="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-[#14b8a6]/50 bg-[#14b8a6]/15 px-3 py-1 text-xs sm:px-4 sm:py-1.5 sm:text-sm font-medium text-[#0f766e] backdrop-blur-md"
               >
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#a4dca7] opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#a4dca7]" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#14b8a6] opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#14b8a6]" />
                 </span>
                 {t('common.new')}
-                <span className="text-[#72c477]/60 hidden xs:inline">&mdash;</span>
+                <span className="text-[#059669]/60 hidden xs:inline">&mdash;</span>
                 <span className="hidden xs:inline">{t('landing.hero.farmersCountDesc')}</span>
               </motion.div>
               <h1 className="text-3xl font-bold leading-[1.1] tracking-tight text-[#1f2937] xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-balance">
@@ -156,7 +156,7 @@ export default function HomePage() {
                 {t('landing.hero.subtitle')}
               </p>
               <div className="mt-6 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
-                <Button size="xl" className="bg-[#445c8c] text-white hover:bg-[#364a70] shadow-2xl shadow-[#445c8c]/30 hover:shadow-[#445c8c]/40 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
+                <Button size="xl" className="bg-[#0f766e] text-white hover:bg-[#183028] shadow-2xl shadow-[#0f766e]/30 hover:shadow-[#0f766e]/40 w-full xs:w-auto" onClick={() => router.push('/auth?tab=register')}>
                   {t('landing.hero.cta')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
@@ -172,20 +172,20 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="relative"
             >
-              <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-gradient-to-r from-[#445c8c]/20 via-[#a4dca7]/10 to-[#c4d4e4]/20 blur-3xl animate-pulse-glow" />
-              <div className="relative overflow-hidden rounded-2xl border border-[#ccccbe]/30 bg-white/80 p-1 backdrop-blur-xl">
+              <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-gradient-to-r from-[#0f766e]/20 via-[#14b8a6]/10 to-[#e2f0ee]/20 blur-3xl animate-pulse-glow" />
+              <div className="relative overflow-hidden rounded-2xl border border-[#d1d5db]/30 bg-white/80 p-1 backdrop-blur-xl">
                 <div className="rounded-xl bg-white p-3 sm:p-5 shadow-sm">
-                  <div className="mb-3 sm:mb-4 flex items-center justify-between border-b border-[#ccccbe]/40 pb-2 sm:pb-3">
+                  <div className="mb-3 sm:mb-4 flex items-center justify-between border-b border-[#d1d5db]/40 pb-2 sm:pb-3">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1.5">
                         <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-[#945c34]/80" />
-                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-[#ccccbe]/80" />
-                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-[#a4dca7]/80" />
+                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-[#d1d5db]/80" />
+                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-[#14b8a6]/80" />
                       </div>
                       <span className="ml-2 sm:ml-3 text-[10px] sm:text-xs text-[#5a6a7d] dark:text-[#5a6a7d] font-mono">agripride-dashboard</span>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 rounded-full bg-[#a4dca7]/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs text-[#408c45]">
-                      <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#a4dca7]" /><span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#a4dca7]" /></span>
+                    <div className="flex items-center gap-1 sm:gap-2 rounded-full bg-[#14b8a6]/15 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs text-[#0f766e]">
+                      <span className="relative flex h-1.5 w-1.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#14b8a6]" /><span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#14b8a6]" /></span>
                       <span className="hidden xs:inline">{t('landing.hero.allSystemsNormal')}</span>
                     </div>
                   </div>
@@ -196,10 +196,10 @@ export default function HomePage() {
                       { label: t('dashboard.farmer.diseaseDetection'), value: '47', change: '+12', icon: FileSearch },
                       { label: t('landing.metrics.yield'), value: '35%', change: '+5%', icon: TrendingUp },
                     ].map((s, i) => (
-                      <div key={i} className="rounded-xl bg-[#f0f4f8] p-2 sm:p-3 border border-[#ccccbe]/30 hover:bg-[#c4d4e4]/30 transition-colors">
+                      <div key={i} className="rounded-xl bg-[#f9fafb] p-2 sm:p-3 border border-[#d1d5db]/30 hover:bg-[#e2f0ee]/30 transition-colors">
                         <div className="flex items-center justify-between">
-                          <s.icon className="h-3 w-3 sm:h-4 sm:w-4 text-[#445c8c]" />
-                          <span className="text-[10px] sm:text-xs font-medium text-[#a4dca7]">{s.change}</span>
+                          <s.icon className="h-3 w-3 sm:h-4 sm:w-4 text-[#0f766e]" />
+                          <span className="text-[10px] sm:text-xs font-medium text-[#14b8a6]">{s.change}</span>
                         </div>
                       <div className="mt-1 sm:mt-2 text-base sm:text-lg font-bold text-[#1f2937] dark:text-[#1f2937]">{s.value}</div>
                       <div className="text-[10px] sm:text-xs text-[#5a6a7d] dark:text-[#5a6a7d]">{s.label}</div>
@@ -207,25 +207,25 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div className="mt-2 sm:mt-3 grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-3">
-                    <div className="rounded-xl bg-[#f0f4f8] p-2 sm:p-3 border border-[#ccccbe]/30">
+                    <div className="rounded-xl bg-[#f9fafb] p-2 sm:p-3 border border-[#d1d5db]/30">
                       <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-[#5a6a7d] dark:text-[#5a6a7d]">
                         <span>{t('dashboard.farmHealthScore')}</span>
-                        <span className="text-[#a4dca7] font-medium">92%</span>
+                        <span className="text-[#14b8a6] font-medium">92%</span>
                       </div>
-                      <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-[#ccccbe]/30">
-                        <div className="h-full w-[92%] rounded-full bg-gradient-to-r from-[#a4dca7] to-[#72c477] shadow-[0_0_8px_rgba(164,220,167,0.3)]" />
+                      <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-[#d1d5db]/30">
+                        <div className="h-full w-[92%] rounded-full bg-gradient-to-r from-[#14b8a6] to-[#059669] shadow-[0_0_8px_rgba(164,220,167,0.3)]" />
                       </div>
                       <div className="mt-1 sm:mt-2 flex justify-between text-[10px] sm:text-xs text-[#5a6a7d] dark:text-[#5a6a7d]"><span>Maize</span><span>Beans</span><span>Tomatoes</span></div>
                     </div>
-                    <div className="rounded-xl bg-[#f0f4f8] p-2 sm:p-3 border border-[#ccccbe]/30">
+                    <div className="rounded-xl bg-[#f9fafb] p-2 sm:p-3 border border-[#d1d5db]/30">
                       <div className="mb-1 sm:mb-2 flex items-center justify-between text-[10px] sm:text-xs text-[#5a6a7d] dark:text-[#5a6a7d]">
                         <span>{t('weather.currentWeather')}</span>
-                        <span className="text-[#445c8c]"><CloudSun className="h-3 w-3 sm:h-3.5 sm:w-3.5" /></span>
+                        <span className="text-[#0f766e]"><CloudSun className="h-3 w-3 sm:h-3.5 sm:w-3.5" /></span>
                       </div>
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-[#1f2937] dark:text-[#1f2937]">
                         28°C · Partly Cloudy
                       </div>
-                      <div className="mt-1 text-[10px] sm:text-xs text-[#a4dca7]">Rain expected in 2 days</div>
+                      <div className="mt-1 text-[10px] sm:text-xs text-[#14b8a6]">Rain expected in 2 days</div>
                     </div>
                   </div>
                 </div>
@@ -236,8 +236,8 @@ export default function HomePage() {
       </section>
 
       {/* ===== METRICS ===== */}
-      <section id="features" className="relative overflow-hidden bg-gradient-to-b from-[#f0f4f8] to-[var(--background)] py-16 sm:py-24">
-        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-48 rounded-full bg-[#c4d4e4]/50 blur-3xl" />
+      <section id="features" className="relative overflow-hidden bg-gradient-to-b from-[#f9fafb] to-[var(--background)] py-16 sm:py-24">
+        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-48 w-48 rounded-full bg-[#e2f0ee]/50 blur-3xl" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -258,12 +258,12 @@ export default function HomePage() {
           >
             {metrics.map((m, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className="group relative rounded-xl border border-[#ccccbe] bg-[var(--card)] p-6 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
+                <div className="group relative rounded-xl border border-[#d1d5db] bg-[var(--card)] p-6 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
                   <div className="relative">
-                    <div className="mb-3 inline-flex rounded-xl bg-[#c4d4e4] p-3 dark:bg-[#364a70]">
-                      <m.icon className="h-6 w-6 text-[#445c8c] dark:text-[#a4dca7]" />
+                    <div className="mb-3 inline-flex rounded-xl bg-[#e2f0ee] p-3 dark:bg-[#183028]">
+                      <m.icon className="h-6 w-6 text-[#0f766e] dark:text-[#14b8a6]" />
                     </div>
-                    <div className="text-3xl font-bold text-[#445c8c] dark:text-[#a4dca7]">{m.value}</div>
+                    <div className="text-3xl font-bold text-[#0f766e] dark:text-[#14b8a6]">{m.value}</div>
                     <div className="mt-1 text-sm text-[var(--muted-foreground)]">{m.label}</div>
                   </div>
                 </div>
@@ -295,13 +295,13 @@ export default function HomePage() {
           >
             {features.map((f, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className="group relative h-full overflow-hidden rounded-xl border border-[#ccccbe] bg-white p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 hover:bg-[#f0f4f8]">
-                  <div className={`mb-5 inline-flex rounded-xl p-3 ${f.bg} ring-1 ring-[#ccccbe]`}>
+                <div className="group relative h-full overflow-hidden rounded-xl border border-[#d1d5db] bg-white p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 hover:bg-[#f9fafb]">
+                  <div className={`mb-5 inline-flex rounded-xl p-3 ${f.bg} ring-1 ring-[#d1d5db]`}>
                     <f.icon className={`h-6 w-6 ${f.color}`} />
                   </div>
                   <h3 className="mb-3 text-xl font-bold text-[var(--foreground)]">{f.title}</h3>
                   <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">{f.description}</p>
-                  <div className="mt-6 flex items-center gap-1 text-sm font-medium text-[#445c8c] dark:text-[#a4dca7] opacity-0 transition-all duration-150 group-hover:opacity-100">
+                  <div className="mt-6 flex items-center gap-1 text-sm font-medium text-[#0f766e] dark:text-[#14b8a6] opacity-0 transition-all duration-150 group-hover:opacity-100">
                     {t('landing.hero.learnMore')} <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -345,7 +345,7 @@ export default function HomePage() {
                   </motion.div>
                 ))}
               </div>
-              <Button className="mt-6 sm:mt-8 bg-white text-[#445c8c] hover:bg-[#f0f4f8] shadow-xl shadow-black/10 w-full sm:w-auto" onClick={() => router.push('/governance')}>
+              <Button className="mt-6 sm:mt-8 bg-white text-[#0f766e] hover:bg-[#f9fafb] shadow-xl shadow-black/10 w-full sm:w-auto" onClick={() => router.push('/governance')}>
                 {t('landing.hero.governance.learnAboutAI')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -376,7 +376,7 @@ export default function HomePage() {
                     <div key={i} className="rounded-lg border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-white">{log.action}</span>
-                        <span className="text-xs font-medium text-[#a4dca7]">{log.confidence}</span>
+                        <span className="text-xs font-medium text-[#14b8a6]">{log.confidence}</span>
                       </div>
                       <div className="mt-1 flex items-center justify-between text-xs text-white/50">
                         <span>{log.agent}</span>
@@ -414,11 +414,11 @@ export default function HomePage() {
           >
             {testimonials.map((item, i) => (
               <motion.div key={item.id} variants={itemVariants}>
-                <div className="group relative h-full rounded-xl border border-[#ccccbe] bg-white p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
-                  <Quote className="mb-4 h-8 w-8 text-[#c4d4e4] dark:text-[#364a70]" />
+                <div className="group relative h-full rounded-xl border border-[#d1d5db] bg-white p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5">
+                  <Quote className="mb-4 h-8 w-8 text-[#e2f0ee] dark:text-[#183028]" />
                   <p className="mb-6 text-sm leading-relaxed text-[var(--muted-foreground)]">&ldquo;{item.content}&rdquo;</p>
-                  <div className="mb-4 flex items-center gap-4 border-t border-[#ccccbe] pt-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#445c8c] to-[#445c8c] text-sm font-bold text-white shadow-lg shadow-[#445c8c]/20">{item.name.charAt(0).toUpperCase()}</div>
+                  <div className="mb-4 flex items-center gap-4 border-t border-[#d1d5db] pt-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#0f766e] to-[#0f766e] text-sm font-bold text-white shadow-lg shadow-[#0f766e]/20">{item.name.charAt(0).toUpperCase()}</div>
                     <div>
                       <div className="font-semibold text-[var(--foreground)]">{item.name}</div>
                       {item.location && <div className="text-xs text-[var(--muted-foreground)]">{item.location}{item.farm_type ? ` · ${item.farm_type}` : ''}</div>}
@@ -436,7 +436,7 @@ export default function HomePage() {
 
       {/* ===== PRICING ===== */}
       <section id="pricing" className="relative overflow-hidden bg-gradient-to-b from-[var(--muted)] to-[var(--background)] py-16 sm:py-24">
-        <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-[#c4d4e4]/50 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-[#e2f0ee]/50 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -452,11 +452,11 @@ export default function HomePage() {
             <span className={`text-sm font-medium transition-colors ${billing === 'monthly' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>{t('landing.hero.monthly')}</span>
             <button
               onClick={() => setBilling(billing === 'monthly' ? 'annual' : 'monthly')}
-              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${billing === 'annual' ? 'bg-[#445c8c]' : 'bg-[var(--border)]'}`}
+              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all ${billing === 'annual' ? 'bg-[#0f766e]' : 'bg-[var(--border)]'}`}
             >
               <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${billing === 'annual' ? 'translate-x-6' : 'translate-x-0.5'}`} />
             </button>
-            <span className={`text-sm font-medium transition-colors ${billing === 'annual' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>{t('landing.hero.annual')} <span className="text-[#a4dca7] dark:text-[#a4dca7]">{t('landing.hero.saveAnnual', { percent: 15 })}</span></span>
+            <span className={`text-sm font-medium transition-colors ${billing === 'annual' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'}`}>{t('landing.hero.annual')} <span className="text-[#14b8a6] dark:text-[#14b8a6]">{t('landing.hero.saveAnnual', { percent: 15 })}</span></span>
           </div>
           <motion.div
             variants={containerVariants}
@@ -467,10 +467,10 @@ export default function HomePage() {
           >
             {pricingPlans.map((plan, i) => (
               <motion.div key={i} variants={itemVariants}>
-                <div className={`relative rounded-xl border p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] ${plan.popular ? 'border-[#a4dca7]/50 bg-[var(--card)] shadow-[var(--shadow-card)] ring-1 ring-[#a4dca7]/20' : 'border-[#ccccbe] bg-[var(--card)] hover:-translate-y-0.5'}`}>
+                <div className={`relative rounded-xl border p-8 shadow-[var(--shadow-card)] transition-all duration-150 hover:shadow-[var(--shadow-card-hover)] ${plan.popular ? 'border-[#14b8a6]/50 bg-[var(--card)] shadow-[var(--shadow-card)] ring-1 ring-[#14b8a6]/20' : 'border-[#d1d5db] bg-[var(--card)] hover:-translate-y-0.5'}`}>
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge variant="primary" className="px-4 py-1 text-xs shadow-lg shadow-[#a4dca7]/20">{t('landing.hero.mostPopular')}</Badge>
+                      <Badge variant="primary" className="px-4 py-1 text-xs shadow-lg shadow-[#14b8a6]/20">{t('landing.hero.mostPopular')}</Badge>
                     </div>
                   )}
                   <div className="mb-6">
@@ -484,13 +484,13 @@ export default function HomePage() {
                   <ul className="mb-8 space-y-3">
                     {plan.features.map((f, j) => (
                       <li key={j} className="flex items-start gap-3 text-sm text-[var(--muted-foreground)]">
-                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#a4dca7]" />
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#14b8a6]" />
                         {f}
                       </li>
                     ))}
                   </ul>
                   <Button
-                    className={`w-full ${plan.popular ? 'bg-[#445c8c] text-white hover:bg-[#364a70] shadow-[var(--shadow-button)]' : 'border-[#ccccbe] text-[var(--foreground)] hover:bg-[var(--muted)]'}`}
+                    className={`w-full ${plan.popular ? 'bg-[#0f766e] text-white hover:bg-[#183028] shadow-[var(--shadow-button)]' : 'border-[#d1d5db] text-[var(--foreground)] hover:bg-[var(--muted)]'}`}
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => router.push('/auth?tab=register')}
                   >
@@ -527,11 +527,11 @@ export default function HomePage() {
               >
                 <button
                   onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                  className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ${faqOpen === i ? 'border-[#a4dca7] bg-gradient-to-br from-[#eef8ef] to-white shadow-[var(--shadow-card-hover)] dark:border-[#a4dca7] dark:from-[#283854] dark:to-[var(--card)]' : 'border-[#ccccbe] bg-[var(--card)] hover:bg-[var(--muted)] hover:border-[var(--border)]'}`}
+                  className={`w-full rounded-xl border p-5 text-left transition-all duration-200 ${faqOpen === i ? 'border-[#14b8a6] bg-gradient-to-br from-[#e2f0ee] to-white shadow-[var(--shadow-card-hover)] dark:border-[#14b8a6] dark:from-[#0a201c] dark:to-[var(--card)]' : 'border-[#d1d5db] bg-[var(--card)] hover:bg-[var(--muted)] hover:border-[var(--border)]'}`}
                 >
                   <div className="flex items-center justify-between gap-4">
                     <span className="font-semibold text-[var(--foreground)]">{item.q}</span>
-                    <ChevronRight className={`h-5 w-5 shrink-0 text-[var(--muted-foreground)] transition-all duration-200 ${faqOpen === i ? 'rotate-90 text-[#445c8c]' : ''}`} />
+                    <ChevronRight className={`h-5 w-5 shrink-0 text-[var(--muted-foreground)] transition-all duration-200 ${faqOpen === i ? 'rotate-90 text-[#0f766e]' : ''}`} />
                   </div>
                   <div className={`overflow-hidden transition-all duration-200 ${faqOpen === i ? 'mt-3 max-h-96' : 'max-h-0'}`}>
                     <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">{item.a}</p>

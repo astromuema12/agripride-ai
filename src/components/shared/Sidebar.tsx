@@ -115,7 +115,7 @@ export function Sidebar() {
             {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
           </Button>
           <div className="flex items-center gap-2 min-w-0">
-            <Wheat className="h-5 w-5 text-[#445c8c] dark:text-[#a4dca7] shrink-0" />
+            <Wheat className="h-5 w-5 text-[#0f766e] dark:text-[#14b8a6] shrink-0" />
             {!collapsed && (
               <div className="flex items-center gap-2 min-w-0">
                 <span className="text-sm font-semibold text-[var(--foreground)] capitalize truncate">{user?.role}</span>
@@ -137,7 +137,7 @@ export function Sidebar() {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 touch-manipulation',
                   isActive
-                    ? 'bg-[#c4d4e4] text-[#445c8c] dark:bg-[#445c8c]/30 dark:text-[#a4dca7] nav-active-indicator'
+                    ? 'bg-[#e2f0ee] text-[#0f766e] dark:bg-[#0f766e]/30 dark:text-[#14b8a6] nav-active-indicator'
                     : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]',
                   collapsed && 'justify-center px-2'
                 )}
@@ -146,7 +146,7 @@ export function Sidebar() {
                 <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-200', isActive && 'scale-110')} />
                 {!collapsed && <span className="truncate">{link.ns === 'nav' ? t(`nav.${link.key}`) : t(`nav.sidebar.${link.key}`)}</span>}
                 {isActive && !collapsed && (
-                  <span className="ml-auto flex h-1.5 w-1.5 rounded-full bg-[#445c8c]" />
+                  <span className="ml-auto flex h-1.5 w-1.5 rounded-full bg-[#0f766e]" />
                 )}
               </Link>
             );
@@ -155,7 +155,7 @@ export function Sidebar() {
 
         {!collapsed && (
           <div className="border-t border-[var(--border)] p-3 sm:p-4">
-            <Link href="/" className="text-xs text-[var(--muted-foreground)] hover:text-[#445c8c] dark:hover:text-[#a4dca7] transition-colors">
+            <Link href="/" className="text-xs text-[var(--muted-foreground)] hover:text-[#0f766e] dark:hover:text-[#14b8a6] transition-colors">
               {t('nav.sidebar.backToHome')}
             </Link>
           </div>

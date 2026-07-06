@@ -44,8 +44,8 @@ const frameworks: Framework[] = [
     implementation: 'All AI agents register their model versions with the governance layer. Each prediction includes the model ID, training snapshot hash, and a human-in-the-loop escalation path for low-confidence results.',
     principles: ['Model Versioning', 'Human Oversight', 'Training Traceability', 'Confidence Thresholds'],
     icon: BrainCircuit,
-    color: 'text-[#445c8c]',
-    gradient: 'from-[#445c8c] to-[#364a70]',
+    color: 'text-[#0f766e]',
+    gradient: 'from-[#0f766e] to-[#183028]',
   },
   {
     acronym: 'MAP',
@@ -296,7 +296,7 @@ function DecisionTable() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.25 }}
-                className="transition-colors hover:bg-[#c4d4e4]/50"
+                className="transition-colors hover:bg-[#e2f0ee]/50"
               >
                 <td className="max-w-[220px] truncate px-4 py-3 font-medium text-gray-900">
                   {d.source_data}
@@ -307,7 +307,7 @@ function DecisionTable() {
                       <div
                         className={`h-full rounded-full transition-all ${
                           d.confidence_score >= 90
-                            ? 'bg-[#445c8c]'
+                            ? 'bg-[#0f766e]'
                             : d.confidence_score >= 80
                               ? 'bg-amber-400'
                               : 'bg-red-400'
@@ -386,7 +386,7 @@ export default function GovernancePage() {
       {/* Governance Stats */}
       <motion.div variants={itemVariants} className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         {[
-          { label: t('governance.activeFrameworks'), value: '8', icon: Shield, color: 'text-[#445c8c] bg-[#c4d4e4]' },
+          { label: t('governance.activeFrameworks'), value: '8', icon: Shield, color: 'text-[#0f766e] bg-[#e2f0ee]' },
           { label: t('governance.decisionsToday'), value: '47', icon: BrainCircuit, color: 'text-blue-600 bg-blue-50' },
           { label: t('governance.complianceScore'), value: '96%', icon: CheckCircle, color: 'text-cyan-600 bg-cyan-50' },
           { label: t('governance.flaggedActions'), value: '3', icon: AlertTriangle, color: 'text-amber-600 bg-amber-50' },
@@ -435,7 +435,7 @@ export default function GovernancePage() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
                     <CardTitle className="flex items-center gap-2 text-base">
-                      <ScrollText className="h-4 w-4 text-[#445c8c] shrink-0" />
+                      <ScrollText className="h-4 w-4 text-[#0f766e] shrink-0" />
                       {t('governance.recentAiDecisions')}
                     </CardTitle>
                     <CardDescription className="mt-1 text-xs sm:text-sm">
@@ -445,7 +445,7 @@ export default function GovernancePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-[#ccccbe] text-[#445c8c] hover:bg-[#eef8ef] w-full sm:w-auto"
+                    className="border-[#d1d5db] text-[#0f766e] hover:bg-[#e2f0ee] w-full sm:w-auto"
                   >
                     <Server className="mr-1.5 h-3.5 w-3.5" />
                     {t('governance.exportLog')}
@@ -459,14 +459,14 @@ export default function GovernancePage() {
 
             {/* Bottom Info Cards */}
             <div className="grid gap-3 sm:gap-4 sm:grid-cols-3">
-              <Card className="border-[#ccccbe] bg-[#c4d4e4]/30">
+              <Card className="border-[#d1d5db] bg-[#e2f0ee]/30">
                 <CardHeader className="pb-2 pt-4">
-                  <CardTitle className="flex items-center gap-2 text-sm text-[#364a70]">
-                    <CheckCircle className="h-4 w-4 text-[#445c8c]" />
+                  <CardTitle className="flex items-center gap-2 text-sm text-[#183028]">
+                    <CheckCircle className="h-4 w-4 text-[#0f766e]" />
                     {t('governance.fullTraceability')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pb-4 text-xs leading-relaxed text-[#445c8c]">
+                <CardContent className="pb-4 text-xs leading-relaxed text-[#0f766e]">
                   {t('governance.fullTraceabilityDesc')}
                 </CardContent>
               </Card>

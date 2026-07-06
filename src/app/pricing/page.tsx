@@ -36,7 +36,7 @@ function PricingPageContent() {
       period: t('pricing.perMonth'),
       description: t('pricing.freePlan.description'),
       icon: Leaf,
-      color: 'from-[#445c8c] to-[#364a70]',
+      color: 'from-[#0f766e] to-[#183028]',
       features: [
         translations.pricing.freePlan.features[0],
         translations.pricing.freePlan.features[1],
@@ -58,7 +58,7 @@ function PricingPageContent() {
       description: t('pricing.premiumPlan.description'),
       icon: Sparkles,
       popular: true,
-      color: 'from-[#445c8c] to-[#364a70]',
+      color: 'from-[#0f766e] to-[#183028]',
       features: [
         translations.pricing.premiumPlan.features[0],
         translations.pricing.premiumPlan.features[1],
@@ -178,10 +178,10 @@ function PricingPageContent() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
         {statusMessage && (
           <div className={`mb-6 rounded-lg px-4 py-3 text-sm font-medium ${
-            statusMessage.variant === 'success' ? 'bg-[#eef8ef] text-[#445c8c] border border-[#ccccbe]' :
+            statusMessage.variant === 'success' ? 'bg-[#e2f0ee] text-[#0f766e] border border-[#d1d5db]' :
             statusMessage.variant === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
             statusMessage.variant === 'warning' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-            'bg-gray-50 text-gray-700 border border-[#ccccbe]'
+            'bg-gray-50 text-gray-700 border border-[#d1d5db]'
           }`}>
             {statusMessage.message}
           </div>
@@ -218,7 +218,7 @@ function PricingPageContent() {
                     </Badge>
                   </div>
                 )}
-                <Card className={`h-full border-2 ${plan.popular ? 'border-[#a4dca7] shadow-xl' : 'border-[#ccccbe] shadow-sm'} transition-all duration-200 hover:shadow-lg`}>
+                <Card className={`h-full border-2 ${plan.popular ? 'border-[#14b8a6] shadow-xl' : 'border-[#d1d5db] shadow-sm'} transition-all duration-200 hover:shadow-lg`}>
                   <CardHeader className={`rounded-t-lg bg-gradient-to-r ${plan.color} p-6 text-white`}>
                     <div className="flex items-center justify-between">
                       <div className="rounded-lg bg-white/20 p-2">
@@ -238,7 +238,7 @@ function PricingPageContent() {
                     <ul className="space-y-3">
                       {plan.features.map((feature) => (
                         <li key={feature} className="flex items-start gap-2 text-sm">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#a4dca7]" />
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#14b8a6]" />
                           <span className="text-gray-700">{feature}</span>
                         </li>
                       ))}
@@ -299,7 +299,7 @@ export default function PricingPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
-        <Loader2 className="h-8 w-8 animate-spin text-[#445c8c]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#0f766e]" />
       </div>
     }>
       <PricingPageContent />

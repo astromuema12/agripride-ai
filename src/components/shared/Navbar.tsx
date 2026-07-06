@@ -62,11 +62,11 @@ export function Navbar() {
     : '/auth';
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-[#ccccbe]/60 bg-white/80 backdrop-blur-xl transition-colors dark:border-[#364a70]/60 dark:bg-[#1a2638]/80">
+    <nav className="sticky top-0 z-40 w-full border-b border-[var(--border)] bg-white/80 backdrop-blur-xl transition-colors dark:border-[var(--border)] dark:bg-[var(--background)]/80">
       <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4 sm:gap-8">
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-[#445c8c]">
+            <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-[#0f766e]">
               <Wheat className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <span className="text-base sm:text-lg font-bold text-[var(--foreground)]">AgriPride AI</span>
@@ -84,8 +84,8 @@ export function Navbar() {
                 className={cn(
                   'text-sm font-medium transition-colors',
                   pathname === link.href
-                    ? 'text-[#445c8c] dark:text-[#a4dca7]'
-                    : 'text-[var(--muted-foreground)] hover:text-[#a4dca7] dark:hover:text-[#a4dca7]'
+                    ? 'text-[#0f766e] dark:text-[#14b8a6]'
+                    : 'text-[var(--muted-foreground)] hover:text-[#0f766e] dark:hover:text-[#14b8a6]'
                 )}
               >
                 {t(link.key)}
@@ -124,16 +124,16 @@ export function Navbar() {
                   {notifications.slice(0, 5).map((n) => (
                     <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-1 py-2">
                       <div className="flex items-center gap-2">
-                        <span className={cn('text-sm font-medium text-[var(--foreground)]', !n.is_read && 'text-[#445c8c] dark:text-[#a4dca7]')}>
+                        <span className={cn('text-sm font-medium text-[var(--foreground)]', !n.is_read && 'text-[#0f766e] dark:text-[#14b8a6]')}>
                           {n.title}
                         </span>
-                        {!n.is_read && <div className="h-2 w-2 rounded-full bg-[#445c8c] dark:bg-[#a4dca7]" />}
+                        {!n.is_read && <div className="h-2 w-2 rounded-full bg-[#0f766e] dark:bg-[#14b8a6]" />}
                       </div>
                       <span className="text-xs text-[var(--muted-foreground)]">{n.message.slice(0, 60)}...</span>
                     </DropdownMenuItem>
                   ))}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')} className="justify-center text-sm text-[#445c8c] dark:text-[#a4dca7] font-medium">
+                  <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')} className="justify-center text-sm text-[#0f766e] dark:text-[#14b8a6] font-medium">
                     {t('nav.viewAll')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -143,7 +143,7 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
-                      <AvatarFallback className="bg-[#c4d4e4] text-[#445c8c] dark:bg-[#364a70] dark:text-[#a4dca7] text-[10px] sm:text-xs">
+                      <AvatarFallback className="bg-[#e2f0ee] text-[#0f766e] dark:bg-[#183028] dark:text-[#14b8a6] text-[10px] sm:text-xs">
                         {user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
                       </AvatarFallback>
                     </Avatar>
@@ -206,7 +206,7 @@ export function Navbar() {
                 className={cn(
                   'block rounded-md px-3 py-2.5 text-sm font-medium touch-manipulation transition-colors',
                   pathname === link.href
-                    ? 'bg-[#c4d4e4] text-[#445c8c] dark:bg-[#364a70] dark:text-[#a4dca7]'
+                    ? 'bg-[#e2f0ee] text-[#0f766e] dark:bg-[#183028] dark:text-[#14b8a6]'
                     : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]'
                 )}
               >
