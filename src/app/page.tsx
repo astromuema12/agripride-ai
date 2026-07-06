@@ -299,7 +299,7 @@ export default function HomePage() {
                   <div className={`mb-5 inline-flex rounded-xl p-3 ${f.bg} ring-1 ring-[#d1d5db]`}>
                     <f.icon className={`h-6 w-6 ${f.color}`} />
                   </div>
-                  <h3 className="mb-3 text-xl font-bold text-[var(--foreground)]">{f.title}</h3>
+                  <h3 className="mb-3 text-xl font-bold text-gray-900 dark:text-gray-700">{f.title}</h3>
                   <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">{f.description}</p>
                   <div className="mt-6 flex items-center gap-1 text-sm font-medium text-[#0f766e] dark:text-[#14b8a6] opacity-0 transition-all duration-150 group-hover:opacity-100">
                     {t('landing.hero.learnMore')} <ArrowRight className="h-3.5 w-3.5" />
