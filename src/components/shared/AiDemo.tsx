@@ -267,10 +267,10 @@ export function AiDemo() {
     setCapturedFrame(null);
   }, [stopCamera]);
 
-  const canDiagnose = selectedCrop && symptoms.length >= 5 && !diagnosing;
+  const canDiagnose = selectedCrop && (symptoms.length >= 5 || imageFile) && !diagnosing;
 
   const handleDiagnose = async () => {
-    if (!selectedCrop || symptoms.length < 5 || diagnosing) return;
+    if (!selectedCrop || (symptoms.length < 5 && !imageFile) || diagnosing) return;
     setDiagnosing(true);
     setError('');
     setResult(null);

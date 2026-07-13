@@ -104,10 +104,10 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    if (!symptoms || symptoms.length < 5) {
+    if (!image && (!symptoms || symptoms.length < 5)) {
       return Response.json({
         success: false,
-        error: 'Please describe the symptoms you are observing (at least 5 characters).',
+        error: 'Please either describe symptoms (at least 5 characters) or upload an image.',
         usage: usageResponse(identifier),
       }, { status: 400 });
     }
@@ -125,11 +125,11 @@ export async function POST(req: NextRequest) {
       try {
         const stageInfo = growthStage && growthStage !== 'unknown' ? `\nCrop Growth Stage: ${growthStage}` : '';
         const hasImage = !!image;
+        const symptomsInfo = symptoms ? `\nSymptoms reported by farmer: ${symptoms}` : '\nNo symptoms were described. Rely entirely on the image for your diagnosis.';
         const prompt = hasImage
-          ? `You are an expert crop disease diagnostician. Analyze the plant image along with the reported symptoms and provide a comprehensive diagnosis.
+          ? `You are an expert crop disease diagnostician. Analyze the plant image${symptoms ? ' along with the reported symptoms' : ''} and provide a comprehensive diagnosis.
 
-Crop: ${cropType}${stageInfo}
-Symptoms reported by farmer: ${symptoms}
+Crop: ${cropType}${stageInfo}${symptomsInfo}
 
 Analyze the image carefully for:
 - Visual disease signs (spots, lesions, discoloration, fungal growth, pest damage)
