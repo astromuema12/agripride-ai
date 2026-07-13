@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans, DM_Serif_Display } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -9,22 +9,30 @@ import { Footer } from '@/components/shared/Footer';
 import { CookieConsent } from '@/components/shared/CookieConsent';
 import { Toaster } from 'sonner';
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-dm-sans',
+  weight: ['300', '400', '500', '600', '700'],
+});
+
+const dmSerif = DM_Serif_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-dm-serif',
+  weight: ['400'],
 });
 
 export const metadata: Metadata = {
-  title: 'AgriPride AI - Jukwaa la Akili ya Kilimo',
-  description: 'Kuwapa wakulima wa Afrika uwezo wa akili ya kilimo inayoendeshwa na AI, utambuzi wa magonjwa, ufuatiliaji wa hali ya hewa, na mazoea ya kilimo endelevu.',
+  title: 'AgriPride AI — Intelligence for African Agriculture',
+  description: 'AI-powered crop disease diagnosis, weather intelligence, and sustainable farming tools built for African farmers.',
   keywords: 'agriculture, AI, farming, crop disease, weather, Africa, sustainability',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.variable}>
+      <body className={`${dmSans.variable} ${dmSerif.variable}`}>
         <ThemeProvider>
           <I18nProvider>
             <AuthProvider>

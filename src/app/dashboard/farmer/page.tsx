@@ -118,7 +118,7 @@ function FarmHealthScore({ score }: { score: number }) {
         <span className={`absolute text-xl font-bold ${healthColor} stat-highlight`}>{Math.round(score)}</span>
       </div>
       <div>
-        <p className="text-sm font-medium text-[var(--foreground)]">Farm Health</p>
+        <p className="text-sm font-medium font-body text-[var(--foreground)]">Farm Health</p>
         <p className="text-xs text-[var(--muted-foreground)]">
           {score >= 80 ? 'Excellent condition' : score >= 60 ? 'Needs attention' : 'At risk'}
         </p>
@@ -147,7 +147,7 @@ function Greeting({ name }: { name: string }) {
   const greeting = hour < 12 ? t('common.goodMorning') : hour < 17 ? t('common.goodAfternoon') : t('common.goodEvening');
   return (
     <div>
-      <h1 className="text-2xl font-bold text-[var(--foreground)]">{greeting}, {name.split(' ')[0]}</h1>
+      <h1 className="font-display text-2xl sm:text-3xl text-[var(--foreground)]">{greeting}, {name.split(' ')[0]}</h1>
       <p className="mt-1 text-sm text-[var(--muted-foreground)]">{t('dashboard.executiveSummary')}</p>
     </div>
   );
@@ -294,7 +294,7 @@ export default function FarmerDashboard() {
                 <kpi.icon className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-xs font-medium text-[var(--muted-foreground)]">{kpi.label}</p>
+                <p className="text-xs font-medium font-body text-[var(--muted-foreground)]">{kpi.label}</p>
                 <p className="text-xl font-bold text-[var(--foreground)] stat-highlight">{kpi.value}</p>
               </div>
             </CardContent>
@@ -326,7 +326,7 @@ export default function FarmerDashboard() {
           {todayTasks.length > 0 && (
             <Card className="premium-card">
               <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <CardTitle className="text-sm font-semibold font-body flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-emerald-500" />
                   {t('dashboard.todayTasks')}
                 </CardTitle>
@@ -355,7 +355,7 @@ export default function FarmerDashboard() {
           {reports.filter(r => r.risk_level === 'high' || r.risk_level === 'critical').length > 0 && (
             <Card className="border-red-200 dark:border-red-900/50 premium-card">
               <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-red-600 dark:text-red-400">
+                <CardTitle className="text-sm font-semibold font-body flex items-center gap-2 text-red-600 dark:text-red-400">
                   <AlertTriangle className="h-4 w-4" />
                   {t('disease.diseaseAlert')}
                 </CardTitle>
@@ -379,7 +379,7 @@ export default function FarmerDashboard() {
           {/* Recent AI Recommendations */}
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-              <CardTitle className="text-sm font-semibold">{t('dashboard.aiInsights')}</CardTitle>
+              <CardTitle className="text-sm font-semibold font-body">{t('dashboard.aiInsights')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/recommendations')}>
                 {t('common.seeAll')}
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -421,7 +421,7 @@ export default function FarmerDashboard() {
           {/* Recent Disease Reports */}
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-              <CardTitle className="text-sm font-semibold">{t('disease.history')}</CardTitle>
+              <CardTitle className="text-sm font-semibold font-body">{t('disease.history')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/disease')}>
                 {t('common.seeAll')}
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -466,7 +466,7 @@ export default function FarmerDashboard() {
           {/* Weather Widget */}
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-              <CardTitle className="text-sm font-semibold">{t('weather.sevenDayForecast')}</CardTitle>
+              <CardTitle className="text-sm font-semibold font-body">{t('weather.sevenDayForecast')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/weather')}>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
@@ -533,7 +533,7 @@ export default function FarmerDashboard() {
           {reports.length > 0 && (
             <Card className="premium-card">
               <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <CardTitle className="text-sm font-semibold font-body flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-amber-500" />
                   {t('riskWidget.title')}
                 </CardTitle>
@@ -594,7 +594,7 @@ export default function FarmerDashboard() {
           {/* Crop Status */}
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-              <CardTitle className="text-sm font-semibold">{t('dashboard.cropStatus')}</CardTitle>
+              <CardTitle className="text-sm font-semibold font-body">{t('dashboard.cropStatus')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/farmer/crops')}>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
@@ -642,7 +642,7 @@ export default function FarmerDashboard() {
           {/* Recent Activity */}
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between py-4 px-5">
-              <CardTitle className="text-sm font-semibold">{t('common.recentActivity')}</CardTitle>
+              <CardTitle className="text-sm font-semibold font-body">{t('common.recentActivity')}</CardTitle>
             </CardHeader>
             <CardContent className="px-5 pb-4 pt-0">
               <div className="space-y-3">

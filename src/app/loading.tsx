@@ -1,17 +1,15 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n';
 import { Wheat } from 'lucide-react';
 
 export default function RootLoading() {
-  const { t } = useI18n();
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0f766e]">
-          <Wheat className="h-6 w-6 text-white animate-pulse" />
+        <Wheat className="h-6 w-6 text-[#2d6a4f] dark:text-[#5e9a6b] animate-pulse" />
+        <div className="h-0.5 w-16 bg-[var(--border)] rounded-full overflow-hidden">
+          <div className="h-full w-1/3 bg-[#2d6a4f] dark:bg-[#5e9a6b] rounded-full animate-[shimmer_1.5s_ease-in-out_infinite]" />
         </div>
-        <p className="text-sm text-[var(--muted-foreground)]">{t('common.loading')}</p>
       </div>
     </div>
   );

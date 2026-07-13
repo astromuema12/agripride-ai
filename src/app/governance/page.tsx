@@ -44,8 +44,8 @@ const frameworks: Framework[] = [
     implementation: 'All AI agents register their model versions with the governance layer. Each prediction includes the model ID, training snapshot hash, and a human-in-the-loop escalation path for low-confidence results.',
     principles: ['Model Versioning', 'Human Oversight', 'Training Traceability', 'Confidence Thresholds'],
     icon: BrainCircuit,
-    color: 'text-[#0f766e]',
-    gradient: 'from-[#0f766e] to-[#183028]',
+    color: 'text-[#2d6a4f]',
+    gradient: 'from-[#2d6a4f] to-[#1a3a2a]',
   },
   {
     acronym: 'MAP',
@@ -182,7 +182,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
     >
       <Card
-        className="group cursor-pointer overflow-hidden border-gray-200 transition-shadow duration-200 hover:shadow-lg"
+        className="group cursor-pointer overflow-hidden border-[var(--border)] transition-shadow duration-200 hover:shadow-lg"
         onClick={() => setExpanded(!expanded)}
       >
         {/* Gradient Top Accent */}
@@ -191,26 +191,26 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className={`rounded-lg bg-gray-50 p-2.5 ring-1 ring-gray-200 ${framework.color}`}>
+              <div className={`rounded-lg bg-[var(--muted)] p-2.5 ring-1 ring-[var(--border)] ${framework.color}`}>
                 <Icon className="h-5 w-5" />
               </div>
               <div>
-                <CardTitle className="text-base text-gray-900">
+                <CardTitle className="text-base text-[var(--foreground)]">
                   <span className={`font-bold ${framework.color}`}>{framework.acronym}</span>
                   {' '}
-                  <span className="font-normal text-gray-500">|</span>{' '}
+                  <span className="font-normal text-[var(--muted-foreground)]">|</span>{' '}
                   {framework.name}
                 </CardTitle>
               </div>
             </div>
-            <Badge variant="outline" className={`shrink-0 border-gray-200 text-xs ${framework.color}`}>
+            <Badge variant="outline" className={`shrink-0 border-[var(--border)] text-xs ${framework.color}`}>
               {framework.acronym}
             </Badge>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-3 pt-0">
-          <p className="text-sm leading-relaxed text-gray-600">
+          <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
             {framework.description}
           </p>
 
@@ -219,24 +219,24 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
             animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
             className="overflow-hidden"
           >
-            <div className="space-y-3 border-t border-gray-100 pt-3">
+            <div className="space-y-3 border-t border-[var(--border)] pt-3">
               <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]/60">
                   {t('governance.systemImplementation')}
                 </p>
-                <p className="text-sm leading-relaxed text-gray-600">
+                <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
                   {framework.implementation}
                 </p>
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]/60">
                   {t('governance.corePrinciples')}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {framework.principles.map((p) => (
                     <span
                       key={p}
-                      className="inline-flex items-center gap-1 rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-200"
+                      className="inline-flex items-center gap-1 rounded-md bg-[var(--muted)] px-2 py-1 text-xs font-medium text-[var(--muted-foreground)] ring-1 ring-[var(--border)]"
                     >
                       <CheckCircle className={`h-3 w-3 ${framework.color}`} />
                       {p}
@@ -248,7 +248,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
           </motion.div>
 
           <button
-            className="flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors hover:text-gray-600"
+            className="flex items-center gap-1 text-xs font-medium text-[var(--muted-foreground)]/60 transition-colors hover:text-[var(--muted-foreground)]"
             onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
           >
             {expanded ? t('governance.showLess') : t('governance.showDetails')}
@@ -274,19 +274,19 @@ const statusConfig: Record<Decision['status'], { labelKey: string; variant: 'pri
 function DecisionTable() {
   const { t } = useI18n();
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200">
+    <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-gray-100 bg-gray-50/80">
-            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.sourceData')}</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.confidence')}</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">{t('common.timestamp')}</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.responsibleAgent')}</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">{t('governance.frameworksLabel')}</th>
-            <th className="px-4 py-3 font-semibold text-gray-700">{t('common.status')}</th>
+          <tr className="border-b border-[var(--border)] bg-[var(--muted)]">
+            <th className="px-4 py-3 font-semibold text-[var(--foreground)]">{t('governance.sourceData')}</th>
+            <th className="px-4 py-3 font-semibold text-[var(--foreground)]">{t('governance.confidence')}</th>
+            <th className="px-4 py-3 font-semibold text-[var(--foreground)]">{t('common.timestamp')}</th>
+            <th className="px-4 py-3 font-semibold text-[var(--foreground)]">{t('governance.responsibleAgent')}</th>
+            <th className="px-4 py-3 font-semibold text-[var(--foreground)]">{t('governance.frameworksLabel')}</th>
+            <th className="px-4 py-3 font-semibold text-[var(--foreground)]">{t('common.status')}</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[var(--border)]">
           {recentDecisions.map((d, i) => {
             const cfg = statusConfig[d.status];
             const StatusIcon = cfg.icon;
@@ -296,18 +296,18 @@ function DecisionTable() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.25 }}
-                className="transition-colors hover:bg-[#e2f0ee]/50"
+                className="transition-colors hover:bg-[#f0f5f1]/50"
               >
-                <td className="max-w-[220px] truncate px-4 py-3 font-medium text-gray-900">
+                <td className="max-w-[220px] truncate px-4 py-3 font-medium text-[var(--foreground)]">
                   {d.source_data}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-12 overflow-hidden rounded-full bg-gray-100">
+                    <div className="h-1.5 w-12 overflow-hidden rounded-full bg-[var(--border)]">
                       <div
                         className={`h-full rounded-full transition-all ${
                           d.confidence_score >= 90
-                            ? 'bg-[#0f766e]'
+                            ? 'bg-[#2d6a4f]'
                             : d.confidence_score >= 80
                               ? 'bg-amber-400'
                               : 'bg-red-400'
@@ -315,18 +315,18 @@ function DecisionTable() {
                         style={{ width: `${d.confidence_score}%` }}
                       />
                     </div>
-                    <span className="text-xs font-medium text-gray-600">
+                    <span className="text-xs font-medium text-[var(--muted-foreground)]">
                       {d.confidence_score}%
                     </span>
                   </div>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 text-gray-600">
+                <td className="whitespace-nowrap px-4 py-3 text-[var(--muted-foreground)]">
                   <div className="flex items-center gap-1.5">
-                    <Clock className="h-3.5 w-3.5 text-gray-400" />
+                    <Clock className="h-3.5 w-3.5 text-[var(--muted-foreground)]/60" />
                     {timeAgo(d.timestamp, t)}
                   </div>
                 </td>
-                <td className="max-w-[160px] truncate px-4 py-3 text-gray-600">
+                <td className="max-w-[160px] truncate px-4 py-3 text-[var(--muted-foreground)]">
                   {d.responsible_agent}
                 </td>
                 <td className="px-4 py-3">
@@ -334,7 +334,7 @@ function DecisionTable() {
                     {d.framework.split(', ').map((fw) => (
                       <span
                         key={fw}
-                        className="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 ring-1 ring-gray-200"
+                        className="inline-flex items-center rounded bg-[var(--muted)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--muted-foreground)] ring-1 ring-[var(--border)]"
                       >
                         {fw}
                       </span>
@@ -370,10 +370,10 @@ export default function GovernancePage() {
       {/* Header */}
       <motion.div variants={itemVariants} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight font-body text-[var(--foreground)]">
             {t('governance.title')}
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm font-body text-[var(--muted-foreground)]">
             {t('governance.description')}
           </p>
         </div>
@@ -386,7 +386,7 @@ export default function GovernancePage() {
       {/* Governance Stats */}
       <motion.div variants={itemVariants} className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         {[
-          { label: t('governance.activeFrameworks'), value: '8', icon: Shield, color: 'text-[#0f766e] bg-[#e2f0ee]' },
+          { label: t('governance.activeFrameworks'), value: '8', icon: Shield, color: 'text-[#2d6a4f] bg-[#f0f5f1] dark:text-[#5e9a6b] dark:bg-[#1a2e20]' },
           { label: t('governance.decisionsToday'), value: '47', icon: BrainCircuit, color: 'text-blue-600 bg-blue-50' },
           { label: t('governance.complianceScore'), value: '96%', icon: CheckCircle, color: 'text-cyan-600 bg-cyan-50' },
           { label: t('governance.flaggedActions'), value: '3', icon: AlertTriangle, color: 'text-amber-600 bg-amber-50' },
@@ -397,8 +397,8 @@ export default function GovernancePage() {
                 <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <div className="text-lg sm:text-xl font-bold text-gray-900">{value}</div>
-                <p className="text-xs text-gray-500 truncate">{label}</p>
+                <div className="text-lg sm:text-xl font-bold text-[var(--foreground)]">{value}</div>
+                <p className="text-xs text-[var(--muted-foreground)] truncate">{label}</p>
               </div>
             </CardContent>
           </Card>
@@ -435,7 +435,7 @@ export default function GovernancePage() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
                     <CardTitle className="flex items-center gap-2 text-base">
-                      <ScrollText className="h-4 w-4 text-[#0f766e] shrink-0" />
+                      <ScrollText className="h-4 w-4 text-[#2d6a4f] shrink-0" />
                       {t('governance.recentAiDecisions')}
                     </CardTitle>
                     <CardDescription className="mt-1 text-xs sm:text-sm">
@@ -445,7 +445,7 @@ export default function GovernancePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-[#d1d5db] text-[#0f766e] hover:bg-[#e2f0ee] w-full sm:w-auto"
+                    className="border-[var(--border)] text-[#2d6a4f] hover:bg-[#f0f5f1] w-full sm:w-auto"
                   >
                     <Server className="mr-1.5 h-3.5 w-3.5" />
                     {t('governance.exportLog')}
@@ -459,14 +459,14 @@ export default function GovernancePage() {
 
             {/* Bottom Info Cards */}
             <div className="grid gap-3 sm:gap-4 sm:grid-cols-3">
-              <Card className="border-[#d1d5db] bg-[#e2f0ee]/30">
+              <Card className="border-[var(--border)] bg-[#f0f5f1]/50 dark:bg-[#1a2e20]/50">
                 <CardHeader className="pb-2 pt-4">
-                  <CardTitle className="flex items-center gap-2 text-sm text-[#183028]">
-                    <CheckCircle className="h-4 w-4 text-[#0f766e]" />
+                  <CardTitle className="flex items-center gap-2 text-sm text-[var(--foreground)]">
+                    <CheckCircle className="h-4 w-4 text-[#2d6a4f]" />
                     {t('governance.fullTraceability')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pb-4 text-xs leading-relaxed text-[#0f766e]">
+                <CardContent className="pb-4 text-xs leading-relaxed text-[#2d6a4f]">
                   {t('governance.fullTraceabilityDesc')}
                 </CardContent>
               </Card>

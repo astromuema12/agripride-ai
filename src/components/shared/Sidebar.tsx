@@ -13,7 +13,6 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { Badge } from '@/components/ui/badge';
 import { useSidebar } from '@/lib/sidebar-context';
 import { useI18n } from '@/lib/i18n/context';
 
@@ -72,11 +71,7 @@ export function Sidebar() {
   const { t } = useI18n();
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    if (mobileOpen) { document.body.style.overflow = 'hidden'; } else { document.body.style.overflow = ''; }
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
@@ -85,8 +80,7 @@ export function Sidebar() {
   return (
     <>
       <Button
-        variant="ghost"
-        size="icon"
+        variant="ghost" size="icon"
         className="fixed left-3 top-[60px] sm:top-[68px] z-50 flex lg:hidden"
         onClick={() => setMobileOpen(!mobileOpen)}
       >
@@ -94,38 +88,38 @@ export function Sidebar() {
       </Button>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setMobileOpen(false)} />
+        <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
       <aside
         className={cn(
-          'fixed left-0 top-14 sm:top-16 z-30 flex flex-col border-r border-[var(--border)] bg-[var(--background)] transition-all duration-200',
-          'h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)]',
+          'fixed left-0 top-16 z-30 flex flex-col transition-all duration-300',
+          'h-[calc(100vh-4rem)]',
           collapsed ? 'w-16' : 'w-64',
-          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          'bg-[#0f2219] dark:bg-[#0a0f0c] border-r border-white/5'
         )}
       >
-        <div className={cn('flex items-center gap-3 border-b border-[var(--border)] py-3', collapsed && 'justify-center')}>
+        {/* Header */}
+        <div className={cn('flex items-center gap-3 px-4 py-4 border-b border-white/5', collapsed && 'justify-center px-2')}>
           <Button
-            variant="ghost"
-            size="icon"
-            className="hidden lg:flex shrink-0"
+            variant="ghost" size="icon"
+            className="hidden lg:flex shrink-0 text-white/40 hover:text-white hover:bg-white/5"
             onClick={() => setCollapsed(!collapsed)}
           >
             {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
           </Button>
-          <div className="flex items-center gap-2 min-w-0">
-            <Wheat className="h-5 w-5 text-[#0f766e] dark:text-[#14b8a6] shrink-0" />
-            {!collapsed && (
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="text-sm font-semibold text-[var(--foreground)] capitalize truncate">{user?.role}</span>
-                <Badge variant="primary" className="text-[10px] shrink-0">{t('nav.sidebar.dashboard')}</Badge>
-              </div>
-            )}
-          </div>
+          {!collapsed && (
+            <div className="flex items-center gap-2 min-w-0">
+              <Wheat className="h-4 w-4 text-[#5e9a6b] shrink-0" />
+              <span className="text-sm font-medium text-white/80 font-body capitalize truncate">{user?.role}</span>
+            </div>
+          )}
+          {collapsed && <Wheat className="h-4 w-4 text-[#5e9a6b] shrink-0" />}
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto p-2 scrollbar-hide">
+        {/* Links */}
+        <nav className="flex-1 space-y-0.5 overflow-y-auto p-2 scrollbar-hide">
           {links.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -135,28 +129,30 @@ export function Sidebar() {
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 touch-manipulation',
+                  'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-body font-medium transition-all duration-200 touch-manipulation',
                   isActive
-                    ? 'bg-[#e2f0ee] text-[#0f766e] dark:bg-[#0f766e]/30 dark:text-[#14b8a6] nav-active-indicator'
-                    : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]',
+                    ? 'bg-white/10 text-white'
+                    : 'text-white/40 hover:bg-white/5 hover:text-white/70',
                   collapsed && 'justify-center px-2'
                 )}
                 title={collapsed ? (link.ns === 'nav' ? t(`nav.${link.key}`) : t(`nav.sidebar.${link.key}`)) : undefined}
               >
-                <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-200', isActive && 'scale-110')} />
+                <Icon className={cn('h-4 w-4 shrink-0', isActive && 'text-[#5e9a6b]')} />
                 {!collapsed && <span className="truncate">{link.ns === 'nav' ? t(`nav.${link.key}`) : t(`nav.sidebar.${link.key}`)}</span>}
                 {isActive && !collapsed && (
-                  <span className="ml-auto flex h-1.5 w-1.5 rounded-full bg-[#0f766e]" />
+                  <div className="ml-auto h-1.5 w-1.5 rounded-full bg-[#c4704b]" />
                 )}
               </Link>
             );
           })}
         </nav>
 
+        {/* Footer */}
         {!collapsed && (
-          <div className="border-t border-[var(--border)] p-3 sm:p-4">
-            <Link href="/" className="text-xs text-[var(--muted-foreground)] hover:text-[#0f766e] dark:hover:text-[#14b8a6] transition-colors">
-              {t('nav.sidebar.backToHome')}
+          <div className="border-t border-white/5 p-3">
+            <Link href="/" className="flex items-center gap-2 text-xs text-white/30 hover:text-white/60 transition-colors font-body">
+              <Wheat className="h-3 w-3" />
+              Back to home
             </Link>
           </div>
         )}

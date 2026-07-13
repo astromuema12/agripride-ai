@@ -34,10 +34,17 @@ const navLinkKeys = [
 export function Navbar() {
   const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const pathname = usePathname();
   const router = useRouter();
   const { user, isDemoMode, logout } = useAuth();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -62,160 +69,188 @@ export function Navbar() {
     : '/auth';
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-[var(--border)] bg-white/80 backdrop-blur-xl transition-colors dark:border-[var(--border)] dark:bg-[var(--background)]/80">
-      <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 sm:gap-8">
-          <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-[#0f766e]">
-              <Wheat className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-            </div>
-            <span className="text-base sm:text-lg font-bold text-[var(--foreground)]">AgriPride AI</span>
-            <span suppressHydrationWarning>
-              {isDemoMode && (
-                <Badge variant="warning" className="ml-0.5 text-[10px]">DEMO</Badge>
-              )}
-            </span>
-          </Link>
-          <div className="hidden md:flex md:items-center md:gap-6">
-            {navLinkKeys.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  'text-sm font-medium transition-colors',
-                  pathname === link.href
-                    ? 'text-[#0f766e] dark:text-[#14b8a6]'
-                    : 'text-[var(--muted-foreground)] hover:text-[#0f766e] dark:hover:text-[#14b8a6]'
+    <>
+      <nav
+        className={cn(
+          'fixed top-0 z-50 w-full transition-all duration-300',
+          scrolled
+            ? 'bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--border)]'
+            : 'bg-transparent'
+        )}
+      >
+        <div className="mx-auto flex h-16 sm:h-18 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
+          <div className="flex items-center gap-8 sm:gap-12">
+            <Link href="/" className="flex items-center gap-2 group">
+              <Wheat className="h-5 w-5 text-[#2d6a4f] dark:text-[#5e9a6b] transition-transform duration-300 group-hover:rotate-12" />
+              <span className="font-display text-lg font-normal text-[var(--foreground)] tracking-tight">AgriPride</span>
+              <span suppressHydrationWarning>
+                {isDemoMode && (
+                  <Badge variant="warning" className="text-[10px] ml-1">DEMO</Badge>
                 )}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
+              </span>
+            </Link>
+            <div className="hidden md:flex md:items-center md:gap-1">
+              {navLinkKeys.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    'link-underline px-3 py-2 text-sm font-body font-medium transition-colors',
+                    pathname === link.href
+                      ? 'text-[var(--foreground)]'
+                      : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                  )}
+                >
+                  {t(link.key)}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              title={t('nav.switchTo', { mode: theme === 'dark' ? t('common.light') : t('common.dark') })}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            {user ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative">
+                      <Bell className="h-4 w-4" />
+                      {unreadCount > 0 && (
+                        <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#c4704b] text-[9px] font-bold text-white">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-72 sm:w-80">
+                    <DropdownMenuLabel>{t('nav.notifications')}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {notifications.slice(0, 5).map((n) => (
+                      <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-1 py-2">
+                        <div className="flex items-center gap-2">
+                          <span className={cn('text-sm font-medium text-[var(--foreground)]', !n.is_read && 'text-[#2d6a4f] dark:text-[#5e9a6b]')}>
+                            {n.title}
+                          </span>
+                          {!n.is_read && <div className="h-1.5 w-1.5 rounded-full bg-[#c4704b]" />}
+                        </div>
+                        <span className="text-xs text-[var(--muted-foreground)]">{n.message.slice(0, 60)}...</span>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')} className="justify-center text-sm text-[#2d6a4f] dark:text-[#5e9a6b] font-medium">
+                      {t('nav.viewAll')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-[#f0f5f1] text-[#2d6a4f] dark:bg-[#1a2e20] dark:text-[#5e9a6b] text-xs font-body">
+                          {user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-[var(--foreground)]">{user.name}</span>
+                        <span className="text-xs text-[var(--muted-foreground)]">{user.email}</span>
+                        <Badge variant="primary" className="mt-1 w-fit text-[10px] capitalize">{user.role}</Badge>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push(dashboardHref)}>
+                      <Shield className="mr-2 h-4 w-4" />
+                      {t('nav.dashboard')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/settings')}>
+                      <Settings className="mr-2 h-4 w-4" />
+                      {t('nav.settings')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/dashboard/security')}>
+                      <Lock className="mr-2 h-4 w-4" />
+                      {t('nav.security')}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      {t('nav.logout')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" className="hidden xs:inline-flex" onClick={() => router.push('/auth')}>
+                  {t('nav.signIn')}
+                </Button>
+                <Button size="sm" onClick={() => router.push('/auth?tab=register')}>
+                  {t('nav.getStarted')}
+                </Button>
+              </div>
+            )}
+
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
           </div>
         </div>
+      </nav>
 
-        <div className="flex items-center gap-1 sm:gap-3">
-          <LanguageSwitcher />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-            title={t('nav.switchTo', { mode: theme === 'dark' ? t('common.light') : t('common.dark') })}
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
-          </Button>
-          {user ? (
-            <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                    {unreadCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full bg-red-500 text-[9px] sm:text-[10px] font-bold text-white">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-72 sm:w-80">
-                  <DropdownMenuLabel>{t('nav.notifications')}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {notifications.slice(0, 5).map((n) => (
-                    <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-1 py-2">
-                      <div className="flex items-center gap-2">
-                        <span className={cn('text-sm font-medium text-[var(--foreground)]', !n.is_read && 'text-[#0f766e] dark:text-[#14b8a6]')}>
-                          {n.title}
-                        </span>
-                        {!n.is_read && <div className="h-2 w-2 rounded-full bg-[#0f766e] dark:bg-[#14b8a6]" />}
-                      </div>
-                      <span className="text-xs text-[var(--muted-foreground)]">{n.message.slice(0, 60)}...</span>
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')} className="justify-center text-sm text-[#0f766e] dark:text-[#14b8a6] font-medium">
-                    {t('nav.viewAll')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
-                      <AvatarFallback className="bg-[#e2f0ee] text-[#0f766e] dark:bg-[#183028] dark:text-[#14b8a6] text-[10px] sm:text-xs">
-                        {user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-[var(--foreground)]">{user.name}</span>
-                      <span className="text-xs text-[var(--muted-foreground)]">{user.email}</span>
-                      <Badge variant="primary" className="mt-1 w-fit text-[10px] capitalize">{user.role}</Badge>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push(dashboardHref)}>
-                    <Shield className="mr-2 h-4 w-4" />
-                    {t('nav.dashboard')}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/settings')}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    {t('nav.settings')}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/dashboard/security')}>
-                    <Lock className="mr-2 h-4 w-4" />
-                    {t('nav.security')}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    {t('nav.logout')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
-          ) : (
-            <div className="flex items-center gap-1 sm:gap-2">
-              <Button variant="ghost" size="sm" className="hidden xs:inline-flex" onClick={() => router.push('/auth')}>
-                {t('nav.signIn')}
-              </Button>
-              <Button size="sm" onClick={() => router.push('/auth?tab=register')}>
-                {t('nav.getStarted')}
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="absolute right-0 top-0 h-full w-72 bg-[var(--background)] border-l border-[var(--border)] shadow-2xl">
+            <div className="flex items-center justify-between px-5 h-16 border-b border-[var(--border)]">
+              <span className="font-display text-lg text-[var(--foreground)]">Menu</span>
+              <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
+                <X className="h-5 w-5" />
               </Button>
             </div>
-          )}
-
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
-          </Button>
-        </div>
-      </div>
-
-      {mobileOpen && (
-        <div className="border-t border-[var(--border)] bg-[var(--background)] md:hidden">
-          <div className="space-y-1 px-3 sm:px-4 py-2 sm:py-3">
-            {navLinkKeys.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  'block rounded-md px-3 py-2.5 text-sm font-medium touch-manipulation transition-colors',
-                  pathname === link.href
-                    ? 'bg-[#e2f0ee] text-[#0f766e] dark:bg-[#183028] dark:text-[#14b8a6]'
-                    : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]'
-                )}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
+            <div className="px-3 py-4 space-y-1">
+              {navLinkKeys.map((link, i) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    'block rounded-md px-4 py-3 text-sm font-medium font-body touch-manipulation transition-all duration-200',
+                    pathname === link.href
+                      ? 'bg-[var(--muted)] text-[var(--foreground)]'
+                      : 'text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]'
+                  )}
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  {t(link.key)}
+                </Link>
+              ))}
+            </div>
+            {!user && (
+              <div className="px-3 py-4 border-t border-[var(--border)]">
+                <Button className="w-full" onClick={() => { router.push('/auth?tab=register'); setMobileOpen(false); }}>
+                  {t('nav.getStarted')}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
-    </nav>
+
+      {/* Spacer for fixed nav */}
+      <div className="h-16 sm:h-18" />
+    </>
   );
 }

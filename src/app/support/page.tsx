@@ -20,11 +20,11 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         className="flex w-full items-center justify-between py-4 text-left"
         onClick={() => setOpen(!open)}
       >
-        <span className="text-sm font-medium text-gray-900">{question}</span>
+        <span className="text-sm font-medium text-[var(--foreground)] font-body">{question}</span>
         {open ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
       </button>
       {open && (
-        <p className="pb-4 text-sm leading-relaxed text-gray-600">{answer}</p>
+        <p className="pb-4 text-sm leading-relaxed text-[var(--muted-foreground)]">{answer}</p>
       )}
     </div>
   );
@@ -99,12 +99,12 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--muted)]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 sm:mb-12 text-center">
           <Badge variant="primary" className="mb-3 sm:mb-4">{t('support.title')}</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance">{t('support.title')}</h1>
-          <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] text-balance font-body">{t('support.title')}</h1>
+          <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-[var(--muted-foreground)] font-body">
             {t('support.subtitle')}
           </p>
         </motion.div>
@@ -149,8 +149,8 @@ export default function SupportPage() {
           <TabsContent value="ticket">
             <Card>
               <CardHeader>
-                <CardTitle>{t('support.submitTicket')}</CardTitle>
-                <p className="text-sm text-gray-500">{t('support.contact.emailDesc')}</p>
+                <CardTitle className="font-body">{t('support.submitTicket')}</CardTitle>
+                <p className="text-sm text-[var(--muted-foreground)]">{t('support.contact.emailDesc')}</p>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleTicketSubmit} className="space-y-4">
@@ -169,7 +169,7 @@ export default function SupportPage() {
                     <textarea
                       id="ticket-message"
                       rows={6}
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f766e]"
+                      className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2d6a4f] dark:focus:ring-[#5e9a6b]"
                       placeholder={t('support.descriptionPlaceholder')}
                       value={ticketForm.message}
                       onChange={(e) => setTicketForm({ ...ticketForm, message: e.target.value })}

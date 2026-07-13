@@ -1,14 +1,29 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, CreditCard } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { Check, X, ArrowRight, Loader2, Leaf, Sparkles, Building2, Globe, CreditCard, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useI18n } from '@/lib/i18n';
+
+function RevealSection({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 interface Plan {
   tier: string;
@@ -20,13 +35,13 @@ interface Plan {
   notIncluded: string[];
   icon: React.ComponentType<{ className?: string }>;
   popular?: boolean;
-  color: string;
 }
-
-
 
 function PricingPageContent() {
   const { t, translations } = useI18n();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [loading, setLoading] = useState<string | null>(null);
 
   const plans: Plan[] = [
     {
@@ -36,19 +51,13 @@ function PricingPageContent() {
       period: t('pricing.perMonth'),
       description: t('pricing.freePlan.description'),
       icon: Leaf,
-      color: 'from-[#0f766e] to-[#183028]',
       features: [
         translations.pricing.freePlan.features[0],
         translations.pricing.freePlan.features[1],
         translations.pricing.freePlan.features[2],
         translations.pricing.freePlan.features[3],
       ],
-      notIncluded: [
-        'Advanced AI Diagnosis',
-        'Farm Analytics Dashboard',
-        'Loan Recommendations',
-        'Priority Support',
-      ],
+      notIncluded: ['Advanced AI Diagnosis', 'Farm Analytics Dashboard', 'Loan Recommendations', 'Priority Support'],
     },
     {
       tier: 'premium',
@@ -58,7 +67,6 @@ function PricingPageContent() {
       description: t('pricing.premiumPlan.description'),
       icon: Sparkles,
       popular: true,
-      color: 'from-[#0f766e] to-[#183028]',
       features: [
         translations.pricing.premiumPlan.features[0],
         translations.pricing.premiumPlan.features[1],
@@ -66,10 +74,7 @@ function PricingPageContent() {
         translations.pricing.premiumPlan.features[3],
         translations.pricing.premiumPlan.features[4],
       ],
-      notIncluded: [
-        'Multi-farm Dashboard',
-        'Group Analytics',
-      ],
+      notIncluded: ['Multi-farm Dashboard', 'Group Analytics'],
     },
     {
       tier: 'cooperative',
@@ -78,7 +83,6 @@ function PricingPageContent() {
       period: t('pricing.perMonth'),
       description: t('pricing.cooperativePlan.description'),
       icon: Building2,
-      color: 'from-blue-500 to-blue-700',
       features: [
         translations.pricing.cooperativePlan.features[0],
         translations.pricing.cooperativePlan.features[1],
@@ -87,10 +91,7 @@ function PricingPageContent() {
         translations.pricing.cooperativePlan.features[4],
         translations.pricing.cooperativePlan.features[5],
       ],
-      notIncluded: [
-        'White-label Options',
-        'API Access',
-      ],
+      notIncluded: ['White-label Options', 'API Access'],
     },
     {
       tier: 'enterprise',
@@ -99,7 +100,6 @@ function PricingPageContent() {
       period: t('pricing.perMonth'),
       description: t('pricing.enterprisePlan.description'),
       icon: Globe,
-      color: 'from-purple-500 to-purple-700',
       features: [
         translations.pricing.enterprisePlan.features[0],
         translations.pricing.enterprisePlan.features[1],
@@ -112,9 +112,6 @@ function PricingPageContent() {
       notIncluded: [],
     },
   ];
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [loading, setLoading] = useState<string | null>(null);
 
   const payment = searchParams.get('payment');
   const statusMap: Record<string, { variant: 'success' | 'error' | 'warning' | 'default'; message: string }> = {
@@ -124,7 +121,6 @@ function PricingPageContent() {
     pending: { variant: 'warning', message: t('pricing.paymentPending') },
     already_active: { variant: 'success', message: t('pricing.alreadyActive') },
   };
-
   const statusMessage = payment ? statusMap[payment] : null;
 
   const handleSubscribe = async (tier: string) => {
@@ -133,11 +129,9 @@ function PricingPageContent() {
       const plan = plans.find((p) => p.tier === tier);
       const storedUser = localStorage.getItem('agripride_user');
       const user = storedUser ? JSON.parse(storedUser) : null;
-
       if (plan?.price === 0) {
         const res = await fetch('/api/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tier, userId: user?.id }),
         });
         const data = await res.json();
@@ -146,122 +140,94 @@ function PricingPageContent() {
         router.push('/auth');
         return;
       }
-
       const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tier,
-          userId: user?.id,
-          email: user?.email || 'farmer@agripride.ai',
-          name: user?.name || 'Farmer',
-        }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier, userId: user?.id, email: user?.email || 'farmer@agripride.ai', name: user?.name || 'Farmer' }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || t('errors.paymentFailed'));
-
       const authorization_url = data.data?.authorization_url || data.authorization_url;
-      if (authorization_url) {
-        window.location.assign(authorization_url);
-      } else {
-        throw new Error(t('errors.paymentFailed'));
-      }
+      if (authorization_url) { window.location.assign(authorization_url); } else { throw new Error(t('errors.paymentFailed')); }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('errors.paymentFailed'));
-    } finally {
-      setLoading(null);
-    }
+    } finally { setLoading(null); }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[var(--background)]">
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:py-20 sm:px-8 lg:px-10">
         {statusMessage && (
-          <div className={`mb-6 rounded-lg px-4 py-3 text-sm font-medium ${
-            statusMessage.variant === 'success' ? 'bg-[#e2f0ee] text-[#0f766e] border border-[#d1d5db]' :
+          <div className={`mb-6 rounded-lg px-4 py-3 text-sm font-medium font-body ${
+            statusMessage.variant === 'success' ? 'bg-[#f0f5f1] text-[#2d6a4f] border border-[#dce8de]' :
             statusMessage.variant === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
             statusMessage.variant === 'warning' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-            'bg-gray-50 text-gray-700 border border-[#d1d5db]'
+            'bg-[var(--muted)] text-[var(--muted-foreground)] border border-[var(--border)]'
           }`}>
             {statusMessage.message}
           </div>
         )}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 sm:mb-12 text-center"
-        >
-          <Badge variant="primary" className="mb-3 sm:mb-4">{t('nav.pricing')}</Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 text-balance">
+
+        <RevealSection className="mb-12 sm:mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px w-8 bg-[#c4704b]" />
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Pricing</span>
+          </div>
+          <h1 className="display-lg text-[var(--foreground)]">
             {t('pricing.title')}
           </h1>
-          <p className="mx-auto mt-2 sm:mt-3 max-w-2xl text-base sm:text-lg text-gray-500">
+          <p className="mt-4 max-w-xl text-base sm:text-lg text-[var(--muted-foreground)] font-body">
             {t('pricing.subtitle')}
           </p>
-        </motion.div>
+        </RevealSection>
 
-        <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 xl:grid-cols-4">
+        {/* Pricing comparison */}
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {plans.map((plan, i) => {
             const Icon = plan.icon;
             return (
-              <motion.div
-                key={plan.tier}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="relative"
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <Badge variant="primary" className="px-4 py-1 text-xs font-semibold shadow-lg">
-                      {t('pricing.mostPopular')}
-                    </Badge>
-                  </div>
-                )}
-                <Card className={`h-full border-2 ${plan.popular ? 'border-[#14b8a6] shadow-xl' : 'border-[#d1d5db] shadow-sm'} transition-all duration-200 hover:shadow-lg`}>
-                  <CardHeader className={`rounded-t-lg bg-gradient-to-r ${plan.color} p-6 text-white`}>
-                    <div className="flex items-center justify-between">
-                      <div className="rounded-lg bg-white/20 p-2">
-                        <Icon className="h-6 w-6" />
-                      </div>
+              <RevealSection key={plan.tier} delay={i * 0.08}>
+                <div className={`relative h-full flex flex-col rounded-lg border bg-[var(--card)] transition-all duration-300 ${plan.popular ? 'border-[#2d6a4f]/30 dark:border-[#5e9a6b]/30 shadow-lg' : 'border-[var(--border)] hover:shadow-md'}`}>
+                  {plan.popular && (
+                    <div className="absolute -top-3 left-6 z-10">
+                      <Badge variant="primary" className="text-[10px] tracking-wide uppercase">{t('pricing.mostPopular')}</Badge>
                     </div>
-                    <CardTitle className="mt-4 text-xl font-bold">{plan.name}</CardTitle>
-                    <CardDescription className="text-sm text-white/80">{plan.description}</CardDescription>
-                    <div className="mt-4 flex items-baseline gap-1">
-                      <span className="text-4xl font-bold">
+                  )}
+
+                  <div className="p-6 sm:p-8 flex-1 flex flex-col">
+                    <div className={`mb-4 inline-flex rounded-lg p-2 w-fit ${plan.popular ? 'bg-[#1a3a2a] dark:bg-[#5e9a6b]' : 'bg-[var(--muted)]'}`}>
+                      <Icon className={`h-5 w-5 ${plan.popular ? 'text-white dark:text-[#1a1a1a]' : 'text-[var(--muted-foreground)]'}`} />
+                    </div>
+                    <h3 className="font-display text-xl text-[var(--foreground)]">{plan.name}</h3>
+                    <p className="mt-1 text-sm text-[var(--muted-foreground)] font-body">{plan.description}</p>
+
+                    <div className="mt-5 flex items-baseline gap-1">
+                      <span className="text-3xl sm:text-4xl font-display text-[var(--foreground)]">
                         {plan.price === 0 ? t('pricing.free') : `KES ${plan.price.toLocaleString()}`}
                       </span>
-                      {plan.price > 0 && <span className="text-sm text-white/70">{t('pricing.perMonth')}</span>}
+                      {plan.price > 0 && <span className="text-sm text-[var(--muted-foreground)] font-body">{t('pricing.perMonth')}</span>}
                     </div>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <ul className="space-y-3">
+
+                    <div className="mt-6 pt-6 border-t border-[var(--border)] space-y-3 flex-1">
                       {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2 text-sm">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#14b8a6]" />
-                          <span className="text-gray-700">{feature}</span>
-                        </li>
+                        <div key={feature} className="flex items-start gap-2.5 text-sm font-body">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#2d6a4f] dark:text-[#5e9a6b]" />
+                          <span className="text-[var(--foreground)]">{feature}</span>
+                        </div>
                       ))}
                       {plan.notIncluded.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2 text-sm text-gray-400">
-                          <X className="mt-0.5 h-4 w-4 shrink-0" />
+                        <div key={feature} className="flex items-start gap-2.5 text-sm font-body text-[var(--muted-foreground)]/60">
+                          <Minus className="mt-0.5 h-4 w-4 shrink-0" />
                           <span>{feature}</span>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
 
-                    <div className="mt-6">
+                    <div className="mt-6 pt-6 border-t border-[var(--border)]">
                       <Button
                         className="w-full"
                         variant={plan.popular ? 'default' : 'outline'}
                         size="lg"
-                        onClick={() => {
-                          if (plan.price === 0) {
-                            router.push('/auth?tab=register');
-                          } else {
-                            handleSubscribe(plan.tier);
-                          }
-                        }}
+                        onClick={() => plan.price === 0 ? router.push('/auth?tab=register') : handleSubscribe(plan.tier)}
                         disabled={loading === plan.tier}
                       >
                         {loading === plan.tier ? (
@@ -275,22 +241,19 @@ function PricingPageContent() {
                           </>
                         )}
                       </Button>
+                      {plan.price > 0 && (
+                        <p className="mt-2 text-center text-xs text-[var(--muted-foreground)]/60 font-body">
+                          {t('pricing.securePayment')}
+                        </p>
+                      )}
                     </div>
-
-                    {plan.price > 0 && (
-                      <p className="mt-2 text-center text-xs text-gray-400">
-                        {t('pricing.securePayment')}
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
+                  </div>
+                </div>
+              </RevealSection>
             );
           })}
         </div>
       </div>
-
-
     </div>
   );
 }
@@ -298,8 +261,8 @@ function PricingPageContent() {
 export default function PricingPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
-        <Loader2 className="h-8 w-8 animate-spin text-[#0f766e]" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+        <Loader2 className="h-6 w-6 animate-spin text-[#2d6a4f]" />
       </div>
     }>
       <PricingPageContent />

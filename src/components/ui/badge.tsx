@@ -3,16 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors',
+  'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium transition-colors font-body',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-[var(--muted)] text-[var(--muted-foreground)]',
-        primary: 'border-transparent bg-[#e2f0ee] text-[#0f766e] dark:bg-[#183028] dark:text-[#14b8a6]',
-        secondary: 'border-transparent bg-[#f2f5f2] text-[#0f766e] dark:bg-[#11201c] dark:text-[#14b8a6]',
-        destructive: 'border-transparent bg-red-100 text-red-700 dark:bg-red-900/60 dark:text-red-300',
-        warning: 'border-transparent bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-300',
-        outline: 'border-[var(--border)] text-[var(--muted-foreground)]',
+        default: 'bg-[var(--muted)] text-[var(--muted-foreground)]',
+        primary: 'bg-[#f0f5f1] text-[#2d6a4f] dark:bg-[#1a2e20] dark:text-[#5e9a6b]',
+        secondary: 'bg-[#f3efe9] text-[#756a5c] dark:bg-[#222822] dark:text-[#95928a]',
+        destructive: 'bg-red-50 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+        warning: 'bg-amber-50 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+        outline: 'border border-[var(--border)] text-[var(--muted-foreground)]',
+        terra: 'bg-[#fdf3ee] text-[#a85a3a] dark:bg-[#522b1e]/40 dark:text-[#e8a07a]',
       },
     },
     defaultVariants: { variant: 'default' },
