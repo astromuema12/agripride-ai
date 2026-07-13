@@ -127,6 +127,7 @@ export function AiDemo() {
 
   const [usage, setUsage] = useState<UsageInfo | null>(null);
   const [analyzingProgress, setAnalyzingProgress] = useState(0);
+  const [imageDiagnosing, setImageDiagnosing] = useState(false);
 
   useEffect(() => {
     fetch('/api/ai/demo').then((r) => r.json()).then((res) => {
@@ -324,6 +325,61 @@ export function AiDemo() {
       clearInterval(progressInterval);
       setDiagnosing(false);
       setAnalyzingProgress(0);
+    }
+  };
+
+  const handleDiagnoseImage = async () => {
+    if (!imageFile || imageDiagnosing) return;
+    setImageDiagnosing(true);
+    setError('');
+    setResult(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const res = await fetch('/api/diagnose-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setResult({
+          crop: 'image-analysis',
+          primaryDiagnosis: {
+            name: data.data.disease,
+            type: 'disease',
+            confidence: data.data.confidence,
+            likelihood: data.data.confidence >= 0.7 ? 'high' : data.data.confidence >= 0.4 ? 'medium' : 'low',
+            severity: data.data.severity,
+            description: data.data.description,
+            treatment: Array.isArray(data.data.treatment) ? data.data.treatment.join('. ') : data.data.treatment,
+            prevention: Array.isArray(data.data.prevention) ? data.data.prevention.join('. ') : data.data.prevention,
+          },
+          possibleCauses: [],
+          confidenceRange: { min: Math.max(0, data.data.confidence - 0.15), max: Math.min(1, data.data.confidence + 0.1) },
+          reasoning: {
+            summary: data.data.description,
+            symptomInfluences: ['Visual analysis of uploaded image'],
+            uncertainties: data.data.confidence < 0.5 ? ['Low confidence — consider uploading a clearer image or describing symptoms'] : [],
+          },
+          symptomCategories: {},
+          growthStage: 'unknown',
+          uncertaintyLevel: data.data.confidence >= 0.7 ? 'low' : data.data.confidence >= 0.4 ? 'moderate' : 'high',
+          requestMoreInfo: data.data.confidence < 0.5,
+          missingInfo: data.data.confidence < 0.5 ? ['A clearer image or symptom description would improve accuracy'] : [],
+          imageAnalyzed: data.data.imageAnalyzed,
+        });
+        if (data.usage) setUsage(data.usage);
+      } else {
+        setError(data.error || t('landing.aiDemo.imageDiagnosisFailed'));
+      }
+    } catch {
+      setError(t('landing.aiDemo.networkError'));
+    } finally {
+      setImageDiagnosing(false);
     }
   };
 
@@ -535,6 +591,21 @@ export function AiDemo() {
               <canvas ref={canvasRef} className="hidden" />
               <p className="mt-2 text-xs text-[var(--muted-foreground)]/70 font-body">{t('landing.aiDemo.imageHelpText')}</p>
             </div>
+
+            {imageFile && (
+              <Button
+                type="button"
+                className="w-full bg-[#2d6a4f] hover:bg-[#1a3a2a] text-white dark:bg-[#5e9a6b] dark:hover:bg-[#4a8a5a] dark:text-[#1a1a1a]"
+                onClick={handleDiagnoseImage}
+                disabled={imageDiagnosing}
+              >
+                {imageDiagnosing ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('landing.aiDemo.diagnosingImage')}</>
+                ) : (
+                  <><Scan className="mr-2 h-4 w-4" /> {t('landing.aiDemo.diagnoseImage')}</>
+                )}
+              </Button>
+            )}
 
             <div>
               <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">{t('landing.aiDemo.selectCrop')}</label>
