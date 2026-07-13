@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Sprout, AlertTriangle, Shield, Loader2, Scan, HelpCircle, ImagePlus, X, RefreshCw } from 'lucide-react';
+import { Sprout, AlertTriangle, Shield, Loader2, Scan, HelpCircle, ImagePlus, X, RefreshCw, Camera, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -39,7 +39,9 @@ type UsageInfo = {
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const ACCEPTED_EXTENSIONS = '.jpg,.jpeg,.png,.webp';
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const COMPRESSION_MAX_WIDTH = 1200;
+const COMPRESSION_QUALITY = 0.82;
 
 const likelihoodColors: Record<string, string> = {
   high: 'bg-[#f0f5f1] text-[#2d6a4f] border-[#dce8de] dark:bg-[#1a2e20] dark:text-[#5e9a6b] dark:border-[#2a3a2a]',
@@ -52,6 +54,37 @@ const uncertaintyColors: Record<string, string> = {
   moderate: 'bg-amber-50 text-amber-700',
   high: 'bg-red-50 text-red-700',
 };
+
+function compressImage(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      if (width > COMPRESSION_MAX_WIDTH) {
+        height = Math.round((height * COMPRESSION_MAX_WIDTH) / width);
+        width = COMPRESSION_MAX_WIDTH;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { resolve(file); return; }
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { resolve(file); return; }
+          resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg', lastModified: Date.now() }));
+        },
+        'image/jpeg',
+        COMPRESSION_QUALITY,
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
 
 export function AiDemo() {
   const { t } = useI18n();
@@ -75,6 +108,14 @@ export function AiDemo() {
   const [imageError, setImageError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+  const [cameraActive, setCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState('');
+  const [capturedFrame, setCapturedFrame] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [usage, setUsage] = useState<UsageInfo | null>(null);
 
@@ -88,8 +129,22 @@ export function AiDemo() {
     }).catch(() => {});
   }, []);
 
-  const handleFile = useCallback((file: File) => {
+  useEffect(() => {
+    return () => { stopCamera(); };
+  }, []);
+
+  const stopCamera = useCallback(() => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
+    }
+    setCameraActive(false);
+    setCapturedFrame(null);
+  }, [cameraStream]);
+
+  const handleFile = useCallback(async (file: File) => {
     setImageError('');
+    setCameraError('');
     if (!ACCEPTED_TYPES.includes(file.type)) {
       setImageError(t('landing.aiDemo.imageTypeError'));
       return;
@@ -98,10 +153,11 @@ export function AiDemo() {
       setImageError(t('landing.aiDemo.imageSizeError'));
       return;
     }
-    setImageFile(file);
+    const compressed = await compressImage(file);
+    setImageFile(compressed);
     const reader = new FileReader();
     reader.onload = (e) => setImagePreview(e.target?.result as string);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(compressed);
   }, [t]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -131,7 +187,76 @@ export function AiDemo() {
     setImagePreview(null);
     setImageError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
   }, []);
+
+  const openCamera = useCallback(async () => {
+    setCameraError('');
+    setImageError('');
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError(t('landing.aiDemo.cameraUnavailable'));
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
+      });
+      setCameraStream(stream);
+      setCameraActive(true);
+      setCapturedFrame(null);
+      requestAnimationFrame(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(() => {});
+        }
+      });
+    } catch {
+      setCameraError(t('landing.aiDemo.cameraDenied'));
+    }
+  }, [t]);
+
+  const capturePhoto = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0);
+    const dataUrl = canvas.toDataURL('image/jpeg', COMPRESSION_QUALITY);
+    setCapturedFrame(dataUrl);
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
+      setCameraActive(false);
+    }
+  }, [cameraStream]);
+
+  const confirmCapture = useCallback(async () => {
+    if (!capturedFrame) return;
+    const res = await fetch(capturedFrame);
+    const blob = await res.blob();
+    const file = new File([blob], `camera-${Date.now()}.jpg`, { type: 'image/jpeg', lastModified: Date.now() });
+    setImageFile(file);
+    setImagePreview(capturedFrame);
+    setCapturedFrame(null);
+  }, [capturedFrame]);
+
+  const retakePhoto = useCallback(() => {
+    setCapturedFrame(null);
+    openCamera();
+  }, [openCamera]);
+
+  const cancelCamera = useCallback(() => {
+    stopCamera();
+    setCapturedFrame(null);
+  }, [stopCamera]);
 
   const canDiagnose = selectedCrop && symptoms.length >= 5 && imageFile && !diagnosing;
 
@@ -141,18 +266,12 @@ export function AiDemo() {
     setError('');
     setResult(null);
     try {
-      let imageBase64: string | undefined;
-      if (imageFile) {
-        imageBase64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const result = e.target?.result as string;
-            resolve(result);
-          };
-          reader.onerror = () => reject(new Error('Failed to read file'));
-          reader.readAsDataURL(imageFile);
-        });
-      }
+      const imageBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsDataURL(imageFile);
+      });
 
       const res = await fetch('/api/ai/demo', {
         method: 'POST',
@@ -212,58 +331,84 @@ export function AiDemo() {
             viewport={{ once: true }}
             className="lg:col-span-2 space-y-5"
           >
-            {/* Image Upload Zone */}
+            {/* Image Capture Section */}
             <div>
               <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">
                 {t('landing.aiDemo.uploadImage')} <span className="text-[#c4704b]">*</span>
               </label>
-              {!imagePreview ? (
-                <div
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                  className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all duration-200 ${
-                    isDragging
-                      ? 'border-[#2d6a4f] bg-[#f0f5f1] dark:border-[#5e9a6b] dark:bg-[#1a2e20]'
-                      : 'border-[var(--border)] bg-[var(--muted)]/50 hover:border-[#2d6a4f]/40 hover:bg-[#f0f5f1]/50 dark:hover:border-[#5e9a6b]/40'
-                  } p-8 text-center`}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept={ACCEPTED_EXTENSIONS}
-                    onChange={handleFileInput}
-                    className="sr-only"
-                  />
-                  <ImagePlus className={`mx-auto mb-3 h-8 w-8 ${isDragging ? 'text-[#2d6a4f] dark:text-[#5e9a6b]' : 'text-[var(--muted-foreground)]/40'}`} />
-                  <p className="text-sm font-medium text-[var(--foreground)] font-body">
-                    {t('landing.aiDemo.dropHint')}
-                  </p>
-                  <p className="mt-1 text-xs text-[var(--muted-foreground)]/60 font-body">
-                    {t('landing.aiDemo.supportedFormats')}
-                  </p>
+
+              {/* Camera Active State */}
+              {cameraActive && !capturedFrame && (
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-black">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-16 h-16 border-2 border-white/40 rounded-full" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 p-3">
+                    <button
+                      type="button"
+                      onClick={cancelCamera}
+                      className="rounded-full bg-[var(--muted)] p-2.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={capturePhoto}
+                      className="rounded-full bg-white p-1 shadow-lg ring-2 ring-white/80 hover:ring-[#c4704b] transition-all"
+                    >
+                      <Circle className="h-10 w-10 text-[#c4704b] fill-[#c4704b]/20" />
+                    </button>
+                    <div className="w-9" />
+                  </div>
                 </div>
-              ) : (
+              )}
+
+              {/* Captured Frame Preview */}
+              {capturedFrame && (
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
+                  <div className="aspect-[4/3]">
+                    <img src={capturedFrame} alt="Captured" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex items-center justify-between p-3">
+                    <button
+                      type="button"
+                      onClick={retakePhoto}
+                      className="flex items-center gap-1.5 rounded-md bg-[var(--muted)] px-3 py-1.5 text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors font-body"
+                    >
+                      <RefreshCw className="h-3 w-3" />
+                      {t('landing.aiDemo.retakePhoto')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={confirmCapture}
+                      className="flex items-center gap-1.5 rounded-md bg-[#1a3a2a] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1a3a2a]/90 transition-colors font-body dark:bg-[#5e9a6b] dark:text-[#1a1a1a]"
+                    >
+                      <Scan className="h-3 w-3" />
+                      {t('landing.aiDemo.continueDiagnosis')}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Image Preview (uploaded or confirmed capture) */}
+              {!cameraActive && !capturedFrame && imagePreview && (
                 <div className="relative rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-                  <img
-                    src={imagePreview}
-                    alt="Plant preview"
-                    className="w-full h-48 object-cover"
-                  />
+                  <img src={imagePreview} alt="Plant preview" className="w-full h-48 object-cover" />
                   <div className="flex items-center justify-between p-3">
                     <div className="min-w-0">
                       <p className="text-xs font-medium text-[var(--foreground)] truncate font-body">{imageFile?.name}</p>
                       <p className="text-[10px] text-[var(--muted-foreground)] font-body">{imageFile ? `${(imageFile.size / 1024 / 1024).toFixed(1)} MB` : ''}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                        className="rounded-md bg-[var(--muted)] p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                      >
-                        <RefreshCw className="h-3.5 w-3.5" />
-                      </button>
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); removeImage(); }}
@@ -273,18 +418,87 @@ export function AiDemo() {
                       </button>
                     </div>
                   </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept={ACCEPTED_EXTENSIONS}
-                    onChange={handleFileInput}
-                    className="sr-only"
-                  />
+                  <input ref={fileInputRef} type="file" accept={ACCEPTED_EXTENSIONS} onChange={handleFileInput} className="sr-only" />
+                  <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileInput} className="sr-only" />
                 </div>
               )}
-              {imageError && (
-                <p className="mt-1.5 text-xs text-red-500 font-body">{imageError}</p>
+
+              {/* Upload / Take Photo Buttons */}
+              {!cameraActive && !capturedFrame && !imagePreview && (
+                <>
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all duration-200 ${
+                      isDragging
+                        ? 'border-[#2d6a4f] bg-[#f0f5f1] dark:border-[#5e9a6b] dark:bg-[#1a2e20]'
+                        : 'border-[var(--border)] bg-[var(--muted)]/50 hover:border-[#2d6a4f]/40 hover:bg-[#f0f5f1]/50 dark:hover:border-[#5e9a6b]/40'
+                    } p-6 text-center`}
+                  >
+                    <input ref={fileInputRef} type="file" accept={ACCEPTED_EXTENSIONS} onChange={handleFileInput} className="sr-only" />
+                    <ImagePlus className={`mx-auto mb-2 h-7 w-7 ${isDragging ? 'text-[#2d6a4f] dark:text-[#5e9a6b]' : 'text-[var(--muted-foreground)]/40'}`} />
+                    <p className="text-sm font-medium text-[var(--foreground)] font-body">
+                      {t('landing.aiDemo.dropHint')}
+                    </p>
+                    <p className="mt-1 text-xs text-[var(--muted-foreground)]/60 font-body">
+                      {t('landing.aiDemo.supportedFormats')}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 mt-3">
+                    <div className="h-px flex-1 bg-[var(--border)]" />
+                    <span className="text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]/60 font-body">{t('landing.aiDemo.or')}</span>
+                    <div className="h-px flex-1 bg-[var(--border)]" />
+                  </div>
+
+                  <div className="flex gap-2 mt-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={openCamera}
+                    >
+                      <Camera className="mr-1.5 h-4 w-4" />
+                      {t('landing.aiDemo.takePhoto')}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => cameraInputRef.current?.click()}
+                    >
+                      <Camera className="mr-1.5 h-4 w-4" />
+                      {t('landing.aiDemo.quickCapture')}
+                    </Button>
+                    <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileInput} className="sr-only" />
+                  </div>
+                </>
               )}
+
+              {(imageError || cameraError) && (
+                <div className="mt-2">
+                  {imageError && <p className="text-xs text-red-500 font-body">{imageError}</p>}
+                  {cameraError && (
+                    <div className="flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 p-2.5 dark:bg-amber-950 dark:border-amber-800">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-amber-700 font-body dark:text-amber-300">{cameraError}</p>
+                        <button
+                          type="button"
+                          onClick={() => cameraInputRef.current?.click()}
+                          className="mt-1 text-xs font-medium text-amber-800 underline underline-offset-2 hover:text-amber-900 font-body dark:text-amber-200"
+                        >
+                          {t('landing.aiDemo.useFileUpload')}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <canvas ref={canvasRef} className="hidden" />
             </div>
 
             <div>
