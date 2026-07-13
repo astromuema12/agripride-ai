@@ -368,7 +368,7 @@ export function AiDemo() {
             {/* Image Capture Section */}
             <div>
               <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">
-                {t('landing.aiDemo.uploadImage')} <span className="text-[var(--muted-foreground)]/60 text-xs font-normal">({t('landing.aiDemo.optional')})</span>
+                {t('landing.aiDemo.uploadImage')}
               </label>
 
               {/* Camera Active State */}
@@ -533,6 +533,7 @@ export function AiDemo() {
               )}
 
               <canvas ref={canvasRef} className="hidden" />
+              <p className="mt-2 text-xs text-[var(--muted-foreground)]/70 font-body">{t('landing.aiDemo.imageHelpText')}</p>
             </div>
 
             <div>
@@ -572,7 +573,7 @@ export function AiDemo() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">{t('landing.aiDemo.describeSymptoms')}</label>
+              <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">{t('landing.aiDemo.describeSymptoms')} <span className="text-[var(--muted-foreground)]/60 text-xs font-normal">({t('landing.aiDemo.optional')})</span></label>
               <textarea
                 rows={4}
                 className="w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2.5 text-sm font-body text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent"
