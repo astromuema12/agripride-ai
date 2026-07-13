@@ -346,6 +346,7 @@ export function AiDemo() {
       const data = await res.json();
 
       if (data.success) {
+        const symptomsObserved = Array.isArray(data.data.symptoms_observed) ? data.data.symptoms_observed : [];
         setResult({
           crop: 'image-analysis',
           primaryDiagnosis: {
@@ -362,7 +363,7 @@ export function AiDemo() {
           confidenceRange: { min: Math.max(0, data.data.confidence - 0.15), max: Math.min(1, data.data.confidence + 0.1) },
           reasoning: {
             summary: data.data.description,
-            symptomInfluences: ['Visual analysis of uploaded image'],
+            symptomInfluences: symptomsObserved.length > 0 ? symptomsObserved : ['Visual analysis of uploaded image'],
             uncertainties: data.data.confidence < 0.5 ? ['Low confidence — consider uploading a clearer image or describing symptoms'] : [],
           },
           symptomCategories: {},
