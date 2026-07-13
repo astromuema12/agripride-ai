@@ -456,6 +456,8 @@ export const en = {
       or: 'or',
       observation: 'Observation',
       imageAnalyzed: 'Image analyzed with AI vision',
+      optional: 'Optional',
+      diagnoseWithImage: 'Diagnose with Image',
       uploadingImage: 'Uploading image...',
       analyzingImage: 'Analyzing plant health...',
       finalizing: 'Finalizing diagnosis...',

@@ -267,10 +267,10 @@ export function AiDemo() {
     setCapturedFrame(null);
   }, [stopCamera]);
 
-  const canDiagnose = selectedCrop && symptoms.length >= 5 && imageFile && !diagnosing;
+  const canDiagnose = selectedCrop && symptoms.length >= 5 && !diagnosing;
 
   const handleDiagnose = async () => {
-    if (!selectedCrop || symptoms.length < 5 || !imageFile || diagnosing) return;
+    if (!selectedCrop || symptoms.length < 5 || diagnosing) return;
     setDiagnosing(true);
     setError('');
     setResult(null);
@@ -284,12 +284,15 @@ export function AiDemo() {
     }, 400);
 
     try {
-      const imageBase64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target?.result as string);
-        reader.onerror = () => reject(new Error('Failed to read file'));
-        reader.readAsDataURL(imageFile);
-      });
+      let imageBase64: string | undefined;
+      if (imageFile) {
+        imageBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target?.result as string);
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(imageFile);
+        });
+      }
 
       setAnalyzingProgress(30);
 
@@ -365,7 +368,7 @@ export function AiDemo() {
             {/* Image Capture Section */}
             <div>
               <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">
-                {t('landing.aiDemo.uploadImage')} <span className="text-[#c4704b]">*</span>
+                {t('landing.aiDemo.uploadImage')} <span className="text-[var(--muted-foreground)]/60 text-xs font-normal">({t('landing.aiDemo.optional')})</span>
               </label>
 
               {/* Camera Active State */}
@@ -596,6 +599,8 @@ export function AiDemo() {
             <Button className="w-full" onClick={handleDiagnose} disabled={!canDiagnose || !!error}>
               {diagnosing ? (
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('landing.aiDemo.diagnosing')}</>
+              ) : imageFile ? (
+                <><Scan className="mr-2 h-4 w-4" /> {t('landing.aiDemo.diagnoseWithImage')}</>
               ) : (
                 <><Scan className="mr-2 h-4 w-4" /> {t('landing.aiDemo.diagnoseNow')}</>
               )}
@@ -620,9 +625,13 @@ export function AiDemo() {
                   <Progress value={analyzingProgress} className="h-1.5" />
                   <p className="mt-1.5 text-[10px] text-center text-[var(--muted-foreground)]/60 font-body">
                     {analyzingProgress < 30
-                      ? t('landing.aiDemo.uploadingImage')
+                      ? imageFile
+                        ? t('landing.aiDemo.uploadingImage')
+                        : t('landing.aiDemo.analyzingSymptoms')
                       : analyzingProgress < 80
-                        ? t('landing.aiDemo.analyzingImage')
+                        ? imageFile
+                          ? t('landing.aiDemo.analyzingImage')
+                          : t('landing.aiDemo.analyzingSymptoms')
                         : t('landing.aiDemo.finalizing')}
                   </p>
                 </div>

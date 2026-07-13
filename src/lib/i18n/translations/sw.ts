@@ -458,6 +458,8 @@ export const sw: Translations = {
       or: 'au',
       observation: 'Uchunguzi',
       imageAnalyzed: 'Picha imechambuliwa kwa AI vision',
+      optional: 'Hiari',
+      diagnoseWithImage: 'Chambua kwa Picha',
       uploadingImage: 'Inapakia picha...',
       analyzingImage: 'Inachambua afya ya mmea...',
       finalizing: 'Inakamilisha utambuzi...',

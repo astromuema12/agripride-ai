@@ -112,14 +112,6 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    if (!image) {
-      return Response.json({
-        success: false,
-        error: 'Please upload a plant image for diagnosis.',
-        usage: usageResponse(identifier),
-      }, { status: 400 });
-    }
-
     const updatedEntries = recordUsage(identifier);
     const newUsed = updatedEntries.length;
     const newRemaining = Math.max(0, FREE_TIER_LIMIT - newUsed);
@@ -132,7 +124,9 @@ export async function POST(req: NextRequest) {
     if (hasRealAI) {
       try {
         const stageInfo = growthStage && growthStage !== 'unknown' ? `\nCrop Growth Stage: ${growthStage}` : '';
-        const prompt = `You are an expert crop disease diagnostician. Analyze the plant image along with the reported symptoms and provide a comprehensive diagnosis.
+        const hasImage = !!image;
+        const prompt = hasImage
+          ? `You are an expert crop disease diagnostician. Analyze the plant image along with the reported symptoms and provide a comprehensive diagnosis.
 
 Crop: ${cropType}${stageInfo}
 Symptoms reported by farmer: ${symptoms}
@@ -165,6 +159,37 @@ Respond in JSON format with:
   "uncertaintyLevel": "low|moderate|high",
   "requestMoreInfo": false,
   "missingInfo": []
+}`
+          : `You are an expert crop disease diagnostician. Based on the reported symptoms, provide a diagnosis.
+
+Crop: ${cropType}${stageInfo}
+Symptoms reported by farmer: ${symptoms}
+
+No image was provided. Base your diagnosis purely on the reported symptoms and your knowledge of common crop diseases.
+
+Respond in JSON format with:
+{
+  "primaryDiagnosis": {
+    "name": "Disease/Condition Name",
+    "type": "disease|stress|pest|physiological|nutrient_deficiency",
+    "confidence": 0.0-1.0,
+    "likelihood": "high|medium|low",
+    "severity": "mild|moderate|severe|critical",
+    "description": "Analysis based on reported symptoms. Note that no image was provided so this is a text-based assessment.",
+    "treatment": "Specific treatment recommendations",
+    "prevention": "Prevention tips"
+  },
+  "possibleCauses": [array of 2-4 possible causes with same fields],
+  "confidenceRange": {"min": 0.0, "max": 1.0},
+  "reasoning": {
+    "summary": "Overall analysis summary",
+    "symptomInfluences": ["list of symptoms that influenced the diagnosis"],
+    "uncertainties": ["any uncertainties, especially noting that no image was provided"],
+    "growthStageNote": "note about growth stage if relevant"
+  },
+  "uncertaintyLevel": "low|moderate|high",
+  "requestMoreInfo": true,
+  "missingInfo": ["A plant image would improve diagnostic accuracy"]
 }`;
 
         const msgContent: { type: string; text?: string; image_url?: { url: string } }[] = [
@@ -223,7 +248,7 @@ Respond in JSON format with:
             uncertaintyLevel: result.uncertaintyLevel || 'moderate',
             requestMoreInfo: result.requestMoreInfo || false,
             missingInfo: result.missingInfo || [],
-            imageAnalyzed: true,
+            imageAnalyzed: hasImage,
           },
           usage: usageData,
           disclaimer: 'This is an AI-assisted diagnosis. Results should be verified by a local agricultural extension officer.',
@@ -239,7 +264,21 @@ Respond in JSON format with:
     await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
 
     const result = diagnose({ cropType, symptoms, growthStage });
-    const enriched = enrichWithImageAnalysis(result, image);
+    const enriched = image ? enrichWithImageAnalysis(result, image) : {
+      ...result,
+      possibleCauses: result.possibleCauses.map((cause) => ({
+        ...cause,
+        severity: cause.severity || inferSeverity(cause.confidence, cause.likelihood),
+        description: cause.description || `${cause.name} detected based on reported symptoms. No image was provided for visual confirmation.`,
+      })),
+      primaryDiagnosis: result.primaryDiagnosis
+        ? {
+            ...result.primaryDiagnosis,
+            severity: result.primaryDiagnosis.severity || inferSeverity(result.primaryDiagnosis.confidence, result.primaryDiagnosis.likelihood),
+            description: result.primaryDiagnosis.description || `Diagnosis based on reported symptoms: ${result.primaryDiagnosis.name}. Consider uploading a plant image for more accurate analysis.`,
+          }
+        : undefined,
+    };
 
     return Response.json({
       success: true,
@@ -254,7 +293,7 @@ Respond in JSON format with:
         uncertaintyLevel: result.uncertaintyLevel,
         requestMoreInfo: result.requestMoreInfo,
         missingInfo: result.missingInfo,
-        imageAnalyzed: true,
+        imageAnalyzed: !!image,
       },
       usage: usageData,
       disclaimer: 'This is a demo diagnosis. Results are simulated. Always consult a local agricultural extension officer before applying treatments.',
