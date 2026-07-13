@@ -6,12 +6,16 @@ export type Likelihood = 'high' | 'medium' | 'low';
 
 export type ConditionType = 'disease' | 'stress' | 'physiological' | 'nutrient_deficiency' | 'pest';
 
+export type Severity = 'mild' | 'moderate' | 'severe' | 'critical';
+
 export interface PossibleCause {
   name: string;
   type: ConditionType;
   pathogen?: string;
   likelihood: Likelihood;
   confidence: number;
+  severity?: Severity;
+  description?: string;
   treatment?: string;
   prevention?: string;
 }

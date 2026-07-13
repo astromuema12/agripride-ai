@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useI18n } from '@/lib/i18n';
-import type { GrowthStage, PossibleCause } from '@/types';
+import type { GrowthStage, PossibleCause, Severity } from '@/types';
 
 type CropOption = { id: string; name: string; emoji?: string };
 type GrowthStageOption = { value: GrowthStage; label: string };
@@ -28,6 +28,7 @@ type DemoResult = {
   uncertaintyLevel: 'low' | 'moderate' | 'high';
   requestMoreInfo: boolean;
   missingInfo?: string[];
+  imageAnalyzed?: boolean;
 };
 
 type UsageInfo = {
@@ -53,6 +54,13 @@ const uncertaintyColors: Record<string, string> = {
   low: 'bg-[#f0f5f1] text-[#2d6a4f] dark:bg-[#1a2e20] dark:text-[#5e9a6b]',
   moderate: 'bg-amber-50 text-amber-700',
   high: 'bg-red-50 text-red-700',
+};
+
+const severityColors: Record<string, string> = {
+  mild: 'bg-[#f0f5f1] text-[#2d6a4f] border-[#dce8de] dark:bg-[#1a2e20] dark:text-[#5e9a6b]',
+  moderate: 'bg-amber-50 text-amber-700 border-amber-200',
+  severe: 'bg-orange-50 text-orange-700 border-orange-200',
+  critical: 'bg-red-50 text-red-700 border-red-200',
 };
 
 function compressImage(file: File): Promise<File> {
@@ -118,6 +126,7 @@ export function AiDemo() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [usage, setUsage] = useState<UsageInfo | null>(null);
+  const [analyzingProgress, setAnalyzingProgress] = useState(0);
 
   useEffect(() => {
     fetch('/api/ai/demo').then((r) => r.json()).then((res) => {
@@ -261,10 +270,19 @@ export function AiDemo() {
   const canDiagnose = selectedCrop && symptoms.length >= 5 && imageFile && !diagnosing;
 
   const handleDiagnose = async () => {
-    if (!selectedCrop || symptoms.length < 5 || !imageFile) return;
+    if (!selectedCrop || symptoms.length < 5 || !imageFile || diagnosing) return;
     setDiagnosing(true);
     setError('');
     setResult(null);
+    setAnalyzingProgress(0);
+
+    const progressInterval = setInterval(() => {
+      setAnalyzingProgress((prev) => {
+        if (prev >= 90) return prev;
+        return prev + Math.random() * 15;
+      });
+    }, 400);
+
     try {
       const imageBase64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -272,6 +290,8 @@ export function AiDemo() {
         reader.onerror = () => reject(new Error('Failed to read file'));
         reader.readAsDataURL(imageFile);
       });
+
+      setAnalyzingProgress(30);
 
       const res = await fetch('/api/ai/demo', {
         method: 'POST',
@@ -283,14 +303,25 @@ export function AiDemo() {
           image: imageBase64,
         }),
       });
+
+      setAnalyzingProgress(85);
       const data = await res.json();
+
+      setAnalyzingProgress(100);
+
       if (data.success) {
         setResult(data.data);
         if (data.usage) setUsage(data.usage);
       } else {
         setError(data.error || t('landing.aiDemo.diagnosisFailed'));
       }
-    } catch { setError(t('landing.aiDemo.networkError')); } finally { setDiagnosing(false); }
+    } catch {
+      setError(t('landing.aiDemo.networkError'));
+    } finally {
+      clearInterval(progressInterval);
+      setDiagnosing(false);
+      setAnalyzingProgress(0);
+    }
   };
 
   const handleReset = () => {
@@ -585,6 +616,16 @@ export function AiDemo() {
               <div className="flex flex-col items-center justify-center py-12">
                 <Loader2 className="mb-3 h-8 w-8 animate-spin text-[#2d6a4f] dark:text-[#5e9a6b]" />
                 <p className="text-sm text-[var(--muted-foreground)] font-body">{t('landing.aiDemo.analyzingSymptoms')}</p>
+                <div className="mt-4 w-full max-w-xs">
+                  <Progress value={analyzingProgress} className="h-1.5" />
+                  <p className="mt-1.5 text-[10px] text-center text-[var(--muted-foreground)]/60 font-body">
+                    {analyzingProgress < 30
+                      ? t('landing.aiDemo.uploadingImage')
+                      : analyzingProgress < 80
+                        ? t('landing.aiDemo.analyzingImage')
+                        : t('landing.aiDemo.finalizing')}
+                  </p>
+                </div>
               </div>
             )}
             {error && (
@@ -611,10 +652,31 @@ export function AiDemo() {
                     <div className="font-display text-lg text-[var(--foreground)]">{result.primaryDiagnosis?.name ?? t('landing.aiDemo.uncertain')}</div>
                     <div className="text-xs text-[var(--muted-foreground)] capitalize font-body">{result.crop} — {t('landing.aiDemo.stageLabel', { stage: result.growthStage })}</div>
                   </div>
-                  <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-[var(--muted)] text-[var(--muted-foreground)]'} w-fit`}>
-                    {t('landing.aiDemo.uncertaintyLabel', { level: result.uncertaintyLevel.toUpperCase() })}
-                  </Badge>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {result.primaryDiagnosis?.severity && (
+                      <Badge className={`${severityColors[result.primaryDiagnosis.severity] || 'bg-[var(--muted)]'} w-fit`}>
+                        {t(`landing.aiDemo.severity.${result.primaryDiagnosis.severity}`)}
+                      </Badge>
+                    )}
+                    <Badge className={`${uncertaintyColors[result.uncertaintyLevel] || 'bg-[var(--muted)] text-[var(--muted-foreground)]'} w-fit`}>
+                      {t('landing.aiDemo.uncertaintyLabel', { level: result.uncertaintyLevel.toUpperCase() })}
+                    </Badge>
+                  </div>
                 </div>
+
+                {result.primaryDiagnosis?.description && (
+                  <div className="rounded-md bg-[var(--muted)] p-3">
+                    <p className="text-xs font-semibold text-[var(--foreground)] mb-1 font-body">{t('landing.aiDemo.observation')}</p>
+                    <p className="text-xs text-[var(--muted-foreground)] font-body">{result.primaryDiagnosis.description}</p>
+                  </div>
+                )}
+
+                {result.imageAnalyzed && (
+                  <div className="flex items-center gap-1.5 text-[10px] text-[#2d6a4f] dark:text-[#5e9a6b] font-body">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#2d6a4f] dark:bg-[#5e9a6b]" />
+                    {t('landing.aiDemo.imageAnalyzed')}
+                  </div>
+                )}
 
                 {result.requestMoreInfo && (
                   <div className="rounded-md bg-amber-50 border border-amber-200 p-3 flex items-start gap-2">
@@ -633,12 +695,20 @@ export function AiDemo() {
                       {result.possibleCauses.slice(0, 4).map((cause, idx) => (
                         <div key={idx} className={`rounded-md border p-3 ${idx === 0 && cause.likelihood === 'high' ? likelihoodColors.high : 'border-[var(--border)]'}`}>
                           <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 min-w-0">
+                            <div className="flex items-center gap-2 min-w-0 flex-wrap">
                               <span className="text-xs font-medium text-[var(--foreground)] font-body">{idx + 1}. {cause.name}</span>
                               <Badge className={`${likelihoodColors[cause.likelihood] || 'bg-[var(--muted)]'} text-[10px]`}>{cause.likelihood}</Badge>
+                              {cause.severity && (
+                                <Badge className={`${severityColors[cause.severity] || 'bg-[var(--muted)]'} text-[10px]`}>
+                                  {t(`landing.aiDemo.severity.${cause.severity}`)}
+                                </Badge>
+                              )}
                             </div>
                             <span className="text-[10px] font-semibold text-[var(--muted-foreground)] shrink-0 font-body">{Math.round(cause.confidence * 100)}%</span>
                           </div>
+                          {cause.description && (
+                            <p className="mt-1.5 text-[11px] text-[var(--muted-foreground)] font-body leading-relaxed">{cause.description}</p>
+                          )}
                           <Progress value={Math.round(cause.confidence * 100)} className="h-1 mt-2" />
                         </div>
                       ))}

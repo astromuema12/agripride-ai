@@ -454,6 +454,17 @@ export const en = {
       cameraDenied: 'Camera access denied. Please allow camera permissions and try again.',
       useFileUpload: 'Use file upload instead',
       or: 'or',
+      observation: 'Observation',
+      imageAnalyzed: 'Image analyzed with AI vision',
+      uploadingImage: 'Uploading image...',
+      analyzingImage: 'Analyzing plant health...',
+      finalizing: 'Finalizing diagnosis...',
+      severity: {
+        mild: 'Mild',
+        moderate: 'Moderate',
+        severe: 'Severe',
+        critical: 'Critical',
+      },
     },
   },
 

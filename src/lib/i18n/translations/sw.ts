@@ -456,6 +456,17 @@ export const sw: Translations = {
       cameraDenied: 'Upatikanaji wa kamera umekatazwa. Tafadhali ruhusu ruhusa za kamera na jaribu tena.',
       useFileUpload: 'Tumia upakiaji wa faili badala yake',
       or: 'au',
+      observation: 'Uchunguzi',
+      imageAnalyzed: 'Picha imechambuliwa kwa AI vision',
+      uploadingImage: 'Inapakia picha...',
+      analyzingImage: 'Inachambua afya ya mmea...',
+      finalizing: 'Inakamilisha utambuzi...',
+      severity: {
+        mild: 'Nyepesi',
+        moderate: 'Wastani',
+        severe: 'Kali',
+        critical: 'Hatari',
+      },
     },
   },
 
