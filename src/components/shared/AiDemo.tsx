@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Sprout, AlertTriangle, Shield, ArrowRight, Leaf, Loader2, Scan, HelpCircle } from 'lucide-react';
+import { Sprout, AlertTriangle, Shield, Loader2, Scan, HelpCircle, ImagePlus, X, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -29,6 +29,17 @@ type DemoResult = {
   requestMoreInfo: boolean;
   missingInfo?: string[];
 };
+
+type UsageInfo = {
+  used: number;
+  limit: number;
+  remaining: number;
+  resetsAt: string;
+};
+
+const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ACCEPTED_EXTENSIONS = '.jpg,.jpeg,.png,.webp';
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const likelihoodColors: Record<string, string> = {
   high: 'bg-[#f0f5f1] text-[#2d6a4f] border-[#dce8de] dark:bg-[#1a2e20] dark:text-[#5e9a6b] dark:border-[#2a3a2a]',
@@ -59,29 +70,114 @@ export function AiDemo() {
   const [result, setResult] = useState<DemoResult | null>(null);
   const [error, setError] = useState('');
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageError, setImageError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [usage, setUsage] = useState<UsageInfo | null>(null);
+
   useEffect(() => {
     fetch('/api/ai/demo').then((r) => r.json()).then((res) => {
       if (res.success) {
         setCrops(res.crops);
         if (res.growthStages) setGrowthStages(res.growthStages);
+        if (res.usage) setUsage(res.usage);
       }
     }).catch(() => {});
   }, []);
 
+  const handleFile = useCallback((file: File) => {
+    setImageError('');
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      setImageError(t('landing.aiDemo.imageTypeError'));
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setImageError(t('landing.aiDemo.imageSizeError'));
+      return;
+    }
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (e) => setImagePreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+  }, [t]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleFile(file);
+  }, [handleFile]);
+
+  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFile(file);
+  }, [handleFile]);
+
+  const removeImage = useCallback(() => {
+    setImageFile(null);
+    setImagePreview(null);
+    setImageError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }, []);
+
+  const canDiagnose = selectedCrop && symptoms.length >= 5 && imageFile && !diagnosing;
+
   const handleDiagnose = async () => {
-    if (!selectedCrop || symptoms.length < 5) return;
+    if (!selectedCrop || symptoms.length < 5 || !imageFile) return;
     setDiagnosing(true);
     setError('');
     setResult(null);
     try {
+      let imageBase64: string | undefined;
+      if (imageFile) {
+        imageBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const result = e.target?.result as string;
+            resolve(result);
+          };
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(imageFile);
+        });
+      }
+
       const res = await fetch('/api/ai/demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cropType: selectedCrop, symptoms, growthStage: selectedStage }),
+        body: JSON.stringify({
+          cropType: selectedCrop,
+          symptoms,
+          growthStage: selectedStage,
+          image: imageBase64,
+        }),
       });
       const data = await res.json();
-      if (data.success) { setResult(data.data); } else { setError(data.error || t('landing.aiDemo.diagnosisFailed')); }
+      if (data.success) {
+        setResult(data.data);
+        if (data.usage) setUsage(data.usage);
+      } else {
+        setError(data.error || t('landing.aiDemo.diagnosisFailed'));
+      }
     } catch { setError(t('landing.aiDemo.networkError')); } finally { setDiagnosing(false); }
+  };
+
+  const handleReset = () => {
+    setResult(null);
+    setSymptoms('');
+    removeImage();
   };
 
   return (
@@ -116,6 +212,81 @@ export function AiDemo() {
             viewport={{ once: true }}
             className="lg:col-span-2 space-y-5"
           >
+            {/* Image Upload Zone */}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">
+                {t('landing.aiDemo.uploadImage')} <span className="text-[#c4704b]">*</span>
+              </label>
+              {!imagePreview ? (
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all duration-200 ${
+                    isDragging
+                      ? 'border-[#2d6a4f] bg-[#f0f5f1] dark:border-[#5e9a6b] dark:bg-[#1a2e20]'
+                      : 'border-[var(--border)] bg-[var(--muted)]/50 hover:border-[#2d6a4f]/40 hover:bg-[#f0f5f1]/50 dark:hover:border-[#5e9a6b]/40'
+                  } p-8 text-center`}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept={ACCEPTED_EXTENSIONS}
+                    onChange={handleFileInput}
+                    className="sr-only"
+                  />
+                  <ImagePlus className={`mx-auto mb-3 h-8 w-8 ${isDragging ? 'text-[#2d6a4f] dark:text-[#5e9a6b]' : 'text-[var(--muted-foreground)]/40'}`} />
+                  <p className="text-sm font-medium text-[var(--foreground)] font-body">
+                    {t('landing.aiDemo.dropHint')}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--muted-foreground)]/60 font-body">
+                    {t('landing.aiDemo.supportedFormats')}
+                  </p>
+                </div>
+              ) : (
+                <div className="relative rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
+                  <img
+                    src={imagePreview}
+                    alt="Plant preview"
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="flex items-center justify-between p-3">
+                    <div className="min-w-0">
+                      <p className="text-xs font-medium text-[var(--foreground)] truncate font-body">{imageFile?.name}</p>
+                      <p className="text-[10px] text-[var(--muted-foreground)] font-body">{imageFile ? `${(imageFile.size / 1024 / 1024).toFixed(1)} MB` : ''}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                        className="rounded-md bg-[var(--muted)] p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); removeImage(); }}
+                        className="rounded-md bg-red-50 p-1.5 text-red-500 hover:bg-red-100 transition-colors dark:bg-red-950 dark:hover:bg-red-900"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept={ACCEPTED_EXTENSIONS}
+                    onChange={handleFileInput}
+                    className="sr-only"
+                  />
+                </div>
+              )}
+              {imageError && (
+                <p className="mt-1.5 text-xs text-red-500 font-body">{imageError}</p>
+              )}
+            </div>
+
             <div>
               <label className="mb-2 block text-sm font-medium text-[var(--foreground)] font-body">{t('landing.aiDemo.selectCrop')}</label>
               {crops.length > 0 && (
@@ -163,7 +334,21 @@ export function AiDemo() {
               />
             </div>
 
-            <Button className="w-full" onClick={handleDiagnose} disabled={diagnosing || !selectedCrop || symptoms.length < 5}>
+            {/* Usage Counter */}
+            {usage && (
+              <div className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--muted)]/50 px-3 py-2.5">
+                <span className="text-xs text-[var(--muted-foreground)] font-body">
+                  {t('landing.aiDemo.analysesRemaining', { remaining: usage.remaining, limit: usage.limit })}
+                </span>
+                {usage.remaining <= 1 && (
+                  <span className="text-[10px] text-[#c4704b] font-medium font-body">
+                    {t('landing.aiDemo.limitAlmostReached')}
+                  </span>
+                )}
+              </div>
+            )}
+
+            <Button className="w-full" onClick={handleDiagnose} disabled={!canDiagnose || !!error}>
               {diagnosing ? (
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('landing.aiDemo.diagnosing')}</>
               ) : (
@@ -192,6 +377,11 @@ export function AiDemo() {
               <div className="flex flex-col items-center justify-center py-12">
                 <AlertTriangle className="mb-3 h-8 w-8 text-amber-500" />
                 <p className="text-sm text-red-500 font-body">{error}</p>
+                {error.includes(t('landing.aiDemo.limitReached')) && (
+                  <Button variant="outline" className="mt-4" onClick={() => window.location.href = '/pricing'}>
+                    {t('landing.aiDemo.viewPlans')}
+                  </Button>
+                )}
               </div>
             )}
             {!diagnosing && !error && !result && (
@@ -272,7 +462,7 @@ export function AiDemo() {
                   </p>
                 </div>
 
-                <Button variant="outline" className="w-full" onClick={() => { setResult(null); setSymptoms(''); }}>
+                <Button variant="outline" className="w-full" onClick={handleReset}>
                   {t('landing.aiDemo.tryAnother')}
                 </Button>
               </div>

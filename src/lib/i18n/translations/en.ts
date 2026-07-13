@@ -439,6 +439,13 @@ export const en = {
       getStarted: 'Get Started',
       diagnosisFailed: 'Diagnosis failed',
       networkError: 'Network error. Please try again.',
+      uploadImage: 'Upload Plant Image',
+      imageTypeError: 'Please upload a valid image (JPG, PNG, or WebP)',
+      imageSizeError: 'Image must be under 10MB',
+      analysesRemaining: '{remaining} of {limit} analyses remaining this week',
+      limitAlmostReached: 'Almost at limit',
+      limitReached: 'Free tier limit reached',
+      viewPlans: 'View Plans',
     },
   },
 

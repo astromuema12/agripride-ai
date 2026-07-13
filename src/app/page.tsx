@@ -9,7 +9,7 @@ import {
   Sprout, FileSearch, ScrollText, TreePine,
   Globe, CheckCircle, Quote,
   TrendingUp, Users, DollarSign, Activity,
-  ChevronRight, ArrowUpRight, Minus,
+  ChevronRight, Star, ArrowUpRight, Minus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

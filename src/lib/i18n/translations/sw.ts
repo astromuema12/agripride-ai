@@ -441,6 +441,13 @@ export const sw: Translations = {
       getStarted: 'Anza Sasa',
       diagnosisFailed: 'Utambuzi umeshindwa',
       networkError: 'Hitilafu ya mtandao. Tafadhali jaribu tena.',
+      uploadImage: 'Pakia Picha ya Mmea',
+      imageTypeError: 'Tafadhali pakia picha sahihi (JPG, PNG, au WebP)',
+      imageSizeError: 'Picha lazima iwe chini ya 10MB',
+      analysesRemaining: '{remaining} kati ya {limit} uchambuzi uliobaki wiki hii',
+      limitAlmostReached: 'Karibu na kikomo',
+      limitReached: 'Kikomo cha kiwango cha bure kimefikiwa',
+      viewPlans: 'Angalia Mpango',
     },
   },
 
