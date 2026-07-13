@@ -9,7 +9,7 @@ import {
   Sprout, FileSearch, ScrollText, TreePine,
   Globe, CheckCircle, Quote,
   TrendingUp, Users, DollarSign, Activity,
-  ChevronRight, Star, ArrowUpRight, Minus,
+  ChevronRight, ArrowUpRight, Minus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -147,29 +147,6 @@ export default function HomePage() {
                 </Button>
               </motion.div>
 
-              {/* Trust signals */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                className="mt-12 sm:mt-16 flex items-center gap-6 text-xs text-[var(--muted-foreground)] font-body"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    {['#2d6a4f', '#c4704b', '#756a5c'].map((c, i) => (
-                      <div key={i} className="h-7 w-7 rounded-full border-2 border-[var(--background)]" style={{ backgroundColor: c }} />
-                    ))}
-                  </div>
-                  <span>15,000+ farmers</span>
-                </div>
-                <div className="h-4 w-px bg-[var(--border)]" />
-                <div className="flex items-center gap-1.5">
-                  <div className="flex gap-0.5">
-                    {[1,2,3,4,5].map(i => <Star key={i} className="h-3 w-3 fill-[#c4704b] text-[#c4704b]" />)}
-                  </div>
-                  <span>4.9/5 rating</span>
-                </div>
-              </motion.div>
             </motion.div>
 
             {/* Visual — 5 columns */}
@@ -206,14 +183,7 @@ export default function HomePage() {
                       <div className="text-xs font-semibold text-[#c4704b] font-body">47</div>
                       <div className="text-[10px] text-[var(--muted-foreground)] font-body">Counties</div>
                     </motion.div>
-                    <motion.div
-                      animate={{ y: [0, -6, 0] }}
-                      transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                      className="absolute top-1/2 -right-12 sm:-right-16 bg-[var(--card)] rounded-lg px-3 py-2 shadow-lg border border-[var(--border)]"
-                    >
-                      <div className="text-xs font-semibold text-[var(--foreground)] font-body">KES 50M+</div>
-                      <div className="text-[10px] text-[var(--muted-foreground)] font-body">Value tracked</div>
-                    </motion.div>
+
                   </div>
                 </div>
               </div>
