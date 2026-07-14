@@ -205,7 +205,7 @@ export default function AIAssistant() {
             <div className="min-w-0">
               <CardTitle className="text-base sm:text-lg">{t('assistant.title')}</CardTitle>
               <p className="text-xs text-[var(--muted-foreground)]">
-                {process.env.NEXT_PUBLIC_OPENAI_API_KEY ? t('assistant.poweredBy') : t('dashboard.aiInsights')}
+                {process.env.NEXT_PUBLIC_GEMINI_API_KEY ? t('assistant.poweredBy') : t('dashboard.aiInsights')}
               </p>
             </div>
           </div>

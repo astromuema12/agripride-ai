@@ -1,10 +1,12 @@
 import { NextRequest } from 'next/server';
+import { GoogleGenAI } from '@google/genai';
 import { diagnose, KNOWN_CROPS, GROWTH_STAGES } from '@/lib/diagnosis-engine';
 import { logger } from '@/lib/logger';
 import { getClientIdentifier, getUsage, recordUsage, usageResponse, FREE_TIER_LIMIT, WEEK_IN_MS } from '@/lib/demo-usage';
 import type { GrowthStage } from '@/types';
 
 const cropList = KNOWN_CROPS;
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 const SEVERITY_LEVELS = ['mild', 'moderate', 'severe', 'critical'] as const;
 
@@ -81,11 +83,23 @@ export async function POST(req: NextRequest) {
     const resetsAt = updatedEntries[0] ? new Date(updatedEntries[0].timestamp + WEEK_IN_MS).toISOString() : '';
     const usageData = { used: newUsed, limit: FREE_TIER_LIMIT, remaining: newRemaining, resetsAt };
 
-    const hasRealAI = !!process.env.OPENAI_API_KEY;
+    const hasRealAI = !!process.env.GEMINI_API_KEY;
     const startTime = Date.now();
+
+    logger.info('[ai/demo] Request', {
+      component: 'ai',
+      metadata: {
+        cropType,
+        hasImage: !!image,
+        hasGeminiKey: hasRealAI,
+        keyPrefix: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 6) + '...' : 'none',
+        model: GEMINI_MODEL,
+      },
+    });
 
     if (hasRealAI) {
       try {
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
         const stageInfo = growthStage && growthStage !== 'unknown' ? `\nCrop Growth Stage: ${growthStage}` : '';
         const hasImage = !!image;
         const symptomsInfo = symptoms ? `\nSymptoms reported by farmer: ${symptoms}` : '\nNo symptoms were described. Rely entirely on the image for your diagnosis.';
@@ -155,47 +169,33 @@ Respond in JSON format with:
   "missingInfo": ["A plant image would improve diagnostic accuracy"]
 }`;
 
-        const msgContent: { type: string; text?: string; image_url?: { url: string } }[] = [
-          { type: 'text', text: prompt },
-        ];
+        const contents = image
+          ? [
+              { text: prompt },
+              { inlineData: { mimeType: 'image/jpeg', data: (image.includes(',') ? image.split(',')[1] : image) } },
+            ]
+          : prompt;
 
-        if (image) {
-          const base64Data = image.includes(',') ? image.split(',')[1] : image;
-          msgContent.push({
-            type: 'image_url',
-            image_url: { url: `data:image/jpeg;base64,${base64Data}` },
-          });
-        }
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        const response = await ai.models.generateContent({
+          model: GEMINI_MODEL,
+          contents,
+          config: {
+            temperature: 0.3,
+            maxOutputTokens: 2048,
           },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [{ role: 'user', content: msgContent }],
-            response_format: { type: 'json_object' },
-          }),
         });
 
-        if (!response.ok) {
-          const errorText = await response.text().catch(() => 'Unknown error');
-          logger.error('OpenAI API error in demo', {
-            component: 'ai',
-            metadata: { status: response.status, error: errorText },
-          });
-          throw new Error(`OpenAI API error: ${response.status}`);
+        const rawText = response.text ?? '';
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          throw new Error('No JSON in Gemini response');
         }
-
-        const data = await response.json();
-        const result = JSON.parse(data.choices[0].message.content);
+        const result = JSON.parse(jsonMatch[0]);
         const duration = Date.now() - startTime;
 
         logger.info(`AI demo diagnosis completed in ${duration}ms`, {
           component: 'ai',
-          metadata: { cropType, model: 'gpt-4o-mini', duration },
+          metadata: { cropType, model: GEMINI_MODEL, duration },
         });
 
         return Response.json({
@@ -217,9 +217,15 @@ Respond in JSON format with:
           disclaimer: 'This is an AI-assisted diagnosis. Results should be verified by a local agricultural extension officer.',
         });
       } catch (error) {
+        const errDetail = error as { status?: number; message?: string; error?: { message?: string; code?: number; status?: string } };
         logger.error('AI demo diagnosis failed, falling back to local engine', {
           component: 'ai',
-          metadata: { error: error instanceof Error ? error.message : String(error) },
+          metadata: {
+            error: error instanceof Error ? error.message : String(error),
+            status: errDetail.status ?? errDetail.error?.code,
+            gcpStatus: errDetail.error?.status,
+            fullError: JSON.stringify(errDetail.error || error).substring(0, 1000),
+          },
         });
       }
     }

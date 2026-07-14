@@ -38,8 +38,8 @@ export async function GET() {
     checks.database = 'demo_mode';
   }
 
-  const hasOpenAI = !!process.env.OPENAI_API_KEY;
-  checks.ai = hasOpenAI ? 'configured' : 'demo_mode';
+  const hasGemini = !!process.env.GEMINI_API_KEY;
+  checks.ai = hasGemini ? 'configured' : 'demo_mode';
 
   const hasPaystack = !!(
     process.env.PAYSTACK_PUBLIC_KEY &&

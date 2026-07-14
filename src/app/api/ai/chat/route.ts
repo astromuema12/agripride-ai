@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
+import { GoogleGenAI } from '@google/genai';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
 import { getChatResponse } from '@/lib/ai-agents';
 import { withErrorHandling, parseBody, apiError } from '@/lib/api-utils';
@@ -17,6 +18,8 @@ const ChatSchema = z.object({
   userId: z.string().optional(),
   history: z.array(HistoryItemSchema).max(50).optional(),
 });
+
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 const SYSTEM_PROMPT = `You are AgriPride AI, an experienced agricultural extension officer and agronomist. Your purpose is to provide expert-level, practical agricultural guidance to farmers, agribusinesses, and agricultural stakeholders worldwide, with special expertise in African and East African agriculture.
 
@@ -111,7 +114,7 @@ async function handler(req: NextRequest) {
   })) ?? [];
   const startTime = Date.now();
 
-  const isDemoMode = !process.env.OPENAI_API_KEY;
+  const isDemoMode = !process.env.GEMINI_API_KEY;
 
   if (serverSupabase && !isDemoMode) {
     const { data: { session } } = await serverSupabase.auth.getSession();
@@ -138,77 +141,46 @@ async function handler(req: NextRequest) {
     ip_address: req.headers.get('x-forwarded-for') || undefined,
   });
 
-  const hasRealAI = !!process.env.OPENAI_API_KEY;
+  const hasRealAI = !!process.env.GEMINI_API_KEY;
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
       try {
         if (hasRealAI) {
-          const openAIMessages: { role: string; content: string }[] = [
-            { role: 'system', content: SYSTEM_PROMPT },
-            ...sanitizedHistory,
-            { role: 'user', content: message },
-          ];
+          const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-          const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-            },
-            body: JSON.stringify({
-              model: 'gpt-4o-mini',
-              messages: openAIMessages,
-              max_tokens: 2048,
-              temperature: 0.3,
-              stream: true,
-              stream_options: { include_usage: true },
-            }),
+          const geminiContents: { role: string; parts: { text: string }[] }[] = [];
+          for (const h of sanitizedHistory) {
+            geminiContents.push({
+              role: h.role === 'user' ? 'user' : 'model',
+              parts: [{ text: h.content }],
+            });
+          }
+          geminiContents.push({
+            role: 'user',
+            parts: [{ text: message }],
           });
 
-          if (!response.ok) {
-            const errorText = await response.text().catch(() => 'Unknown error');
-            logger.error('OpenAI streaming error', {
-              component: 'ai',
-              metadata: { status: response.status, error: errorText },
-            });
-            throw new Error(`OpenAI API error: ${response.status}`);
-          }
+          const response = await ai.models.generateContentStream({
+            model: GEMINI_MODEL,
+            contents: geminiContents,
+            config: {
+              systemInstruction: SYSTEM_PROMPT,
+              maxOutputTokens: 2048,
+              temperature: 0.3,
+            },
+          });
 
-          const reader = response.body?.getReader();
-          if (!reader) throw new Error('No response stream');
-
-          const decoder = new TextDecoder();
-          let buffer = '';
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
-            buffer = lines.pop() ?? '';
-
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6);
-                if (data === '[DONE]') continue;
-                try {
-                  const parsed = JSON.parse(data);
-                  const content = parsed.choices?.[0]?.delta?.content;
-                  if (content) {
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: content })}\n\n`));
-                  }
-                } catch {
-                  // skip malformed SSE lines
-                }
-              }
+          for await (const chunk of response) {
+            const text = chunk.text;
+            if (text) {
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
             }
           }
 
           const duration = Date.now() - startTime;
-          trackAiUsage('chat', duration, true, 'gpt-4o-mini', userId);
+          trackAiUsage('chat', duration, true, GEMINI_MODEL, userId);
         } else {
           const agentResponse = getChatResponse(message);
           const fullResponse = agentResponse.success && agentResponse.data
@@ -227,8 +199,12 @@ async function handler(req: NextRequest) {
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
       } catch (error) {
-        trackAiUsage('chat', Date.now() - startTime, false, hasRealAI ? 'gpt-4o-mini' : 'local-agent', userId);
+        trackAiUsage('chat', Date.now() - startTime, false, hasRealAI ? GEMINI_MODEL : 'local-agent', userId);
         await reportError(error, { userId, endpoint: 'ai/chat' });
+        logger.error('[ai/chat] Gemini streaming error', {
+          component: 'ai',
+          metadata: { error: error instanceof Error ? error.message : String(error) },
+        });
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: 'I apologize, but I encountered an error processing your request. Please try again.' })}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();

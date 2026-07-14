@@ -1,9 +1,19 @@
 import { NextRequest } from 'next/server';
+import { GoogleGenAI } from '@google/genai';
 import { logger } from '@/lib/logger';
 import { getClientIdentifier, getUsage, recordUsage, FREE_TIER_LIMIT, WEEK_IN_MS } from '@/lib/demo-usage';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const GEMINI_MODEL = 'gemini-2.5-flash';
+
+function getGeminiClient(): GoogleGenAI {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('MISSING_API_KEY');
+  }
+  return new GoogleGenAI({ apiKey });
+}
 
 export async function POST(req: NextRequest) {
   const startTime = Date.now();
@@ -12,7 +22,12 @@ export async function POST(req: NextRequest) {
     const identifier = getClientIdentifier(req);
     logger.info('[diagnose-image] Request received', {
       component: 'ai',
-      metadata: { identifier },
+      metadata: {
+        identifier,
+        hasGeminiKey: !!process.env.GEMINI_API_KEY,
+        keyPrefix: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 6) + '...' : 'none',
+        model: GEMINI_MODEL,
+      },
     });
 
     const entries = getUsage(identifier);
@@ -74,13 +89,18 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      logger.error('[diagnose-image] OPENAI_API_KEY not configured', { component: 'ai' });
-      return Response.json({
-        success: false,
-        error: 'Image diagnosis is not available. The AI service is not configured on this server. Please contact support.',
-      }, { status: 503 });
+    let ai: GoogleGenAI;
+    try {
+      ai = getGeminiClient();
+    } catch (err) {
+      if (err instanceof Error && err.message === 'MISSING_API_KEY') {
+        logger.error('[diagnose-image] GEMINI_API_KEY not configured', { component: 'ai' });
+        return Response.json({
+          success: false,
+          error: 'Missing GEMINI_API_KEY environment variable. Please set GEMINI_API_KEY in your Vercel environment variables.',
+        }, { status: 503 });
+      }
+      throw err;
     }
 
     logger.info('[diagnose-image] Reading image data', { component: 'ai' });
@@ -129,68 +149,90 @@ Respond ONLY with valid JSON in this exact format:
   ]
 }`;
 
-    logger.info('[diagnose-image] Sending request to OpenAI vision API', {
+    logger.info('[diagnose-image] Sending request to Gemini API', {
       component: 'ai',
-      metadata: { model: 'gpt-4o-mini' },
+      metadata: { model: GEMINI_MODEL },
     });
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'text', text: prompt },
-            { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64}` } },
-          ],
-        }],
-        response_format: { type: 'json_object' },
-        max_tokens: 1024,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => 'Could not read error response');
-      logger.error('[diagnose-image] OpenAI API error', {
-        component: 'ai',
-        metadata: {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText.substring(0, 500),
+    let rawContent: string;
+    try {
+      const response = await ai.models.generateContent({
+        model: GEMINI_MODEL,
+        contents: [
+          { text: prompt },
+          { inlineData: { mimeType, data: base64 } },
+        ],
+        config: {
+          temperature: 0.3,
+          maxOutputTokens: 1024,
         },
       });
+
+      rawContent = response.text ?? '';
+    } catch (err: unknown) {
+      const apiErr = err as { status?: number; message?: string; name?: string; error?: { message?: string; code?: number; status?: string } };
+      const status = apiErr.status ?? apiErr.error?.code ?? 500;
+      const msg = apiErr.message ?? apiErr.error?.message ?? String(err);
+      const errStatus = apiErr.error?.status ?? 'UNKNOWN';
+
+      logger.error('[diagnose-image] Gemini API error', {
+        component: 'ai',
+        metadata: {
+          status,
+          gcpStatus: errStatus,
+          message: msg.substring(0, 500),
+          fullError: JSON.stringify(apiErr.error || apiErr).substring(0, 1000),
+          model: GEMINI_MODEL,
+          hasKey: !!process.env.GEMINI_API_KEY,
+        },
+      });
+
+      if (status === 400 || msg.includes('API key not valid') || msg.includes('INVALID_ARGUMENT')) {
+        return Response.json({
+          success: false,
+          error: 'Invalid GEMINI_API_KEY. Please verify your API key in Vercel environment variables.',
+        }, { status: 401 });
+      }
+
+      if (status === 429 || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Rate limit')) {
+        return Response.json({
+          success: false,
+          error: 'Rate limit exceeded. Please try again later.',
+        }, { status: 429 });
+      }
+
+      if (status === 403 || msg.includes('PERMISSION_DENIED')) {
+        return Response.json({
+          success: false,
+          error: 'Gemini API permission denied. Check that your API key has the correct permissions.',
+        }, { status: 403 });
+      }
+
       return Response.json({
         success: false,
-        error: `AI analysis failed (HTTP ${response.status}). ${response.status === 401 ? 'Invalid API key.' : response.status === 429 ? 'Rate limited. Please try again later.' : 'Please try again.'}`,
-      }, { status: response.status === 401 ? 401 : response.status === 429 ? 429 : 502 });
+        error: `Gemini request failed (${status}). ${msg.includes('SAFETY') ? 'The image was blocked by safety filters. Please try a different image.' : 'Please try again.'}`,
+      }, { status: 502 });
     }
 
-    logger.info('[diagnose-image] OpenAI response received, parsing', { component: 'ai' });
-
-    const data = await response.json();
-    const rawContent = data.choices?.[0]?.message?.content;
-
-    if (!rawContent) {
-      logger.error('[diagnose-image] Empty response from OpenAI', {
-        component: 'ai',
-        metadata: { data: JSON.stringify(data).substring(0, 500) },
-      });
+    if (!rawContent || rawContent.trim().length === 0) {
+      logger.error('[diagnose-image] Empty response from Gemini', { component: 'ai' });
       return Response.json({
         success: false,
         error: 'AI returned an empty response. Please try uploading a clearer image.',
       }, { status: 502 });
     }
 
+    logger.info('[diagnose-image] Gemini response received, parsing', { component: 'ai' });
+
     let result: Record<string, unknown>;
     try {
-      result = JSON.parse(rawContent);
+      const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('No JSON object found in response');
+      }
+      result = JSON.parse(jsonMatch[0]);
     } catch (parseError) {
-      logger.error('[diagnose-image] Failed to parse OpenAI JSON response', {
+      logger.error('[diagnose-image] Failed to parse Gemini JSON response', {
         component: 'ai',
         metadata: {
           rawContent: rawContent.substring(0, 500),
@@ -217,7 +259,7 @@ Respond ONLY with valid JSON in this exact format:
         confidence,
         severity,
         duration: `${duration}ms`,
-        model: 'gpt-4o-mini',
+        model: GEMINI_MODEL,
       },
     });
 
