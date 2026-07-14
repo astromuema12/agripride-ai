@@ -6,6 +6,43 @@ import { getClientIdentifier, getUsage, recordUsage, FREE_TIER_LIMIT, WEEK_IN_MS
 const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_TIMEOUT_MS = 30_000;
+const MAX_RETRIES = 2;
+const RETRY_DELAYS = [1000, 2000];
+
+type ErrorCode = 'rate_limit' | 'service_unavailable' | 'connection_error' | 'unexpected_error' | 'safety_blocked' | 'invalid_key';
+
+function classifyGeminiError(status: number, message: string): { code: ErrorCode; httpStatus: number } {
+  if (status === 429 || message.includes('RESOURCE_EXHAUSTED') || message.includes('Rate limit')) {
+    return { code: 'rate_limit', httpStatus: 429 };
+  }
+  if (status === 400 || message.includes('API key not valid') || message.includes('INVALID_ARGUMENT')) {
+    return { code: 'invalid_key', httpStatus: 502 };
+  }
+  if (message.includes('SAFETY') || message.includes('blocked')) {
+    return { code: 'safety_blocked', httpStatus: 422 };
+  }
+  if (status === 403 || message.includes('PERMISSION_DENIED')) {
+    return { code: 'invalid_key', httpStatus: 502 };
+  }
+  if (status >= 500) {
+    return { code: 'service_unavailable', httpStatus: 502 };
+  }
+  return { code: 'unexpected_error', httpStatus: 502 };
+}
+
+function isRetryable(code: ErrorCode): boolean {
+  return code === 'service_unavailable' || code === 'connection_error';
+}
+
+const FRIENDLY_MESSAGES: Record<ErrorCode, string> = {
+  rate_limit: 'Our AI service is temporarily busy. Please wait a moment and try again.',
+  service_unavailable: 'The AI service is temporarily unavailable. Please try again shortly.',
+  connection_error: 'Could not reach the AI service. Please check your connection and try again.',
+  unexpected_error: 'Something went wrong while analyzing the image. Please try again.',
+  safety_blocked: 'The image was blocked by content filters. Please try a different image.',
+  invalid_key: 'The AI service is not properly configured. Please contact support.',
+};
 
 function getGeminiClient(): GoogleGenAI {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -97,7 +134,8 @@ export async function POST(req: NextRequest) {
         logger.error('[diagnose-image] GEMINI_API_KEY not configured', { component: 'ai' });
         return Response.json({
           success: false,
-          error: 'Missing GEMINI_API_KEY environment variable. Please set GEMINI_API_KEY in your Vercel environment variables.',
+          error: 'The AI service is not properly configured. Please contact support.',
+          errorCode: 'invalid_key',
         }, { status: 503 });
       }
       throw err;
@@ -154,64 +192,68 @@ Respond ONLY with valid JSON in this exact format:
       metadata: { model: GEMINI_MODEL },
     });
 
-    let rawContent: string;
-    try {
-      const response = await ai.models.generateContent({
-        model: GEMINI_MODEL,
-        contents: [
-          { text: prompt },
-          { inlineData: { mimeType, data: base64 } },
-        ],
-        config: {
-          temperature: 0.3,
-          maxOutputTokens: 1024,
-        },
-      });
+    let rawContent = '';
+    let lastError: { code: ErrorCode; httpStatus: number } | null = null;
 
-      rawContent = response.text ?? '';
-    } catch (err: unknown) {
-      const apiErr = err as { status?: number; message?: string; name?: string; error?: { message?: string; code?: number; status?: string } };
-      const status = apiErr.status ?? apiErr.error?.code ?? 500;
-      const msg = apiErr.message ?? apiErr.error?.message ?? String(err);
-      const errStatus = apiErr.error?.status ?? 'UNKNOWN';
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      if (attempt > 0) {
+        const delay = RETRY_DELAYS[attempt - 1] || 2000;
+        logger.info(`[diagnose-image] Retry attempt ${attempt}/${MAX_RETRIES} after ${delay}ms`, { component: 'ai' });
+        await new Promise((r) => setTimeout(r, delay));
+      }
 
-      logger.error('[diagnose-image] Gemini API error', {
-        component: 'ai',
-        metadata: {
-          status,
-          gcpStatus: errStatus,
-          message: msg.substring(0, 500),
-          fullError: JSON.stringify(apiErr.error || apiErr).substring(0, 1000),
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+
+        const response = await ai.models.generateContent({
           model: GEMINI_MODEL,
-          hasKey: !!process.env.GEMINI_API_KEY,
-        },
-      });
+          contents: [
+            { text: prompt },
+            { inlineData: { mimeType, data: base64 } },
+          ],
+          config: {
+            temperature: 0.3,
+            maxOutputTokens: 1024,
+          },
+        });
 
-      if (status === 400 || msg.includes('API key not valid') || msg.includes('INVALID_ARGUMENT')) {
-        return Response.json({
-          success: false,
-          error: 'Invalid GEMINI_API_KEY. Please verify your API key in Vercel environment variables.',
-        }, { status: 401 });
+        clearTimeout(timeoutId);
+        rawContent = response.text ?? '';
+        lastError = null;
+        break;
+      } catch (err: unknown) {
+        const apiErr = err as { status?: number; message?: string; name?: string; error?: { message?: string; code?: number; status?: string } };
+        const status = apiErr.status ?? apiErr.error?.code ?? 500;
+        const msg = apiErr.message ?? apiErr.error?.message ?? String(err);
+        const errStatus = apiErr.error?.status ?? 'UNKNOWN';
+
+        const classified = classifyGeminiError(status, msg);
+        lastError = classified;
+
+        logger.error('[diagnose-image] Gemini API error', {
+          component: 'ai',
+          metadata: {
+            attempt,
+            status,
+            gcpStatus: errStatus,
+            errorCode: classified.code,
+            message: msg.substring(0, 300),
+            fullError: JSON.stringify(apiErr.error || apiErr).substring(0, 800),
+            model: GEMINI_MODEL,
+          },
+        });
+
+        if (!isRetryable(classified.code)) break;
       }
+    }
 
-      if (status === 429 || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Rate limit')) {
-        return Response.json({
-          success: false,
-          error: 'Rate limit exceeded. Please try again later.',
-        }, { status: 429 });
-      }
-
-      if (status === 403 || msg.includes('PERMISSION_DENIED')) {
-        return Response.json({
-          success: false,
-          error: 'Gemini API permission denied. Check that your API key has the correct permissions.',
-        }, { status: 403 });
-      }
-
+    if (lastError) {
       return Response.json({
         success: false,
-        error: `Gemini request failed (${status}). ${msg.includes('SAFETY') ? 'The image was blocked by safety filters. Please try a different image.' : 'Please try again.'}`,
-      }, { status: 502 });
+        error: FRIENDLY_MESSAGES[lastError.code],
+        errorCode: lastError.code,
+      }, { status: lastError.httpStatus });
     }
 
     if (!rawContent || rawContent.trim().length === 0) {
@@ -310,14 +352,14 @@ Respond ONLY with valid JSON in this exact format:
     return Response.json(diagnosisResponse);
   } catch (error) {
     const duration = Date.now() - startTime;
-    const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error('[diagnose-image] Unhandled error', {
       component: 'ai',
-      metadata: { error: errorMessage, duration: `${duration}ms` },
+      metadata: { error: error instanceof Error ? error.message : String(error), duration: `${duration}ms` },
     });
     return Response.json({
       success: false,
-      error: `Image diagnosis failed: ${errorMessage}`,
+      error: 'An unexpected error occurred. Please try again.',
+      errorCode: 'unexpected_error',
     }, { status: 500 });
   }
 }

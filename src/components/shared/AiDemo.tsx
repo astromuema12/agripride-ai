@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Sprout, AlertTriangle, Shield, Loader2, Scan, HelpCircle, ImagePlus, X, RefreshCw, Camera, Circle } from 'lucide-react';
+import { Sprout, AlertTriangle, Shield, Loader2, Scan, HelpCircle, ImagePlus, X, RefreshCw, Camera, Circle, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -89,10 +89,27 @@ function compressImage(file: File): Promise<File> {
         COMPRESSION_QUALITY,
       );
     };
-    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
-    img.src = url;
+  img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+  img.src = url;
   });
 }
+
+async function hashImage(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const dataBuffer = encoder.encode(data);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
+  rate_limit: 'Our AI service is temporarily busy. Please wait a moment and try again.',
+  service_unavailable: 'The AI service is temporarily unavailable. Please try again shortly.',
+  connection_error: 'Could not reach the AI service. Please check your connection and try again.',
+  unexpected_error: 'Something went wrong while analyzing the image. Please try again.',
+  safety_blocked: 'The image was blocked by content filters. Please try a different image.',
+  invalid_key: 'The AI service is not properly configured. Please contact support.',
+};
 
 export function AiDemo() {
   const { t } = useI18n();
@@ -120,14 +137,20 @@ export function AiDemo() {
 
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
+  const [cameraLoading, setCameraLoading] = useState(false);
   const [cameraError, setCameraError] = useState('');
   const [capturedFrame, setCapturedFrame] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
 
   const [usage, setUsage] = useState<UsageInfo | null>(null);
   const [analyzingProgress, setAnalyzingProgress] = useState(0);
   const [imageDiagnosing, setImageDiagnosing] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const [statusMessage, setStatusMessage] = useState('');
+  const diagnosisCacheRef = useRef<Map<string, DemoResult>>(new Map());
+  const lastRequestRef = useRef<{ type: 'demo' | 'image'; params: Record<string, unknown> } | null>(null);
 
   useEffect(() => {
     fetch('/api/ai/demo').then((r) => r.json()).then((res) => {
@@ -144,13 +167,16 @@ export function AiDemo() {
   }, []);
 
   const stopCamera = useCallback(() => {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach((track) => track.stop());
-      setCameraStream(null);
+    const stream = cameraStreamRef.current;
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      cameraStreamRef.current = null;
     }
+    setCameraStream(null);
     setCameraActive(false);
+    setCameraLoading(false);
     setCapturedFrame(null);
-  }, [cameraStream]);
+  }, []);
 
   const handleFile = useCallback(async (file: File) => {
     setImageError('');
@@ -203,10 +229,25 @@ export function AiDemo() {
   const openCamera = useCallback(async () => {
     setCameraError('');
     setImageError('');
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraError(t('landing.aiDemo.cameraUnavailable'));
+
+    const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!isSecure) {
+      const msg = 'Camera requires HTTPS. Please access this page over a secure connection.';
+      setCameraError(msg);
+      if (process.env.NODE_ENV === 'development') console.warn('[Camera] Blocked: not HTTPS', window.location.href);
       return;
     }
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      const msg = 'Camera is not supported in this browser. Please use file upload instead.';
+      setCameraError(msg);
+      if (process.env.NODE_ENV === 'development') console.warn('[Camera] getUserMedia not supported');
+      return;
+    }
+
+    setCameraLoading(true);
+    if (process.env.NODE_ENV === 'development') console.log('[Camera] Requesting permission...');
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -216,19 +257,78 @@ export function AiDemo() {
         },
         audio: false,
       });
+
+      if (process.env.NODE_ENV === 'development') console.log('[Camera] Permission granted, tracks:', stream.getTracks().length);
+
+      cameraStreamRef.current = stream;
       setCameraStream(stream);
       setCameraActive(true);
+      setCameraLoading(false);
       setCapturedFrame(null);
+
       requestAnimationFrame(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.play().catch(() => {});
         }
       });
-    } catch {
-      setCameraError(t('landing.aiDemo.cameraDenied'));
+    } catch (err: unknown) {
+      setCameraLoading(false);
+      const error = err as DOMException;
+
+      if (process.env.NODE_ENV === 'development') console.error('[Camera] Error:', error.name, error.message);
+
+      switch (error.name) {
+        case 'NotAllowedError':
+          setCameraError('Camera access was denied. Please allow camera access in your browser settings and try again.');
+          break;
+        case 'NotFoundError':
+          setCameraError('No camera found on this device. Please use file upload instead.');
+          break;
+        case 'NotReadableError':
+          setCameraError('Camera is in use by another app. Please close other camera apps and try again.');
+          break;
+        case 'OverconstrainedError':
+          setCameraError('Camera does not meet the required constraints. Trying with default settings...');
+          tryFallbackCamera();
+          return;
+        case 'AbortError':
+          setCameraError('Camera request was cancelled. Please try again.');
+          break;
+        case 'SecurityError':
+          setCameraError('Camera access blocked for security reasons. Please use HTTPS or check browser settings.');
+          break;
+        default:
+          setCameraError('Could not access camera. Please use file upload instead.');
+      }
     }
-  }, [t]);
+  }, []);
+
+  const tryFallbackCamera = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      cameraStreamRef.current = stream;
+      setCameraStream(stream);
+      setCameraActive(true);
+      setCameraLoading(false);
+      setCapturedFrame(null);
+      setCameraError('');
+      requestAnimationFrame(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(() => {});
+        }
+      });
+    } catch (err: unknown) {
+      setCameraLoading(false);
+      const error = err as DOMException;
+      if (error.name === 'NotAllowedError') {
+        setCameraError('Camera access was denied. Please allow camera access in your browser settings and try again.');
+      } else {
+        setCameraError('Could not access camera. Please use file upload instead.');
+      }
+    }
+  }, []);
 
   const capturePhoto = useCallback(() => {
     if (!videoRef.current || !canvasRef.current) return;
@@ -241,12 +341,14 @@ export function AiDemo() {
     ctx.drawImage(video, 0, 0);
     const dataUrl = canvas.toDataURL('image/jpeg', COMPRESSION_QUALITY);
     setCapturedFrame(dataUrl);
-    if (cameraStream) {
-      cameraStream.getTracks().forEach((track) => track.stop());
-      setCameraStream(null);
-      setCameraActive(false);
+    const stream = cameraStreamRef.current;
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      cameraStreamRef.current = null;
     }
-  }, [cameraStream]);
+    setCameraStream(null);
+    setCameraActive(false);
+  }, []);
 
   const confirmCapture = useCallback(async () => {
     if (!capturedFrame) return;
@@ -268,14 +370,41 @@ export function AiDemo() {
     setCapturedFrame(null);
   }, [stopCamera]);
 
-  const canDiagnose = selectedCrop && (symptoms.length >= 5 || imageFile) && !diagnosing;
+  const canDiagnose = selectedCrop && (symptoms.length >= 5 || imageFile) && !diagnosing && !imageDiagnosing;
 
-  const handleDiagnose = async () => {
+  const handleDiagnose = async (isRetry = false) => {
     if (!selectedCrop || (symptoms.length < 5 && !imageFile) || diagnosing) return;
     setDiagnosing(true);
     setError('');
-    setResult(null);
+    setStatusMessage('');
+    if (!isRetry) {
+      setResult(null);
+      setRetryCount(0);
+      lastRequestRef.current = null;
+    }
     setAnalyzingProgress(0);
+
+    // Check cache for same image
+    if (imageFile) {
+      try {
+        const reader = new FileReader();
+        const imageDataUrl = await new Promise<string>((resolve, reject) => {
+          reader.onload = (e) => resolve(e.target?.result as string);
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(imageFile);
+        });
+        const imageHash = await hashImage(imageDataUrl);
+        const cached = diagnosisCacheRef.current.get(imageHash);
+        if (cached) {
+          setResult(cached);
+          setDiagnosing(false);
+          setStatusMessage('Loaded from cache');
+          return;
+        }
+      } catch {
+        // Cache lookup failed, continue with normal request
+      }
+    }
 
     const progressInterval = setInterval(() => {
       setAnalyzingProgress((prev) => {
@@ -293,6 +422,10 @@ export function AiDemo() {
           reader.onerror = () => reject(new Error('Failed to read file'));
           reader.readAsDataURL(imageFile);
         });
+      }
+
+      if (!isRetry) {
+        lastRequestRef.current = { type: 'demo', params: { cropType: selectedCrop, symptoms, growthStage: selectedStage, image: imageBase64 } };
       }
 
       setAnalyzingProgress(30);
@@ -316,11 +449,28 @@ export function AiDemo() {
       if (data.success) {
         setResult(data.data);
         if (data.usage) setUsage(data.usage);
+        // Cache the result if image was used
+        if (imageFile && imageBase64) {
+          try {
+            const hash = await hashImage(imageBase64);
+            diagnosisCacheRef.current.set(hash, data.data);
+          } catch {
+            // Cache store failed silently
+          }
+        }
+        setRetryCount(0);
+        setStatusMessage('');
       } else {
-        setError(data.error || t('landing.aiDemo.diagnosisFailed'));
+        const errorCode = data.errorCode as string | undefined;
+        const friendlyMsg = errorCode && FRIENDLY_ERROR_MESSAGES[errorCode]
+          ? FRIENDLY_ERROR_MESSAGES[errorCode]
+          : data.error || 'Diagnosis failed. Please try again.';
+        setError(friendlyMsg);
+        setRetryCount((c) => c + 1);
       }
     } catch {
-      setError(t('landing.aiDemo.networkError'));
+      setError('Could not connect to the service. Please check your internet and try again.');
+      setRetryCount((c) => c + 1);
     } finally {
       clearInterval(progressInterval);
       setDiagnosing(false);
@@ -328,13 +478,42 @@ export function AiDemo() {
     }
   };
 
-  const handleDiagnoseImage = async () => {
+  const handleDiagnoseImage = async (isRetry = false) => {
     if (!imageFile || imageDiagnosing) return;
     setImageDiagnosing(true);
     setError('');
-    setResult(null);
+    setStatusMessage('');
+    if (!isRetry) {
+      setResult(null);
+      setRetryCount(0);
+      lastRequestRef.current = null;
+    }
+
+    // Check cache
+    try {
+      const reader = new FileReader();
+      const imageDataUrl = await new Promise<string>((resolve, reject) => {
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsDataURL(imageFile);
+      });
+      const imageHash = await hashImage(imageDataUrl);
+      const cached = diagnosisCacheRef.current.get(imageHash);
+      if (cached) {
+        setResult(cached);
+        setImageDiagnosing(false);
+        setStatusMessage('Loaded from cache');
+        return;
+      }
+    } catch {
+      // Cache lookup failed, continue
+    }
 
     try {
+      if (!isRetry) {
+        lastRequestRef.current = { type: 'image', params: {} };
+      }
+
       const formData = new FormData();
       formData.append('image', imageFile);
 
@@ -347,7 +526,7 @@ export function AiDemo() {
 
       if (data.success) {
         const symptomsObserved = Array.isArray(data.data.symptoms_observed) ? data.data.symptoms_observed : [];
-        setResult({
+        const resultData: DemoResult = {
           crop: 'image-analysis',
           primaryDiagnosis: {
             name: data.data.disease,
@@ -372,13 +551,35 @@ export function AiDemo() {
           requestMoreInfo: data.data.confidence < 0.5,
           missingInfo: data.data.confidence < 0.5 ? ['A clearer image or symptom description would improve accuracy'] : [],
           imageAnalyzed: data.data.imageAnalyzed,
-        });
+        };
+        setResult(resultData);
         if (data.usage) setUsage(data.usage);
+        // Cache the result
+        try {
+          const reader2 = new FileReader();
+          const imgData = await new Promise<string>((resolve, reject) => {
+            reader2.onload = (e) => resolve(e.target?.result as string);
+            reader2.onerror = () => reject(new Error('Failed to read file'));
+            reader2.readAsDataURL(imageFile);
+          });
+          const hash = await hashImage(imgData);
+          diagnosisCacheRef.current.set(hash, resultData);
+        } catch {
+          // Cache store failed silently
+        }
+        setRetryCount(0);
+        setStatusMessage('');
       } else {
-        setError(data.error || t('landing.aiDemo.imageDiagnosisFailed'));
+        const errorCode = data.errorCode as string | undefined;
+        const friendlyMsg = errorCode && FRIENDLY_ERROR_MESSAGES[errorCode]
+          ? FRIENDLY_ERROR_MESSAGES[errorCode]
+          : data.error || 'Image diagnosis failed. Please try again.';
+        setError(friendlyMsg);
+        setRetryCount((c) => c + 1);
       }
     } catch {
-      setError(t('landing.aiDemo.networkError'));
+      setError('Could not connect to the service. Please check your internet and try again.');
+      setRetryCount((c) => c + 1);
     } finally {
       setImageDiagnosing(false);
     }
@@ -387,8 +588,22 @@ export function AiDemo() {
   const handleReset = () => {
     setResult(null);
     setSymptoms('');
+    setError('');
+    setStatusMessage('');
+    setRetryCount(0);
+    lastRequestRef.current = null;
     removeImage();
   };
+
+  const handleRetry = useCallback(() => {
+    const last = lastRequestRef.current;
+    if (!last) return;
+    if (last.type === 'image') {
+      handleDiagnoseImage(true);
+    } else {
+      handleDiagnose(true);
+    }
+  }, [handleDiagnose, handleDiagnoseImage]);
 
   return (
     <section className="py-16 sm:py-20 lg:py-28">
@@ -521,7 +736,7 @@ export function AiDemo() {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={() => !cameraLoading && fileInputRef.current?.click()}
                     className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all duration-200 ${
                       isDragging
                         ? 'border-[#2d6a4f] bg-[#f0f5f1] dark:border-[#5e9a6b] dark:bg-[#1a2e20]'
@@ -550,15 +765,20 @@ export function AiDemo() {
                       variant="outline"
                       className="flex-1"
                       onClick={openCamera}
+                      disabled={cameraLoading}
                     >
-                      <Camera className="mr-1.5 h-4 w-4" />
-                      {t('landing.aiDemo.takePhoto')}
+                      {cameraLoading ? (
+                        <><Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Requesting...</>
+                      ) : (
+                        <><Camera className="mr-1.5 h-4 w-4" /> {t('landing.aiDemo.takePhoto')}</>
+                      )}
                     </Button>
                     <Button
                       type="button"
                       variant="outline"
                       className="flex-1"
                       onClick={() => cameraInputRef.current?.click()}
+                      disabled={cameraLoading}
                     >
                       <Camera className="mr-1.5 h-4 w-4" />
                       {t('landing.aiDemo.quickCapture')}
@@ -574,15 +794,24 @@ export function AiDemo() {
                   {cameraError && (
                     <div className="flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 p-2.5 dark:bg-amber-950 dark:border-amber-800">
                       <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0 mt-0.5" />
-                      <div>
+                      <div className="flex-1">
                         <p className="text-xs text-amber-700 font-body dark:text-amber-300">{cameraError}</p>
-                        <button
-                          type="button"
-                          onClick={() => cameraInputRef.current?.click()}
-                          className="mt-1 text-xs font-medium text-amber-800 underline underline-offset-2 hover:text-amber-900 font-body dark:text-amber-200"
-                        >
-                          {t('landing.aiDemo.useFileUpload')}
-                        </button>
+                        <div className="flex items-center gap-3 mt-1.5">
+                          <button
+                            type="button"
+                            onClick={openCamera}
+                            className="text-xs font-medium text-amber-800 underline underline-offset-2 hover:text-amber-900 font-body dark:text-amber-200"
+                          >
+                            Retry Camera
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => cameraInputRef.current?.click()}
+                            className="text-xs font-medium text-amber-800 underline underline-offset-2 hover:text-amber-900 font-body dark:text-amber-200"
+                          >
+                            {t('landing.aiDemo.useFileUpload')}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -597,8 +826,8 @@ export function AiDemo() {
               <Button
                 type="button"
                 className="w-full bg-[#2d6a4f] hover:bg-[#1a3a2a] text-white dark:bg-[#5e9a6b] dark:hover:bg-[#4a8a5a] dark:text-[#1a1a1a]"
-                onClick={handleDiagnoseImage}
-                disabled={imageDiagnosing}
+                onClick={() => handleDiagnoseImage(false)}
+                disabled={imageDiagnosing || diagnosing}
               >
                 {imageDiagnosing ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('landing.aiDemo.diagnosingImage')}</>
@@ -669,7 +898,7 @@ export function AiDemo() {
               </div>
             )}
 
-            <Button className="w-full" onClick={handleDiagnose} disabled={!canDiagnose || !!error}>
+            <Button className="w-full" onClick={() => handleDiagnose(false)} disabled={!canDiagnose || diagnosing || imageDiagnosing}>
               {diagnosing ? (
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('landing.aiDemo.diagnosing')}</>
               ) : imageFile ? (
@@ -713,10 +942,21 @@ export function AiDemo() {
             {error && (
               <div className="flex flex-col items-center justify-center py-12">
                 <AlertTriangle className="mb-3 h-8 w-8 text-amber-500" />
-                <p className="text-sm text-red-500 font-body">{error}</p>
-                {error.includes(t('landing.aiDemo.limitReached')) && (
+                <p className="text-sm text-[var(--muted-foreground)] font-body text-center max-w-xs">{error}</p>
+                {retryCount < 3 && lastRequestRef.current && (
+                  <Button variant="outline" className="mt-4" onClick={handleRetry}>
+                    <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+                    Try Again
+                  </Button>
+                )}
+                {error.includes('limit') && (
                   <Button variant="outline" className="mt-4" onClick={() => window.location.href = '/pricing'}>
                     {t('landing.aiDemo.viewPlans')}
+                  </Button>
+                )}
+                {!lastRequestRef.current && (
+                  <Button variant="outline" className="mt-4" onClick={handleReset}>
+                    Start Over
                   </Button>
                 )}
               </div>
@@ -725,6 +965,12 @@ export function AiDemo() {
               <div className="flex flex-col items-center justify-center py-12">
                 <Sprout className="mb-3 h-8 w-8 text-[var(--border)]" />
                 <p className="text-sm text-[var(--muted-foreground)] font-body">{t('landing.aiDemo.emptyState')}</p>
+              </div>
+            )}
+            {!diagnosing && !error && result && statusMessage && (
+              <div className="mb-3 flex items-center gap-1.5 text-[10px] text-[#2d6a4f] dark:text-[#5e9a6b] font-body">
+                <div className="h-1.5 w-1.5 rounded-full bg-[#2d6a4f] dark:bg-[#5e9a6b]" />
+                {statusMessage}
               </div>
             )}
             {result && (

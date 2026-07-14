@@ -7,8 +7,33 @@ import type { GrowthStage } from '@/types';
 
 const cropList = KNOWN_CROPS;
 const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_TIMEOUT_MS = 30_000;
+const MAX_RETRIES = 2;
+const RETRY_DELAYS = [1000, 2000];
 
 const SEVERITY_LEVELS = ['mild', 'moderate', 'severe', 'critical'] as const;
+
+type ErrorCode = 'rate_limit' | 'service_unavailable' | 'connection_error' | 'unexpected_error' | 'safety_blocked' | 'invalid_key';
+
+function classifyGeminiError(status: number, message: string): { code: ErrorCode; httpStatus: number } {
+  if (status === 429 || message.includes('RESOURCE_EXHAUSTED') || message.includes('Rate limit')) {
+    return { code: 'rate_limit', httpStatus: 429 };
+  }
+  if (status === 400 || message.includes('API key not valid') || message.includes('INVALID_ARGUMENT')) {
+    return { code: 'invalid_key', httpStatus: 502 };
+  }
+  if (message.includes('SAFETY') || message.includes('blocked')) {
+    return { code: 'safety_blocked', httpStatus: 422 };
+  }
+  if (status >= 500) {
+    return { code: 'service_unavailable', httpStatus: 502 };
+  }
+  return { code: 'unexpected_error', httpStatus: 502 };
+}
+
+function isRetryable(code: ErrorCode): boolean {
+  return code === 'service_unavailable' || code === 'connection_error';
+}
 
 function inferSeverity(confidence: number, likelihood: string): 'mild' | 'moderate' | 'severe' | 'critical' {
   if (confidence >= 0.80 && likelihood === 'high') return 'severe';
@@ -98,13 +123,22 @@ export async function POST(req: NextRequest) {
     });
 
     if (hasRealAI) {
-      try {
-        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-        const stageInfo = growthStage && growthStage !== 'unknown' ? `\nCrop Growth Stage: ${growthStage}` : '';
-        const hasImage = !!image;
-        const symptomsInfo = symptoms ? `\nSymptoms reported by farmer: ${symptoms}` : '\nNo symptoms were described. Rely entirely on the image for your diagnosis.';
-        const prompt = hasImage
-          ? `You are an expert crop disease diagnostician. Analyze the plant image${symptoms ? ' along with the reported symptoms' : ''} and provide a comprehensive diagnosis.
+      let lastGeminiError: { code: ErrorCode; httpStatus: number } | null = null;
+
+      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        if (attempt > 0) {
+          const delay = RETRY_DELAYS[attempt - 1] || 2000;
+          logger.info(`[ai/demo] Retry attempt ${attempt}/${MAX_RETRIES} after ${delay}ms`, { component: 'ai' });
+          await new Promise((r) => setTimeout(r, delay));
+        }
+
+        try {
+          const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+          const stageInfo = growthStage && growthStage !== 'unknown' ? `\nCrop Growth Stage: ${growthStage}` : '';
+          const hasImage = !!image;
+          const symptomsInfo = symptoms ? `\nSymptoms reported by farmer: ${symptoms}` : '\nNo symptoms were described. Rely entirely on the image for your diagnosis.';
+          const prompt = hasImage
+            ? `You are an expert crop disease diagnostician. Analyze the plant image${symptoms ? ' along with the reported symptoms' : ''} and provide a comprehensive diagnosis.
 
 Crop: ${cropType}${stageInfo}${symptomsInfo}
 
@@ -137,7 +171,7 @@ Respond in JSON format with:
   "requestMoreInfo": false,
   "missingInfo": []
 }`
-          : `You are an expert crop disease diagnostician. Based on the reported symptoms, provide a diagnosis.
+            : `You are an expert crop disease diagnostician. Based on the reported symptoms, provide a diagnosis.
 
 Crop: ${cropType}${stageInfo}
 Symptoms reported by farmer: ${symptoms}
@@ -169,65 +203,85 @@ Respond in JSON format with:
   "missingInfo": ["A plant image would improve diagnostic accuracy"]
 }`;
 
-        const contents = image
-          ? [
-              { text: prompt },
-              { inlineData: { mimeType: 'image/jpeg', data: (image.includes(',') ? image.split(',')[1] : image) } },
-            ]
-          : prompt;
+          const contents = image
+            ? [
+                { text: prompt },
+                { inlineData: { mimeType: 'image/jpeg', data: (image.includes(',') ? image.split(',')[1] : image) } },
+              ]
+            : prompt;
 
-        const response = await ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents,
-          config: {
-            temperature: 0.3,
-            maxOutputTokens: 2048,
-          },
-        });
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
 
-        const rawText = response.text ?? '';
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-          throw new Error('No JSON in Gemini response');
+          const response = await ai.models.generateContent({
+            model: GEMINI_MODEL,
+            contents,
+            config: {
+              temperature: 0.3,
+              maxOutputTokens: 2048,
+            },
+          });
+
+          clearTimeout(timeoutId);
+          const rawText = response.text ?? '';
+          const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+          if (!jsonMatch) {
+            throw new Error('No JSON in Gemini response');
+          }
+          const result = JSON.parse(jsonMatch[0]);
+          const duration = Date.now() - startTime;
+
+          logger.info(`AI demo diagnosis completed in ${duration}ms`, {
+            component: 'ai',
+            metadata: { cropType, model: GEMINI_MODEL, duration },
+          });
+
+          lastGeminiError = null;
+
+          return Response.json({
+            success: true,
+            data: {
+              crop: cropType,
+              primaryDiagnosis: result.primaryDiagnosis,
+              possibleCauses: result.possibleCauses || [],
+              confidenceRange: result.confidenceRange || { min: 0.3, max: 0.8 },
+              reasoning: result.reasoning || { summary: 'Analysis completed.', symptomInfluences: [], uncertainties: [] },
+              symptomCategories: {},
+              growthStage,
+              uncertaintyLevel: result.uncertaintyLevel || 'moderate',
+              requestMoreInfo: result.requestMoreInfo || false,
+              missingInfo: result.missingInfo || [],
+              imageAnalyzed: hasImage,
+            },
+            usage: usageData,
+            disclaimer: 'This is an AI-assisted diagnosis. Results should be verified by a local agricultural extension officer.',
+          });
+        } catch (error) {
+          const errDetail = error as { status?: number; message?: string; error?: { message?: string; code?: number; status?: string } };
+          const status = errDetail.status ?? errDetail.error?.code ?? 500;
+          const msg = errDetail.message ?? errDetail.error?.message ?? String(error);
+          const classified = classifyGeminiError(status, msg);
+          lastGeminiError = classified;
+
+          logger.error('AI demo Gemini call failed', {
+            component: 'ai',
+            metadata: {
+              attempt,
+              errorCode: classified.code,
+              status,
+              gcpStatus: errDetail.error?.status,
+              message: msg.substring(0, 300),
+            },
+          });
+
+          if (!isRetryable(classified.code)) break;
         }
-        const result = JSON.parse(jsonMatch[0]);
-        const duration = Date.now() - startTime;
-
-        logger.info(`AI demo diagnosis completed in ${duration}ms`, {
-          component: 'ai',
-          metadata: { cropType, model: GEMINI_MODEL, duration },
-        });
-
-        return Response.json({
-          success: true,
-          data: {
-            crop: cropType,
-            primaryDiagnosis: result.primaryDiagnosis,
-            possibleCauses: result.possibleCauses || [],
-            confidenceRange: result.confidenceRange || { min: 0.3, max: 0.8 },
-            reasoning: result.reasoning || { summary: 'Analysis completed.', symptomInfluences: [], uncertainties: [] },
-            symptomCategories: {},
-            growthStage,
-            uncertaintyLevel: result.uncertaintyLevel || 'moderate',
-            requestMoreInfo: result.requestMoreInfo || false,
-            missingInfo: result.missingInfo || [],
-            imageAnalyzed: hasImage,
-          },
-          usage: usageData,
-          disclaimer: 'This is an AI-assisted diagnosis. Results should be verified by a local agricultural extension officer.',
-        });
-      } catch (error) {
-        const errDetail = error as { status?: number; message?: string; error?: { message?: string; code?: number; status?: string } };
-        logger.error('AI demo diagnosis failed, falling back to local engine', {
-          component: 'ai',
-          metadata: {
-            error: error instanceof Error ? error.message : String(error),
-            status: errDetail.status ?? errDetail.error?.code,
-            gcpStatus: errDetail.error?.status,
-            fullError: JSON.stringify(errDetail.error || error).substring(0, 1000),
-          },
-        });
       }
+
+      logger.info('[ai/demo] Gemini exhausted, falling back to local engine', {
+        component: 'ai',
+        metadata: { lastError: lastGeminiError?.code },
+      });
     }
 
     await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
@@ -268,7 +322,11 @@ Respond in JSON format with:
       disclaimer: 'This is a demo diagnosis. Results are simulated. Always consult a local agricultural extension officer before applying treatments.',
     });
   } catch {
-    return Response.json({ success: false, error: 'Invalid request' }, { status: 400 });
+    return Response.json({
+      success: false,
+      error: 'Invalid request. Please check your input and try again.',
+      errorCode: 'unexpected_error',
+    }, { status: 400 });
   }
 }
 
