@@ -13,22 +13,47 @@ const RETRY_DELAYS = [1000, 2000];
 
 const SEVERITY_LEVELS = ['mild', 'moderate', 'severe', 'critical'] as const;
 
-type ErrorCode = 'rate_limit' | 'service_unavailable' | 'connection_error' | 'unexpected_error' | 'safety_blocked' | 'invalid_key';
+type ErrorCode = 'rate_limit' | 'service_unavailable' | 'connection_error' | 'unexpected_error' | 'safety_blocked' | 'invalid_key' | 'permission_denied' | 'invalid_model' | 'timeout' | 'auth_error';
 
-function classifyGeminiError(status: number, message: string): { code: ErrorCode; httpStatus: number } {
-  if (status === 429 || message.includes('RESOURCE_EXHAUSTED') || message.includes('Rate limit')) {
-    return { code: 'rate_limit', httpStatus: 429 };
+function classifyGeminiError(status: number, message: string, errorName?: string): { code: ErrorCode; httpStatus: number } {
+  if (errorName === 'AbortError' || message.includes('abort') || message.includes('timeout')) {
+    return { code: 'timeout', httpStatus: 504 };
   }
-  if (status === 400 || message.includes('API key not valid') || message.includes('INVALID_ARGUMENT')) {
-    return { code: 'invalid_key', httpStatus: 502 };
+
+  switch (status) {
+    case 400:
+      if (message.includes('API key') || message.includes('INVALID_ARGUMENT') || message.includes('key not valid')) {
+        return { code: 'invalid_key', httpStatus: 502 };
+      }
+      if (message.includes('SAFETY') || message.includes('blocked') || message.includes('safety')) {
+        return { code: 'safety_blocked', httpStatus: 422 };
+      }
+      return { code: 'unexpected_error', httpStatus: 422 };
+
+    case 401:
+      return { code: 'auth_error', httpStatus: 502 };
+
+    case 403:
+      return { code: 'permission_denied', httpStatus: 502 };
+
+    case 404:
+      return { code: 'invalid_model', httpStatus: 502 };
+
+    case 429:
+      return { code: 'rate_limit', httpStatus: 429 };
+
+    case 500:
+      return { code: 'service_unavailable', httpStatus: 502 };
+
+    case 503:
+      return { code: 'service_unavailable', httpStatus: 503 };
+
+    default:
+      if (status >= 500) {
+        return { code: 'service_unavailable', httpStatus: 502 };
+      }
+      return { code: 'unexpected_error', httpStatus: 502 };
   }
-  if (message.includes('SAFETY') || message.includes('blocked')) {
-    return { code: 'safety_blocked', httpStatus: 422 };
-  }
-  if (status >= 500) {
-    return { code: 'service_unavailable', httpStatus: 502 };
-  }
-  return { code: 'unexpected_error', httpStatus: 502 };
 }
 
 function isRetryable(code: ErrorCode): boolean {
@@ -257,10 +282,11 @@ Respond in JSON format with:
             disclaimer: 'This is an AI-assisted diagnosis. Results should be verified by a local agricultural extension officer.',
           });
         } catch (error) {
-          const errDetail = error as { status?: number; message?: string; error?: { message?: string; code?: number; status?: string } };
-          const status = errDetail.status ?? errDetail.error?.code ?? 500;
+          const errDetail = error as { status?: number; message?: string; name?: string; error?: { message?: string; code?: number; status?: string } };
+          const status = errDetail.status ?? errDetail.error?.code ?? 0;
           const msg = errDetail.message ?? errDetail.error?.message ?? String(error);
-          const classified = classifyGeminiError(status, msg);
+          const errorName = errDetail.name ?? 'UnknownError';
+          const classified = classifyGeminiError(status, msg, errorName);
           lastGeminiError = classified;
 
           logger.error('AI demo Gemini call failed', {
@@ -268,8 +294,8 @@ Respond in JSON format with:
             metadata: {
               attempt,
               errorCode: classified.code,
-              status,
-              gcpStatus: errDetail.error?.status,
+              httpStatus: status,
+              errorName,
               message: msg.substring(0, 300),
             },
           });

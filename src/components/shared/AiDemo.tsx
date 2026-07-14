@@ -109,6 +109,10 @@ const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
   unexpected_error: 'Something went wrong while analyzing the image. Please try again.',
   safety_blocked: 'The image was blocked by content filters. Please try a different image.',
   invalid_key: 'The AI service is not properly configured. Please contact support.',
+  permission_denied: 'The AI service does not have permission to process this request. Please contact support.',
+  invalid_model: 'The AI model is not available. Please contact support.',
+  timeout: 'The AI service took too long to respond. Please try again.',
+  auth_error: 'Authentication failed with the AI service. Please contact support.',
 };
 
 export function AiDemo() {

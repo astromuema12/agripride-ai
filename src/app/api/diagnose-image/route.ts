@@ -10,25 +10,47 @@ const GEMINI_TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 2;
 const RETRY_DELAYS = [1000, 2000];
 
-type ErrorCode = 'rate_limit' | 'service_unavailable' | 'connection_error' | 'unexpected_error' | 'safety_blocked' | 'invalid_key';
+type ErrorCode = 'rate_limit' | 'service_unavailable' | 'connection_error' | 'unexpected_error' | 'safety_blocked' | 'invalid_key' | 'permission_denied' | 'invalid_model' | 'timeout' | 'auth_error';
 
-function classifyGeminiError(status: number, message: string): { code: ErrorCode; httpStatus: number } {
-  if (status === 429 || message.includes('RESOURCE_EXHAUSTED') || message.includes('Rate limit')) {
-    return { code: 'rate_limit', httpStatus: 429 };
+function classifyGeminiError(status: number, message: string, errorName?: string): { code: ErrorCode; httpStatus: number } {
+  if (errorName === 'AbortError' || message.includes('abort') || message.includes('timeout')) {
+    return { code: 'timeout', httpStatus: 504 };
   }
-  if (status === 400 || message.includes('API key not valid') || message.includes('INVALID_ARGUMENT')) {
-    return { code: 'invalid_key', httpStatus: 502 };
+
+  switch (status) {
+    case 400:
+      if (message.includes('API key') || message.includes('INVALID_ARGUMENT') || message.includes('key not valid')) {
+        return { code: 'invalid_key', httpStatus: 502 };
+      }
+      if (message.includes('SAFETY') || message.includes('blocked') || message.includes('safety')) {
+        return { code: 'safety_blocked', httpStatus: 422 };
+      }
+      return { code: 'unexpected_error', httpStatus: 422 };
+
+    case 401:
+      return { code: 'auth_error', httpStatus: 502 };
+
+    case 403:
+      return { code: 'permission_denied', httpStatus: 502 };
+
+    case 404:
+      return { code: 'invalid_model', httpStatus: 502 };
+
+    case 429:
+      return { code: 'rate_limit', httpStatus: 429 };
+
+    case 500:
+      return { code: 'service_unavailable', httpStatus: 502 };
+
+    case 503:
+      return { code: 'service_unavailable', httpStatus: 503 };
+
+    default:
+      if (status >= 500) {
+        return { code: 'service_unavailable', httpStatus: 502 };
+      }
+      return { code: 'unexpected_error', httpStatus: 502 };
   }
-  if (message.includes('SAFETY') || message.includes('blocked')) {
-    return { code: 'safety_blocked', httpStatus: 422 };
-  }
-  if (status === 403 || message.includes('PERMISSION_DENIED')) {
-    return { code: 'invalid_key', httpStatus: 502 };
-  }
-  if (status >= 500) {
-    return { code: 'service_unavailable', httpStatus: 502 };
-  }
-  return { code: 'unexpected_error', httpStatus: 502 };
 }
 
 function isRetryable(code: ErrorCode): boolean {
@@ -42,6 +64,10 @@ const FRIENDLY_MESSAGES: Record<ErrorCode, string> = {
   unexpected_error: 'Something went wrong while analyzing the image. Please try again.',
   safety_blocked: 'The image was blocked by content filters. Please try a different image.',
   invalid_key: 'The AI service is not properly configured. Please contact support.',
+  permission_denied: 'The AI service does not have permission to process this request. Please contact support.',
+  invalid_model: 'The AI model is not available. Please contact support.',
+  timeout: 'The AI service took too long to respond. Please try again.',
+  auth_error: 'Authentication failed with the AI service. Please contact support.',
 };
 
 function getGeminiClient(): GoogleGenAI {
@@ -224,22 +250,22 @@ Respond ONLY with valid JSON in this exact format:
         break;
       } catch (err: unknown) {
         const apiErr = err as { status?: number; message?: string; name?: string; error?: { message?: string; code?: number; status?: string } };
-        const status = apiErr.status ?? apiErr.error?.code ?? 500;
+        const status = apiErr.status ?? apiErr.error?.code ?? 0;
         const msg = apiErr.message ?? apiErr.error?.message ?? String(err);
-        const errStatus = apiErr.error?.status ?? 'UNKNOWN';
+        const errorName = apiErr.name ?? 'UnknownError';
 
-        const classified = classifyGeminiError(status, msg);
+        const classified = classifyGeminiError(status, msg, errorName);
         lastError = classified;
 
         logger.error('[diagnose-image] Gemini API error', {
           component: 'ai',
           metadata: {
             attempt,
-            status,
-            gcpStatus: errStatus,
+            httpStatus: status,
+            errorName,
             errorCode: classified.code,
             message: msg.substring(0, 300),
-            fullError: JSON.stringify(apiErr.error || apiErr).substring(0, 800),
+            fullError: JSON.stringify(apiErr.error || { name: apiErr.name, message: apiErr.message, status: apiErr.status }).substring(0, 800),
             model: GEMINI_MODEL,
           },
         });

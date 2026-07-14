@@ -115,11 +115,32 @@ async function handler(req: NextRequest) {
     } catch (error) {
       trackAiUsage('diagnose', Date.now() - startTime, false, GEMINI_MODEL, userId);
       await reportError(error, { cropType, growthStage, endpoint: 'ai/diagnose' });
+      const errDetail = error as { status?: number; message?: string; name?: string };
+      const httpStatus = errDetail.status ?? 0;
+      const errorName = errDetail.name ?? 'UnknownError';
+      const msg = errDetail.message ?? String(error);
       logger.error('[ai/diagnose] Gemini API error', {
         component: 'ai',
-        metadata: { error: error instanceof Error ? error.message : String(error) },
+        metadata: {
+          httpStatus,
+          errorName,
+          message: msg.substring(0, 300),
+          model: GEMINI_MODEL,
+        },
       });
-      return apiError(500, 'Failed to diagnose. Please try again.');
+      if (httpStatus === 429) {
+        return apiError(429, 'AI service is temporarily busy. Please try again shortly.');
+      }
+      if (httpStatus === 401 || httpStatus === 403) {
+        return apiError(502, 'AI service authentication failed. Please contact support.');
+      }
+      if (httpStatus === 404) {
+        return apiError(502, 'AI model not available. Please contact support.');
+      }
+      if (errorName === 'AbortError' || msg.includes('timeout')) {
+        return apiError(504, 'AI service timed out. Please try again.');
+      }
+      return apiError(502, 'AI diagnosis failed. Please try again.');
     }
   }
 

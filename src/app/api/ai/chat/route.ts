@@ -201,11 +201,28 @@ async function handler(req: NextRequest) {
       } catch (error) {
         trackAiUsage('chat', Date.now() - startTime, false, hasRealAI ? GEMINI_MODEL : 'local-agent', userId);
         await reportError(error, { userId, endpoint: 'ai/chat' });
+        const errDetail = error as { status?: number; message?: string; name?: string };
+        const httpStatus = errDetail.status ?? 0;
+        const errorName = errDetail.name ?? 'UnknownError';
+        const msg = errDetail.message ?? String(error);
         logger.error('[ai/chat] Gemini streaming error', {
           component: 'ai',
-          metadata: { error: error instanceof Error ? error.message : String(error) },
+          metadata: {
+            httpStatus,
+            errorName,
+            message: msg.substring(0, 300),
+            model: GEMINI_MODEL,
+          },
         });
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: 'I apologize, but I encountered an error processing your request. Please try again.' })}\n\n`));
+        let userMessage = 'I apologize, but I encountered an error processing your request. Please try again.';
+        if (httpStatus === 429) {
+          userMessage = 'The AI service is temporarily busy. Please wait a moment and try again.';
+        } else if (httpStatus === 401 || httpStatus === 403) {
+          userMessage = 'The AI service is not properly configured. Please contact support.';
+        } else if (errorName === 'AbortError' || msg.includes('timeout')) {
+          userMessage = 'The AI service took too long to respond. Please try again.';
+        }
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: userMessage })}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
       }
