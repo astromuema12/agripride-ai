@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-export const FREE_TIER_LIMIT = 3;
+export const FREE_TIER_LIMIT = 10;
 export const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 interface UsageEntry {
