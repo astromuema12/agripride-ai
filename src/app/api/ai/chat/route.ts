@@ -19,7 +19,7 @@ const ChatSchema = z.object({
   history: z.array(HistoryItemSchema).max(50).optional(),
 });
 
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-2.0-flash';
 
 const SYSTEM_PROMPT = `You are AgriPride AI, an experienced agricultural extension officer and agronomist. Your purpose is to provide expert-level, practical agricultural guidance to farmers, agribusinesses, and agricultural stakeholders worldwide, with special expertise in African and East African agriculture.
 

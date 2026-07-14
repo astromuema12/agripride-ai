@@ -6,7 +6,7 @@ import { getClientIdentifier, getUsage, recordUsage, usageResponse, FREE_TIER_LI
 import type { GrowthStage } from '@/types';
 
 const cropList = KNOWN_CROPS;
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-2.0-flash';
 
 const SEVERITY_LEVELS = ['mild', 'moderate', 'severe', 'critical'] as const;
 

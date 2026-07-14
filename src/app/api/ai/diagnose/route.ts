@@ -10,7 +10,7 @@ import { logger } from '@/lib/logger';
 import type { GrowthStage } from '@/types';
 
 const GROWTH_STAGES = ['seedling', 'vegetative', 'flowering', 'fruiting', 'unknown'] as const;
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-2.0-flash';
 
 const DiagnoseSchema = z.object({
   cropType: z.string().min(1, 'Crop type is required').max(100),
