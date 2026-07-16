@@ -77,6 +77,12 @@ export function Sidebar() {
 
   const links = user?.role === 'admin' ? adminLinks : user?.role === 'officer' ? officerLinks : farmerLinks;
 
+  const roleLabels: Record<string, string> = {
+    farmer: t('nav.sidebar.roleFarmer'),
+    officer: t('nav.sidebar.roleOfficer'),
+    admin: t('nav.sidebar.roleAdmin'),
+  };
+
   return (
     <>
       <Button
@@ -112,7 +118,7 @@ export function Sidebar() {
           {!collapsed && (
             <div className="flex items-center gap-2 min-w-0">
               <Wheat className="h-4 w-4 text-[#5e9a6b] shrink-0" />
-              <span className="text-sm font-medium text-white/80 font-body capitalize truncate">{user?.role}</span>
+              <span className="text-sm font-medium text-white/80 font-body capitalize truncate">{roleLabels[user?.role || 'farmer'] || user?.role}</span>
             </div>
           )}
           {collapsed && <Wheat className="h-4 w-4 text-[#5e9a6b] shrink-0" />}
@@ -152,7 +158,7 @@ export function Sidebar() {
           <div className="border-t border-white/5 p-3">
             <Link href="/" className="flex items-center gap-2 text-xs text-white/30 hover:text-white/60 transition-colors font-body">
               <Wheat className="h-3 w-3" />
-              Back to home
+              {t('nav.sidebar.backToHome')}
             </Link>
           </div>
         )}

@@ -1,4 +1,5 @@
 import type { PasswordStrengthResult } from '@/types';
+import { serverT } from './i18n/server';
 
 const COMMON_PASSWORDS = new Set([
   'password', 'password123', '123456', '12345678', 'qwerty', 'abc123',
@@ -7,58 +8,58 @@ const COMMON_PASSWORDS = new Set([
   'passw0rd', 'p@ssword', 'P@ssw0rd',
 ]);
 
-export function evaluatePasswordStrength(password: string): PasswordStrengthResult {
+export function evaluatePasswordStrength(password: string, locale?: string): PasswordStrengthResult {
   const cracks: string[] = [];
   const suggestions: string[] = [];
 
   if (password.length < 8) {
-    cracks.push('At least 8 characters');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.atLeast8'));
   } else if (password.length < 12) {
-    suggestions.push('Use 12+ characters for better security');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.use12Plus'));
   }
 
   if (!/[A-Z]/.test(password)) {
-    cracks.push('Add an uppercase letter');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.uppercase'));
   }
   if (!/[a-z]/.test(password)) {
-    cracks.push('Add a lowercase letter');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.lowercase'));
   }
   if (!/[0-9]/.test(password)) {
-    cracks.push('Add a number');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.number'));
   }
   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    cracks.push('Add a special character');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.special'));
   }
 
   if (/(.)\1{2,}/.test(password)) {
-    suggestions.push('Avoid repeated characters like "aaa"');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.avoidRepeated'));
   }
   if (/^[a-zA-Z]+$/.test(password)) {
-    suggestions.push('Add numbers and symbols');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.addNumbersSymbols'));
   }
   if (/^[0-9]+$/.test(password)) {
-    suggestions.push('Add letters for a stronger password');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.addLetters'));
   }
   if (password.toLowerCase() === password) {
-    suggestions.push('Add uppercase letters');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.uppercase'));
   }
   if (password === password.toUpperCase()) {
-    suggestions.push('Add lowercase letters');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.lowercase'));
   }
 
   const lower = password.toLowerCase();
   if (COMMON_PASSWORDS.has(lower) || COMMON_PASSWORDS.has(password)) {
-    cracks.push('This password is too common');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.tooCommon'));
   }
 
   if (/(?:012|123|234|345|456|567|678|789|890)/.test(password)) {
-    suggestions.push('Avoid sequential numbers like "123"');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.avoidSequentialNumbers'));
   }
   if (/(?:abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|rst|stu|tuv|uvw|vwx|wxy|xyz)/i.test(password)) {
-    suggestions.push('Avoid sequential letters like "abc"');
+    suggestions.push(serverT(locale || 'en', 'passwordStrength.suggestions.avoidSequentialLetters'));
   }
   if (/(.)\1{3,}/.test(password)) {
-    cracks.push('Avoid long repeated characters');
+    cracks.push(serverT(locale || 'en', 'passwordStrength.cracks.longRepeated'));
   }
 
   let score = 0;

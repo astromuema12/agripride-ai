@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { serverT } from './i18n/server';
 import { logger } from './logger';
 import { reportError, trackApiCall } from './monitoring';
 import { getRequestId, setRequestId } from './request-id';
@@ -56,7 +57,7 @@ export async function parseBody<T>(
   } catch {
     return {
       success: false,
-      response: apiError(400, 'Invalid JSON body'),
+      response: apiError(400, serverT('en', 'api.invalidJsonBody')),
     };
   }
 }
@@ -96,7 +97,7 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<Response
 
       trackApiCall(url.pathname, duration, 500);
 
-      return apiError(500, 'Internal server error');
+      return apiError(500, serverT('en', 'api.internalServerError'));
     }
   };
 }

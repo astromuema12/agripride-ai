@@ -57,7 +57,7 @@ function PricingPageContent() {
         translations.pricing.freePlan.features[2],
         translations.pricing.freePlan.features[3],
       ],
-      notIncluded: ['Advanced AI Diagnosis', 'Farm Analytics Dashboard', 'Loan Recommendations', 'Priority Support'],
+      notIncluded: [t('pricing.notIncluded.advancedAiDiagnosis'), t('pricing.notIncluded.farmAnalyticsDashboard'), t('pricing.notIncluded.loanRecommendations'), t('pricing.notIncluded.prioritySupport')],
     },
     {
       tier: 'premium',
@@ -74,7 +74,7 @@ function PricingPageContent() {
         translations.pricing.premiumPlan.features[3],
         translations.pricing.premiumPlan.features[4],
       ],
-      notIncluded: ['Multi-farm Dashboard', 'Group Analytics'],
+      notIncluded: [t('pricing.notIncluded.multiFarmDashboard'), t('pricing.notIncluded.groupAnalytics')],
     },
     {
       tier: 'cooperative',
@@ -91,7 +91,7 @@ function PricingPageContent() {
         translations.pricing.cooperativePlan.features[4],
         translations.pricing.cooperativePlan.features[5],
       ],
-      notIncluded: ['White-label Options', 'API Access'],
+      notIncluded: [t('pricing.notIncluded.whiteLabelOptions'), t('pricing.notIncluded.apiAccess')],
     },
     {
       tier: 'enterprise',
@@ -170,7 +170,7 @@ function PricingPageContent() {
         <RevealSection className="mb-12 sm:mb-16">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-[#c4704b]" />
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Pricing</span>
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('pricing.title')}</span>
           </div>
           <h1 className="display-lg text-[var(--foreground)]">
             {t('pricing.title')}

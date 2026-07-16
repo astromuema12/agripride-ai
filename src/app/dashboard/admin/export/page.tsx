@@ -45,7 +45,16 @@ export default function AdminExportPage() {
 
   if (!user) return null;
 
-  const types = Object.entries(data).map(([id, items]) => ({ id, label: id.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase()), count: items.length }));
+  const typeLabels: Record<string, string> = {
+    farms: t('export.farms'),
+    crops: t('export.cropRecords'),
+    diseaseReports: t('export.diseaseReports'),
+    yieldRecords: t('export.yieldRecords'),
+    marketPrices: t('export.prices'),
+    users: t('export.users'),
+    auditLogs: t('export.auditLogs'),
+  };
+  const types = Object.entries(data).map(([id, items]) => ({ id, label: typeLabels[id] || id, count: items.length }));
 
   return (
     <div className="space-y-6">

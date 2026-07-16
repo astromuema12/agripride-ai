@@ -1,6 +1,7 @@
 import { User, UserRole } from '@/types';
 import { generateId } from './utils';
 import { writeAuditLog } from './server-auth';
+import { serverT } from './i18n/server';
 
 export const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
   'admin@agripride.ai': {
@@ -8,7 +9,7 @@ export const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
     user: {
       id: 'demo-admin-001',
       email: 'admin@agripride.ai',
-      name: 'Admin User',
+      name: serverT('en', 'demo.adminName'),
       role: 'admin',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -20,7 +21,7 @@ export const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
     user: {
       id: 'demo-officer-001',
       email: 'officer@agripride.ai',
-      name: 'Jane Extension',
+      name: serverT('en', 'demo.officerName'),
       role: 'officer',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -32,7 +33,7 @@ export const DEMO_ACCOUNTS: Record<string, { password: string; user: User }> = {
     user: {
       id: 'demo-farmer-001',
       email: 'farmer@agripride.ai',
-      name: 'John Farmer',
+      name: serverT('en', 'demo.farmerDemoName'),
       role: 'farmer',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),

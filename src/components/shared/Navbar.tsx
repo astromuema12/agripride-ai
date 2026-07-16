@@ -215,7 +215,7 @@ export function Navbar() {
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div className="absolute right-0 top-0 h-full w-72 bg-[var(--background)] border-l border-[var(--border)] shadow-2xl">
             <div className="flex items-center justify-between px-5 h-16 border-b border-[var(--border)]">
-              <span className="font-display text-lg text-[var(--foreground)]">Menu</span>
+              <span className="font-display text-lg text-[var(--foreground)]">{t('nav.menu')}</span>
               <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
                 <X className="h-5 w-5" />
               </Button>

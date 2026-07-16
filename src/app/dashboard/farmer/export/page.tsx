@@ -42,23 +42,23 @@ export default function ExportPage() {
 
     switch (type) {
       case 'farms':
-        data = farms.map((f) => ({ Name: f.name, Location: f.location, 'Size (acres)': f.size_acres, 'Soil Type': f.soil_type, Status: f.status, Created: formatDate(f.created_at) }));
+        data = farms.map((f) => ({ [t('export.colName')]: f.name, [t('export.colLocation')]: f.location, [t('export.colSizeAcres')]: f.size_acres, [t('export.colSoilType')]: f.soil_type, [t('export.colStatus')]: f.status, [t('export.colCreated')]: formatDate(f.created_at) }));
         filename = 'farms-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
       case 'crops':
-        data = crops.map((c) => ({ 'Crop Name': c.name, Variety: c.variety, 'Area (acres)': c.area_acres, Status: c.status, 'Expected Yield (kg)': c.expected_yield_kg, 'Actual Yield (kg)': c.actual_yield_kg ?? '-', Planted: formatDate(c.planting_date) }));
+        data = crops.map((c) => ({ [t('export.colCropName')]: c.name, [t('export.colVariety')]: c.variety, [t('export.colAreaAcres')]: c.area_acres, [t('export.colStatus')]: c.status, [t('export.colExpectedYield')]: c.expected_yield_kg, [t('export.colActualYield')]: c.actual_yield_kg ?? '-', [t('export.colPlanted')]: formatDate(c.planting_date) }));
         filename = 'crops-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
       case 'disease':
-        data = reports.map((r) => ({ 'Crop Type': r.crop_type, Disease: r.disease_prediction ?? '-', Confidence: r.confidence_score ? (r.confidence_score * 100).toFixed(1) + '%' : '-', 'Risk Level': r.risk_level ?? '-', Status: r.status, Created: formatDate(r.created_at) }));
+        data = reports.map((r) => ({ [t('export.colCropType')]: r.crop_type, [t('export.colDisease')]: r.disease_prediction ?? '-', [t('export.colConfidence')]: r.confidence_score ? (r.confidence_score * 100).toFixed(1) + '%' : '-', [t('export.colRiskLevel')]: r.risk_level ?? '-', [t('export.colStatus')]: r.status, [t('export.colCreated')]: formatDate(r.created_at) }));
         filename = 'disease-reports-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
       case 'yields':
-        data = yields.map((y) => ({ 'Yield (kg)': y.yield_kg, 'Area (acres)': y.area_acres, 'Quality Rating': y.quality_rating ?? '-', Notes: y.notes ?? '-', 'Harvest Date': formatDate(y.harvest_date) }));
+        data = yields.map((y) => ({ [t('export.colYieldKg')]: y.yield_kg, [t('export.colAreaAcres')]: y.area_acres, [t('export.colQualityRating')]: y.quality_rating ?? '-', [t('export.colNotes')]: y.notes ?? '-', [t('export.colHarvestDate')]: formatDate(y.harvest_date) }));
         filename = 'yield-records-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
       case 'prices':
-        data = prices.map((p) => ({ Crop: p.crop, Region: p.region, 'Price/kg': 'KES ' + p.price_per_kg.toFixed(2), Trend: p.trend }));
+        data = prices.map((p) => ({ [t('export.colCrop')]: p.crop, [t('export.colRegion')]: p.region, [t('export.colPricePerKg')]: 'KES ' + p.price_per_kg.toFixed(2), [t('export.colTrend')]: p.trend }));
         filename = 'market-prices-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
     }
@@ -73,7 +73,7 @@ export default function ExportPage() {
     { id: 'farms', label: t('export.farms'), icon: Table, desc: t('export.countFarms').replace('{count}', farms.length.toString()) },
     { id: 'crops', label: t('export.cropRecords'), icon: Table, desc: t('export.countCrops').replace('{count}', crops.length.toString()) },
     { id: 'disease', label: t('export.diseaseReports'), icon: Table, desc: t('export.countReports').replace('{count}', reports.length.toString()) },
-    { id: 'yields', label: t('export.yieldRecords'), icon: Table, desc: yields.length + ' records' },
+    { id: 'yields', label: t('export.yieldRecords'), icon: Table, desc: t('export.yieldRecordsDesc', { count: yields.length }) },
     { id: 'prices', label: t('export.prices'), icon: Table, desc: t('export.countPrices').replace('{count}', prices.length.toString()) },
   ];
 

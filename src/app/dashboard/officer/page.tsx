@@ -19,7 +19,7 @@ import {
 export default function OfficerDashboard() {
   const { user } = useAuth();
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -40,7 +40,7 @@ export default function OfficerDashboard() {
         setFarms(farmsData);
         setDiseaseReports(reportsData);
       } catch (error) {
-        toast.error('Failed to load dashboard data');
+        toast.error(t('dashboard.officer.failedToLoadDashboard'));
       } finally {
         setLoading(false);
       }
@@ -55,10 +55,10 @@ export default function OfficerDashboard() {
   const resolutionRate = diseaseReports.length > 0 ? Math.round((resolvedCases / diseaseReports.length) * 100) : 0;
 
   const getFarmerName = (userId: string) =>
-    users.find((u) => u.id === userId)?.name || 'Unknown Farmer';
+    users.find((u) => u.id === userId)?.name || t('dashboard.officer.unknownFarmer');
 
   const getFarmLocation = (farmId: string) =>
-    farms.find((f) => f.id === farmId)?.location || 'Unknown Region';
+    farms.find((f) => f.id === farmId)?.location || t('dashboard.officer.unknownRegion');
 
   const latestReports = [...diseaseReports]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -118,11 +118,11 @@ export default function OfficerDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.officer.title')}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.welcomeBack', { name: user?.name || 'Officer' })}</p>
+          <p className="text-sm text-gray-500 mt-1">{t('dashboard.officer.welcomeBack', { name: user?.name || t('nav.sidebar.roleOfficer') })}</p>
         </div>
         <Badge variant="primary" className="text-xs w-fit">
           <Clock className="mr-1 h-3 w-3" />
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+          {new Date().toLocaleDateString(language === 'sw' ? 'sw-KE' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </Badge>
       </div>
 
@@ -277,7 +277,7 @@ export default function OfficerDashboard() {
                       {report.risk_level || t('common.unknown')}
                         </Badge>
                         <Badge className={statusBadgeClass(report.status)}>
-                          {report.status}
+                          {report.status === 'submitted' ? t('dashboard.farmer.submitted') : report.status === 'reviewed' ? t('dashboard.farmer.reviewed') : report.status === 'resolved' ? t('dashboard.farmer.resolved') : report.status}
                         </Badge>
                       </div>
                     </div>
@@ -373,7 +373,7 @@ export default function OfficerDashboard() {
                   </div>
                   <div className="flex items-center gap-2 ml-4 shrink-0">
                     <Badge className={riskBadgeClass(report.risk_level)}>
-                      {report.risk_level || 'unknown'}
+                      {report.risk_level || t('common.unknown')}
                     </Badge>
                     <Button size="sm" variant="outline" onClick={() => router.push('/dashboard/officer/disease')}>
                       {t('dashboard.officer.review')}

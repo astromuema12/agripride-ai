@@ -103,16 +103,16 @@ async function hashImage(data: string): Promise<string> {
 }
 
 const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
-  rate_limit: 'Our AI service is temporarily busy. Please wait a moment and try again.',
-  service_unavailable: 'The AI service is temporarily unavailable. Please try again shortly.',
-  connection_error: 'Could not reach the AI service. Please check your connection and try again.',
-  unexpected_error: 'Something went wrong while analyzing the image. Please try again.',
-  safety_blocked: 'The image was blocked by content filters. Please try a different image.',
-  invalid_key: 'The AI service is not properly configured. Please contact support.',
-  permission_denied: 'The AI service does not have permission to process this request. Please contact support.',
-  invalid_model: 'The AI model is not available. Please contact support.',
-  timeout: 'The AI service took too long to respond. Please try again.',
-  auth_error: 'Authentication failed with the AI service. Please contact support.',
+  rate_limit: 'aiDemoErrors.rateLimit',
+  service_unavailable: 'aiDemoErrors.serviceUnavailable',
+  connection_error: 'aiDemoErrors.connectionError',
+  unexpected_error: 'aiDemoErrors.unexpectedError',
+  safety_blocked: 'aiDemoErrors.safetyBlocked',
+  invalid_key: 'aiDemoErrors.invalidKey',
+  permission_denied: 'aiDemoErrors.permissionDenied',
+  invalid_model: 'aiDemoErrors.invalidModel',
+  timeout: 'aiDemoErrors.timeout',
+  auth_error: 'aiDemoErrors.authError',
 };
 
 export function AiDemo() {
@@ -236,14 +236,14 @@ export function AiDemo() {
 
     const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     if (!isSecure) {
-      const msg = 'Camera requires HTTPS. Please access this page over a secure connection.';
+      const msg = t('aiDemoErrors.cameraRequiresHttps');
       setCameraError(msg);
       if (process.env.NODE_ENV === 'development') console.warn('[Camera] Blocked: not HTTPS', window.location.href);
       return;
     }
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      const msg = 'Camera is not supported in this browser. Please use file upload instead.';
+      const msg = t('aiDemoErrors.cameraNotSupported');
       setCameraError(msg);
       if (process.env.NODE_ENV === 'development') console.warn('[Camera] getUserMedia not supported');
       return;
@@ -284,29 +284,29 @@ export function AiDemo() {
 
       switch (error.name) {
         case 'NotAllowedError':
-          setCameraError('Camera access was denied. Please allow camera access in your browser settings and try again.');
+          setCameraError(t('aiDemoErrors.cameraAccessDenied'));
           break;
         case 'NotFoundError':
-          setCameraError('No camera found on this device. Please use file upload instead.');
+          setCameraError(t('aiDemoErrors.cameraNotFound'));
           break;
         case 'NotReadableError':
-          setCameraError('Camera is in use by another app. Please close other camera apps and try again.');
+          setCameraError(t('aiDemoErrors.cameraInUse'));
           break;
         case 'OverconstrainedError':
-          setCameraError('Camera does not meet the required constraints. Trying with default settings...');
+          setCameraError(t('aiDemoErrors.cameraConstraints'));
           tryFallbackCamera();
           return;
         case 'AbortError':
-          setCameraError('Camera request was cancelled. Please try again.');
+          setCameraError(t('aiDemoErrors.cameraCancelled'));
           break;
         case 'SecurityError':
-          setCameraError('Camera access blocked for security reasons. Please use HTTPS or check browser settings.');
+          setCameraError(t('aiDemoErrors.cameraSecurityBlocked'));
           break;
         default:
-          setCameraError('Could not access camera. Please use file upload instead.');
+          setCameraError(t('aiDemoErrors.cameraAccessError'));
       }
     }
-  }, []);
+  }, [t]);
 
   const tryFallbackCamera = useCallback(async () => {
     try {
@@ -327,12 +327,12 @@ export function AiDemo() {
       setCameraLoading(false);
       const error = err as DOMException;
       if (error.name === 'NotAllowedError') {
-        setCameraError('Camera access was denied. Please allow camera access in your browser settings and try again.');
+        setCameraError(t('aiDemoErrors.cameraAccessDenied'));
       } else {
-        setCameraError('Could not access camera. Please use file upload instead.');
+        setCameraError(t('aiDemoErrors.cameraAccessError'));
       }
     }
-  }, []);
+  }, [t]);
 
   const capturePhoto = useCallback(() => {
     if (!videoRef.current || !canvasRef.current) return;
@@ -402,7 +402,7 @@ export function AiDemo() {
         if (cached) {
           setResult(cached);
           setDiagnosing(false);
-          setStatusMessage('Loaded from cache');
+          setStatusMessage(t('aiDemoErrors.loadedFromCache'));
           return;
         }
       } catch {
@@ -467,13 +467,13 @@ export function AiDemo() {
       } else {
         const errorCode = data.errorCode as string | undefined;
         const friendlyMsg = errorCode && FRIENDLY_ERROR_MESSAGES[errorCode]
-          ? FRIENDLY_ERROR_MESSAGES[errorCode]
-          : data.error || 'Diagnosis failed. Please try again.';
+          ? t(FRIENDLY_ERROR_MESSAGES[errorCode])
+          : data.error || t('aiDemoErrors.diagnosisFailed');
         setError(friendlyMsg);
         setRetryCount((c) => c + 1);
       }
     } catch {
-      setError('Could not connect to the service. Please check your internet and try again.');
+      setError(t('aiDemoErrors.connectFailed'));
       setRetryCount((c) => c + 1);
     } finally {
       clearInterval(progressInterval);
@@ -506,7 +506,7 @@ export function AiDemo() {
       if (cached) {
         setResult(cached);
         setImageDiagnosing(false);
-        setStatusMessage('Loaded from cache');
+        setStatusMessage(t('aiDemoErrors.loadedFromCache'));
         return;
       }
     } catch {
@@ -546,14 +546,14 @@ export function AiDemo() {
           confidenceRange: { min: Math.max(0, data.data.confidence - 0.15), max: Math.min(1, data.data.confidence + 0.1) },
           reasoning: {
             summary: data.data.description,
-            symptomInfluences: symptomsObserved.length > 0 ? symptomsObserved : ['Visual analysis of uploaded image'],
-            uncertainties: data.data.confidence < 0.5 ? ['Low confidence — consider uploading a clearer image or describing symptoms'] : [],
+            symptomInfluences: symptomsObserved.length > 0 ? symptomsObserved : [t('aiDemoErrors.visualAnalysis')],
+            uncertainties: data.data.confidence < 0.5 ? [t('aiDemoErrors.lowConfidenceNote')] : [],
           },
           symptomCategories: {},
           growthStage: 'unknown',
           uncertaintyLevel: data.data.confidence >= 0.7 ? 'low' : data.data.confidence >= 0.4 ? 'moderate' : 'high',
           requestMoreInfo: data.data.confidence < 0.5,
-          missingInfo: data.data.confidence < 0.5 ? ['A clearer image or symptom description would improve accuracy'] : [],
+          missingInfo: data.data.confidence < 0.5 ? [t('aiDemoErrors.clearerImageNeeded')] : [],
           imageAnalyzed: data.data.imageAnalyzed,
         };
         setResult(resultData);
@@ -576,13 +576,13 @@ export function AiDemo() {
       } else {
         const errorCode = data.errorCode as string | undefined;
         const friendlyMsg = errorCode && FRIENDLY_ERROR_MESSAGES[errorCode]
-          ? FRIENDLY_ERROR_MESSAGES[errorCode]
-          : data.error || 'Image diagnosis failed. Please try again.';
+          ? t(FRIENDLY_ERROR_MESSAGES[errorCode])
+          : data.error || t('aiDemoErrors.imageDiagnosisFailed');
         setError(friendlyMsg);
         setRetryCount((c) => c + 1);
       }
     } catch {
-      setError('Could not connect to the service. Please check your internet and try again.');
+      setError(t('aiDemoErrors.connectFailed'));
       setRetryCount((c) => c + 1);
     } finally {
       setImageDiagnosing(false);
@@ -686,7 +686,7 @@ export function AiDemo() {
               {capturedFrame && (
                 <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
                   <div className="aspect-[4/3]">
-                    <img src={capturedFrame} alt="Captured" className="w-full h-full object-cover" />
+                    <img src={capturedFrame} alt={t('common.done')} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex items-center justify-between p-3">
                     <button
@@ -712,7 +712,7 @@ export function AiDemo() {
               {/* Image Preview (uploaded or confirmed capture) */}
               {!cameraActive && !capturedFrame && imagePreview && (
                 <div className="relative rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-                  <img src={imagePreview} alt="Plant preview" className="w-full h-48 object-cover" />
+                  <img src={imagePreview} alt={t('landing.aiDemo.uploadImage')} className="w-full h-48 object-cover" />
                   <div className="flex items-center justify-between p-3">
                     <div className="min-w-0">
                       <p className="text-xs font-medium text-[var(--foreground)] truncate font-body">{imageFile?.name}</p>
@@ -772,7 +772,7 @@ export function AiDemo() {
                       disabled={cameraLoading}
                     >
                       {cameraLoading ? (
-                        <><Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Requesting...</>
+                        <><Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> {t('aiDemoErrors.requesting')}</>
                       ) : (
                         <><Camera className="mr-1.5 h-4 w-4" /> {t('landing.aiDemo.takePhoto')}</>
                       )}
@@ -806,7 +806,7 @@ export function AiDemo() {
                             onClick={openCamera}
                             className="text-xs font-medium text-amber-800 underline underline-offset-2 hover:text-amber-900 font-body dark:text-amber-200"
                           >
-                            Retry Camera
+                            {t('aiDemoErrors.retryCamera')}
                           </button>
                           <button
                             type="button"
@@ -950,7 +950,7 @@ export function AiDemo() {
                 {retryCount < 3 && lastRequestRef.current && (
                   <Button variant="outline" className="mt-4" onClick={handleRetry}>
                     <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                    Try Again
+                    {t('common.tryAgain')}
                   </Button>
                 )}
                 {error.includes('limit') && (
@@ -960,7 +960,7 @@ export function AiDemo() {
                 )}
                 {!lastRequestRef.current && (
                   <Button variant="outline" className="mt-4" onClick={handleReset}>
-                    Start Over
+                    {t('aiDemoErrors.startOver')}
                   </Button>
                 )}
               </div>

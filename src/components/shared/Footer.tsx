@@ -70,7 +70,7 @@ export function Footer() {
                   </a>
                 </li>
                 <li className="flex items-center gap-2 text-white/60 font-body">
-                  <MapPin className="h-3.5 w-3.5 text-[#c4704b] shrink-0" /> Nairobi, Kenya
+                  <MapPin className="h-3.5 w-3.5 text-[#c4704b] shrink-0" /> {t('footer.location')}
                 </li>
                 <li>
                   <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 text-white/60 transition-colors hover:text-white font-body">
@@ -86,7 +86,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-4 border-t border-white/10 py-6 text-xs text-white/30 sm:flex-row font-body">
           <p>&copy; {new Date().getFullYear()} AgriPride AI Ltd. {t('footer.rights')}</p>
           <div className="flex items-center gap-1">
-            <span>Built in Nairobi</span>
+            <span>{t('footer.builtIn')}</span>
             <MapPin className="h-3 w-3 text-[#c4704b]" />
           </div>
         </div>

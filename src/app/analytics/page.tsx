@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
   const yieldByMonth = groupByMonth(yieldRecords, 'yield_kg' as keyof YieldRecord);
 
   const diseaseByCrop = diseaseReports.reduce<Record<string, number>>((acc, r) => {
-    const crop = r.crop_type || 'Unknown';
+    const crop = r.crop_type || t('common.unknown');
     acc[crop] = (acc[crop] || 0) + 1;
     return acc;
   }, {});
@@ -102,9 +102,9 @@ export default function AnalyticsPage() {
   const fair = sustainabilityScores.filter((s) => s.overall_score >= 0.4 && s.overall_score <= 0.7).length;
   const poor = sustainabilityScores.filter((s) => s.overall_score < 0.4).length;
   const sustainabilityPieData = [
-    { name: 'Good (>0.7)', value: good },
-    { name: 'Fair (0.4–0.7)', value: fair },
-    { name: 'Poor (<0.4)', value: poor },
+    { name: t('analyticsPage.good'), value: good },
+    { name: t('analyticsPage.fair'), value: fair },
+    { name: t('analyticsPage.poor'), value: poor },
   ];
 
   const avgSoilHealth = sustainabilityScores.length
@@ -196,12 +196,12 @@ export default function AnalyticsPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Avg Sustainability</p>
+                  <p className="text-sm font-medium text-gray-500">{t('analyticsPage.avgSustainability')}</p>
                   <p className="mt-1 text-2xl font-bold text-gray-900">
                     {stats ? (stats.avg_sustainability_score * 100).toFixed(0) : 0}%
                   </p>
                   <p className="mt-1 text-xs text-gray-400">
-                    {sustainabilityScores.length} farms scored
+                    {t('analyticsPage.farmsScored', { count: sustainabilityScores.length })}
                   </p>
                 </div>
                 <div className="rounded-lg bg-[#e2f0ee] p-3">
@@ -216,19 +216,19 @@ export default function AnalyticsPage() {
           <TabsList>
             <TabsTrigger value="yield" className="gap-2">
               <TrendingUp className="h-4 w-4" />
-              Yield Trends
+              {t('analyticsPage.yieldTrends')}
             </TabsTrigger>
             <TabsTrigger value="disease" className="gap-2">
               <AlertTriangle className="h-4 w-4" />
-              Disease Trends
+              {t('analyticsPage.diseaseTrends')}
             </TabsTrigger>
             <TabsTrigger value="users" className="gap-2">
               <Users className="h-4 w-4" />
-              User Growth
+              {t('analyticsPage.userGrowthTab')}
             </TabsTrigger>
             <TabsTrigger value="sustainability" className="gap-2">
               <Leaf className="h-4 w-4" />
-              Sustainability
+              {t('analyticsPage.sustainabilityTab')}
             </TabsTrigger>
           </TabsList>
 
@@ -239,14 +239,14 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Sprout className="h-4 w-4 text-[#0f766e]" />
-                    Total Yield
+                    {t('analyticsPage.totalYield')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                     <TrendingUp className="h-3 w-3" />
-                    Across all records
+                    {t('analyticsPage.acrossAllRecords')}
                   </div>
                 </CardContent>
               </Card>
@@ -254,13 +254,13 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <BarChart3 className="h-4 w-4 text-[#0f766e]" />
-                    Average Yield
+                    {t('analyticsPage.avgYield')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{avgYield.toFixed(1)} kg</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-gray-400">
-                    Per harvest record
+                    {t('analyticsPage.perHarvestRecord')}
                   </div>
                 </CardContent>
               </Card>
@@ -268,13 +268,13 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <LineChart className="h-4 w-4 text-[#0f766e]" />
-                    Records
+                    {t('analyticsPage.records')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{yieldRecords.length}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-gray-400">
-                    Yield data points
+                    {t('analyticsPage.yieldDataPoints')}
                   </div>
                 </CardContent>
               </Card>
@@ -282,17 +282,17 @@ export default function AnalyticsPage() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Yield Over Time</CardTitle>
+                <CardTitle>{t('analyticsPage.yieldOverTime')}</CardTitle>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <Download className="h-4 w-4" />
-                  Download
+                  {t('common.download')}
                 </Button>
               </CardHeader>
               <CardContent>
                 {yieldByMonth.length === 0 ? (
                   <div className="flex h-64 flex-col items-center justify-center text-gray-400">
                     <BarChart3 className="mb-2 h-8 w-8" />
-                    <p className="text-sm">No yield data available</p>
+                    <p className="text-sm">{t('analyticsPage.noYieldData')}</p>
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={400}>
@@ -315,7 +315,7 @@ export default function AnalyticsPage() {
                         strokeWidth={2}
                         dot={{ fill: '#0f766e', r: 4 }}
                         activeDot={{ r: 6 }}
-                        name="Yield (kg)"
+                        name={t('analyticsPage.yieldKg')}
                       />
                     </ReLineChart>
                   </ResponsiveContainer>
@@ -331,13 +331,13 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <AlertTriangle className="h-4 w-4 text-red-500" />
-                    Total Reports
+                    {t('analyticsPage.totalReports')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{totalDiseases}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-gray-400">
-                    All disease reports
+                    {t('analyticsPage.allDiseaseReports')}
                   </div>
                 </CardContent>
               </Card>
@@ -345,14 +345,14 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Badge variant="primary" className="rounded-full px-1.5 py-0">R</Badge>
-                    Resolved
+                    {t('analyticsPage.resolved')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{resolvedDiseases}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                     <TrendingUp className="h-3 w-3" />
-                    {totalDiseases > 0 ? ((resolvedDiseases / totalDiseases) * 100).toFixed(0) : 0}% resolution
+                    {t('analyticsPage.resolutionPercent', { percent: totalDiseases > 0 ? ((resolvedDiseases / totalDiseases) * 100).toFixed(0) : 0 })}
                   </div>
                 </CardContent>
               </Card>
@@ -360,13 +360,13 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Activity className="h-4 w-4 text-amber-500" />
-                    Crops Affected
+                    {t('analyticsPage.cropsAffected')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{Object.keys(diseaseByCrop).length}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-gray-400">
-                    Distinct crop types
+                    {t('analyticsPage.distinctCropTypes')}
                   </div>
                 </CardContent>
               </Card>
@@ -374,17 +374,17 @@ export default function AnalyticsPage() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Disease Reports by Crop Type</CardTitle>
+                <CardTitle>{t('analyticsPage.diseaseByCropType')}</CardTitle>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <Download className="h-4 w-4" />
-                  Download
+                  {t('common.download')}
                 </Button>
               </CardHeader>
               <CardContent>
                 {diseaseChartData.length === 0 ? (
                   <div className="flex h-64 flex-col items-center justify-center text-gray-400">
                     <AlertTriangle className="mb-2 h-8 w-8" />
-                    <p className="text-sm">No disease reports available</p>
+                    <p className="text-sm">{t('analyticsPage.noDiseaseData')}</p>
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={400}>
@@ -400,7 +400,7 @@ export default function AnalyticsPage() {
                           boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                         }}
                       />
-                      <Bar dataKey="count" name="Reports" radius={[4, 4, 0, 0]}>
+                      <Bar dataKey="count" name={t('analyticsPage.reports')} radius={[4, 4, 0, 0]}>
                         {diseaseChartData.map((_, index) => (
                           <Cell key={index} fill={COLORS[index % COLORS.length]} />
                         ))}
@@ -419,14 +419,14 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Users className="h-4 w-4 text-blue-500" />
-                    Total Users
+                    {t('analyticsPage.totalUsers')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{users.length}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                     <TrendingUp className="h-3 w-3" />
-                    {stats?.user_growth ?? 0}% growth
+                    {t('analyticsPage.percentGrowth', { growth: stats?.user_growth ?? 0 })}
                   </div>
                 </CardContent>
               </Card>
@@ -434,43 +434,43 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Badge variant="secondary" className="rounded-full px-1.5 py-0">F</Badge>
-                    Farmers
+                    {t('analyticsPage.farmers')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">
                     {users.filter((u) => u.role === 'farmer').length}
                   </p>
-                  <div className="mt-1 text-xs text-gray-400">Primary users</div>
+                  <div className="mt-1 text-xs text-gray-400">{t('analyticsPage.primaryUsers')}</div>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <LineChart className="h-4 w-4 text-blue-500" />
-                    Months Active
+                    {t('analyticsPage.monthsActive')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-gray-900">{userByMonth.length}</p>
-                  <div className="mt-1 text-xs text-gray-400">With registrations</div>
+                  <div className="mt-1 text-xs text-gray-400">{t('analyticsPage.withRegistrations')}</div>
                 </CardContent>
               </Card>
             </div>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>User Registrations Over Time</CardTitle>
+                <CardTitle>{t('analyticsPage.userRegistrationsOverTime')}</CardTitle>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <Download className="h-4 w-4" />
-                  Download
+                  {t('common.download')}
                 </Button>
               </CardHeader>
               <CardContent>
                 {userByMonth.length === 0 ? (
                   <div className="flex h-64 flex-col items-center justify-center text-gray-400">
                     <Users className="mb-2 h-8 w-8" />
-                    <p className="text-sm">No user data available</p>
+                    <p className="text-sm">{t('analyticsPage.noUserData')}</p>
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={400}>
@@ -493,7 +493,7 @@ export default function AnalyticsPage() {
                         strokeWidth={2}
                         dot={{ fill: '#2563eb', r: 4 }}
                         activeDot={{ r: 6 }}
-                        name="New Users"
+                        name={t('analyticsPage.newUsers')}
                       />
                     </ReLineChart>
                   </ResponsiveContainer>
@@ -509,7 +509,7 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Leaf className="h-4 w-4 text-[#0f766e]" />
-                    Soil Health
+                    {t('analyticsPage.soilHealth')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -521,7 +521,7 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Activity className="h-4 w-4 text-blue-500" />
-                    Water Usage
+                    {t('analyticsPage.waterUsage')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -533,7 +533,7 @@ export default function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <Sprout className="h-4 w-4 text-amber-500" />
-                    Biodiversity
+                    {t('analyticsPage.biodiversity')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -546,17 +546,17 @@ export default function AnalyticsPage() {
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Sustainability Distribution</CardTitle>
+                  <CardTitle>{t('analyticsPage.sustainabilityDistribution')}</CardTitle>
                   <Button variant="ghost" size="sm" className="gap-2">
                     <Download className="h-4 w-4" />
-                    Download
+                    {t('common.download')}
                   </Button>
                 </CardHeader>
                 <CardContent>
                   {sustainabilityScores.length === 0 ? (
                     <div className="flex h-64 flex-col items-center justify-center text-gray-400">
                       <PieChart className="mb-2 h-8 w-8" />
-                      <p className="text-sm">No sustainability data available</p>
+                      <p className="text-sm">{t('analyticsPage.noSustainabilityData')}</p>
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height={400}>
@@ -591,52 +591,52 @@ export default function AnalyticsPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Score Breakdown</CardTitle>
+                  <CardTitle>{t('analyticsPage.scoreBreakdown')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-[#e2f0ee]0" />
-                        Good (&gt;0.7)
+                        {t('analyticsPage.good')}
                       </span>
                       <span className="font-medium text-gray-900">{good}</span>
                     </div>
                     <Progress value={(good / Math.max(sustainabilityScores.length, 1)) * 100} className="h-2.5" />
                     <p className="mt-1 text-xs text-gray-400">
-                      {sustainabilityScores.length > 0
+                      {t('analyticsPage.percentOfFarms', { percent: sustainabilityScores.length > 0
                         ? ((good / sustainabilityScores.length) * 100).toFixed(0)
-                        : 0}% of farms
+                        : 0 })}
                     </p>
                   </div>
                   <div>
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                        Fair (0.4–0.7)
+                        {t('analyticsPage.fair')}
                       </span>
                       <span className="font-medium text-gray-900">{fair}</span>
                     </div>
                     <Progress value={(fair / Math.max(sustainabilityScores.length, 1)) * 100} className="h-2.5" />
                     <p className="mt-1 text-xs text-gray-400">
-                      {sustainabilityScores.length > 0
+                      {t('analyticsPage.percentOfFarms', { percent: sustainabilityScores.length > 0
                         ? ((fair / sustainabilityScores.length) * 100).toFixed(0)
-                        : 0}% of farms
+                        : 0 })}
                     </p>
                   </div>
                   <div>
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                        Poor (&lt;0.4)
+                        {t('analyticsPage.poor')}
                       </span>
                       <span className="font-medium text-gray-900">{poor}</span>
                     </div>
                     <Progress value={(poor / Math.max(sustainabilityScores.length, 1)) * 100} className="h-2.5" />
                     <p className="mt-1 text-xs text-gray-400">
-                      {sustainabilityScores.length > 0
+                      {t('analyticsPage.percentOfFarms', { percent: sustainabilityScores.length > 0
                         ? ((poor / sustainabilityScores.length) * 100).toFixed(0)
-                        : 0}% of farms
+                        : 0 })}
                     </p>
                   </div>
                 </CardContent>

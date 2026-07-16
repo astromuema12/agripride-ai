@@ -51,12 +51,13 @@ function PageSkeleton() {
 }
 
 function RiskBadge({ risk }: { risk?: DiseaseReport['risk_level'] }) {
+  const { t } = useI18n();
   if (!risk) return null;
   const map: Record<string, { variant: 'destructive' | 'warning' | 'primary' | 'default'; label: string }> = {
-    critical: { variant: 'destructive', label: 'Critical' },
-    high: { variant: 'destructive', label: 'High' },
-    medium: { variant: 'warning', label: 'Medium' },
-    low: { variant: 'primary', label: 'Low' },
+    critical: { variant: 'destructive', label: t('dashboard.farmer.critical') },
+    high: { variant: 'destructive', label: t('dashboard.farmer.high') },
+    medium: { variant: 'warning', label: t('dashboard.farmer.medium') },
+    low: { variant: 'primary', label: t('dashboard.farmer.low') },
   };
   const { variant, label } = map[risk] ?? map.low;
   return <Badge variant={variant}>{label}</Badge>;
@@ -75,10 +76,11 @@ function TypeBadge({ type }: { type: Recommendation['type'] }) {
 }
 
 function StatusBadge({ status }: { status: DiseaseReport['status'] }) {
+  const { t } = useI18n();
   const map: Record<string, { variant: 'warning' | 'secondary' | 'primary'; label: string }> = {
-    submitted: { variant: 'warning', label: 'Submitted' },
-    reviewed: { variant: 'secondary', label: 'Reviewed' },
-    resolved: { variant: 'primary', label: 'Resolved' },
+    submitted: { variant: 'warning', label: t('dashboard.farmer.submitted') },
+    reviewed: { variant: 'secondary', label: t('dashboard.farmer.reviewed') },
+    resolved: { variant: 'primary', label: t('dashboard.farmer.resolved') },
   };
   const { variant, label } = map[status];
   return <Badge variant={variant}>{label}</Badge>;
@@ -97,6 +99,7 @@ function ConfidenceScore({ score }: { score?: number }) {
 }
 
 function FarmHealthScore({ score }: { score: number }) {
+  const { t } = useI18n();
   const healthColor = score >= 80 ? 'text-emerald-500' : score >= 60 ? 'text-amber-500' : 'text-red-500';
   const strokeColor = score >= 80 ? '#14b8a6' : score >= 60 ? '#f59e0b' : '#ef4444';
 
@@ -118,9 +121,9 @@ function FarmHealthScore({ score }: { score: number }) {
         <span className={`absolute text-xl font-bold ${healthColor} stat-highlight`}>{Math.round(score)}</span>
       </div>
       <div>
-        <p className="text-sm font-medium font-body text-[var(--foreground)]">Farm Health</p>
+        <p className="text-sm font-medium font-body text-[var(--foreground)]">{t('dashboard.farmer.farmHealth')}</p>
         <p className="text-xs text-[var(--muted-foreground)]">
-          {score >= 80 ? 'Excellent condition' : score >= 60 ? 'Needs attention' : 'At risk'}
+          {score >= 80 ? t('dashboard.farmer.excellentCondition') : score >= 60 ? t('dashboard.farmer.needsAttention') : t('dashboard.farmer.atRisk')}
         </p>
       </div>
     </div>
@@ -229,19 +232,19 @@ export default function FarmerDashboard() {
   const todayTasks = useMemo(() => {
     const tasks: { label: string; icon: React.ReactNode; href: string }[] = [];
     if (unreadNotifications.length > 0) {
-      tasks.push({ label: `${unreadNotifications.length} unread notifications`, icon: <Bell className="h-4 w-4" />, href: '/dashboard/notifications' });
+      tasks.push({ label: t('dashboard.farmer.unreadNotifications', { count: unreadNotifications.length }), icon: <Bell className="h-4 w-4" />, href: '/dashboard/notifications' });
     }
     if (reports.some(r => r.status === 'submitted')) {
-      tasks.push({ label: 'Review pending diagnosis results', icon: <FileSearch className="h-4 w-4" />, href: '/dashboard/farmer/disease' });
+      tasks.push({ label: t('dashboard.farmer.reviewPending'), icon: <FileSearch className="h-4 w-4" />, href: '/dashboard/farmer/disease' });
     }
     if (activeCrops.length > 0) {
-      tasks.push({ label: `Monitor ${activeCrops.length} growing crops`, icon: <Sprout className="h-4 w-4" />, href: '/dashboard/farmer/crops' });
+      tasks.push({ label: t('dashboard.farmer.monitorCrops', { count: activeCrops.length }), icon: <Sprout className="h-4 w-4" />, href: '/dashboard/farmer/crops' });
     }
     if (weather && weather.forecast && weather.forecast.some(f => (f.rainfall_chance || 0) > 70)) {
-      tasks.push({ label: 'Heavy rain expected - prepare fields', icon: <CloudSun className="h-4 w-4" />, href: '/dashboard/farmer/weather' });
+      tasks.push({ label: t('dashboard.farmer.heavyRainExpected'), icon: <CloudSun className="h-4 w-4" />, href: '/dashboard/farmer/weather' });
     }
     return tasks;
-  }, [unreadNotifications, reports, activeCrops, weather]);
+  }, [unreadNotifications, reports, activeCrops, weather, t]);
 
   if (loading) return <PageSkeleton />;
   if (!user) return null;
@@ -366,7 +369,7 @@ export default function FarmerDashboard() {
                     <div key={r.id} className="flex items-center justify-between rounded-lg bg-red-50 dark:bg-red-900/20 px-3 py-2">
                       <div>
                         <p className="text-sm font-medium text-red-800 dark:text-red-300">{r.crop_type}</p>
-                        <p className="text-xs text-red-600 dark:text-red-400">{r.disease_prediction || 'Analysis pending'}</p>
+                        <p className="text-xs text-red-600 dark:text-red-400">{r.disease_prediction || t('dashboard.farmer.analysisPending')}</p>
                       </div>
                       <RiskBadge risk={r.risk_level} />
                     </div>
@@ -446,7 +449,7 @@ export default function FarmerDashboard() {
                           <StatusBadge status={report.status} />
                         </div>
                         <p className="mt-0.5 text-xs text-[var(--muted-foreground)] truncate max-w-[200px]">
-                          {report.disease_prediction || 'Pending analysis'}
+                          {report.disease_prediction || t('dashboard.farmer.pendingAnalysis')}
                         </p>
                       </div>
                       <div className="flex items-center gap-3 ml-3">
@@ -544,7 +547,7 @@ export default function FarmerDashboard() {
                     const riskOrder = { critical: 0, high: 1, medium: 2, low: 3 } as const;
                     const riskCounts: Record<string, { risk: keyof typeof riskOrder; count: number }> = {};
                     reports.forEach(r => {
-                      const crop = r.crop_type || 'Unknown';
+                      const crop = r.crop_type || t('common.unknown');
                       const rl = (r.risk_level || 'low') as keyof typeof riskOrder;
                       const prev = riskCounts[crop];
                       if (!prev || riskOrder[rl] < riskOrder[prev.risk]) {
@@ -659,7 +662,7 @@ export default function FarmerDashboard() {
                           <FileSearch className="h-3.5 w-3.5 text-red-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-[var(--foreground)]">{r.disease_prediction || 'Disease report'} - {r.crop_type}</p>
+                          <p className="text-xs font-medium text-[var(--foreground)]">{r.disease_prediction || t('dashboard.farmer.diseaseReportFallback')} - {r.crop_type}</p>
                           <p className="text-[10px] text-[var(--muted-foreground)]">{timeAgo(r.created_at)}</p>
                         </div>
                         <StatusBadge status={r.status} />
