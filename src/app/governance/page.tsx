@@ -17,10 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 interface Framework {
   acronym: string;
-  name: string;
-  description: string;
-  implementation: string;
-  principles: string[];
+  translationKey: string;
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   gradient: string;
@@ -39,80 +36,56 @@ interface Decision {
 const frameworks: Framework[] = [
   {
     acronym: 'AIM',
-    name: 'Accountability in AI Model Management',
-    description: 'Ensures every AI model deployed in the platform is traceable to its training data, versioned, and accountable to a human overseer.',
-    implementation: 'All AI agents register their model versions with the governance layer. Each prediction includes the model ID, training snapshot hash, and a human-in-the-loop escalation path for low-confidence results.',
-    principles: ['Model Versioning', 'Human Oversight', 'Training Traceability', 'Confidence Thresholds'],
+    translationKey: 'aim',
     icon: BrainCircuit,
     color: 'text-[#2d6a4f]',
     gradient: 'from-[#2d6a4f] to-[#1a3a2a]',
   },
   {
     acronym: 'MAP',
-    name: 'Model Audit & Provenance',
-    description: 'Provides a complete audit trail for every model decision — from data ingestion through inference — ensuring full provenance and regulatory compliance.',
-    implementation: 'Every API call to AI services is logged with input hashes, output signatures, model parameters, and timestamps. These logs feed the centralized audit system and are immutable once written.',
-    principles: ['Full Audit Trail', 'Input/Output Hashing', 'Regulatory Compliance', 'Immutable Logs'],
+    translationKey: 'map',
     icon: FileSearch,
     color: 'text-blue-600',
     gradient: 'from-blue-500 to-blue-600',
   },
   {
     acronym: '4D',
-    name: 'Data-Driven Decision Framework',
-    description: 'Governs how data is collected, validated, transformed, and used in decision-making to prevent bias and ensure data quality.',
-    implementation: 'Data pipelines enforce schema validation at ingress, quality scoring at each transformation stage, and bias detection checks before data reaches training or inference pipelines.',
-    principles: ['Data Validation', 'Bias Detection', 'Quality Scoring', 'Pipeline Governance'],
+    translationKey: '4d',
     icon: Split,
     color: 'text-purple-600',
     gradient: 'from-purple-500 to-purple-600',
   },
   {
     acronym: 'TRACK',
-    name: 'Transparency, Responsibility, Accountability, Compliance, Knowledge',
-    description: 'A five-pillar framework that operationalises ethical AI by making every decision transparent, assignable, compliant, and well-documented.',
-    implementation: 'Each recommendation exposes its reasoning chain, assigned human responsible party, compliance tag (e.g. GDPR, local agri-regs), and links to relevant knowledge base articles.',
-    principles: ['Transparency', 'Responsibility', 'Accountability', 'Compliance', 'Knowledge'],
+    translationKey: 'track',
     icon: ScrollText,
     color: 'text-amber-600',
     gradient: 'from-amber-500 to-amber-600',
   },
   {
     acronym: 'OASIS',
-    name: 'Ownership, Access, Security, Informed Consent, Stewardship',
-    description: 'Protects farmer and stakeholder data through strict ownership models, role-based access, encryption, and revocable consent.',
-    implementation: 'All personal and farm data is tagged with ownership metadata. Access is enforced via RBAC with row-level security. Consent records are stored immutably and checked before every AI processing operation.',
-    principles: ['Data Ownership', 'Access Control', 'Security', 'Informed Consent', 'Stewardship'],
+    translationKey: 'oasis',
     icon: Lock,
     color: 'text-red-600',
     gradient: 'from-red-500 to-red-600',
   },
   {
     acronym: 'RANK',
-    name: 'Role Separation, Authority Boundaries, Need-To-Know Communication, Shared Knowledge Layer',
-    description: 'Defines strict boundaries between system roles (farmer, officer, admin, AI agent) while enabling a shared knowledge layer for collaboration.',
-    implementation: 'Each user role has a bounded set of permissions. AI agents operate in isolated contexts but contribute insights to a shared, access-controlled knowledge graph that spans the platform.',
-    principles: ['Role Separation', 'Authority Boundaries', 'Need-To-Know', 'Shared Knowledge'],
+    translationKey: 'rank',
     icon: Users,
     color: 'text-cyan-600',
     gradient: 'from-cyan-500 to-cyan-600',
   },
   {
     acronym: 'TRAIL',
-    name: 'Traceability, Reliability, Auditability, Integrity, Limits',
-    description: 'Ensures every AI-driven action can be traced back to its source, independently verified, and constrained within safe operational limits.',
-    implementation: 'Decision chains are recorded as directed acyclic graphs (DAGs) from trigger to action. Reliability scores are computed per agent. Integrity checksums verify data hasn\'t been tampered with. Hard and soft limits prevent unsafe actions.',
-    principles: ['Traceability', 'Reliability', 'Auditability', 'Integrity', 'Limits'],
+    translationKey: 'trail',
     icon: GitBranch,
     color: 'text-violet-600',
     gradient: 'from-violet-500 to-violet-600',
   },
   {
     acronym: 'HORIZON',
-    name: 'Holistic Oversight & Risk Intelligence Zone',
-    description: 'A strategic framework that continuously monitors the AI ecosystem for emerging risks, drift, and policy violations using dashboard-level intelligence.',
-    implementation: 'A dedicated governance dashboard aggregates risk scores, model drift metrics, policy violation alerts, and compliance status across all active AI agents and data pipelines in real time.',
-    principles: ['Risk Monitoring', 'Drift Detection', 'Policy Enforcement', 'Real-time Alerts'],
+    translationKey: 'horizon',
     icon: Eye,
     color: 'text-orange-600',
     gradient: 'from-orange-500 to-orange-600',
@@ -169,9 +142,10 @@ const frameworkCardVariants = {
 };
 
 function FrameworkCard({ framework, index }: { framework: Framework; index: number }) {
-  const { t } = useI18n();
+  const { t, translations } = useI18n();
   const [expanded, setExpanded] = useState(false);
   const Icon = framework.icon;
+  const fwData = translations.governance.frameworks[framework.translationKey as keyof typeof translations.governance.frameworks];
 
   return (
     <motion.div
@@ -199,7 +173,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
                   <span className={`font-bold ${framework.color}`}>{framework.acronym}</span>
                   {' '}
                   <span className="font-normal text-[var(--muted-foreground)]">|</span>{' '}
-                  {framework.name}
+                  {fwData.name}
                 </CardTitle>
               </div>
             </div>
@@ -211,7 +185,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
 
         <CardContent className="space-y-3 pt-0">
           <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
-            {framework.description}
+            {fwData.description}
           </p>
 
           <motion.div
@@ -225,7 +199,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
                   {t('governance.systemImplementation')}
                 </p>
                 <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
-                  {framework.implementation}
+                  {fwData.implementation}
                 </p>
               </div>
               <div>
@@ -233,7 +207,7 @@ function FrameworkCard({ framework, index }: { framework: Framework; index: numb
                   {t('governance.corePrinciples')}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {framework.principles.map((p) => (
+                  {fwData.principles.map((p) => (
                     <span
                       key={p}
                       className="inline-flex items-center gap-1 rounded-md bg-[var(--muted)] px-2 py-1 text-xs font-medium text-[var(--muted-foreground)] ring-1 ring-[var(--border)]"

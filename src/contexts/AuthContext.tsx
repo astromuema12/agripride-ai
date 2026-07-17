@@ -45,7 +45,7 @@ async function ensureUserProfile(authUser: { id: string; email?: string; user_me
     const newProfile = {
       id: authUser.id,
       email: authUser.email ?? '',
-      name: authUser.user_metadata?.name ?? authUser.email?.split('@')[0] ?? 'User',
+      name: authUser.user_metadata?.name ?? authUser.email?.split('@')[0] ?? t('authExtra.defaultUserName'),
       role: 'farmer' as UserRole,
       is_suspended: false,
     };

@@ -9,6 +9,7 @@ import { userSubscriptionService } from '@/services/subscription.service';
 import { writeAuditLog } from '@/lib/server-auth';
 import { logger } from '@/lib/logger';
 import { reportError, trackMetric } from '@/lib/monitoring';
+import { serverT } from '@/lib/i18n/server';
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -19,14 +20,14 @@ export async function POST(req: NextRequest) {
     logger.warn('Paystack webhook invalid signature', {
       component: 'paystack',
     });
-    return NextResponse.json({ status: 'error', message: 'Invalid signature' }, { status: 401 });
+    return NextResponse.json({ status: 'error', message: serverT('en', 'webhook.invalidSignature') }, { status: 401 });
   }
 
   let body: Record<string, unknown>;
   try {
     body = JSON.parse(rawBody);
   } catch {
-    return NextResponse.json({ status: 'error', message: 'Invalid JSON' }, { status: 400 });
+    return NextResponse.json({ status: 'error', message: serverT('en', 'webhook.invalidJson') }, { status: 400 });
   }
 
   const parsed = parsePaystackWebhook(body);
@@ -41,14 +42,14 @@ export async function POST(req: NextRequest) {
   });
 
   if (parsed.event !== 'charge.success') {
-    return NextResponse.json({ status: 'ignored', message: 'Event not handled' });
+    return NextResponse.json({ status: 'ignored', message: serverT('en', 'webhook.eventNotHandled') });
   }
 
   if (!parsed.reference) {
     logger.warn('Paystack webhook missing reference', {
       component: 'paystack',
     });
-    return NextResponse.json({ status: 'ignored', message: 'Missing reference' });
+    return NextResponse.json({ status: 'ignored', message: serverT('en', 'webhook.missingReference') });
   }
 
   const existing = await paystackTransactionService.getByReference(parsed.reference);
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
       component: 'paystack',
       metadata: { reference: parsed.reference },
     });
-    return NextResponse.json({ status: 'ignored', message: 'Unknown transaction' });
+    return NextResponse.json({ status: 'ignored', message: serverT('en', 'webhook.unknownTransaction') });
   }
 
   if (existing.status === 'success') {
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
       component: 'paystack',
       metadata: { reference: parsed.reference },
     });
-    return NextResponse.json({ status: 'ok', message: 'Already processed' });
+    return NextResponse.json({ status: 'ok', message: serverT('en', 'webhook.alreadyProcessed') });
   }
 
   const verify = await verifyPaystackTransaction(parsed.reference);
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest) {
     await reportError(new Error('Paystack verification failed'), {
       reference: parsed.reference,
     });
-    return NextResponse.json({ status: 'error', message: 'Verification failed' }, { status: 502 });
+    return NextResponse.json({ status: 'error', message: serverT('en', 'webhook.verificationFailed') }, { status: 502 });
   }
 
   const verifiedData = verify.data!;
@@ -158,5 +159,5 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ status: 'ok', message: 'Webhook processed' });
+  return NextResponse.json({ status: 'ok', message: serverT('en', 'webhook.processed') });
 }

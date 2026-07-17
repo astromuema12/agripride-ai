@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { serverSupabase, writeAuditLog } from '@/lib/server-auth';
 import { withErrorHandling, apiError, apiSuccess } from '@/lib/api-utils';
 import { logger } from '@/lib/logger';
+import { serverT } from '@/lib/i18n/server';
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -13,23 +14,23 @@ async function handler(req: NextRequest) {
   const userId = formData.get('userId') as string | null;
 
   if (!file) {
-    return apiError(400, 'No file provided');
+    return apiError(400, serverT('en', 'upload.noFile'));
   }
 
   if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    return apiError(400, `Invalid file type. Allowed: ${ALLOWED_MIME_TYPES.join(', ')}`);
+    return apiError(400, serverT('en', 'upload.invalidFileType', { types: ALLOWED_MIME_TYPES.join(', ') }));
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return apiError(400, `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB`);
+    return apiError(400, serverT('en', 'upload.fileTooLarge', { size: String(MAX_FILE_SIZE / 1024 / 1024) }));
   }
 
   if (file.size === 0) {
-    return apiError(400, 'File is empty');
+    return apiError(400, serverT('en', 'upload.fileEmpty'));
   }
 
   if (file.size < 100) {
-    return apiError(400, 'File too small or corrupted');
+    return apiError(400, serverT('en', 'upload.fileTooSmall'));
   }
 
   if (serverSupabase) {
@@ -58,7 +59,7 @@ async function handler(req: NextRequest) {
           component: 'upload',
           metadata: { declaredType: file.type, header, fileName: file.name },
         });
-        return apiError(400, 'File content does not match declared type');
+        return apiError(400, serverT('en', 'upload.contentMismatch'));
       }
 
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -78,7 +79,7 @@ async function handler(req: NextRequest) {
           error,
           metadata: { fileName },
         });
-        return apiError(500, 'Failed to upload file');
+        return apiError(500, serverT('en', 'upload.uploadFailed'));
       }
 
       const { data: { publicUrl } } = supabase.storage

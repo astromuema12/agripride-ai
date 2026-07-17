@@ -73,15 +73,15 @@ export default function TestimonialsPage() {
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="space-y-2">
                   <Label htmlFor="tname">{t('testimonials.name')} *</Label>
-                  <Input id="tname" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Edwin Musau" />
+                  <Input id="tname" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={t('testimonials.placeholders.name')} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="tlocation">{t('common.location')}</Label>
-                  <Input id="tlocation" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Nairobi, Kenya" />
+                  <Input id="tlocation" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={t('testimonials.placeholders.location')} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="tfarm">{t('testimonials.farmType')}</Label>
-                  <Input id="tfarm" value={form.farm_type} onChange={(e) => setForm({ ...form, farm_type: e.target.value })} placeholder="Maize Farmer" />
+                  <Input id="tfarm" value={form.farm_type} onChange={(e) => setForm({ ...form, farm_type: e.target.value })} placeholder={t('testimonials.placeholders.farmType')} />
                 </div>
               </div>
               <div className="space-y-2">

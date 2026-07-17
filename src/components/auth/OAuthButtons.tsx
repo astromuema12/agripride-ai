@@ -89,7 +89,7 @@ export function OAuthButtons({ mode = 'login', redirectTo }: OAuthButtonsProps) 
           ) : (
             <GoogleIcon className="h-4 w-4" />
           )}
-          Google
+          {t('auth.providers.google')}
         </Button>
         <Button
           variant="outline"
@@ -102,7 +102,7 @@ export function OAuthButtons({ mode = 'login', redirectTo }: OAuthButtonsProps) 
           ) : (
             <GitHubIcon className="h-4 w-4" />
           )}
-          GitHub
+          {t('auth.providers.github')}
         </Button>
       </div>
     </div>

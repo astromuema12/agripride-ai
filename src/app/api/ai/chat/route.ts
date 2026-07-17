@@ -17,6 +17,7 @@ const ChatSchema = z.object({
   message: z.string().min(1, 'Message is required').max(10000),
   userId: z.string().optional(),
   history: z.array(HistoryItemSchema).max(50).optional(),
+  language: z.string().optional(),
 });
 
 const GEMINI_MODEL = 'gemini-2.0-flash';
@@ -107,7 +108,8 @@ async function handler(req: NextRequest) {
   if (!parsed.success) return parsed.response;
 
   const message = sanitizeInput(parsed.data.message);
-  const { userId, history } = parsed.data;
+  const { userId, history, language } = parsed.data;
+  const locale = language || 'en';
   const sanitizedHistory = history?.map((h) => ({
     role: h.role as 'user' | 'assistant',
     content: sanitizeInput(h.content),
@@ -182,7 +184,7 @@ async function handler(req: NextRequest) {
           const duration = Date.now() - startTime;
           trackAiUsage('chat', duration, true, GEMINI_MODEL, userId);
         } else {
-          const agentResponse = getChatResponse(message);
+          const agentResponse = getChatResponse(message, locale);
           const fullResponse = agentResponse.success && agentResponse.data
             ? (agentResponse.data as { response: string }).response
             : 'I am your AgriPride AI assistant for Kenyan agriculture. I can help with planting advice, fertilizer recommendations, pest and disease management, weather information, and sustainability practices for all crops grown in Kenya. What would you like to know?';

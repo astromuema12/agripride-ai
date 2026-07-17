@@ -49,7 +49,7 @@ export default function AdminTicketsPage() {
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-semibold text-gray-900">{ticket.subject}</span>
-                        <Badge className="text-[10px] bg-yellow-100 text-yellow-700">{ticket.priority || 'medium'}</Badge>
+                        <Badge className="text-[10px] bg-yellow-100 text-yellow-700">{ticket.priority || t('common.medium')}</Badge>
                         <Badge className="text-[10px] bg-blue-100 text-blue-700 capitalize">{ticket.category || 'general'}</Badge>
                       </div>
                       <p className="mt-1 text-sm text-gray-500 line-clamp-3">{ticket.description}</p>

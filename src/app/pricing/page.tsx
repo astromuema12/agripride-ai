@@ -202,7 +202,7 @@ function PricingPageContent() {
 
                     <div className="mt-5 flex items-baseline gap-1">
                       <span className="text-3xl sm:text-4xl font-display text-[var(--foreground)]">
-                        {plan.price === 0 ? t('pricing.free') : `KES ${plan.price.toLocaleString()}`}
+                        {plan.price === 0 ? t('pricing.free') : t('landing.currencyKes', { value: plan.price.toLocaleString() })}
                       </span>
                       {plan.price > 0 && <span className="text-sm text-[var(--muted-foreground)] font-body">{t('pricing.perMonth')}</span>}
                     </div>

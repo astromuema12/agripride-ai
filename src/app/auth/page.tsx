@@ -143,16 +143,16 @@ function AuthForm() {
             <span className="font-display text-xl text-white">AgriPride</span>
           </div>
           <h2 className="font-display text-4xl text-white leading-tight max-w-sm">
-            Grow smarter,{'\n'}season after season.
+            {t('auth.brandTagline')}
           </h2>
         </div>
         <div className="relative">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="h-px w-8 bg-[#c4704b]" />
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Trusted by</span>
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('auth.trustedBy')}</span>
             </div>
-            <p className="text-white/50 text-sm font-body">15,000+ farmers across 47 counties in Kenya</p>
+            <p className="text-white/50 text-sm font-body">{t('auth.socialProof')}</p>
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ function AuthForm() {
             {showReset ? (
               <motion.div key="reset" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}>
                 <form onSubmit={handleReset} className="space-y-4">
-                  <FormField id="reset-email" label={t('auth.email')} type="email" placeholder="farmer@agripride.ai" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} autoComplete="email" />
+                  <FormField id="reset-email" label={t('auth.email')} type="email" placeholder={t('auth.placeholders.email')} value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} autoComplete="email" />
                   {error && <p className="flex items-center gap-1 text-sm text-red-500 font-body"><AlertCircle className="h-4 w-4" />{error}</p>}
                   <Button type="submit" className="w-full h-11" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -208,8 +208,8 @@ function AuthForm() {
 
                   <TabsContent value="login" className="mt-0">
                     <form onSubmit={handleLogin} className="space-y-4">
-                      <FormField id="email" label={t('auth.email')} type="email" placeholder="farmer@agripride.ai" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} autoComplete="email" />
-                      <FormField id="password" label={t('auth.password')} type="password" placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="current-password" />
+                      <FormField id="email" label={t('auth.email')} type="email" placeholder={t('auth.placeholders.email')} value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} autoComplete="email" />
+                      <FormField id="password" label={t('auth.password')} type="password" placeholder={t('auth.placeholders.password')} value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} showToggle showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} autoComplete="current-password" />
                       <div className="flex items-center justify-between">
                         <label className="flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="h-4 w-4 rounded border-[var(--border)] text-[#2d6a4f] focus:ring-[#2d6a4f] focus:ring-offset-0" />

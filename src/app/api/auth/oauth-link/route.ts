@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { serverT } from '@/lib/i18n/server';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -7,13 +8,13 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 export async function POST(request: Request) {
   try {
     if (!supabaseUrl || !supabaseAnonKey) {
-      return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
+      return NextResponse.json({ error: serverT('en', 'api.supabaseNotConfigured') }, { status: 500 });
     }
 
     const { userId, provider, providerAccountId, providerEmail } = await request.json();
 
     if (!userId || !provider || !providerAccountId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json({ error: serverT('en', 'api.missingRequiredFields') }, { status: 400 });
     }
 
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal server error';
+    const message = err instanceof Error ? err.message : serverT('en', 'api.internalServerError');
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

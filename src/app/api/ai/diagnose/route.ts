@@ -18,6 +18,7 @@ const DiagnoseSchema = z.object({
   growthStage: z.enum(GROWTH_STAGES).optional(),
   imageBase64: z.string().max(10_000_000).optional(),
   userId: z.string().optional(),
+  language: z.string().optional(),
 });
 
 async function handler(req: NextRequest) {
@@ -25,7 +26,8 @@ async function handler(req: NextRequest) {
   if (!parsed.success) return parsed.response;
 
   const sanitized = sanitizeObject({ cropType: parsed.data.cropType, symptoms: parsed.data.symptoms });
-  const { cropType, symptoms, growthStage, imageBase64, userId } = { ...parsed.data, ...sanitized };
+  const { cropType, symptoms, growthStage, imageBase64, userId, language } = { ...parsed.data, ...sanitized };
+  const locale = language || 'en';
   const startTime = Date.now();
 
   const isDemoMode = !process.env.GEMINI_API_KEY;

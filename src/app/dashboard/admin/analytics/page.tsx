@@ -288,14 +288,14 @@ export default function AdminAnalyticsPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-500">
                   <Users className="h-4 w-4 text-blue-500" />
-                  Total Users
+                  {t('adminAnalytics.totalUsers')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-gray-900">{users.length}</p>
                 <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                   <TrendingUp className="h-3 w-3" />
-                  {stats?.user_growth ?? 0}% growth
+                  {stats?.user_growth ?? 0}{t('dashboard.admin.growthSuffix')}
                 </div>
               </CardContent>
             </Card>
@@ -656,7 +656,7 @@ export default function AdminAnalyticsPage() {
                   </div>
                   <Progress value={(fair / Math.max(sustainabilityScores.length, 1)) * 100} className="h-2.5" />
                   <p className="mt-1 text-xs text-gray-400">
-                    {sustainabilityScores.length > 0 ? ((fair / sustainabilityScores.length) * 100).toFixed(0) : 0}% of farms
+                    {sustainabilityScores.length > 0 ? ((fair / sustainabilityScores.length) * 100).toFixed(0) : 0}{t('dashboard.admin.farmsPercent')}
                   </p>
                 </div>
                 <div>
@@ -669,7 +669,7 @@ export default function AdminAnalyticsPage() {
                   </div>
                   <Progress value={(poor / Math.max(sustainabilityScores.length, 1)) * 100} className="h-2.5" />
                   <p className="mt-1 text-xs text-gray-400">
-                    {sustainabilityScores.length > 0 ? ((poor / sustainabilityScores.length) * 100).toFixed(0) : 0}% of farms
+                    {sustainabilityScores.length > 0 ? ((poor / sustainabilityScores.length) * 100).toFixed(0) : 0}{t('dashboard.admin.farmsPercent')}
                   </p>
                 </div>
               </CardContent>

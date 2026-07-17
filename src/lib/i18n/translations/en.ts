@@ -222,6 +222,19 @@ export const en = {
     previous: 'Previous',
     nextPeriod: 'Next Period',
     thisPeriod: 'This Period',
+    units: {
+      kmPerHour: 'km/h',
+      mm: 'mm',
+      kg: 'kg',
+      mb: 'MB',
+      percent: '%',
+      perKg: '/ kg',
+      on: ' on ',
+      csv: 'CSV',
+      json: 'JSON',
+      excel: 'Excel',
+      pdf: 'PDF',
+    },
   },
 
   nav: {
@@ -478,6 +491,51 @@ export const en = {
         critical: 'Critical',
       },
     },
+    heroBadge: 'Intelligence for African Agriculture',
+    heroHeadline: 'Your crops deserve {highlight} care.',
+    heroCtaStart: 'Start growing smarter',
+    heroCtaLearn: 'See how it works',
+    heroStatAccuracy: 'Accuracy',
+    heroStatCounties: 'Counties',
+    problemBadge: 'The challenge',
+    problemHeadline: 'African agriculture loses billions every year.',
+    problemDescription: 'Smallholder farmers feed the continent, yet they operate without the tools that large-scale operations take for granted. Late diagnosis, unpredictable weather, and volatile markets compound into preventable losses.',
+    problemStatCropLosses: 'of crop losses are preventable with early diagnosis',
+    problemStatHigherYields: 'higher yields with data-driven farming decisions',
+    problemStatNoExtension: 'of African farmers lack access to extension services',
+    howItWorksBadge: 'How it works',
+    howItWorksHeadline: 'Three steps to smarter farming.',
+    howItWorksStep1Title: 'Connect your farm',
+    howItWorksStep1Desc: 'Register your crops, soil type, and location. Our system builds a profile of your unique growing conditions.',
+    howItWorksStep2Title: 'Get intelligent guidance',
+    howItWorksStep2Desc: 'AI agents monitor your crops, analyze disease symptoms, and deliver weather-aware recommendations in real time.',
+    howItWorksStep3Title: 'Grow with confidence',
+    howItWorksStep3Desc: 'Make informed decisions backed by data. Track your progress, optimize inputs, and increase your harvest season over season.',
+    rootFeaturesBadge: 'Features',
+    rootFeaturesHeadline: "Everything your farm needs, nothing it doesn't.",
+    rootFeaturesDiseaseDiagnosis: 'Disease Diagnosis',
+    rootFeaturesDiseaseDiagnosisDesc: 'Photograph a sick plant and get a diagnosis in seconds. Our AI identifies diseases with 98.5% accuracy across 50+ crop types.',
+    rootFeaturesWeatherIntelligence: 'Weather Intelligence',
+    rootFeaturesWeatherIntelligenceDesc: 'Hyper-local forecasts combined with crop-specific alerts. Know exactly when to plant, irrigate, and harvest.',
+    rootFeaturesAiFarmAssistant: 'AI Farm Assistant',
+    rootFeaturesAiFarmAssistantDesc: 'Ask questions in plain language. Get advice on planting schedules, pest control, and soil management tailored to your region.',
+    rootFeaturesYieldAnalytics: 'Yield Analytics',
+    rootFeaturesYieldAnalyticsDesc: 'Track farm performance over seasons. Identify patterns, predict yields, and optimize your resource allocation.',
+    rootFeaturesMarketIntelligence: 'Market Intelligence',
+    rootFeaturesMarketIntelligenceDesc: 'Real-time commodity prices from markets across Kenya. Know when to sell and where to get the best margins.',
+    rootFeaturesSustainabilityScoring: 'Sustainability Scoring',
+    rootFeaturesSustainabilityScoringDesc: 'Measure your environmental impact. Get actionable steps to improve soil health and reduce chemical inputs.',
+    rootTestimonialsBadge: 'From the field',
+    rootTestimonialsHeadline: 'Real farmers, real results.',
+    rootTestimonialsReviewCount: '{count}+ reviews',
+    rootPricingBadge: 'Pricing',
+    rootPricingHeadline: 'Simple plans for every scale.',
+    rootFaqHeadline: 'Common questions.',
+    ctaHeadline: 'Ready to grow differently?',
+    ctaDescription: 'Join 15,000+ farmers across 47 counties who are already using AgriPride to make smarter decisions, every season.',
+    ctaGetStartedFree: 'Get started for free',
+    ctaTalkToTeam: 'Talk to our team',
+    currencyKes: 'KES {value}',
   },
 
   auth: {
@@ -594,6 +652,16 @@ export const en = {
     farmer: 'Farmer',
     officer: 'Agricultural Officer',
     admin: 'Administrator',
+    placeholders: {
+      email: 'farmer@agripride.ai',
+      password: '••••••••',
+      totpCode: '000000',
+    },
+    recoveryCodes: {
+      separator: '========================',
+      generatedLabel: 'Generated: ',
+      filename: 'agripride-recovery-codes.txt',
+    },
   },
 
   legal: {
@@ -848,6 +916,11 @@ export const en = {
       riskSubmitted: 'Submitted',
       riskReviewed: 'Reviewed',
       riskResolved: 'Resolved',
+      weatherUnits: {
+        windSpeed: 'km/h',
+        rainfall: 'mm',
+      },
+      yieldUnit: 'kg',
     },
 
     officer: {
@@ -923,6 +996,45 @@ export const en = {
       failedToLoadDashboard: 'Failed to load dashboard data',
       unknownFarmer: 'Unknown Farmer',
       unknownRegion: 'Unknown Region',
+      reports: {
+        recentReports: {
+          farmerActivityJune: 'Farmer Activity - June 2026',
+          diseaseOutbreakWeek22: 'Disease Outbreak Analysis - Week 22',
+          regionalSummary: 'Regional Summary - Rift Valley',
+          sustainabilityScorecard: 'Sustainability Scorecard Q2',
+          monthlyDiseaseMay: 'Monthly Disease Summary - May',
+          farmerActivityMay: 'Farmer Activity - May 2026',
+        },
+      },
+    },
+
+    finance: {
+      categories: {
+        seeds: 'Seeds',
+        fertilizer: 'Fertilizer',
+        pesticide: 'Pesticide',
+        labor: 'Labor',
+        equipment: 'Equipment',
+        irrigation: 'Irrigation',
+        fuel: 'Fuel',
+        other: 'Other',
+      },
+      revenueSources: {
+        crop_sales: 'Crop Sales',
+        livestock_sales: 'Livestock Sales',
+        consulting: 'Consulting',
+        equipment_rental: 'Equipment Rental',
+        other: 'Other',
+      },
+    },
+
+    error: {
+      errorPage: {
+        title: 'Something went wrong',
+        description: 'An unexpected error occurred loading this page.',
+        tryAgain: 'Try Again',
+        goHome: 'Go Home',
+      },
     },
 
     admin: {
@@ -998,6 +1110,26 @@ export const en = {
       failedToUpdateUser: 'Failed to update user',
       userSuspended: 'User {name} suspended successfully',
       userActivated: 'User {name} activated successfully',
+      fallbackName: 'Admin',
+      auditActions: {
+        user_login: 'User Login',
+        user_register: 'User Register',
+        profile_update: 'Profile Update',
+        farm_create: 'Farm Create',
+        farm_update: 'Farm Update',
+        disease_report: 'Disease Report',
+        consent_grant: 'Consent Grant',
+        consent_revoke: 'Consent Revoke',
+        subscription_activate: 'Subscription Activate',
+        payment_process: 'Payment Process',
+      },
+      userRoles: {
+        farmer: 'Farmer',
+        officer: 'Extension Officer',
+        admin: 'Administrator',
+      },
+      growthSuffix: '% growth',
+      farmsPercent: '% of farms',
     },
   },
 
@@ -1090,6 +1222,7 @@ export const en = {
       spraying: 'Good conditions for spraying',
       notSpraying: 'Not ideal for spraying',
     },
+    locale: 'en-US',
     intelligence: 'Weather Intelligence',
     intelligenceDesc: 'Real-time weather data and 7-day forecast for your region',
     noData: 'No Weather Data',
@@ -1260,6 +1393,17 @@ export const en = {
       nyanza: 'Nyanza',
       north_eastern: 'North Eastern',
     },
+    regionsList: {
+      allRegions: 'All Regions',
+      riftValley: 'Rift Valley',
+      central: 'Central',
+      coastal: 'Coastal',
+      eastern: 'Eastern',
+      western: 'Western',
+      nyanza: 'Nyanza',
+      northEastern: 'North Eastern',
+    },
+    placeholder: '---',
   },
 
   assistant: {
@@ -1297,6 +1441,14 @@ export const en = {
       rank: 'Risk Assessment & Navigation Kit',
       description: 'This response follows AgriPride AI governance frameworks.',
     },
+    frameworks: {
+      aim: 'AIM Framework',
+      map: 'MAP Framework',
+      track: 'TRACK Framework',
+      rank: 'RANK Framework',
+      trail: 'TRAIL Framework',
+      oasis: 'OASIS Framework',
+    },
   },
 
   pricing: {
@@ -1327,6 +1479,7 @@ export const en = {
     alreadyActive: 'Your subscription is already active.',
     subscriptionActivated: 'Subscription activated!',
     contactSales: 'Contact Sales',
+    currencyPrefix: 'KES ',
     freePlan: {
       description: 'Essential tools for small-scale farmers',
       features: ['Basic disease detection', 'Weather forecasts', 'Market prices', 'Community support'],
@@ -1400,6 +1553,16 @@ export const en = {
     privacyNotice: 'By submitting, you agree to our Privacy Policy',
     supportHours: 'Support Hours',
     supportHoursDesc: 'Monday - Friday: 8:00 AM - 6:00 PM EAT',
+    socialPlatforms: {
+      linkedin: 'LinkedIn',
+      facebook: 'Facebook',
+      instagram: 'Instagram',
+    },
+    badge: 'Contact',
+    messageTooLarge: 'Message too large',
+    successMessage: 'Thank you for contacting us. We will respond within 24 hours.',
+    failedToSend: 'Failed to send',
+    failedToSendMessage: 'Failed to send message',
   },
 
   support: {
@@ -1467,6 +1630,7 @@ export const en = {
     supportUser: 'Support User',
     supportEmail: 'user@agripride.ai',
     failedToSubmit: 'Failed to submit ticket',
+    ticketPrefix: '[SUPPORT]',
   },
 
   reports: {
@@ -1803,7 +1967,7 @@ export const en = {
     soilType: 'Soil Type',
     predicted: 'Predicted Yield',
     confidence: 'Confidence',
-    factors: 'Contributing Factors',
+    contributingFactorsLabel: 'Contributing Factors',
     weatherImpact: 'Weather Impact',
     soilImpact: 'Soil Health Impact',
     pestImpact: 'Pest & Disease Risk',
@@ -1829,6 +1993,43 @@ export const en = {
     noPredictions: 'No predictions yet',
     failedToLoadFarmData: 'Failed to load farm data',
     failedToSavePrediction: 'Failed to save prediction',
+    factors: {
+      maize: {
+        soilFertility: 'Soil fertility score',
+        rainfall: 'Rainfall patterns',
+        temperature: 'Temperature range',
+        plantingDensity: 'Planting density',
+        pestPressure: 'Pest pressure',
+      },
+      wheat: {
+        soilNitrogen: 'Soil nitrogen levels',
+        growingDegree: 'Growing degree days',
+        waterAvailability: 'Water availability',
+        varietyGenetics: 'Variety genetics',
+        diseaseHistory: 'Disease history',
+      },
+      rice: {
+        waterManagement: 'Water management',
+        nitrogenApplication: 'Nitrogen application',
+        transplantingTiming: 'Transplanting timing',
+        weedControl: 'Weed control',
+        solarRadiation: 'Solar radiation',
+      },
+      cassava: {
+        soilOrganic: 'Soil organic matter',
+        rainfallDistribution: 'Rainfall distribution',
+        cuttingQuality: 'Cutting quality',
+        harvestTiming: 'Harvest timing',
+        intercropping: 'Intercropping effect',
+      },
+      beans: {
+        soilPhosphorus: 'Soil phosphorus',
+        rhizobia: 'Rhizobia inoculation',
+        rainfallIntensity: 'Rainfall intensity',
+        shadeManagement: 'Shade management',
+        rotationHistory: 'Rotation history',
+      },
+    },
   },
 
   sustainability: {
@@ -1948,6 +2149,7 @@ export const en = {
     allNotifications: 'All Notifications',
     newCount: '{count} new',
     unreadCount: 'You have {count} unread',
+    locale: 'en-US',
     types: {
       disease_alert: 'Disease Alert',
       weather_alert: 'Weather Alert',
@@ -1999,6 +2201,7 @@ export const en = {
     dangerZone: 'Danger Zone',
     dangerZoneDesc: 'Irreversible actions for your account security',
     deleteAccount: 'Delete Account',
+    sessionOn: ' on ',
   },
 
   onboarding: {
@@ -2076,19 +2279,61 @@ export const en = {
     stepIndicator: 'Step {current}/{total}',
     continue: 'Continue',
     completeSetup: 'Complete Setup',
+    farmSizePlaceholder: '2.5',
   },
 
   governance: {
     title: 'AI Governance Center',
     subtitle: 'Transparent, accountable, and ethical AI for agriculture',
     frameworks: {
-      aim: 'Accountability & Impact',
-      map: 'Monitoring & Adaptation Protocol',
-      rank: 'Risk Assessment & Navigation Kit',
-      trail: 'Transparency & Auditability',
-      oasis: 'Oversight & Assurance System',
-      track: 'Trust & Compliance Framework',
-      horizon: 'Holistic Impact Assessment',
+      aim: {
+        name: 'Accountability in AI Model Management',
+        description: 'Ensures every AI model deployed in the platform is traceable to its training data, versioned, and accountable to a human overseer.',
+        implementation: 'All AI agents register their model versions with the governance layer. Each prediction includes a model hash and confidence score. Human auditors can review any decision.',
+        principles: ['Model Versioning', 'Human Oversight', 'Training Traceability', 'Confidence Thresholds'],
+      },
+      map: {
+        name: 'Model Audit Protocol',
+        description: 'Provides systematic auditing of AI models for bias, accuracy, and fairness across different regions and crop types.',
+        implementation: 'Monthly model audits compare predictions against verified outcomes. Bias detection runs across all demographic and geographic segments.',
+        principles: ['Regular Audits', 'Bias Detection', 'Fairness Metrics', 'Regional Calibration'],
+      },
+      '4d': {
+        name: 'Four Dimensions of Trust',
+        description: 'Evaluates AI outputs across four critical dimensions: accuracy, timeliness, relevance, and explainability.',
+        implementation: 'Each AI output is scored across all four dimensions. Results below threshold trigger automatic review and reprocessing.',
+        principles: ['Accuracy Scoring', 'Timeliness Checks', 'Relevance Matching', 'Explainability Reports'],
+      },
+      track: {
+        name: 'Transparency & Accountability in AI Knowledge',
+        description: 'Ensures complete transparency in how AI decisions are made and provides accountability for every recommendation.',
+        implementation: 'Every AI decision is logged with full reasoning chain. Users can view the evidence basis for any recommendation.',
+        principles: ['Decision Logging', 'Reasoning Chains', 'Evidence Basis', 'User Transparency'],
+      },
+      oasis: {
+        name: 'Ownership & AI Security Infrastructure System',
+        description: 'Protects farmer data ownership and ensures robust security infrastructure for all AI operations.',
+        implementation: 'Farm data is encrypted at rest and in transit. Farmers maintain full ownership and can export or delete their data at any time.',
+        principles: ['Data Encryption', 'Farmer Ownership', 'Consent Management', 'Secure Infrastructure'],
+      },
+      rank: {
+        name: 'Role-based Access & Network Knowledge',
+        description: 'Controls access to AI features and data based on user roles and responsibilities.',
+        implementation: 'Each user role has defined permissions for data access and AI feature usage. Network effects improve recommendations for all users.',
+        principles: ['Role Permissions', 'Data Segregation', 'Network Learning', 'Access Controls'],
+      },
+      trail: {
+        name: 'Traceable Record of AI Logic',
+        description: 'Maintains a complete audit trail for every AI interaction, from input to output to outcome.',
+        implementation: 'Every AI interaction generates a traceable record stored in an immutable log. Auditors can reconstruct the full decision path.',
+        principles: ['Immutable Logs', 'Decision Traces', 'Audit Reports', 'Compliance Records'],
+      },
+      horizon: {
+        name: 'Holistic Oversight for Responsible AI',
+        description: 'Provides comprehensive oversight of AI systems to ensure responsible operation across all agricultural contexts.',
+        implementation: 'Continuous monitoring of AI system health, fairness, and impact. Automated alerts for anomalies or degradation.',
+        principles: ['System Monitoring', 'Impact Assessment', 'Fairness Tracking', 'Continuous Improvement'],
+      },
     },
     principles: {
       fairness: 'Fairness',
@@ -2126,6 +2371,28 @@ export const en = {
     confidence: 'Confidence',
     responsibleAgent: 'Responsible Agent',
     frameworksLabel: 'Frameworks',
+    demoDecisions: {
+      sourceData: {
+        maizeImage: 'Maize leaf image — Farm KAL-042',
+        weatherFeed: 'Weather feed — Western Region',
+        soilSample: 'Soil sample S-8821 — pH & NPK',
+        pesticideRequest: 'Pesticide recommendation request — Farm MAC-019',
+        consentRenewal: 'Consent renewal — Farmer J. Mwangi',
+        satelliteImagery: 'Satellite imagery — Rift Valley region',
+        yieldPrediction: 'Yield prediction input — Farm NAK-107',
+        irrigationSchedule: 'Irrigation schedule — Farm KSM-203',
+      },
+      agents: {
+        cropDisease: 'Crop Disease Agent (v2.4)',
+        weatherIntelligence: 'Weather Intelligence Agent',
+        soilHealth: 'Soil Health Agent (v3.1)',
+        cropAdvisory: 'Crop Advisory Agent',
+        consentManagement: 'Consent Management Service',
+        diseaseSurveillance: 'Disease Surveillance Agent',
+        yieldPrediction: 'Yield Prediction Agent',
+        irrigation: 'Irrigation Agent (v1.2)',
+      },
+    },
   },
 
   tickets: {
@@ -2155,6 +2422,12 @@ export const en = {
     revoked: 'Revoked',
     allTypes: 'All Types',
     type: {
+      data_collection: 'Data Collection',
+      ai_processing: 'AI Processing',
+      disease_diagnosis: 'Disease Diagnosis',
+      weather_monitoring: 'Weather Monitoring',
+    },
+    types: {
       data_collection: 'Data Collection',
       ai_processing: 'AI Processing',
       disease_diagnosis: 'Disease Diagnosis',
@@ -2279,6 +2552,11 @@ export const en = {
     toastRequired: 'Name and testimonial are required',
     toastSubmitted: 'Testimonial submitted for review!',
     toastFailed: 'Failed to submit',
+    placeholders: {
+      name: 'Edwin Musau',
+      location: 'Nairobi, Kenya',
+      farmType: 'Maize Farmer',
+    },
   },
 
   errors: {
@@ -2320,6 +2598,7 @@ export const en = {
     loading: 'Loading Horizon Impact...',
     title: 'HORIZON Impact Dashboard',
     subtitle: 'Projected impact across farmers, communities, and the environment',
+    sdgPrefix: 'SDG ',
     sdg: {
       zeroHunger: 'Zero Hunger',
       climateAction: 'Climate Action',
@@ -2422,6 +2701,15 @@ export const en = {
       subtitle: 'From farmer livelihoods to planetary health \u2014 AgriPride AI is building a sustainable, food-secure future.',
       viewFullReport: 'View Full Report',
     },
+    sdgLabel: 'SDG {number}: {label}',
+    sdgNumber: 'SDG {number}',
+    sdg2: 'SDG 2',
+    sdg13Label: 'SDG 13 ({description})',
+    sdg15Label: 'SDG 15 ({description})',
+    unitReduction: '% reduction',
+    unitSavings: '% savings',
+    unitImprovement: '% improvement',
+    unitAvgScore: '% avg score',
   },
 
   accessibility: {
@@ -2536,6 +2824,7 @@ export const en = {
     sustainabilityFair: 'Fair (0.4–0.7)',
     sustainabilityPoor: 'Poor (<0.4)',
     percentOfFarms: '{percent}% of farms',
+    chartReports: 'Reports',
   },
 
   passwordStrength: {
@@ -2554,6 +2843,7 @@ export const en = {
     avoidSequentialNumbers: 'Avoid sequential numbers like "123"',
     avoidSequentialLetters: 'Avoid sequential letters like "abc"',
     avoidLongRepeated: 'Avoid long repeated characters',
+    scoreSuffix: '/100',
   },
 
   email: {
@@ -2577,6 +2867,740 @@ export const en = {
     adminName: 'Admin User',
     officerName: 'Jane Extension',
     farmerDemoName: 'John Farmer',
+  },
+
+  validation: {
+    messageRequired: 'Message is required',
+    cropTypeRequired: 'Crop type is required',
+    symptomsRequired: 'Symptoms are required',
+    nameRequired: 'Name is required',
+    subjectRequired: 'Subject is required',
+    invalidEmail: 'Invalid email address',
+    userIdRequired: 'User ID is required',
+    validEmailRequired: 'Valid email required',
+    testimonialContentRequired: 'Testimonial content is required',
+  },
+
+  chat: {
+    fallbackResponse: 'I am your AgriPride AI assistant for Kenyan agriculture. I can help with planting advice, fertilizer recommendations, pest and disease management, weather information, and sustainability practices for all crops grown in Kenya. What would you like to know?',
+    errorProcessing: 'I apologize, but I encountered an error processing your request. Please try again.',
+    errorBusy: 'The AI service is temporarily busy. Please wait a moment and try again.',
+    errorMisconfigured: 'The AI service is not properly configured. Please contact support.',
+    errorTimeout: 'The AI service took too long to respond. Please try again.',
+  },
+
+  diagnosis: {
+    categoryDetected: '{name} detected in {type} category.',
+    treatmentRecommended: 'Treatment recommended.',
+    monitorClosely: 'Monitor closely.',
+    primaryFallback: 'Primary diagnosis: {name}. {treatment}',
+    consultOfficer: 'Consult an agricultural extension officer for treatment options.',
+    analysisCompleted: 'Analysis completed.',
+    noImageFallback: '{name} detected based on reported symptoms. No image was provided for visual confirmation.',
+    textBasedDiagnosis: 'Diagnosis based on reported symptoms: {name}. Consider uploading a plant image for more accurate analysis.',
+    errorBusy: 'AI service is temporarily busy. Please try again shortly.',
+    errorAuthFailed: 'AI service authentication failed. Please contact support.',
+    errorModelUnavailable: 'AI model not available. Please contact support.',
+    errorTimeout: 'AI service timed out. Please try again.',
+    errorGeneric: 'AI diagnosis failed. Please try again.',
+    treatmentLabel: 'Treatment:',
+    preventionLabel: 'Prevention:',
+    typeLabel: 'Type:',
+    confidenceLabel: 'Confidence:',
+    uncertaintyLabel: 'Uncertainty:',
+    reasoningLabel: 'Reasoning:',
+    possibleCausesLabel: 'Possible causes:',
+    analysisFor: 'Analysis for',
+    uncertaintyLevel: 'Uncertainty Level:',
+    diagnosisFor: 'Diagnosis for',
+    otherCauses: 'Other possible causes:',
+    recommendedTreatment: 'Recommended Treatment',
+    suggestedTreatment: 'Suggested Treatment',
+  },
+
+  diagnoseImage: {
+    rateLimit: 'Our AI service is temporarily busy. Please wait a moment and try again.',
+    serviceUnavailable: 'The AI service is temporarily unavailable. Please try again shortly.',
+    connectionError: 'Could not reach the AI service. Please check your connection and try again.',
+    unexpectedError: 'Something went wrong while analyzing the image. Please try again.',
+    safetyBlocked: 'The image was blocked by content filters. Please try a different image.',
+    invalidKey: 'The AI service is not properly configured. Please contact support.',
+    permissionDenied: 'The AI service does not have permission to process this request. Please contact support.',
+    invalidModel: 'The AI model is not available. Please contact support.',
+    timeout: 'The AI service took too long to respond. Please try again.',
+    authError: 'Authentication failed with the AI service. Please contact support.',
+    freeTierLimit: 'Free tier limit reached. You have used {used} of {limit} analyses this week.',
+    pleaseUpload: 'Please upload an image to diagnose.',
+    invalidImageType: 'Invalid image type: {type}. Please upload JPG, PNG, or WebP.',
+    imageTooLarge: 'Image too large: {size}MB. Maximum is 10MB.',
+    emptyResponse: 'AI returned an empty response. Please try uploading a clearer image.',
+    invalidFormat: 'AI returned an invalid response format. Please try again.',
+    unknownCondition: 'Unknown Condition',
+    fallbackTreatment: 'Consult a local agricultural extension officer for treatment recommendations.',
+    fallbackPrevention: 'Monitor plants regularly for early signs of disease.',
+    analysisCompletedFor: 'Analysis completed for {disease}.',
+  },
+
+  disclaimer: {
+    aiDiagnosis: 'This is an AI-assisted diagnosis. Results should be verified by a local agricultural extension officer.',
+    demoDiagnosis: 'This is a demo diagnosis. Results are simulated. Always consult a local agricultural extension officer before applying treatments.',
+  },
+
+  agent: {
+    aiDiagnosis: 'AI Disease Diagnostic Agent',
+    cropDiagnosis: 'Crop Disease Diagnostic Agent',
+  },
+
+  frameworks: {
+    aimMapTrack: 'AIM Framework, MAP Framework, TRACK Framework',
+  },
+
+  aiChat: {
+    agentNames: {
+      cropDisease: 'Crop Disease Diagnostic Agent',
+      cropAdvisor: 'Crop Advisor Agent',
+      weatherIntelligence: 'Weather Intelligence Agent',
+      generalAssistant: 'General AI Assistant',
+      poultrySpecialist: 'Poultry Specialist Agent',
+      aquacultureSpecialist: 'Aquaculture Specialist Agent',
+      beekeepingSpecialist: 'Beekeeping Specialist Agent',
+      irrigationSpecialist: 'Irrigation Specialist Agent',
+      postHarvestSpecialist: 'Post-Harvest Specialist Agent',
+      farmEconomicsSpecialist: 'Farm Economics Specialist Agent',
+      greenhouseSpecialist: 'Greenhouse Specialist Agent',
+      sustainabilitySpecialist: 'Sustainability and Soil Specialist Agent',
+    },
+    weatherAdvisories: {
+      normal: 'Normal weather conditions expected. Continue regular farm operations.',
+      heavyRain: 'Heavy rainfall expected. Ensure drainage systems are clear. Delay planting or harvesting activities.',
+      highTemp: 'High temperatures forecast. Increase irrigation frequency. Provide shade for sensitive seedlings.',
+      dry: 'Dry conditions predicted. Conserve water. Prioritize irrigation for high-value crops.',
+    },
+    currentConditionsOnly: 'Current conditions only',
+    fallbackAdvice: 'For {crop}, we recommend consulting local agricultural extension services for specific guidance tailored to your region.',
+    welcome: 'Hello! I am your AgriPride AI farming assistant. How can I help you today?\n\nI can help you with:\n- Crop disease diagnosis and treatment\n- Weather-based farming advice\n- Planting schedules and crop recommendations\n- Pest and disease management\n- Soil management and fertilization\n- Irrigation scheduling\n- Market price information\n- Sustainable farming practices\n\nWhat would you like to know?',
+    crops: {
+      maize: {
+        planting: 'Plant maize at the onset of rains when soil temperature reaches 18-22\u00B0C. Use certified seed varieties like H614 or Kalro OPV for your region. Maintain 75cm between rows and 25cm between plants for optimal spacing.',
+        fertilizer: 'Apply DAP at 100kg/ha at planting. Top-dress with CAN at 200kg/ha 6 weeks after emergence. For acidic soils, apply lime at 2 tons/ha before planting to optimize pH.',
+        pest: 'Monitor for Fall Armyworm using pheromone traps. Apply approved insecticides at the EARLIEST sign of infestation. Rotate chemical classes to prevent resistance. Scout fields weekly during the growing season.',
+      },
+      wheat: {
+        planting: 'Plant wheat during the long rains (March-May) at 100-120 kg/ha seed rate. Use certified varieties like Kenya Fahari or Eagle 10. Ensure well-drained fields with pH 6.0-7.5.',
+        fertilizer: 'Apply DAP at baseline and top-dress with urea at 150 kg/ha. Wheat responds well to sulfur \u2014 consider applying gypsum at 200 kg/ha on deficient soils.',
+        pest: 'Watch for wheat stem rust and wheat blast. Apply fungicides preventively during wet seasons. Use resistant varieties and maintain field hygiene by removing crop residues.',
+      },
+      rice: {
+        planting: 'For paddy rice, prepare well-leveled fields with bunds for water management. Transplant 21-day-old seedlings at 20\u00D715 cm spacing. Maintain 5cm water level during vegetative stage.',
+        fertilizer: 'Apply basal dose of DAP and top-dress with urea in 3 splits \u2014 at transplanting, tillering, and panicle initiation. Total N requirement is 120-150 kg/ha.',
+        pest: 'Manage rice stem borers with pheromone traps and timely application of neem-based products. Maintain proper water management to reduce pest incidence. Scout for rice blast during humid conditions.',
+      },
+      sorghum: {
+        planting: 'Plant sorghum at the onset of rains at 5-8 kg/ha. Use improved varieties like Gadam or Serena. Maintain 60cm between rows and 15cm between plants.',
+        fertilizer: 'Apply 2 bags of DAP per acre at planting. Top-dress with 1 bag of CAN 4-6 weeks after emergence. Sorghum is efficient at nutrient uptake in low-fertility soils.',
+        pest: 'Watch for sorghum shoot fly and stem borer. Use resistant varieties and practice crop rotation. Apply seed treatment with imidacloprid for early-season protection.',
+      },
+      millet: {
+        planting: 'Plant finger millet at 5-6 kg/ha at the onset of rains. Maintain 30cm between rows and 10cm between plants. Millet is drought-tolerant but responds well to early planting.',
+        fertilizer: 'Apply DAP at planting and top-dress with CAN at 100 kg/ha. Millet responds well to organic matter \u2014 incorporate compost at 5 tons/ha.',
+        pest: 'Monitor for millet head miner and blast disease. Practice crop rotation and use resistant varieties. Remove and destroy infected plant parts promptly.',
+      },
+      cassava: {
+        planting: 'Plant cassava stems at 15cm height, spaced 1m \u00D7 1m. Use disease-free stems from healthy mother plants. Plant at the onset of long rains for best establishment.',
+        fertilizer: 'Cassava requires low fertilizer inputs. Apply 2 bags of DAP per acre at planting. Potassium is critical \u2014 apply muriate of potash at 100 kg/ha if soils are deficient.',
+        pest: 'Monitor for cassava mosaic disease and cassava brown streak virus. Use resistant varieties and remove infected plants. Practice at least 2-year rotation with non-cassava crops.',
+      },
+      beans: {
+        planting: 'Plant beans at 50-80 kg/ha depending on variety. Maintain 45cm between rows and 10cm between plants. Inoculate seeds with rhizobia for nitrogen fixation.',
+        fertilizer: 'Apply 1 bag of DAP per acre at planting. Avoid excessive nitrogen as beans fix their own. Apply phosphorus-rich fertilizers for better nodulation.',
+        pest: 'Watch for bean stem maggot and angular leaf spot. Use certified seed and practice crop rotation. Apply copper-based fungicides for bacterial blight control.',
+      },
+      sweetPotato: {
+        planting: 'Plant vine cuttings at 30cm length, spaced 1m \u00D7 0.3m. Plant on ridges for better tuber development. Use vines from disease-free mother plants.',
+        fertilizer: 'Apply 2 bags of DAP per acre at planting. Sweet potato responds well to potassium \u2014 apply muriate of potash at 50 kg/ha. Avoid excessive nitrogen which promotes vine growth over tubers.',
+        pest: 'Monitor for sweet potato weevil and sweet potato virus disease. Use resistant varieties, practice crop rotation, and remove crop residues after harvest.',
+      },
+      potato: {
+        planting: 'Plant seed potatoes at 30cm spacing on ridges. Use certified seed tubers and cut large tubers into sets with 2-3 eyes each. Plant 10-15 cm deep.',
+        fertilizer: 'Apply 3 bags of DAP per acre at planting and top-dress with CAN at 100 kg/ha. Potassium is critical for tuber quality \u2014 apply muriate of potash at 150 kg/ha.',
+        pest: 'Monitor for late blight \u2014 apply fungicides preventively during wet weather. Use resistant varieties and practice rotation with non-solanaceous crops.',
+      },
+      banana: {
+        planting: 'Plant tissue-culture plantlets at 3m \u00D7 2m spacing. Ensure well-drained soil with adequate organic matter. Mulch around the base to conserve moisture.',
+        fertilizer: 'Apply NPK 17:17:17 at 200g per plant every 3 months. Potassium is the most critical nutrient for bananas \u2014 apply muriate of potash at 200g per plant quarterly.',
+        pest: 'Monitor for banana weevil and black sigatoka. Remove and destroy infected leaves. Practice good sanitation and use neem-based products for organic control.',
+      },
+      coffee: {
+        planting: 'Plant coffee at 2m \u00D7 2m spacing. Use certified seedlings from approved nurseries. Shade young plants with indigenous trees during the first 2 years.',
+        fertilizer: 'Apply NPK 50:50:50 at 100g per tree every 6 months. Top-dress with CAN at 50g per tree during the rainy season. Foliar feeding with micronutrients boosts yields.',
+        pest: 'Monitor for coffee berry borer and coffee leaf rust. Practice regular picking and destroy fallen berries. Apply approved insecticides and fungicides as per schedule.',
+      },
+      tea: {
+        planting: 'Plant tea at 1.2m \u00D7 0.6m spacing on well-drained acidic soils (pH 4.5-5.5). Use clonal material from approved nurseries. Establish windbreaks in exposed areas.',
+        fertilizer: 'Apply NPK 26:5:5 at 300g per bush every 6 months. Tea responds well to nitrogen \u2014 supplement with CAN at 150g per bush during peak growth periods.',
+        pest: 'Monitor for tea mosquito bug and tea blister blight. Maintain plucking table through regular harvesting. Apply copper-based fungicides during wet seasons for blight control.',
+      },
+      sugarcane: {
+        planting: 'Plant setts at 1.5m row spacing with 3-4 buds per sett. Plant at the onset of long rains. Ensure adequate moisture during establishment phase.',
+        fertilizer: 'Apply NPK 17:17:17 at 500kg/ha at planting. Top-dress with urea at 200kg/ha at 3 months. Nitrogen is critical during the tillering phase.',
+        pest: 'Monitor for sugarcane smut and stalk borer. Use resistant varieties and practice crop rotation. Remove and destroy affected shoots promptly.',
+      },
+      cotton: {
+        planting: 'Plant cotton at 90cm \u00D7 30cm spacing. Use certified varieties like H662 or BP 51. Plant at the onset of rains when soil temperature is above 18\u00B0C.',
+        fertilizer: 'Apply DAP at 200kg/ha at planting and top-dress with urea at 100kg/ha at 4-6 weeks. Balanced nutrition is key for fiber quality.',
+        pest: 'Monitor for cotton bollworm and bacterial blight. Practice integrated pest management. Apply Bt-based products for bollworm control and copper for bacterial diseases.',
+      },
+      tomato: {
+        planting: 'Transplant 25-30 day old seedlings at 60cm \u00D7 45cm spacing. Support plants with stakes or trellises. Maintain consistent irrigation for fruit development.',
+        fertilizer: 'Apply NPK 17:17:17 at planting and top-dress with calcium nitrate at 200kg/ha during fruiting. Calcium deficiency causes blossom end rot.',
+        pest: 'Monitor for tomato late blight and early blight. Apply copper-based fungicides preventively. Practice crop rotation and remove plant debris after harvest.',
+      },
+      onion: {
+        planting: 'Transplant 5-6 week old seedlings at 15cm \u00D7 10cm spacing on raised beds. Ensure well-drained soil with pH 6.0-7.0.',
+        fertilizer: 'Apply DAP at planting and top-dress with urea at 100kg/ha at tillering and bulb formation stages. Sulfur is critical for bulb quality.',
+        pest: 'Monitor for onion thrips and downy mildew. Use reflective mulches to deter thrips. Apply fungicides during wet conditions and ensure good air circulation.',
+      },
+      kale: {
+        planting: 'Plant kale seeds in nursery beds and transplant after 4-6 weeks. Space plants at 45cm \u00D7 45cm. Kale grows well in cool conditions and can be planted year-round.',
+        fertilizer: 'Apply DAP at planting and top-dress with CAN every 3-4 weeks during growth. Kale responds well to organic matter \u2014 incorporate compost regularly.',
+        pest: 'Watch for diamondback moth and black rot. Use row covers for young plants. Apply Bt-based insecticides for caterpillar control and copper for bacterial diseases.',
+      },
+      mango: {
+        planting: 'Plant grafted mango seedlings at 10m \u00D7 10m spacing. Ensure full sun exposure and well-drained soil. Protect young trees from wind damage.',
+        fertilizer: 'Apply NPK 17:17:17 at 500g per tree annually at the onset of rains. Mango responds well to potassium during fruit development \u2014 apply muriate of potash.',
+        pest: 'Monitor for mango anthracnose and fruit fly. Practice good orchard sanitation by removing fallen fruit. Use pheromone traps for fruit fly monitoring.',
+      },
+      avocado: {
+        planting: 'Plant grafted avocado trees at 8m \u00D7 8m spacing. Use well-drained soil with good organic matter content. Protect from strong winds.',
+        fertilizer: 'Apply balanced NPK fertilizer at 500g per tree every 6 months. Avocado is sensitive to waterlogging \u2014 ensure good drainage. Mulch around the base.',
+        pest: 'Monitor for root rot (Phytophthora) and thrips. Ensure good drainage to prevent root rot. Apply copper-based fungicides and neem oil for pest control.',
+      },
+      groundnut: {
+        planting: 'Plant groundnuts at 50kg/ha in rows 50cm apart with 15cm between plants. Inoculate seeds with rhizobia for optimal nitrogen fixation.',
+        fertilizer: 'Apply 2 bags of DAP per acre at planting. Groundnuts fix their own nitrogen but respond to phosphorus. Avoid excessive nitrogen fertilization.',
+        pest: 'Monitor for rosette virus disease and leaf spot. Use resistant varieties and practice crop rotation. Remove infected plants promptly to prevent spread.',
+      },
+      sunflower: {
+        planting: 'Plant sunflower at 5-8 kg/ha at 60cm \u00D7 30cm spacing. Plant at the onset of rains. Use certified hybrid varieties for best oil content.',
+        fertilizer: 'Apply 2 bags of DAP per acre at planting. Sunflower is drought-tolerant but responds to phosphorus application for better root development.',
+        pest: 'Monitor for downy mildew and head rot. Use resistant varieties and practice crop rotation. Ensure good air circulation in the field.',
+      },
+      cowpea: {
+        planting: 'Plant cowpea at 20-25 kg/ha at 60cm \u00D7 20cm spacing. Plant at the onset of rains. Cowpea is drought-tolerant and fixes nitrogen.',
+        fertilizer: 'Apply 1 bag of DAP per acre at planting. Cowpea fixes nitrogen with rhizobia \u2014 avoid excessive nitrogen fertilization.',
+        pest: 'Monitor for aphids and pod borers. Apply neem-based products for organic pest control. Practice crop rotation and use resistant varieties.',
+      },
+      pineapple: {
+        planting: 'Plant slips or suckers at 60cm \u00D7 90cm spacing on raised beds. Use disease-free planting material. Mulch around plants to conserve moisture.',
+        fertilizer: 'Apply NPK 15:15:15 at 300g per plant at planting. Top-dress with urea at 100g per plant at 3 months. Pineapple requires good drainage.',
+        pest: 'Monitor for mealybug wilt and Fusarium. Use disease-free planting material. Practice crop rotation and maintain good field sanitation.',
+      },
+      passionFruit: {
+        planting: 'Plant passion fruit vines at 3m \u00D7 2m spacing on trellises. Use certified seedlings. Ensure well-drained soil with adequate organic matter.',
+        fertilizer: 'Apply NPK 17:17:17 at 200g per plant every 3 months. Potassium is critical for fruit quality. Foliar feeding with micronutrients during flowering.',
+        pest: 'Monitor for woodiness virus and fruit fly. Use virus-free planting material. Practice good orchard sanitation and use pheromone traps.',
+      },
+      orange: {
+        planting: 'Plant grafted citrus trees at 6m \u00D7 6m spacing. Ensure full sun and well-drained soil. Protect young trees from frost and wind.',
+        fertilizer: 'Apply NPK 17:17:17 at 500g per tree every 6 months. Citrus requires balanced nutrition with emphasis on nitrogen during growth flushes.',
+        pest: 'Monitor for citrus greening (HLB) and citrus canker. Remove and destroy infected trees. Use certified disease-free planting material.',
+      },
+      coconut: {
+        planting: 'Plant coconut seedlings at 9m \u00D7 9m spacing. Ensure sandy, well-drained soil near water sources. Mulch around the base during establishment.',
+        fertilizer: 'Apply NPK 17:17:17 at 500g per palm annually. Coconut requires high potassium \u2014 apply muriate of potash at 500g per palm.',
+        pest: 'Monitor for lethal yellowing disease and coconut mite. Remove and destroy infected palms. Use resistant varieties where available.',
+      },
+      cashew: {
+        planting: 'Plant grafted cashew trees at 10m \u00D7 10m spacing. Use well-drained, sandy soil. Protect young trees from wind and grazing animals.',
+        fertilizer: 'Apply NPK 17:17:17 at 500g per tree at the onset of rains. Cashew responds well to foliar feeding with micronutrients during flowering.',
+        pest: 'Monitor for powdery mildew and mosquito bug. Apply sulfur-based fungicides for powdery mildew. Practice good orchard sanitation.',
+      },
+      macadamia: {
+        planting: 'Plant grafted macadamia trees at 8m \u00D7 8m spacing. Use well-drained, slightly acidic soil. Protect from strong winds and frost.',
+        fertilizer: 'Apply NPK 17:17:17 at 500g per tree every 6 months. Macadamia requires consistent nutrition throughout the year.',
+        pest: 'Monitor for husk spot and nut borer. Practice good orchard sanitation. Apply copper-based fungicides during wet seasons.',
+      },
+      sesame: {
+        planting: 'Plant sesame at 5-8 kg/ha at 45cm \u00D7 15cm spacing. Plant at the onset of rains on well-drained soils.',
+        fertilizer: 'Apply 2 bags of DAP per acre at planting. Sesame is drought-tolerant but responds to phosphorus application.',
+        pest: 'Monitor for bacterial leaf spot and phyllody. Use certified seed and practice crop rotation. Remove infected plants promptly.',
+      },
+      greenGrams: {
+        planting: 'Plant green grams at 20-25 kg/ha at 60cm \u00D7 20cm spacing. Plant at the onset of rains. Green grams are drought-tolerant and short-duration.',
+        fertilizer: 'Apply 1 bag of DAP per acre at planting. Green grams fix nitrogen \u2014 avoid excessive nitrogen fertilization.',
+        pest: 'Monitor for aphids and pod borers. Use neem-based products for organic control. Practice crop rotation with cereals.',
+      },
+      pigeonPeas: {
+        planting: 'Plant pigeon peas at 10-15 kg/ha at 1m \u00D7 0.5m spacing. Plant at the onset of rains. Pigeon peas are drought-tolerant and fix nitrogen.',
+        fertilizer: 'Apply 1 bag of DAP per acre at planting. Pigeon peas fix nitrogen \u2014 avoid excessive nitrogen. Apply phosphorus for better nodulation.',
+        pest: 'Monitor for pod borer and fusarium wilt. Use resistant varieties and practice crop rotation. Remove infected plants promptly.',
+      },
+      cabbage: {
+        planting: 'Transplant 4-6 week old seedlings at 60cm \u00D7 45cm spacing on raised beds. Ensure consistent moisture for head development.',
+        fertilizer: 'Apply NPK 17:17:17 at planting and top-dress with calcium nitrate at 200kg/ha. Boron deficiency causes hollow stem.',
+        pest: 'Monitor for diamondback moth and aphids. Use row covers for young plants. Apply Bt-based insecticides for caterpillar control.',
+      },
+      spinach: {
+        planting: 'Plant spinach seeds directly at 15cm \u00D7 10cm spacing. Spinach grows quickly and can be harvested in 4-6 weeks. Plant in cool, shaded areas.',
+        fertilizer: 'Apply DAP at planting and top-dress with CAN every 2-3 weeks. Spinach responds well to nitrogen for lush leaf growth.',
+        pest: 'Monitor for leaf miner and downy mildew. Use row covers to prevent leaf miner damage. Apply copper-based fungicides for mildew control.',
+      },
+      carrot: {
+        planting: 'Sow carrot seeds directly at 15cm \u00D7 5cm spacing on loose, sandy soil. Thin seedlings to 5cm apart after germination.',
+        fertilizer: 'Apply DAP at planting. Carrots require potassium for root development \u2014 apply muriate of potash at 100 kg/ha.',
+        pest: 'Monitor for alternaria leaf blight and root knot nematodes. Practice crop rotation and use nematode-free soil.',
+      },
+      watermelon: {
+        planting: 'Plant watermelon seeds at 2m \u00D7 1m spacing on well-drained soil. Use raised beds in heavy soils. Ensure full sun exposure.',
+        fertilizer: 'Apply NPK 17:17:17 at planting and top-dress with calcium nitrate during fruit development. Potassium is critical for sweetness.',
+        pest: 'Monitor for anthracnose and powdery mildew. Practice crop rotation. Apply fungicides preventively during wet conditions.',
+      },
+      pawpaw: {
+        planting: 'Plant papaya seedlings at 2.5m \u00D7 2.5m spacing. Use hermaphrodite varieties for commercial production. Ensure well-drained soil.',
+        fertilizer: 'Apply NPK 17:17:17 at 200g per plant every 3 months. Papaya requires consistent moisture and nutrition during fruiting.',
+        pest: 'Monitor for ringspot virus and anthracnose. Use virus-free seedlings. Practice good orchard sanitation and remove infected fruit.',
+      },
+    },
+    poultry: {
+      layer: 'For layer poultry farming in Kenya, maintain coop temperature at 18-24\u00B0C. Provide 16 hours of light daily for optimal egg production. Use commercial layer mash with 16-18% protein. Ensure clean water is always available. Vaccinate against Newcastle disease, fowl pox, and Marek\'s disease. Collect eggs at least twice daily. Maintain proper ventilation to prevent respiratory diseases. Expected production: 250-300 eggs per hen per year.',
+      broiler: 'For broiler production, maintain brooder temperature at 33-35\u00B0C for the first week, reducing by 2\u00B0C weekly. Use high-protein starter feed (20-22% protein) for the first 3 weeks, then grower feed (18-20%) until market weight. Stock at 10-12 birds/m\u00B2. Ensure good ventilation and clean water. Market weight (2kg) achieved in 6-8 weeks. Watch for coccidiosis and Newcastle disease.',
+    },
+    aquaculture: 'For aquaculture in Kenya, tilapia farming is most suitable. Stock fingerlings at 5-10 per m\u00B2 in properly constructed ponds. Feed with commercial fish feed at 3-5% of body weight daily. Maintain water quality: pH 6.5-8.5, dissolved oxygen above 5mg/L. Harvest in 6-8 months when fish reach 300-500g. Use aeration systems during dry seasons. Monitor for parasites and bacterial infections.',
+    beekeeping: 'For beekeeping in Kenya, use Kenya Top Bar Hive (KTBH) or Langstroth hives. Place hives in shaded areas facing east. Each hive should have 10-15 bars with wax foundation. Harvest honey after 3-4 months of colony establishment. Use a bee suit and smoker for safety. Expected yield: 20-30 kg honey per hive per harvest. Manage pests like small hive beetle and wax moth.',
+    irrigation: 'For small-scale irrigation in Kenya: drip irrigation is most efficient (90% water efficiency). Install drip lines for vegetables at 30cm emitter spacing. For larger farms, consider pivot or sprinkler systems. Water early morning (6-9 AM) to reduce evaporation. Monitor soil moisture with tensiometers. Rainwater harvesting through farm ponds is cost-effective. Budget: KES 50,000-100,000 per acre for drip installation.',
+    postHarvest: 'Post-harvest management for Kenyan farmers: Dry grains to 12-13% moisture content before storage. Use hermetic storage bags (PICS bags) for grains to prevent weevil damage. Store potatoes in cool, dark, ventilated areas. For fruits, maintain cold chain from farm to market. Sort and grade produce before sale. Use standardized packaging for market access. Expected shelf life extension: 3-6 months with proper storage.',
+    farmEconomics: 'Farm economics basics for Kenyan farmers: Track all inputs (seeds, fertilizer, labor, transport) against outputs. Calculate cost of production per kg for each crop. Break-even analysis helps determine viable crop choices. Diversify income through value addition. Join cooperatives for bulk purchasing and collective marketing. Access government subsidies through NARIGP and other programs. Typical profit margins: 20-40% for vegetables, 15-25% for grains.',
+    greenhouse: 'Greenhouse farming in Kenya: Use tunnel-type greenhouses (8m \u00D7 30m standard). Install drip irrigation and fertigation systems. Grow high-value crops: tomatoes, capsicum, cucumbers. Maintain temperature at 20-28\u00B0C through ventilation. Use biological pest control (beneficial insects). Expected yields: 3-5 times open-field production. Initial investment: KES 500,000-1,000,000 per greenhouse. ROI within 1-2 seasons.',
+    sustainabilityTips: [
+      'Practice crop rotation to maintain soil fertility and break pest cycles',
+      'Use organic compost and manure to reduce chemical fertilizer dependency',
+      'Implement water harvesting and drip irrigation for efficient water use',
+      'Plant cover crops to prevent soil erosion and fix nitrogen',
+      'Use integrated pest management (IPM) to reduce pesticide use',
+      'Maintain biodiversity by planting hedgerows and windbreaks',
+      'Practice conservation agriculture with minimum tillage',
+      'Use mulching to conserve moisture and suppress weeds',
+      'Consider agroforestry for additional income and soil health',
+      'Monitor soil health regularly and adjust practices accordingly',
+    ],
+  },
+
+  premium: {
+    subscriptionRequired: 'Premium subscription required. Subscribe at /pricing.',
+    authRequired: 'Authentication required',
+    premiumRequired: 'Premium subscription required',
+    paymentMethod: 'Paystack',
+  },
+
+  payments: {
+    notConfigured: 'Payment service is not configured',
+    planNotFound: 'Plan not found',
+    initFailed: 'Failed to initialize payment',
+    paystackNotConfigured: 'Paystack payment is not configured. Please contact support.',
+  },
+
+  subscribe: {
+    freePlanActivated: 'Free plan selected. Account activated.',
+    redirectingToPayment: 'Redirecting to payment page...',
+  },
+
+  upload: {
+    noFile: 'No file provided',
+    invalidFileType: 'Invalid file type. Allowed: {types}',
+    fileTooLarge: 'File too large. Maximum size: {size}MB',
+    fileEmpty: 'File is empty',
+    fileTooSmall: 'File too small or corrupted',
+    contentMismatch: 'File content does not match declared type',
+    uploadFailed: 'Failed to upload file',
+  },
+
+  webhook: {
+    invalidSignature: 'Invalid signature',
+    invalidJson: 'Invalid JSON',
+    eventNotHandled: 'Event not handled',
+    missingReference: 'Missing reference',
+    unknownTransaction: 'Unknown transaction',
+    alreadyProcessed: 'Already processed',
+    verificationFailed: 'Verification failed',
+    processed: 'Webhook processed',
+  },
+
+  meta: {
+    title: 'AgriPride AI — Intelligence for African Agriculture',
+    description: 'AI-powered crop disease diagnosis, weather intelligence, and sustainable farming tools built for African farmers.',
+    keywords: 'agriculture, AI, farming, crop disease, weather, Africa, sustainability',
+  },
+
+  units: {
+    windSpeed: 'km/h',
+    rainfall: 'mm',
+    kilograms: 'kg',
+    megabytes: 'MB',
+    percent: '%',
+    perKg: '/ kg',
+    currency: 'KES',
+    currencyWithSpace: 'KES ',
+    on: 'on',
+  },
+
+  authExtra: {
+    brandTagline: 'Grow smarter, season after season.',
+    trustedBy: 'Trusted by',
+    socialProof: '15,000+ farmers across 47 counties in Kenya',
+    defaultUserName: 'User',
+    mfaDownloadHeader: 'AgriPride AI - Recovery Codes',
+    mfaDownloadInstructions: 'Keep these codes in a safe place. Each code can only be used once.',
+  },
+
+  tts: {
+    locale: 'en-US',
+  },
+
+  diagnosisEngine: {
+    growthStages: {
+      seedling: 'Seedling',
+      vegetative: 'Vegetative',
+      flowering: 'Flowering',
+      fruiting: 'Fruiting',
+    },
+    insufficientSymptoms: 'Symptoms are insufficient for a definitive diagnosis. Multiple possible causes identified with low confidence. Consider providing more details.',
+    mostLikelyCause: '{name} is the most likely cause based on the symptoms described, with {confidence}% confidence.',
+    possibleConditions: '{count} possible conditions identified. Symptoms are not sufficiently specific for a definitive diagnosis.',
+    conditions: {
+      northernLeafBlight: {
+        name: 'Northern Leaf Blight',
+        treatment: 'Apply fungicide containing triazole or strobilurin at the first sign of lesions. Repeat application after 14 days if conditions remain favorable for disease.',
+        prevention: 'Plant resistant hybrid varieties. Rotate crops every 2-3 seasons. Maintain proper plant spacing for air circulation. Remove crop debris after harvest.',
+      },
+      maizeStreakVirus: {
+        name: 'Maize Streak Virus',
+        treatment: 'No cure exists for MSV. Remove and destroy infected plants to reduce spread. Control leafhopper vectors with systemic insecticides.',
+        prevention: 'Plant certified virus-free seed. Use resistant varieties like KH600-23A. Control leafhopper vectors early in the season. Remove alternative grass hosts near maize fields.',
+      },
+      heatDroughtStress: {
+        name: 'Heat & Drought Stress',
+        treatment: 'Increase irrigation frequency during heat waves. Apply mulch to conserve soil moisture. Provide shade for sensitive seedlings using shade nets.',
+        prevention: 'Choose drought-tolerant varieties. Install drip irrigation systems. Apply organic mulch to retain moisture. Monitor weather forecasts for heat wave warnings.',
+      },
+      nitrogenDeficiency: {
+        name: 'Nitrogen Deficiency',
+        treatment: 'Apply nitrogen-rich fertilizer (CAN or urea) at 100-150 kg/ha. Foliar application of urea solution (2%) for quick recovery.',
+        prevention: 'Incorporate organic matter regularly. Practice crop rotation with legumes. Use nitrogen-fixing cover crops. Apply balanced fertilization based on soil tests.',
+      },
+      wheatStemRust: {
+        name: 'Wheat Stem Rust',
+        treatment: 'Apply fungicide containing propiconazole or tebuconazole at first sign of pustules. Remove and destroy heavily infected plants.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Remove volunteer wheat plants. Apply preventive fungicides during wet seasons.',
+      },
+      wheatPowderyMildew: {
+        name: 'Wheat Powdery Mildew',
+        treatment: 'Apply sulfur-based fungicide or systemic fungicide at first sign of white powdery spots. Ensure good air circulation in the crop.',
+        prevention: 'Use resistant varieties. Maintain optimal plant density. Avoid excessive nitrogen fertilization. Apply preventive fungicides in humid conditions.',
+      },
+      droughtStress: {
+        name: 'Drought Stress',
+        treatment: 'Increase irrigation immediately. Apply thick mulch layer around plants. Use foliar application of potassium to improve drought tolerance.',
+        prevention: 'Plant drought-tolerant varieties. Install efficient irrigation systems. Apply organic mulch to conserve moisture. Practice water harvesting.',
+      },
+      riceBlast: {
+        name: 'Rice Blast',
+        treatment: 'Apply tricyclazole or isoprothiolane at the first sign of diamond-shaped lesions. Maintain proper water management \u2014 avoid prolonged drainage.',
+        prevention: 'Use resistant varieties. Maintain balanced nitrogen application. Ensure proper water management. Avoid excessive seeding rates.',
+      },
+      riceYellowMottleVirus: {
+        name: 'Rice Yellow Mottle Virus',
+        treatment: 'No cure for RYMV. Remove and destroy infected plants. Control beetle vectors with insecticides. Replant with resistant varieties.',
+        prevention: 'Use RYMV-resistant varieties. Control leaf beetles early. Avoid water stress. Practice crop rotation with non-rice crops.',
+      },
+      cassavaMosaicVirus: {
+        name: 'Cassava Mosaic Virus',
+        treatment: 'No cure for CMV. Remove and destroy infected plants immediately. Control whitefly vectors with insecticides.',
+        prevention: 'Use CMV-resistant varieties like NAROCASS 1. Plant disease-free stems. Control whitefly vectors. Remove infected plants promptly.',
+      },
+      cassavaBrownStreakVirus: {
+        name: 'Cassava Brown Streak Virus',
+        treatment: 'No cure for CBSV. Remove and destroy infected plants. Control whitefly vectors. Harvest infected plants immediately for whatever root yield is available.',
+        prevention: 'Use CBSV-resistant varieties. Plant disease-free cuttings. Practice crop rotation. Control whitefly vectors with neem-based products.',
+      },
+      angularLeafSpot: {
+        name: 'Angular Leaf Spot',
+        treatment: 'Apply copper-based fungicide or mancozeb. Remove and destroy infected plant debris. Ensure good air circulation.',
+        prevention: 'Use certified disease-free seed. Practice crop rotation. Maintain proper plant spacing. Avoid overhead irrigation.',
+      },
+      beanCommonMosaicVirus: {
+        name: 'Bean Common Mosaic Virus',
+        treatment: 'No cure for BCMV. Remove and destroy infected plants. Control aphid vectors with insecticides.',
+        prevention: 'Use BCMV-resistant varieties. Plant certified virus-free seed. Control aphid vectors early in the season.',
+      },
+      flowerDrop: {
+        name: 'Flower Drop (Physiological)',
+        treatment: 'Ensure consistent watering. Apply calcium and boron foliar sprays. Avoid extreme temperature fluctuations.',
+        prevention: 'Maintain consistent irrigation. Ensure balanced nutrition. Avoid stress during flowering period. Provide shade during extreme heat.',
+      },
+      sorghumAnthracnose: {
+        name: 'Sorghum Anthracnose',
+        treatment: 'Apply copper-based fungicide. Remove and destroy infected plant material. Ensure good air circulation.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Maintain proper plant spacing. Avoid overhead irrigation.',
+      },
+      sorghumDownyMildew: {
+        name: 'Sorghum Downy Mildew',
+        treatment: 'Apply metalaxyl-based fungicide as seed treatment. Spray systemic fungicide at first sign of infection.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Ensure proper drainage. Avoid waterlogging.',
+      },
+      milletDownyMildew: {
+        name: 'Millet Downy Mildew',
+        treatment: 'Apply metalaxyl-based fungicide. Remove and destroy infected plants. Ensure proper drainage.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Maintain field hygiene. Avoid waterlogging.',
+      },
+      milletBlast: {
+        name: 'Millet Blast',
+        treatment: 'Apply tricyclazole-based fungicide at first sign of lesions. Maintain proper water management.',
+        prevention: 'Use resistant varieties. Maintain balanced fertilization. Ensure proper water management. Practice crop rotation.',
+      },
+      sweetPotatoVirusDisease: {
+        name: 'Sweet Potato Virus Disease',
+        treatment: 'No cure. Remove and destroy infected plants. Use virus-free planting material.',
+        prevention: 'Use virus-free vine cuttings. Control aphid vectors. Practice crop rotation. Remove infected plants promptly.',
+      },
+      sweetPotatoWeevil: {
+        name: 'Sweet Potato Weevil Damage',
+        treatment: 'Apply imidacloprid-based insecticide. Harvest affected roots immediately. Destroy crop residues after harvest.',
+        prevention: 'Practice crop rotation with non-root crops. Use clean planting material. Hill up soil around bases. Harvest before weevil damage becomes severe.',
+      },
+      potatoLateBlight: {
+        name: 'Potato Late Blight',
+        treatment: 'Apply metalaxyl-mancozeb or chlorothalonil at first sign of water-soaked lesions. Repeat every 7-10 days during wet conditions.',
+        prevention: 'Use certified seed tubers. Plant resistant varieties. Ensure good drainage. Apply preventive fungicides during wet seasons.',
+      },
+      potatoEarlyBlight: {
+        name: 'Potato Early Blight',
+        treatment: 'Apply mancozeb or chlorothalonil-based fungicide. Remove and destroy infected leaves. Ensure adequate nutrition.',
+        prevention: 'Practice crop rotation. Maintain proper plant nutrition. Avoid water stress. Remove crop debris after harvest.',
+      },
+      fusariumWilt: {
+        name: 'Fusarium Wilt (Panama Disease)',
+        treatment: 'No effective chemical control. Remove and destroy infected plants. Treat soil with lime to raise pH above 6.5.',
+        prevention: 'Use resistant varieties. Practice long crop rotation (3+ years). Improve drainage. Use disease-free planting material.',
+      },
+      blackSigatoka: {
+        name: 'Black Sigatoka',
+        treatment: 'Apply systemic fungicide (propiconazole or mancozeb). Remove and destroy affected leaves. Improve drainage.',
+        prevention: 'Use resistant varieties. Maintain proper spacing. Remove infected leaves regularly. Apply preventive fungicides during wet seasons.',
+      },
+      coffeeLeafRust: {
+        name: 'Coffee Leaf Rust',
+        treatment: 'Apply copper-based fungicide or systemic fungicide. Remove and destroy heavily infected leaves. Prune overgrown trees.',
+        prevention: 'Use resistant varieties. Maintain proper pruning. Ensure good air circulation. Apply preventive fungicides during wet seasons.',
+      },
+      coffeeBerryBorer: {
+        name: 'Coffee Berry Borer',
+        treatment: 'Apply approved insecticide to berries. Use pheromone traps. Collect and destroy infested berries.',
+        prevention: 'Practice frequent picking. Destroy fallen berries. Use pheromone traps for monitoring. Apply preventive treatments before fly season.',
+      },
+      teaBlisterBlight: {
+        name: 'Tea Blister Blight',
+        treatment: 'Apply copper-based fungicide. Improve drainage. Prune to improve air circulation.',
+        prevention: 'Use resistant varieties. Maintain proper plucking table. Apply preventive fungicides during wet seasons. Ensure good drainage.',
+      },
+      teaMosquitoBug: {
+        name: 'Tea Mosquito Bug',
+        treatment: 'Apply neem-based insecticide. Prune overgrown bushes. Remove alternative host plants.',
+        prevention: 'Maintain proper plucking table. Apply preventive sprays during peak seasons. Remove alternative host plants near tea fields.',
+      },
+      sugarcaneSmut: {
+        name: 'Sugarcane Smut',
+        treatment: 'Remove and destroy infected shoots. Treat setts with fungicide before planting.',
+        prevention: 'Use resistant varieties. Treat setts with hot water (52\u00B0C for 30 minutes). Remove infected shoots promptly.',
+      },
+      sugarcaneRedRot: {
+        name: 'Sugarcane Red Rot',
+        treatment: 'Remove and destroy affected stalks. Treat setts with fungicide. Improve drainage.',
+        prevention: 'Use resistant varieties. Treat setts before planting. Practice crop rotation. Maintain proper drainage.',
+      },
+      cottonBacterialBlight: {
+        name: 'Cotton Bacterial Blight',
+        treatment: 'No chemical control. Remove and destroy infected plants. Use copper-based products for secondary infection.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Use certified seed. Avoid overhead irrigation.',
+      },
+      cottonBollworm: {
+        name: 'Cotton Bollworm',
+        treatment: 'Apply Bt-based insecticide or chlorantraniliprole. Use pheromone traps for monitoring. Practice pick-and-destroy of infested bolls.',
+        prevention: 'Plant early to avoid peak bollworm season. Use Bt varieties where available. Practice crop rotation. Monitor fields weekly.',
+      },
+      tomatoLateBlight: {
+        name: 'Tomato Late Blight',
+        treatment: 'Apply metalaxyl-mancozeb or chlorothalonil at first sign. Remove and destroy infected plants. Avoid overhead irrigation.',
+        prevention: 'Use resistant varieties. Ensure proper spacing. Apply preventive fungicides during wet conditions. Practice crop rotation.',
+      },
+      tomatoEarlyBlight: {
+        name: 'Tomato Early Blight',
+        treatment: 'Apply mancozeb or copper-based fungicide. Remove infected lower leaves. Mulch to prevent soil splash.',
+        prevention: 'Practice crop rotation. Maintain proper plant nutrition. Avoid overhead irrigation. Remove crop debris after harvest.',
+      },
+      blossomEndRot: {
+        name: 'Blossom End Rot',
+        treatment: 'Apply calcium foliar spray. Ensure consistent watering. Mulch to maintain even soil moisture.',
+        prevention: 'Maintain consistent irrigation. Ensure adequate calcium in soil. Avoid excessive nitrogen. Mulch to regulate moisture.',
+      },
+      onionDownyMildew: {
+        name: 'Onion Downy Mildew',
+        treatment: 'Apply metalaxyl-based fungicide. Remove and destroy infected plants. Improve air circulation.',
+        prevention: 'Use resistant varieties. Ensure proper spacing. Avoid overhead irrigation. Apply preventive fungicides during wet conditions.',
+      },
+      onionThrips: {
+        name: 'Onion Thrips',
+        treatment: 'Apply spinosad or neem-based insecticide. Use reflective mulches. Irrigate overhead to dislodge thrips.',
+        prevention: 'Use reflective mulches. Plant early. Ensure proper nutrition. Monitor with blue sticky traps.',
+      },
+      blackRot: {
+        name: 'Black Rot',
+        treatment: 'Remove and destroy infected plants. Apply copper-based fungicide. Ensure proper crop rotation.',
+        prevention: 'Use certified disease-free seed. Practice crop rotation. Avoid overhead irrigation. Remove crop debris.',
+      },
+      diamondbackMoth: {
+        name: 'Diamondback Moth',
+        treatment: 'Apply Bt-based insecticide or spinosad. Use row covers for young plants.',
+        prevention: 'Use row covers. Apply Bt preventively. Practice crop rotation. Maintain field hygiene.',
+      },
+      mangoAnthracnose: {
+        name: 'Mango Anthracnose',
+        treatment: 'Apply copper-based fungicide during flowering. Remove and destroy infected fruits. Prune for air circulation.',
+        prevention: 'Apply preventive fungicides during wet seasons. Maintain proper orchard sanitation. Prune to improve air circulation.',
+      },
+      mangoFruitFly: {
+        name: 'Mango Fruit Fly',
+        treatment: 'Use methyl eugenol traps. Harvest at proper maturity. Bag individual fruits.',
+        prevention: 'Use pheromone traps. Practice good orchard sanitation. Remove fallen fruit. Harvest at proper maturity.',
+      },
+      avocadoRootRot: {
+        name: 'Avocado Root Rot',
+        treatment: 'Improve drainage. Apply phosphorous acid fungicide. Reduce irrigation frequency.',
+        prevention: 'Ensure excellent drainage. Avoid over-irrigation. Plant on raised beds. Use resistant rootstocks.',
+      },
+      groundnutRosetteVirus: {
+        name: 'Groundnut Rosette Virus',
+        treatment: 'No cure. Remove and destroy infected plants. Control aphid vectors.',
+        prevention: 'Use resistant varieties. Control aphids early. Plant early to avoid peak aphid season.',
+      },
+      groundnutLeafSpot: {
+        name: 'Groundnut Leaf Spot',
+        treatment: 'Apply copper-based fungicide or chlorothalonil. Remove and destroy infected leaves.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Maintain proper plant spacing.',
+      },
+      sunflowerDownyMildew: {
+        name: 'Sunflower Downy Mildew',
+        treatment: 'Apply metalaxyl-based fungicide. Remove and destroy infected plants.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Ensure proper drainage.',
+      },
+      cowpeaAphidBorneMosaicVirus: {
+        name: 'Cowpea Aphid-Borne Mosaic Virus',
+        treatment: 'No cure. Remove and destroy infected plants. Control aphid vectors.',
+        prevention: 'Use resistant varieties. Control aphids early. Plant certified virus-free seed.',
+      },
+      pineappleFusariosis: {
+        name: 'Pineapple Fusariosis',
+        treatment: 'Remove and destroy infected plants. Treat planting material with fungicide.',
+        prevention: 'Use disease-free planting material. Practice crop rotation. Maintain field hygiene.',
+      },
+      passionFruitWoodinessVirus: {
+        name: 'Passion Fruit Woodiness Virus',
+        treatment: 'No cure. Remove and destroy infected vines. Control aphid vectors.',
+        prevention: 'Use virus-free planting material. Control aphids. Practice crop rotation.',
+      },
+      citrusGreening: {
+        name: 'Citrus Greening (Huanglongbing)',
+        treatment: 'No cure. Remove and destroy infected trees. Control psyllid vectors with insecticides.',
+        prevention: 'Use certified disease-free nursery trees. Control psyllid vectors. Monitor orchards regularly.',
+      },
+      citrusCanker: {
+        name: 'Citrus Canker',
+        treatment: 'Remove and destroy infected plant parts. Apply copper-based bactericide. Control wind-driven rain splash.',
+        prevention: 'Use disease-free nursery stock. Establish windbreaks. Apply preventive copper sprays.',
+      },
+      coconutLethalYellowing: {
+        name: 'Coconut Lethal Yellowing',
+        treatment: 'No cure. Remove and destroy infected palms. Control planthopper vectors.',
+        prevention: 'Use certified disease-free seedlings. Control planthopper vectors. Remove infected palms promptly.',
+      },
+      cashewPowderyMildew: {
+        name: 'Cashew Powdery Mildew',
+        treatment: 'Apply sulfur-based fungicide. Remove and destroy infected parts. Prune for air circulation.',
+        prevention: 'Apply preventive sulfur sprays during dry seasons. Maintain proper orchard sanitation. Prune regularly.',
+      },
+      macadamiaHuskSpot: {
+        name: 'Macadamia Husk Spot',
+        treatment: 'Apply copper-based fungicide. Remove and destroy infected husks.',
+        prevention: 'Apply preventive fungicides during wet seasons. Maintain orchard sanitation. Prune for air circulation.',
+      },
+      sesameBacterialLeafSpot: {
+        name: 'Sesame Bacterial Leaf Spot',
+        treatment: 'No chemical control. Remove and destroy infected plants. Ensure good drainage.',
+        prevention: 'Use certified seed. Practice crop rotation. Avoid overhead irrigation. Maintain field hygiene.',
+      },
+      cabbageBlackRot: {
+        name: 'Cabbage Black Rot',
+        treatment: 'Remove and destroy infected plants. Apply copper-based bactericide. Ensure proper crop rotation.',
+        prevention: 'Use certified disease-free seed. Practice crop rotation. Avoid overhead irrigation.',
+      },
+      spinachDownyMildew: {
+        name: 'Spinach Downy Mildew',
+        treatment: 'Apply metalaxyl-based fungicide. Ensure good air circulation.',
+        prevention: 'Use resistant varieties. Ensure proper spacing. Avoid overhead irrigation.',
+      },
+      carrotAlternariaLeafBlight: {
+        name: 'Carrot Alternaria Leaf Blight',
+        treatment: 'Apply mancozeb or chlorothalonil-based fungicide. Remove infected leaves.',
+        prevention: 'Practice crop rotation. Use certified seed. Ensure proper nutrition.',
+      },
+      watermelonAnthracnose: {
+        name: 'Watermelon Anthracnose',
+        treatment: 'Apply copper-based fungicide. Remove and destroy infected plants.',
+        prevention: 'Use resistant varieties. Practice crop rotation. Ensure proper drainage.',
+      },
+      watermelonPowderyMildew: {
+        name: 'Watermelon Powdery Mildew',
+        treatment: 'Apply sulfur-based fungicide. Ensure good air circulation.',
+        prevention: 'Use resistant varieties. Maintain proper spacing. Apply preventive fungicides.',
+      },
+      papayaRingspotVirus: {
+        name: 'Papaya Ringspot Virus',
+        treatment: 'No cure. Remove and destroy infected plants. Control aphid vectors.',
+        prevention: 'Use virus-free seedlings. Control aphids. Practice crop rotation.',
+      },
+      waterStress: {
+        name: 'Water Stress (Drought/Overwatering)',
+        treatment: 'Adjust irrigation schedule. For drought stress, increase watering. For overwatering, reduce frequency and improve drainage.',
+        prevention: 'Install drip irrigation for consistent water supply. Monitor soil moisture regularly. Mulch to conserve moisture.',
+      },
+      heatStress: {
+        name: 'Heat Stress',
+        treatment: 'Provide shade for sensitive crops. Increase irrigation frequency during heat waves. Apply mulch to cool soil.',
+        prevention: 'Plant heat-tolerant varieties. Provide shade structures. Irrigate during cooler parts of the day.',
+      },
+      nutrientDeficiencyGeneral: {
+        name: 'Nutrient Deficiency (General)',
+        treatment: 'Conduct soil test to identify specific deficiency. Apply balanced fertilizer based on results. Foliar feeding for quick recovery.',
+        prevention: 'Regular soil testing. Maintain balanced fertilization. Incorporate organic matter. Practice crop rotation.',
+      },
+    },
+    missingInfo: {
+      growthStage: 'Crop growth stage',
+      specificSymptoms: 'More specific symptom details',
+    },
+    reasoning: {
+      vagueSymptoms: 'Symptoms are too vague for a confident diagnosis',
+      unknownGrowthStage: 'Growth stage is unknown, which affects diagnosis accuracy',
+      moreSymptomsNeeded: 'More symptoms would improve diagnostic confidence',
+      multipleSimilar: 'Multiple conditions have similar symptom profiles (confidence gap: {gap}%)',
+      stressAndDisease: 'Both stress and disease symptoms detected \u2014 requires careful differentiation',
+      growthStageNote: 'Diagnosis considers the {stage} growth stage',
+      lessLikelyAtStage: 'Some conditions are less likely at this stage',
+    },
+    summary: {
+      lowConfidence: 'Symptoms are insufficient for a definitive diagnosis. Multiple possible causes identified with low confidence. Consider providing more details.',
+      highConfidence: '{name} is the most likely cause based on the symptoms described, with {confidence}% confidence.',
+      multipleCauses: '{count} possible conditions identified. Symptoms are not sufficiently specific for a definitive diagnosis.',
+    },
   },
 };
 

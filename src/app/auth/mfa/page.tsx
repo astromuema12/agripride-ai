@@ -141,9 +141,9 @@ export default function MfaPage() {
   const handleDownloadCodes = () => {
     if (!setup) return;
     const blob = new Blob([
-      'AgriPride AI - Recovery Codes\n',
+      t('auth.mfaDownloadHeader') + '\n',
       '========================\n\n',
-      'Keep these codes in a safe place. Each code can only be used once.\n\n',
+      t('auth.mfaDownloadInstructions') + '\n\n',
       ...setup.recoveryCodes.map((c) => `${c}\n`),
       '\nGenerated: ', new Date().toISOString(),
     ], { type: 'text/plain' });
@@ -151,7 +151,7 @@ export default function MfaPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'agripride-recovery-codes.txt';
+    a.download = t('auth.recoveryCodes.filename');
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -249,7 +249,7 @@ export default function MfaPage() {
                     type="text"
                     inputMode="numeric"
                     maxLength={6}
-                    placeholder="000000"
+                    placeholder={t('auth.placeholders.totpCode')}
                     value={verifyToken}
                     onChange={(e) => setVerifyToken(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     className="text-center text-2xl tracking-[0.5em] font-mono"

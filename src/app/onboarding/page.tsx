@@ -217,7 +217,7 @@ export default function OnboardingPage() {
                   <h2 className="text-lg font-bold text-gray-900">{t('onboarding.farmDetails')}</h2>
                   <div className="space-y-2">
                     <Label htmlFor="farm_size">{t('onboarding.farmSizeAcres')}</Label>
-                    <Input id="farm_size" type="number" value={form.farm_size_acres} onChange={(e) => updateForm({ farm_size_acres: e.target.value })} placeholder="2.5" />
+                    <Input id="farm_size" type="number" value={form.farm_size_acres} onChange={(e) => updateForm({ farm_size_acres: e.target.value })} placeholder={t('onboarding.farmSizePlaceholder')} />
                   </div>
                   <div className="space-y-2">
                     <Label>{t('onboarding.cropsYouGrow')}</Label>

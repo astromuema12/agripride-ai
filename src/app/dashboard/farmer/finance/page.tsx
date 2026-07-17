@@ -215,7 +215,7 @@ export default function FarmFinancePage() {
                         <div className="flex items-center justify-between text-sm mb-1.5">
                           <div className="flex items-center gap-2">
                             <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-br ${CATEGORY_COLORS[cat] || 'from-gray-400 to-gray-500'}`} />
-                            <span className="capitalize text-gray-700">{cat}</span>
+                            <span className="capitalize text-gray-700">{t(`dashboard.finance.categories.${cat}` as any) || cat}</span>
                           </div>
                           <span className="font-medium text-gray-900">{formatKES(amount)}</span>
                         </div>
@@ -242,7 +242,7 @@ export default function FarmFinancePage() {
                       return (
                         <div key={src}>
                           <div className="flex items-center justify-between text-sm mb-1.5">
-                            <span className="capitalize text-gray-700">{src.replace('_', ' ')}</span>
+                            <span className="capitalize text-gray-700">{t(`dashboard.finance.revenueSources.${src}` as any) || src.replace('_', ' ')}</span>
                             <span className="font-medium text-gray-900">{formatKES(amount)}</span>
                           </div>
                           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">

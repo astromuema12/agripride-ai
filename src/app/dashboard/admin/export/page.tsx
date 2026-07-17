@@ -71,10 +71,10 @@ export default function AdminExportPage() {
                   <p className="text-sm text-gray-500">{t('export.records', { count })}</p>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport(id, 'csv')} disabled={exporting === `${id}-csv`}>
-                      {exporting === `${id}-csv` ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <FileSpreadsheet className="mr-2 h-3 w-3" />} CSV
+                      {exporting === `${id}-csv` ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <FileSpreadsheet className="mr-2 h-3 w-3" />} {t('common.units.csv')}
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport(id, 'json')} disabled={exporting === `${id}-json`}>
-                      {exporting === `${id}-json` ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <FileJson className="mr-2 h-3 w-3" />} JSON
+                      {exporting === `${id}-json` ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <FileJson className="mr-2 h-3 w-3" />} {t('common.units.json')}
                     </Button>
                   </div>
                 </CardContent>

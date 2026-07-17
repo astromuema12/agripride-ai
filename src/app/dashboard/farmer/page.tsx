@@ -503,11 +503,11 @@ export default function FarmerDashboard() {
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-[var(--foreground)]">
                         <Wind className="h-3.5 w-3.5 text-cyan-500" />
-                        <span>{weather.wind_speed} km/h</span>
+                        <span>{weather.wind_speed} {t('dashboard.farmer.weatherUnits.windSpeed')}</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-[var(--foreground)]">
                         <ThermometerSun className="h-3.5 w-3.5 text-amber-500" />
-                        <span>{weather.rainfall_mm} mm</span>
+                        <span>{weather.rainfall_mm} {t('dashboard.farmer.weatherUnits.rainfall')}</span>
                       </div>
                     </div>
                   </div>
@@ -634,7 +634,7 @@ export default function FarmerDashboard() {
                         <span className="text-sm font-medium text-[var(--foreground)]">{crop.name}</span>
                         <span className="text-xs text-[var(--muted-foreground)]">{crop.variety}</span>
                       </div>
-                      <span className="text-xs text-[var(--muted-foreground)]">{t('crops.perHectare')}: {formatCompact(crop.expected_yield_kg)} kg</span>
+                      <span className="text-xs text-[var(--muted-foreground)]">{t('crops.perHectare')}: {formatCompact(crop.expected_yield_kg)} {t('dashboard.farmer.yieldUnit')}</span>
                     </div>
                   ))}
                 </div>

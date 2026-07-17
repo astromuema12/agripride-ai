@@ -50,8 +50,8 @@ export default function MarketPrices() {
         <Card>
           <CardContent className="p-3 sm:p-4">
             <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 mb-1" />
-            <p className="text-lg sm:text-2xl font-bold text-gray-900 leading-tight">KES {avgPrice.toFixed(0)}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500">{t('market.avg')} / kg</p>
+            <p className="text-lg sm:text-2xl font-bold text-gray-900 leading-tight">{t('common.currency')} {avgPrice.toFixed(0)}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500">{t('market.avg')} {t('common.units.perKg')}</p>
           </CardContent>
         </Card>
         <Card>
@@ -105,7 +105,7 @@ export default function MarketPrices() {
                         <span className="text-lg">{cropEmojis[p.crop] ?? '\u{1F33F}'}</span>
                         <span className="text-sm font-medium text-gray-900 dark:text-white">{p.crop}</span>
                       </div>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">KES {p.price_per_kg.toFixed(2)}</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">{t('common.currency')} {p.price_per_kg.toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-500">{p.region}</span>
@@ -139,7 +139,7 @@ export default function MarketPrices() {
                         </td>
                         <td className="py-3 px-3 text-xs text-gray-500 dark:text-gray-400">{p.region}</td>
                         <td className="py-3 px-3 text-right">
-                          <span className="text-sm font-bold text-gray-900 dark:text-white">KES {p.price_per_kg.toFixed(2)}</span>
+                          <span className="text-sm font-bold text-gray-900 dark:text-white">{t('common.currency')} {p.price_per_kg.toFixed(2)}</span>
                         </td>
                         <td className="py-3 px-3 text-right">
                           <Badge variant={p.trend === 'up' ? 'primary' : p.trend === 'down' ? 'destructive' : 'secondary'} className="text-[10px]">

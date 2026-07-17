@@ -95,7 +95,7 @@ export default function AdminSubscriptionsPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-gray-900">{(sub as any).plan_tier || sub.plan_id}</span>
-                      <Badge className={`text-[10px] ${sub.status === 'active' ? 'bg-green-100 text-green-700' : sub.status === 'expired' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>{sub.status}</Badge>
+                      <Badge className={`text-[10px] ${sub.status === 'active' ? 'bg-green-100 text-green-700' : sub.status === 'expired' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>{t(`common.${sub.status}`) || sub.status}</Badge>
                     </div>
                     <p className="text-xs text-gray-500">{t('dashboard.admin.userLabel')}: {sub.user_id?.slice(0, 12)}</p>
                     {sub.expires_at && <p className="text-xs text-gray-400">{t('dashboard.admin.expires')}: {new Date(sub.expires_at).toLocaleDateString()}</p>}

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export default function DashboardError({
   error,
@@ -11,6 +12,7 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useI18n();
   useEffect(() => {
     console.error('Dashboard error:', error);
   }, [error]);
@@ -21,18 +23,18 @@ export default function DashboardError({
         <AlertTriangle className="h-8 w-8 text-red-500" />
       </div>
       <div>
-        <h2 className="text-xl font-semibold text-[var(--foreground)]">Something went wrong</h2>
+        <h2 className="text-xl font-semibold text-[var(--foreground)]">{t('dashboard.errorPage.title')}</h2>
         <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-          An unexpected error occurred loading this page.
+          {t('dashboard.errorPage.description')}
         </p>
       </div>
       <div className="flex gap-3">
         <Button onClick={reset} className="gap-2">
           <RefreshCw className="h-4 w-4" />
-          Try Again
+          {t('dashboard.errorPage.tryAgain')}
         </Button>
         <Button variant="outline" onClick={() => window.location.href = '/'}>
-          Go Home
+          {t('dashboard.errorPage.goHome')}
         </Button>
       </div>
     </div>

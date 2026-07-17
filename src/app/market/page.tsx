@@ -18,10 +18,17 @@ import {
 } from 'recharts';
 import { useI18n } from '@/lib/i18n';
 
-const regions = [
-  'All Regions', 'Rift Valley', 'Central', 'Coastal', 'Eastern', 'Western', 'Nyanza', 'North Eastern',
-];
-const regionToKey = (r: string) => r.toLowerCase().replace(/\s+/g, '_');
+const regionKeys = ['all_regions', 'rift_valley', 'central', 'coastal', 'eastern', 'western', 'nyanza', 'north_eastern'] as const;
+const regionDataMap: Record<string, string> = {
+  all_regions: 'All Regions',
+  rift_valley: 'Rift Valley',
+  central: 'Central',
+  coastal: 'Coastal',
+  eastern: 'Eastern',
+  western: 'Western',
+  nyanza: 'Nyanza',
+  north_eastern: 'North Eastern',
+};
 
 function TrendIcon({ trend }: { trend: MarketPrice['trend'] }) {
   if (trend === 'up') return <TrendingUp className="h-4 w-4 text-[#0f766e]" />;
@@ -39,9 +46,9 @@ function TrendBadge({ trend, t }: { trend: MarketPrice['trend']; t: (key: string
   return <Badge variant={variant}>{label}</Badge>;
 }
 
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string, locale: string) {
   const d = new Date(dateStr);
-  return d.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+  return d.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function PageSkeleton() {
@@ -75,11 +82,11 @@ function PageSkeleton() {
 }
 
 export default function MarketPage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [prices, setPrices] = useState<MarketPrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [regionFilter, setRegionFilter] = useState('All Regions');
+  const [regionFilter, setRegionFilter] = useState('all_regions');
 
   useEffect(() => {
     let cancelled = false;
@@ -99,7 +106,7 @@ export default function MarketPage() {
 
   const filtered = prices.filter((p) => {
     const matchCrop = p.crop.toLowerCase().includes(search.toLowerCase());
-    const matchRegion = regionFilter === 'All Regions' || p.region === regionFilter;
+    const matchRegion = regionFilter === 'all_regions' || p.region === regionDataMap[regionFilter];
     return matchCrop && matchRegion;
   });
 
@@ -151,7 +158,7 @@ export default function MarketPage() {
             <div>
               <p className="text-sm font-medium text-gray-500">{t('market.averagePrice')}</p>
               <p className="text-2xl font-bold text-gray-900">
-                KES {avgPrice.toFixed(0)}
+                {t('landing.currencyKes', { value: avgPrice.toFixed(0) })}
               </p>
               <p className="text-xs text-gray-400">{t('market.unit', { unit: 'kg' })}</p>
             </div>
@@ -166,7 +173,7 @@ export default function MarketPage() {
             <div>
               <p className="text-sm font-medium text-gray-500">{t('market.bestPrice')}</p>
               <p className="text-2xl font-bold text-gray-900">
-                {highest ? `KES ${highest.price_per_kg.toFixed(0)}` : '---'}
+                {highest ? t('landing.currencyKes', { value: highest.price_per_kg.toFixed(0) }) : '---'}
               </p>
               <p className="text-xs text-gray-400">{highest?.crop ?? '---'}</p>
             </div>
@@ -181,7 +188,7 @@ export default function MarketPage() {
             <div>
               <p className="text-sm font-medium text-gray-500">{t('market.lowestPrice')}</p>
               <p className="text-2xl font-bold text-gray-900">
-                {lowest ? `KES ${lowest.price_per_kg.toFixed(0)}` : '---'}
+                {lowest ? t('landing.currencyKes', { value: lowest.price_per_kg.toFixed(0) }) : '---'}
               </p>
               <p className="text-xs text-gray-400">{lowest?.crop ?? '---'}</p>
             </div>
@@ -222,8 +229,8 @@ export default function MarketPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {regions.map((r) => (
-                    <SelectItem key={r} value={r}>{t(`market.regions.${regionToKey(r)}`)}</SelectItem>
+                  {regionKeys.map((key) => (
+                    <SelectItem key={key} value={key}>{t(`market.regions.${key}`)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -247,7 +254,7 @@ export default function MarketPage() {
               <DollarSign className="mb-3 h-10 w-10 text-gray-300" />
               <p className="text-sm font-medium text-gray-500">{t('market.noPrices')}</p>
               <p className="text-xs text-gray-400">
-                {search || regionFilter !== 'All Regions'
+                {search || regionFilter !== 'all_regions'
                   ? t('market.noPricesSearch')
                   : t('market.updating')}
               </p>
@@ -261,7 +268,7 @@ export default function MarketPage() {
                     <div className="flex items-center justify-between">
                       <span className="font-medium text-gray-900">{item.crop}</span>
                       <span className="font-semibold text-gray-900">
-                        KES {item.price_per_kg.toFixed(2)}
+                        {t('landing.currencyKes', { value: item.price_per_kg.toFixed(2) })}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-xs text-gray-500">
@@ -273,7 +280,7 @@ export default function MarketPage() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-gray-400">
                       <Calendar className="h-3 w-3" />
-                      {formatDate(item.recorded_at)}
+                      {formatDate(item.recorded_at, language)}
                     </div>
                   </div>
                 ))}
@@ -297,7 +304,7 @@ export default function MarketPage() {
                         <td className="py-3 pr-4 text-gray-600">{item.region}</td>
                         <td className="py-3 pr-4">
                           <span className="font-semibold text-gray-900">
-                            KES {item.price_per_kg.toFixed(2)}
+                            {t('landing.currencyKes', { value: item.price_per_kg.toFixed(2) })}
                           </span>
                         </td>
                         <td className="py-3 pr-4">
@@ -309,7 +316,7 @@ export default function MarketPage() {
                         <td className="py-3 text-gray-500">
                           <div className="flex items-center gap-1.5">
                             <Calendar className="h-3.5 w-3.5 text-gray-400" />
-                            {formatDate(item.recorded_at)}
+                            {formatDate(item.recorded_at, language)}
                           </div>
                         </td>
                       </tr>
@@ -352,7 +359,7 @@ export default function MarketPage() {
                     tick={{ fontSize: 11, fill: '#6b7280' }}
                     axisLine={{ stroke: '#e5e7eb' }}
                     tickLine={false}
-                    tickFormatter={(v) => `KES ${v}`}
+                    tickFormatter={(v) => t('landing.currencyKes', { value: v })}
                   />
                   <Tooltip
                     contentStyle={{

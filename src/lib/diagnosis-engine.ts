@@ -1,7 +1,9 @@
 import type { GrowthStage, SymptomCategory, PossibleCause, DiagnosisResult, Likelihood, ConditionType } from '@/types';
+import { serverT } from '@/lib/i18n/server';
 
 interface ConditionEntry {
   name: string;
+  translationKey: string;
   type: ConditionType;
   pathogen?: string;
   symptoms: Partial<Record<SymptomCategory, string[]>>;
@@ -216,6 +218,7 @@ function determineUncertainty(
   matchedSymptoms: number,
   totalConditions: number,
   growthStage: GrowthStage,
+  locale: string = 'en',
 ): {
   level: 'low' | 'moderate' | 'high';
   requestMoreInfo: boolean;
@@ -226,11 +229,11 @@ function determineUncertainty(
   let requestMoreInfo = false;
 
   if (growthStage === 'unknown') {
-    missingInfo.push('Crop growth stage');
+    missingInfo.push(serverT(locale, 'diagnosisEngineData.missingInfo.cropGrowthStage'));
   }
 
   if (matchedSymptoms < 2) {
-    missingInfo.push('More specific symptom details');
+    missingInfo.push(serverT(locale, 'diagnosisEngineData.missingInfo.moreSpecificSymptomDetails'));
   }
 
   if (primaryScore < 0.40) {
@@ -259,54 +262,56 @@ function buildReasoning(
   categorized: CategorizedSymptoms,
   growthStage: GrowthStage,
   uncertaintyLevel: string,
+  locale: string = 'en',
 ): DiagnosisResult['reasoning'] {
   const symptomInfluences: string[] = [];
   const uncertainties: string[] = [];
 
   for (const [cat, terms] of Object.entries(categorized.categories)) {
     if (terms && terms.length > 0) {
-      symptomInfluences.push(`Detected ${cat} symptoms: ${terms.join(', ')}`);
+      symptomInfluences.push(serverT(locale, 'diagnosisEngineData.reasoning.detectedCategorySymptoms', { category: cat, terms: terms.join(', ') }));
     }
   }
 
   if (uncertaintyLevel === 'high') {
-    uncertainties.push('Symptoms are too vague for a confident diagnosis');
+    uncertainties.push(serverT(locale, 'diagnosisEngineData.reasoning.vagueSymptoms'));
     if (growthStage === 'unknown') {
-      uncertainties.push('Growth stage is unknown, which affects diagnosis accuracy');
+      uncertainties.push(serverT(locale, 'diagnosisEngineData.reasoning.unknownGrowthStage'));
     }
   } else if (uncertaintyLevel === 'moderate') {
-    uncertainties.push('More symptoms would improve diagnostic confidence');
+    uncertainties.push(serverT(locale, 'diagnosisEngineData.reasoning.moreSymptomsNeeded'));
   }
 
   if (possibleCauses.length > 1 && primary) {
     const diff = primary.confidence - (possibleCauses[1]?.confidence ?? 0);
     if (diff < 0.15) {
-      uncertainties.push(`Multiple conditions have similar symptom profiles (confidence gap: ${Math.round(diff * 100)}%)`);
+      uncertainties.push(serverT(locale, 'diagnosisEngineData.reasoning.similarProfiles', { gap: Math.round(diff * 100) }));
     }
   }
 
   const hasStress = possibleCauses.some(c => c.type === 'stress');
   const hasDisease = possibleCauses.some(c => c.type === 'disease');
   if (hasStress && hasDisease) {
-    symptomInfluences.push('Both stress and disease symptoms detected — requires careful differentiation');
+    symptomInfluences.push(serverT(locale, 'diagnosisEngineData.reasoning.stressAndDisease'));
   }
 
   let growthStageNote: string | undefined;
   if (growthStage !== 'unknown') {
-    growthStageNote = `Diagnosis considers the ${growthStage} growth stage`;
+    const stageLabel = serverT(locale, `diagnosisEngine.growthStages.${growthStage}`);
+    growthStageNote = serverT(locale, 'diagnosisEngineData.reasoning.growthStageConsidered', { stage: stageLabel });
     if (primary && !possibleCauses.find(c => c.name === primary.name)?.name) {
-      growthStageNote += `. Some conditions are less likely at this stage`;
+      growthStageNote += serverT(locale, 'diagnosisEngineData.reasoning.lessLikelyAtStage');
     }
   }
 
   const likelyPrimary = possibleCauses.find(c => c.likelihood === 'high') ?? possibleCauses[0];
   let summary: string;
   if (uncertaintyLevel === 'high') {
-    summary = 'Symptoms are insufficient for a definitive diagnosis. Multiple possible causes identified with low confidence. Consider providing more details.';
+    summary = serverT(locale, 'diagnosisEngineData.summary.insufficientSymptoms');
   } else if (likelyPrimary && likelyPrimary.confidence >= 0.60) {
-    summary = `${likelyPrimary.name} is the most likely cause based on the symptoms described, with ${Math.round(likelyPrimary.confidence * 100)}% confidence.`;
+    summary = serverT(locale, 'diagnosisEngineData.summary.mostLikelyCause', { name: likelyPrimary.name, confidence: Math.round(likelyPrimary.confidence * 100) });
   } else {
-    summary = `${possibleCauses.length} possible conditions identified. Symptoms are not sufficiently specific for a definitive diagnosis.`;
+    summary = serverT(locale, 'diagnosisEngineData.summary.multipleConditions', { count: possibleCauses.length });
   }
 
   return { summary, symptomInfluences, uncertainties, growthStageNote };
@@ -320,6 +325,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   maize: [
     {
       name: 'Northern Leaf Blight',
+      translationKey: 'northernLeafBlight',
       type: 'disease',
       pathogen: 'Exserohilum turcicum',
       symptoms: {
@@ -332,6 +338,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Maize Streak Virus',
+      translationKey: 'maizeStreakVirus',
       type: 'disease',
       pathogen: 'Maize streak virus (MSV)',
       symptoms: {
@@ -344,6 +351,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Heat & Drought Stress',
+      translationKey: 'maizeHeatAndDroughtStress',
       type: 'stress',
       symptoms: {
         leaf: ['leaf rolling', 'leaf scorch', 'marginal burn', 'wilting'],
@@ -356,6 +364,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Nitrogen Deficiency',
+      translationKey: 'maizeNitrogenDeficiency',
       type: 'nutrient_deficiency',
       symptoms: {
         leaf: ['pale green leaves', 'yellowing from tip', 'V-shaped yellowing', 'chlorosis lower leaves'],
@@ -369,6 +378,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   wheat: [
     {
       name: 'Wheat Stem Rust',
+      translationKey: 'wheatStemRust',
       type: 'disease',
       pathogen: 'Puccinia graminis',
       symptoms: {
@@ -382,6 +392,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Wheat Powdery Mildew',
+      translationKey: 'wheatPowderyMildew',
       type: 'disease',
       pathogen: 'Blumeria graminis',
       symptoms: {
@@ -394,6 +405,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Drought Stress',
+      translationKey: 'wheatDroughtStress',
       type: 'stress',
       symptoms: {
         leaf: ['leaf rolling', 'wilting', 'leaf tip burn'],
@@ -408,6 +420,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   rice: [
     {
       name: 'Rice Blast',
+      translationKey: 'riceBlast',
       type: 'disease',
       pathogen: 'Magnaporthe oryzae',
       symptoms: {
@@ -421,6 +434,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Rice Yellow Mottle Virus',
+      translationKey: 'riceYellowMottleVirus',
       type: 'disease',
       pathogen: 'Rice yellow mottle virus (RYMV)',
       symptoms: {
@@ -433,6 +447,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Nitrogen Deficiency',
+      translationKey: 'riceNitrogenDeficiency',
       type: 'nutrient_deficiency',
       symptoms: {
         leaf: ['pale green to yellow', 'chlorosis lower leaves', 'yellowing from tip'],
@@ -446,6 +461,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   cassava: [
     {
       name: 'Cassava Mosaic Virus',
+      translationKey: 'cassavaMosaicVirus',
       type: 'disease',
       pathogen: 'Cassava mosaic virus (CMV)',
       symptoms: {
@@ -458,6 +474,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Cassava Brown Streak Virus',
+      translationKey: 'cassavaBrownStreakVirus',
       type: 'disease',
       pathogen: 'Cassava brown streak virus (CBSV)',
       symptoms: {
@@ -471,6 +488,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Drought Stress',
+      translationKey: 'cassavaDroughtStress',
       type: 'stress',
       symptoms: {
         leaf: ['leaf wilting', 'leaf drop', 'leaf scorch', 'leaf yellowing'],
@@ -485,6 +503,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   beans: [
     {
       name: 'Angular Leaf Spot',
+      translationKey: 'angularLeafSpot',
       type: 'disease',
       pathogen: 'Pseudocercospora griseola',
       symptoms: {
@@ -497,6 +516,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Bean Common Mosaic Virus',
+      translationKey: 'beanCommonMosaicVirus',
       type: 'disease',
       pathogen: 'Bean common mosaic virus (BCMV)',
       symptoms: {
@@ -509,6 +529,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Flower Drop (Physiological)',
+      translationKey: 'flowerDropPhysiological',
       type: 'physiological',
       symptoms: {
         flower: ['flower drop', 'flowers falling', 'poor pod set'],
@@ -523,6 +544,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   sorghum: [
     {
       name: 'Sorghum Anthracnose',
+      translationKey: 'sorghumAnthracnose',
       type: 'disease',
       pathogen: 'Colletotrichum sublineolum',
       symptoms: {
@@ -535,6 +557,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Sorghum Downy Mildew',
+      translationKey: 'sorghumDownyMildew',
       type: 'disease',
       pathogen: 'Peronosclerospora sorghi',
       symptoms: {
@@ -547,6 +570,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Drought Stress',
+      translationKey: 'sorghumDroughtStress',
       type: 'stress',
       symptoms: {
         leaf: ['leaf rolling', 'leaf scorch', 'wilting'],
@@ -561,6 +585,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   millet: [
     {
       name: 'Millet Downy Mildew',
+      translationKey: 'milletDownyMildew',
       type: 'disease',
       pathogen: 'Sclerospora graminicola',
       symptoms: {
@@ -573,6 +598,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Millet Blast',
+      translationKey: 'milletBlast',
       type: 'disease',
       pathogen: 'Magnaporthe grisea',
       symptoms: {
@@ -588,6 +614,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   'sweet potato': [
     {
       name: 'Sweet Potato Virus Disease',
+      translationKey: 'sweetPotatoVirusDisease',
       type: 'disease',
       pathogen: 'Sweet potato virus complex',
       symptoms: {
@@ -600,6 +627,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Sweet Potato Weevil Damage',
+      translationKey: 'sweetPotatoWeevilDamage',
       type: 'pest',
       symptoms: {
         stem_root: ['stem tunneling', 'root damage', 'tuber damage'],
@@ -614,6 +642,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   potato: [
     {
       name: 'Potato Late Blight',
+      translationKey: 'potatoLateBlight',
       type: 'disease',
       pathogen: 'Phytophthora infestans',
       symptoms: {
@@ -628,6 +657,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Potato Early Blight',
+      translationKey: 'potatoEarlyBlight',
       type: 'disease',
       pathogen: 'Alternaria solani',
       symptoms: {
@@ -640,6 +670,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Drought Stress',
+      translationKey: 'potatoDroughtStress',
       type: 'stress',
       symptoms: {
         leaf: ['wilting', 'leaf curling', 'leaf scorch'],
@@ -654,6 +685,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   banana: [
     {
       name: 'Fusarium Wilt (Panama Disease)',
+      translationKey: 'fusariumWiltPanama',
       type: 'disease',
       pathogen: 'Fusarium oxysporum f. sp. cubense TR4',
       symptoms: {
@@ -667,6 +699,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Black Sigatoka',
+      translationKey: 'blackSigatoka',
       type: 'disease',
       pathogen: 'Mycosphaerella fijiensis',
       symptoms: {
@@ -679,6 +712,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Nutrient Deficiency (Potassium)',
+      translationKey: 'nutrientDeficiencyPotassium',
       type: 'nutrient_deficiency',
       symptoms: {
         leaf: ['yellow leaf margins', 'orange-yellow leaves', 'leaf tip necrosis', 'rapid leaf death'],
@@ -693,6 +727,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   coffee: [
     {
       name: 'Coffee Leaf Rust',
+      translationKey: 'coffeeLeafRust',
       type: 'disease',
       pathogen: 'Hemileia vastatrix',
       symptoms: {
@@ -705,6 +740,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Coffee Berry Borer',
+      translationKey: 'coffeeBerryBorer',
       type: 'pest',
       pathogen: 'Hypothenemus hampei',
       symptoms: {
@@ -717,6 +753,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Drought Stress',
+      translationKey: 'coffeeDroughtStress',
       type: 'stress',
       symptoms: {
         leaf: ['leaf wilting', 'leaf scorch', 'leaf drop'],
@@ -731,6 +768,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   tea: [
     {
       name: 'Tea Blister Blight',
+      translationKey: 'teaBlisterBlight',
       type: 'disease',
       pathogen: 'Exobasidium vexans',
       symptoms: {
@@ -743,6 +781,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Tea Mosquito Bug',
+      translationKey: 'teaMosquitoBug',
       type: 'pest',
       symptoms: {
         leaf: ['leaf distortion', 'shot holes', 'leaf damage'],
@@ -756,6 +795,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   sugarcane: [
     {
       name: 'Sugarcane Smut',
+      translationKey: 'sugarcaneSmut',
       type: 'disease',
       pathogen: 'Ustilago scitaminea',
       symptoms: {
@@ -768,6 +808,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Sugarcane Red Rot',
+      translationKey: 'sugarcaneRedRot',
       type: 'disease',
       pathogen: 'Colletotrichum falcatum',
       symptoms: {
@@ -783,6 +824,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   cotton: [
     {
       name: 'Cotton Bacterial Blight',
+      translationKey: 'cottonBacterialBlight',
       type: 'disease',
       pathogen: 'Xanthomonas campestris pv. malvacearum',
       symptoms: {
@@ -796,6 +838,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Cotton Bollworm',
+      translationKey: 'cottonBollworm',
       type: 'pest',
       symptoms: {
         fruit_nut: ['boll damage', 'bore holes in bolls', 'boll rot', 'boll drop'],
@@ -809,6 +852,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   tomato: [
     {
       name: 'Tomato Late Blight',
+      translationKey: 'tomatoLateBlight',
       type: 'disease',
       pathogen: 'Phytophthora infestans',
       symptoms: {
@@ -822,6 +866,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Tomato Early Blight',
+      translationKey: 'tomatoEarlyBlight',
       type: 'disease',
       pathogen: 'Alternaria solani',
       symptoms: {
@@ -835,6 +880,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Blossom End Rot',
+      translationKey: 'blossomEndRot',
       type: 'physiological',
       symptoms: {
         fruit_nut: ['sunken lesion at blossom end', 'fruit rot', 'dark sunken spot'],
@@ -848,6 +894,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   onion: [
     {
       name: 'Onion Downy Mildew',
+      translationKey: 'onionDownyMildew',
       type: 'disease',
       pathogen: 'Peronospora destructor',
       symptoms: {
@@ -860,6 +907,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Onion Thrips',
+      translationKey: 'onionThrips',
       type: 'pest',
       symptoms: {
         leaf: ['silvery streaks', 'white patches', 'leaf distortion', 'leaf dieback'],
@@ -873,6 +921,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   kale: [
     {
       name: 'Black Rot',
+      translationKey: 'blackRot',
       type: 'disease',
       pathogen: 'Xanthomonas campestris pv. campestris',
       symptoms: {
@@ -885,6 +934,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Diamondback Moth',
+      translationKey: 'diamondbackMoth',
       type: 'pest',
       symptoms: {
         leaf: ['shot holes', 'leaf mining', 'leaf damage', 'holes in leaves'],
@@ -898,6 +948,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   mango: [
     {
       name: 'Mango Anthracnose',
+      translationKey: 'mangoAnthracnose',
       type: 'disease',
       pathogen: 'Colletotrichum gloeosporioides',
       symptoms: {
@@ -911,6 +962,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Mango Fruit Fly',
+      translationKey: 'mangoFruitFly',
       type: 'pest',
       symptoms: {
         fruit_nut: ['fruit drop', 'fruit damage', 'soft spots on fruit', 'maggots in fruit'],
@@ -922,6 +974,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Physiological Fruit Drop',
+      translationKey: 'mangoPhysiologicalFruitDrop',
       type: 'physiological',
       symptoms: {
         fruit_nut: ['fruit drop', 'premature fruit fall', 'young fruit drop'],
@@ -935,6 +988,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   avocado: [
     {
       name: 'Avocado Root Rot',
+      translationKey: 'avocadoRootRot',
       type: 'disease',
       pathogen: 'Phytophthora cinnamomi',
       symptoms: {
@@ -949,6 +1003,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Avocado Thrips',
+      translationKey: 'avocadoThrips',
       type: 'pest',
       symptoms: {
         leaf: ['leaf scarring', 'leaf damage', 'bronzed leaves'],
@@ -963,6 +1018,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   groundnut: [
     {
       name: 'Groundnut Rosette Virus',
+      translationKey: 'groundnutRosetteVirus',
       type: 'disease',
       pathogen: 'Groundnut rosette virus (GRV)',
       symptoms: {
@@ -975,6 +1031,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Groundnut Leaf Spot',
+      translationKey: 'groundnutLeafSpot',
       type: 'disease',
       pathogen: 'Cercospora arachidicola / Cercosporidium personatum',
       symptoms: {
@@ -989,6 +1046,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   sunflower: [
     {
       name: 'Sunflower Downy Mildew',
+      translationKey: 'sunflowerDownyMildew',
       type: 'disease',
       pathogen: 'Plasmopara halstedii',
       symptoms: {
@@ -1001,6 +1059,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Sunflower Head Rot',
+      translationKey: 'sunflowerHeadRot',
       type: 'disease',
       pathogen: 'Rhizopus spp. / Sclerotinia sclerotiorum',
       symptoms: {
@@ -1015,6 +1074,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   cowpea: [
     {
       name: 'Cowpea Aphid-Borne Mosaic Virus',
+      translationKey: 'cowpeaAphidBorneMosaicVirus',
       type: 'disease',
       pathogen: 'Cowpea aphid-borne mosaic virus (CABMV)',
       symptoms: {
@@ -1027,6 +1087,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Cowpea Pod Borer',
+      translationKey: 'cowpeaPodBorer',
       type: 'pest',
       symptoms: {
         fruit_nut: ['pod damage', 'pod borer holes', 'seed damage', 'pod rot'],
@@ -1040,6 +1101,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   pineapple: [
     {
       name: 'Pineapple Fusariosis',
+      translationKey: 'pineappleFusariosis',
       type: 'disease',
       pathogen: 'Fusarium subglutinans',
       symptoms: {
@@ -1053,6 +1115,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Pineapple Mealybug Wilt',
+      translationKey: 'pineappleMealybugWilt',
       type: 'disease',
       symptoms: {
         leaf: ['leaf wilting', 'leaf reddening', 'leaf tip dieback', 'leaf curling'],
@@ -1066,6 +1129,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   'passion fruit': [
     {
       name: 'Passion Fruit Woodiness Virus',
+      translationKey: 'passionFruitWoodinessVirus',
       type: 'disease',
       pathogen: 'Passion fruit woodiness virus',
       symptoms: {
@@ -1079,6 +1143,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Fusarium Wilt',
+      translationKey: 'passionFruitFusariumWilt',
       type: 'disease',
       pathogen: 'Fusarium oxysporum f. sp. passiflorae',
       symptoms: {
@@ -1094,6 +1159,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   orange: [
     {
       name: 'Citrus Greening (Huanglongbing)',
+      translationKey: 'citrusGreening',
       type: 'disease',
       pathogen: 'Candidatus Liberibacter spp.',
       symptoms: {
@@ -1107,6 +1173,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Citrus Canker',
+      translationKey: 'citrusCanker',
       type: 'disease',
       pathogen: 'Xanthomonas citri',
       symptoms: {
@@ -1120,6 +1187,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Physiological Fruit Drop',
+      translationKey: 'orangePhysiologicalFruitDrop',
       type: 'physiological',
       symptoms: {
         fruit_nut: ['fruit drop', 'premature fruit fall'],
@@ -1133,6 +1201,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   coconut: [
     {
       name: 'Coconut Lethal Yellowing',
+      translationKey: 'coconutLethalYellowing',
       type: 'disease',
       pathogen: 'Coconut lethal yellowing phytoplasma',
       symptoms: {
@@ -1147,6 +1216,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Coconut Mite',
+      translationKey: 'coconutMite',
       type: 'pest',
       symptoms: {
         fruit_nut: ['nut damage', 'nut scarring', 'premature nut fall', 'nut deformation'],
@@ -1160,6 +1230,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   cashew: [
     {
       name: 'Cashew Powdery Mildew',
+      translationKey: 'cashewPowderyMildew',
       type: 'disease',
       pathogen: 'Oidium anacardii',
       symptoms: {
@@ -1173,6 +1244,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Cashew Mosquito Bug',
+      translationKey: 'cashewMosquitoBug',
       type: 'pest',
       symptoms: {
         leaf: ['leaf wilting', 'leaf necrosis'],
@@ -1188,6 +1260,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   macadamia: [
     {
       name: 'Macadamia Husk Spot',
+      translationKey: 'macadamiaHuskSpot',
       type: 'disease',
       pathogen: 'Pseudocercospora macadamiae',
       symptoms: {
@@ -1200,6 +1273,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Macadamia Nut Borer',
+      translationKey: 'macadamiaNutBorer',
       type: 'pest',
       symptoms: {
         fruit_nut: ['nut damage', 'bore holes in nuts', 'premature nut drop', 'kernel damage'],
@@ -1213,6 +1287,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   sesame: [
     {
       name: 'Sesame Bacterial Leaf Spot',
+      translationKey: 'sesameBacterialLeafSpot',
       type: 'disease',
       pathogen: 'Xanthomonas campestris pv. sesami',
       symptoms: {
@@ -1227,6 +1302,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Sesame Phyllody',
+      translationKey: 'sesamePhyllody',
       type: 'disease',
       pathogen: 'Phytoplasma',
       symptoms: {
@@ -1241,6 +1317,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   cabbage: [
     {
       name: 'Cabbage Black Rot',
+      translationKey: 'cabbageBlackRot',
       type: 'disease',
       pathogen: 'Xanthomonas campestris pv. campestris',
       symptoms: {
@@ -1253,6 +1330,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Cabbage Aphid',
+      translationKey: 'cabbageAphid',
       type: 'pest',
       symptoms: {
         leaf: ['curled leaves', 'sticky leaves', 'white waxy coating', 'leaf distortion'],
@@ -1266,6 +1344,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   spinach: [
     {
       name: 'Spinach Downy Mildew',
+      translationKey: 'spinachDownyMildew',
       type: 'disease',
       pathogen: 'Peronospora farinosa f. sp. spinaciae',
       symptoms: {
@@ -1278,6 +1357,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Spinach Leaf Miner',
+      translationKey: 'spinachLeafMiner',
       type: 'pest',
       symptoms: {
         leaf: ['leaf mining tunnels', 'white trails', 'leaf damage', 'leaf necrosis'],
@@ -1291,6 +1371,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   carrot: [
     {
       name: 'Carrot Alternaria Leaf Blight',
+      translationKey: 'carrotAlternariaLeafBlight',
       type: 'disease',
       pathogen: 'Alternaria dauci',
       symptoms: {
@@ -1303,6 +1384,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Carrot Root Knot Nematodes',
+      translationKey: 'carrotRootKnotNematodes',
       type: 'pest',
       symptoms: {
         stem_root: ['root galls', 'forked roots', 'root damage', 'stunted roots'],
@@ -1316,6 +1398,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   watermelon: [
     {
       name: 'Watermelon Anthracnose',
+      translationKey: 'watermelonAnthracnose',
       type: 'disease',
       pathogen: 'Colletotrichum orbiculare',
       symptoms: {
@@ -1329,6 +1412,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Watermelon Powdery Mildew',
+      translationKey: 'watermelonPowderyMildew',
       type: 'disease',
       pathogen: 'Podosphaera xanthii',
       symptoms: {
@@ -1343,6 +1427,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
   pawpaw: [
     {
       name: 'Papaya Ringspot Virus',
+      translationKey: 'papayaRingspotVirus',
       type: 'disease',
       pathogen: 'Papaya ringspot virus (PRSV)',
       symptoms: {
@@ -1356,6 +1441,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
     },
     {
       name: 'Papaya Anthracnose',
+      translationKey: 'papayaAnthracnose',
       type: 'disease',
       pathogen: 'Colletotrichum gloeosporioides',
       symptoms: {
@@ -1372,6 +1458,7 @@ const CROP_CONDITIONS: Record<string, ConditionEntry[]> = {
 const STRESS_CONDITIONS: ConditionEntry[] = [
   {
     name: 'Water Stress (Drought/Overwatering)',
+    translationKey: 'waterStress',
     type: 'stress',
     symptoms: {
       leaf: ['wilting', 'leaf curling', 'leaf drop', 'leaf yellowing'],
@@ -1384,6 +1471,7 @@ const STRESS_CONDITIONS: ConditionEntry[] = [
   },
   {
     name: 'Heat Stress',
+    translationKey: 'heatStress',
     type: 'stress',
     symptoms: {
       leaf: ['leaf scorch', 'leaf sunburn', 'marginal burn', 'wilting', 'leaf drop'],
@@ -1397,6 +1485,7 @@ const STRESS_CONDITIONS: ConditionEntry[] = [
   },
   {
     name: 'Nutrient Deficiency (General)',
+    translationKey: 'nutrientDeficiencyGeneral',
     type: 'nutrient_deficiency',
     symptoms: {
       leaf: ['leaf yellowing', 'chlorosis', 'pale leaves', 'discolored leaves'],
@@ -1436,7 +1525,9 @@ export function diagnose(options: {
   cropType: string;
   symptoms: string;
   growthStage?: GrowthStage;
+  locale?: string;
 }): DiagnosisResult {
+  const locale = options.locale ?? 'en';
   const growthStage = options.growthStage ?? 'unknown';
   const categorized = categorizeSymptoms(options.symptoms);
   const allConditions = findCropConditions(options.cropType);
@@ -1457,13 +1548,13 @@ export function diagnose(options: {
     : 0;
 
   const possibleCauses: PossibleCause[] = scored.slice(0, 5).map(s => ({
-    name: s.condition.name,
+    name: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.name`) || s.condition.name,
     type: s.condition.type,
     pathogen: s.condition.pathogen,
     likelihood: confidenceLevel(s.score, totalCondSymptoms, s.matchedSymptoms.length),
     confidence: Math.round(s.score * 1000) / 1000,
-    treatment: s.condition.treatment,
-    prevention: s.condition.prevention,
+    treatment: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.treatment`) || s.condition.treatment,
+    prevention: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.prevention`) || s.condition.prevention,
   }));
 
   let primaryDiagnosis: PossibleCause | undefined;
@@ -1476,6 +1567,7 @@ export function diagnose(options: {
     topMatched,
     scored.length,
     growthStage,
+    locale,
   );
 
   const capConfidence = (conf: number, matchedCount: number): number => {
@@ -1509,6 +1601,7 @@ export function diagnose(options: {
     categorized,
     growthStage,
     uncertainty.level,
+    locale,
   );
 
   return {
@@ -1532,6 +1625,15 @@ export function getCropExists(cropType: string): boolean {
 }
 
 export const KNOWN_CROPS = Object.keys(CROP_CONDITIONS);
+
+export function getGrowthStages(locale: string = 'en'): { value: GrowthStage; label: string }[] {
+  return [
+    { value: 'seedling', label: serverT(locale, 'diagnosisEngine.growthStages.seedling') },
+    { value: 'vegetative', label: serverT(locale, 'diagnosisEngine.growthStages.vegetative') },
+    { value: 'flowering', label: serverT(locale, 'diagnosisEngine.growthStages.flowering') },
+    { value: 'fruiting', label: serverT(locale, 'diagnosisEngine.growthStages.fruiting') },
+  ];
+}
 
 export const GROWTH_STAGES: { value: GrowthStage; label: string }[] = [
   { value: 'seedling', label: 'Seedling' },

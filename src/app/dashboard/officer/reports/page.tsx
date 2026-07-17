@@ -23,7 +23,7 @@ interface ReportType {
 
 interface GeneratedReport {
   id: string;
-  title: string;
+  titleKey: string;
   format: string;
   date: string;
   status: 'completed' | 'processing';
@@ -61,12 +61,12 @@ const reportTypes: ReportType[] = [
 ];
 
 const recentReports: GeneratedReport[] = [
-  { id: 'OFR-001', title: 'Farmer Activity - June 2026', format: 'PDF', date: '2026-06-03', status: 'completed' },
-  { id: 'OFR-002', title: 'Disease Outbreak Analysis - Week 22', format: 'CSV', date: '2026-06-02', status: 'completed' },
-  { id: 'OFR-003', title: 'Regional Summary - Rift Valley', format: 'Excel', date: '2026-05-30', status: 'completed' },
-  { id: 'OFR-004', title: 'Sustainability Scorecard Q2', format: 'PDF', date: '2026-05-28', status: 'completed' },
-  { id: 'OFR-005', title: 'Monthly Disease Summary - May', format: 'CSV', date: '2026-05-25', status: 'completed' },
-  { id: 'OFR-006', title: 'Farmer Activity - May 2026', format: 'PDF', date: '2026-05-20', status: 'completed' },
+  { id: 'OFR-001', titleKey: 'dashboard.officer.reports.recentReports.farmerActivityJune', format: 'PDF', date: '2026-06-03', status: 'completed' },
+  { id: 'OFR-002', titleKey: 'dashboard.officer.reports.recentReports.diseaseOutbreakWeek22', format: 'CSV', date: '2026-06-02', status: 'completed' },
+  { id: 'OFR-003', titleKey: 'dashboard.officer.reports.recentReports.regionalSummary', format: 'Excel', date: '2026-05-30', status: 'completed' },
+  { id: 'OFR-004', titleKey: 'dashboard.officer.reports.recentReports.sustainabilityScorecard', format: 'PDF', date: '2026-05-28', status: 'completed' },
+  { id: 'OFR-005', titleKey: 'dashboard.officer.reports.recentReports.monthlyDiseaseMay', format: 'CSV', date: '2026-05-25', status: 'completed' },
+  { id: 'OFR-006', titleKey: 'dashboard.officer.reports.recentReports.farmerActivityMay', format: 'PDF', date: '2026-05-20', status: 'completed' },
 ];
 
 const formatBadgeVariant: Record<string, 'primary' | 'secondary' | 'default'> = {
@@ -188,7 +188,7 @@ export default function OfficerReportsPage() {
                 {reports.map((r) => (
                   <div key={r.id} className="py-3 space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-900 min-w-0 flex-1 mr-2">{r.title}</span>
+                      <span className="text-sm font-medium text-gray-900 min-w-0 flex-1 mr-2">{t(r.titleKey)}</span>
                       <Badge variant={formatBadgeVariant[r.format] ?? 'default'} className="shrink-0">{r.format}</Badge>
                     </div>
                     <div className="flex items-center justify-between text-xs text-gray-500">
@@ -201,7 +201,7 @@ export default function OfficerReportsPage() {
                       variant="ghost"
                       size="sm"
                       className="gap-1.5 text-emerald-600 h-8 px-0 text-xs"
-                      onClick={() => toast.success(t('reports.downloading', { title: r.title }))}
+                      onClick={() => toast.success(t('reports.downloading', { title: t(r.titleKey) }))}
                     >
                       <Download className="h-3 w-3" />
                       {t('common.download')}
@@ -224,7 +224,7 @@ export default function OfficerReportsPage() {
                   <tbody>
                     {reports.map((r) => (
                       <tr key={r.id} className="border-b border-gray-50 transition-colors hover:bg-gray-50/50">
-                        <td className="py-3 pr-4 font-medium text-gray-900">{r.title}</td>
+                        <td className="py-3 pr-4 font-medium text-gray-900">{t(r.titleKey)}</td>
                         <td className="py-3 pr-4">
                           <Badge variant={formatBadgeVariant[r.format] ?? 'default'}>
                             {r.format}
@@ -241,7 +241,7 @@ export default function OfficerReportsPage() {
                             variant="ghost"
                             size="sm"
                             className="gap-1.5 text-emerald-600"
-                            onClick={() => toast.success(t('reports.downloading', { title: r.title }))}
+                            onClick={() => toast.success(t('reports.downloading', { title: t(r.titleKey) }))}
                           >
                             <Download className="h-3.5 w-3.5" />
                             {t('common.download')}

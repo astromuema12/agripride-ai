@@ -85,7 +85,7 @@ export function Navbar() {
               <span className="font-display text-lg font-normal text-[var(--foreground)] tracking-tight">AgriPride</span>
               <span suppressHydrationWarning>
                 {isDemoMode && (
-                  <Badge variant="warning" className="text-[10px] ml-1">DEMO</Badge>
+                  <Badge variant="warning" className="text-[10px] ml-1">{t('nav.demoMode')}</Badge>
                 )}
               </span>
             </Link>

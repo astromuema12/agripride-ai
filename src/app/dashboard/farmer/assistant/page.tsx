@@ -56,7 +56,7 @@ export default function AIAssistant() {
           content: welcomeMessage,
           agent_name: t('assistant.agentName'),
           confidence_score: 1,
-          frameworks_used: ['AIM Framework'],
+          frameworks_used: [t('assistant.frameworks.aim')],
           created_at: new Date().toISOString(),
         };
         setMessages([welcome]);
@@ -150,7 +150,7 @@ export default function AIAssistant() {
         content: fullText,
         agent_name: t('assistant.agentName'),
         confidence_score: 0.92,
-        frameworks_used: ['AIM Framework', 'TRACK Framework'],
+        frameworks_used: [t('assistant.frameworks.aim'), t('assistant.frameworks.track')],
         created_at: new Date().toISOString(),
       };
       setMessages((prev) => prev.map((m) => (m.id === tempId ? finalMsg : m)));
@@ -161,7 +161,7 @@ export default function AIAssistant() {
           content: fullText,
           agent_name: t('assistant.agentName'),
           confidence_score: 0.92,
-          frameworks_used: ['AIM Framework', 'TRACK Framework'],
+          frameworks_used: [t('assistant.frameworks.aim'), t('assistant.frameworks.track')],
         });
       } catch {}
     } catch {
@@ -183,7 +183,7 @@ export default function AIAssistant() {
     } else {
       stopSpeaking();
       setSpeakingId(id);
-      speakText(text, () => setSpeakingId(null));
+      speakText(text, () => setSpeakingId(null), language);
     }
   };
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { serverT } from '@/lib/i18n/server';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
       if (!existing) {
         const email = data.user.email ?? '';
         const metadata = data.user.user_metadata;
-        const name = metadata?.name ?? metadata?.full_name ?? email.split('@')[0] ?? 'User';
+        const name = metadata?.name ?? metadata?.full_name ?? email.split('@')[0] ?? serverT('en', 'authExtra.defaultUserName');
         const avatar = metadata?.avatar_url ?? metadata?.picture ?? null;
 
         await supabase.from('users').insert({

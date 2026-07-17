@@ -183,7 +183,7 @@ export default function AuditPage() {
                   <div key={log.id} className="py-3 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <Badge variant="default" className="capitalize text-[10px]">
-                        {log.action.replace(/_/g, ' ')}
+                        {t(`dashboard.admin.auditActions.${log.action}`) || log.action.replace(/_/g, ' ')}
                       </Badge>
                       <div className="flex items-center gap-1.5 text-xs text-gray-500">
                         <Clock className="h-3 w-3" />
@@ -223,7 +223,7 @@ export default function AuditPage() {
                       <tr key={log.id} className="border-b border-gray-100 last:border-0">
                         <td className="py-3 pr-4">
                           <Badge variant="default" className="capitalize">
-                            {log.action.replace(/_/g, ' ')}
+                            {t(`dashboard.admin.auditActions.${log.action}`) || log.action.replace(/_/g, ' ')}
                           </Badge>
                         </td>
                         <td className="py-3 pr-4 text-gray-700">{log.resource}</td>

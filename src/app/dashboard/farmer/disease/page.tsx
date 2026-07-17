@@ -25,6 +25,10 @@ import { speakText, stopSpeaking } from '@/lib/tts';
 
 const CROP_TYPES = ['Maize', 'Wheat', 'Rice', 'Cassava', 'Beans', 'Sorghum', 'Millet', 'Sweet Potato', 'Potato', 'Banana', 'Coffee', 'Tea', 'Sugarcane', 'Cotton', 'Tomato', 'Onion', 'Kale', 'Mango', 'Avocado', 'Groundnut', 'Sunflower', 'Cowpea', 'Pineapple', 'Passion Fruit', 'Orange', 'Coconut', 'Cashew', 'Macadamia', 'Sesame', 'Green Grams', 'Pigeon Peas', 'Cabbage', 'Spinach', 'Carrot', 'Watermelon', 'Pawpaw', 'Barley', 'French Beans', 'Capsicum', 'Arrow Roots', 'Yam', 'Pyrethrum', 'Sisal'];
 
+function formatDiseaseType(type: string): string {
+  return type.replace(/_/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
 
 
 interface APIResponseData {
@@ -91,7 +95,7 @@ function LikelihoodBadge({ likelihood }: { likelihood?: string }) {
 
 export default function DiseaseDiagnosisPage() {
   const { user } = useAuth();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -343,7 +347,7 @@ export default function DiseaseDiagnosisPage() {
     } else {
       stopSpeaking();
       setSpeakingId(id);
-      speakText(text, () => setSpeakingId(null));
+      speakText(text, () => setSpeakingId(null), language);
     }
   };
 
@@ -548,7 +552,7 @@ export default function DiseaseDiagnosisPage() {
                         <UncertaintyBadge level={result.data.uncertaintyLevel} />
                         {result.data.primaryDiagnosis && (
                           <Badge variant="outline" className="text-xs">
-                            {result.data.primaryDiagnosis.type.replace('_', ' ')}
+                            {formatDiseaseType(result.data.primaryDiagnosis.type)}
                           </Badge>
                         )}
                       </div>
@@ -613,7 +617,7 @@ export default function DiseaseDiagnosisPage() {
                                   </span>
                                   <LikelihoodBadge likelihood={cause.likelihood} />
                                 </div>
-                                <p className="text-xs text-gray-500 mt-0.5 capitalize dark:text-gray-400">{cause.type.replace('_', ' ')}</p>
+                                <p className="text-xs text-gray-500 mt-0.5 capitalize dark:text-gray-400">{formatDiseaseType(cause.type)}</p>
                               </div>
                               <div className="text-right shrink-0">
                                 <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">

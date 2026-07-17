@@ -4,13 +4,14 @@ import { testimonialService } from '@/services/testimonial.service';
 import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-utils';
 import { sanitizeObject } from '@/middleware/security';
 import { logger } from '@/lib/logger';
+import { serverT } from '@/lib/i18n/server';
 
 const CreateTestimonialSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
+  name: z.string().min(1, serverT('en', 'validation.nameRequired')).max(255),
   location: z.string().max(255).optional(),
   farm_type: z.string().max(100).optional(),
   photo_url: z.string().max(2000).optional(),
-  content: z.string().min(1, 'Testimonial content is required').max(5000),
+  content: z.string().min(1, serverT('en', 'validation.testimonialContentRequired')).max(5000),
   userId: z.string().optional(),
 });
 
@@ -31,7 +32,7 @@ async function postHandler(req: NextRequest) {
   } as any);
 
   return apiSuccess({
-    message: 'Thank you for your testimonial! It will be reviewed and published soon.',
+    message: serverT('en', 'testimonials.success'),
     data: testimonial,
   });
 }

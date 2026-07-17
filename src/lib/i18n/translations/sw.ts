@@ -224,6 +224,19 @@ export const sw: Translations = {
     previous: 'Iliyotangulia',
     nextPeriod: 'Kipindi Kijacho',
     thisPeriod: 'Kipindi Hiki',
+    units: {
+      kmPerHour: 'km/saa',
+      mm: 'mm',
+      kg: 'kg',
+      mb: 'MB',
+      percent: '%',
+      perKg: '/ kg',
+      on: ' juu ya ',
+      csv: 'CSV',
+      json: 'JSON',
+      excel: 'Excel',
+      pdf: 'PDF',
+    },
   },
 
   nav: {
@@ -480,6 +493,51 @@ export const sw: Translations = {
         critical: 'Hatari',
       },
     },
+    heroBadge: 'Akili ya Kilimo kwa Wakulima wa Afrika',
+    heroHeadline: 'Mazao yako yanastahili utunzaji {highlight}.',
+    heroCtaStart: 'Anza kulima kwa busara',
+    heroCtaLearn: 'Jinsi inavyofanya kazi',
+    heroStatAccuracy: 'Usahihi',
+    heroStatCounties: 'Nchi',
+    problemBadge: ' changamoto',
+    problemHeadline: 'Kilimo cha Afrika kinapoteza mabilioni kila mwaka.',
+    problemDescription: 'Wakulima wadogo wanalisha bara, lakini wanafanya kazi bila vifaa ambavyo viwanda vikubwa vinatumia. Utambuzi wa marehemu, hali ya hewa isiyotabirika, na masoko yasiyostabilika huunda upotevu unaozuiika.',
+    problemStatCropLosses: ' ya upotevu wa mazao unaozuiika na utambuzi wa mapema',
+    problemStatHigherYields: 'mavuno makubwa zaidi kwa maamuzi ya kilimo yanayotegemea data',
+    problemStatNoExtension: ' ya wakulima wa Afrika hawana ufikiaji wa huduma za ugani',
+    howItWorksBadge: 'Jinsi inavyofanya kazi',
+    howItWorksHeadline: 'Hatua tatu za kilimo chenye busara.',
+    howItWorksStep1Title: 'Unganisha shamba lako',
+    howItWorksStep1Desc: 'Sajili mazao yako, aina ya udongo, na eneo. Mfumo wetu unaunda wasifu wa hali yako ya ukuaji.',
+    howItWorksStep2Title: 'Pata mwongozo wa akili',
+    howItWorksStep2Desc: 'Wakala wa AI wanafuatilia mazao yako, kuchambua dalili za magonjwa, na kutoa mapendekezo kulingana na hali ya hewa kwa wakati.',
+    howItWorksStep3Title: 'Kua kwa ujasiri',
+    howItWorksStep3Desc: 'Fanya maamuzi yenye maarifa yanayotegemea data. Fuatilia maendeleo yako, boresha rasilimali, na ongeza mavuno yako msimu baada ya msimu.',
+    rootFeaturesBadge: 'Vipengele',
+    rootFeaturesHeadline: 'Kila kitu shamba lako kinachohitaji, hakuna lisilohitajika.',
+    rootFeaturesDiseaseDiagnosis: 'Utambuzi wa Magonjwa',
+    rootFeaturesDiseaseDiagnosisDesc: 'Piga picha ya mmea wagonjwa na upate utambuzi kwa sekunde. AI yetu inatambua magonjwa kwa usahihi wa 98.5% katika aina zaidi ya 50 za mazao.',
+    rootFeaturesWeatherIntelligence: 'Akili ya Hali ya Hewa',
+    rootFeaturesWeatherIntelligenceDesc: 'Utabiri wa eneo pamoja na arifa maalum za mazao. Jua ni wakati gani wa kupanda, kunyoa maji, na kuvuna.',
+    rootFeaturesAiFarmAssistant: 'Msaidizi wa AI wa Shamba',
+    rootFeaturesAiFarmAssistantDesc: 'Uliza maswali kwa lugha rahisi. Pata ushauri kuhusu ratiba za upandaji, udhibiti wa wadudu, na usimamizi wa udongo unaofaa eneo lako.',
+    rootFeaturesYieldAnalytics: 'Uchambuzi wa Mazao',
+    rootFeaturesYieldAnalyticsDesc: 'Fuatilia utendaji wa shamba kwa misimu. Tambua mitindo, tabiri mavuno, na boresha ugavi wako wa rasilimali.',
+    rootFeaturesMarketIntelligence: 'Akili ya Soko',
+    rootFeaturesMarketIntelligenceDesc: 'Bei za bidhaa kwa wakati kutoka masoko kote Kenya. Jua ni wakati gani wa kuuza na wapi kupata faida bora.',
+    rootFeaturesSustainabilityScoring: 'Ukadiriaji wa Uendelevu',
+    rootFeaturesSustainabilityScoringDesc: 'Kadiria athari yako ya mazingira. Pata hatua za kuweka matumizi ya afya ya udongo na kupunguza viingilio vya kemikali.',
+    rootTestimonialsBadge: 'Ushanishani',
+    rootTestimonialsHeadline: 'Wakulima halisi, matokeo halisi.',
+    rootTestimonialsReviewCount: 'maoni zaidi ya {count}',
+    rootPricingBadge: 'Bei',
+    rootPricingHeadline: 'Rahisi kwa kila kiwango.',
+    rootFaqHeadline: 'Maswali ya kawaida.',
+    ctaHeadline: 'Tayari kukua tofauti?',
+    ctaDescription: 'Jiunge na wakulima 15,000+ katika nchi 47 ambao tayari wanatumia AgriPride kufanya maamuzi ya busara, kila msimu.',
+    ctaGetStartedFree: 'Anza bure',
+    ctaTalkToTeam: 'Ongea na timu yetu',
+    currencyKes: 'KES {value}',
   },
 
   auth: {
@@ -596,6 +654,16 @@ export const sw: Translations = {
     farmer: 'Mkulima',
     officer: 'Afisa Kilimo',
     admin: 'Msimamizi',
+    placeholders: {
+      email: 'farmer@agripride.ai',
+      password: '••••••••',
+      totpCode: '000000',
+    },
+    recoveryCodes: {
+      separator: '========================',
+      generatedLabel: 'Imetengenezwa: ',
+      filename: 'agripride-maelezo ya kurejesha.txt',
+    },
   },
 
   legal: {
@@ -791,6 +859,34 @@ export const sw: Translations = {
     reports: 'Ripoti',
     notifications: 'Arifa',
     demoBanner: 'Hali ya Onyesho Inatumika \u2014 Data inaigizwa na haihifadhiwi kwenye wingu',
+    error: {
+      errorPage: {
+        title: 'Kuna kitu kimeenda vibaya',
+        description: 'Hitilafu isiyotarajiwa imetokea kupakia ukurasa huu.',
+        tryAgain: 'Jaribu tena',
+        goHome: 'Nenda Nyumbani',
+      },
+    },
+
+    finance: {
+      categories: {
+        seeds: 'Mbegu',
+        fertilizer: 'Mbolea',
+        pesticide: 'Dawa ya wadudu',
+        labor: 'Kazi',
+        equipment: 'Vifaa',
+        irrigation: 'Umwagiliaji',
+        fuel: 'Mafuta',
+        other: 'Nyingine',
+      },
+      revenueSources: {
+        crop_sales: 'Mauzo ya Mazao',
+        livestock_sales: 'Mauzo ya Mifugo',
+        consulting: 'Ushauri',
+        equipment_rental: 'Kukodisha Vifaa',
+        other: 'Nyingine',
+      },
+    },
 
     farmer: {
       title: 'Dashibodi ya Mkulima',
@@ -850,6 +946,11 @@ export const sw: Translations = {
       riskSubmitted: 'Imewasilishwa',
       riskReviewed: 'Imekaguliwa',
       riskResolved: 'Imetatuliwa',
+      weatherUnits: {
+        windSpeed: 'km/saa',
+        rainfall: 'mm',
+      },
+      yieldUnit: 'kg',
     },
 
     officer: {
@@ -925,6 +1026,16 @@ export const sw: Translations = {
       failedToLoadDashboard: 'Imeshindwa kupakia data ya dashibodi',
       unknownFarmer: 'Mkulima Mjinga',
       unknownRegion: 'Eneo Mjinga',
+      reports: {
+        recentReports: {
+          farmerActivityJune: 'Shughuli za Wakulima - Juni 2026',
+          diseaseOutbreakWeek22: 'Uchambuzi wa Mlipuko wa Magonjwa - Wiki 22',
+          regionalSummary: 'Muhtasari wa Mkoa - Bonde la Rift',
+          sustainabilityScorecard: 'Kadi ya Ustahimilivu Q2',
+          monthlyDiseaseMay: 'Muhtasari wa Magonjwa wa Kila Mwezi - Mei',
+          farmerActivityMay: 'Shughuli za Wakulima - Mei 2026',
+        },
+      },
     },
 
     admin: {
@@ -1000,6 +1111,26 @@ export const sw: Translations = {
       failedToUpdateUser: 'Imeshindwa kusasisha mtumiaji',
       userSuspended: 'Mtumiaji {name} amezimwa kwa mafanikio',
       userActivated: 'Mtumiaji {name} amewashwa kwa mafanikio',
+      fallbackName: 'Admin',
+      auditActions: {
+        user_login: 'Kuingia kwa Mtumiaji',
+        user_register: 'Usajili wa Mtumiaji',
+        profile_update: 'Sasisha Wasifu',
+        farm_create: 'Unda Shamba',
+        farm_update: 'Sasisha Shamba',
+        disease_report: 'Ripoti ya Magonjwa',
+        consent_grant: 'Ridhaa ya Kutoa',
+        consent_revoke: 'Ridhaa ya Kujiondoa',
+        subscription_activate: 'Amilisha Usajili',
+        payment_process: 'Shughulikia Malipo',
+      },
+      userRoles: {
+        farmer: 'Mkulima',
+        officer: 'Afisa wa Kilimo',
+        admin: 'Msimamizi',
+      },
+      growthSuffix: ' ukuaji',
+      farmsPercent: '% ya mashamba',
     },
   },
 
@@ -1098,6 +1229,7 @@ export const sw: Translations = {
     noDataDesc: 'Taarifa za hali ya hewa hazipatikani kwa sasa.',
     currentConditions: 'Hali ya Sasa \u2014 {location}',
     disclaimer: 'Kanusho: Wakala wa Hali ya Hewa hatakiwi kamwe kutoa ushauri wa kilimo. Data hii ni kwa madhumuni ya taarifa tu. Wasiliana na afisa wa kilimo wa eneo lako kwa mapendekezo maalum ya shamba lako.',
+    locale: 'sw-KE',
   },
 
   market: {
@@ -1141,6 +1273,17 @@ export const sw: Translations = {
       nyanza: 'Nyanza',
       north_eastern: 'Kaskazini Mashariki',
     },
+    regionsList: {
+      allRegions: 'Mikoa Yote',
+      riftValley: 'Bonde la Rift',
+      central: 'Kati',
+      coastal: 'Pwani',
+      eastern: 'Mashariki',
+      western: 'Magharibi',
+      nyanza: 'Nyanza',
+      northEastern: 'Kaskazini Mashariki',
+    },
+    placeholder: '---',
   },
 
   assistant: {
@@ -1178,6 +1321,14 @@ export const sw: Translations = {
       rank: 'Zana ya Tathmini na Urambazaji wa Hatari',
       description: 'Jibu hili linafuata mifumo ya utawala ya AgriPride AI.',
     },
+    frameworks: {
+      aim: 'Mfumo wa AIM',
+      map: 'Mfumo wa MAP',
+      track: 'Mfumo wa TRACK',
+      rank: 'Mfumo wa RANK',
+      trail: 'Mfumo wa TRAIL',
+      oasis: 'Mfumo wa OASIS',
+    },
   },
 
   pricing: {
@@ -1211,6 +1362,7 @@ export const sw: Translations = {
     bestValue: 'Thamani Bora',
     payWithPaystack: 'Lipa kwa Paystack',
     securePayment: 'Malipo salama kupitia Paystack',
+    currencyPrefix: 'KES ',
     paymentSuccess: 'Malipo yamefanikiwa! Vipengele vyako vya premium vimewashwa.',
     paymentFailed: 'Malipo yameshindwa. Tafadhali jaribu tena.',
     paymentCancelled: 'Malipo yameghairiwa.',
@@ -1281,6 +1433,11 @@ export const sw: Translations = {
     privacyNotice: 'Kwa kuwasilisha, unakubali Sera yetu ya Faragha',
     supportHours: 'Saa za Msaada',
     supportHoursDesc: 'Jumatatu - Ijumaa: 8:00 AM - 6:00 PM EAT',
+    socialPlatforms: {
+      linkedin: 'LinkedIn',
+      facebook: 'Facebook',
+      instagram: 'Instagram',
+    },
   },
 
   support: {
@@ -1348,6 +1505,7 @@ export const sw: Translations = {
     supportUser: 'Mtumiaji wa Msaada',
     supportEmail: 'user@agripride.ai',
     failedToSubmit: 'Imeshindikana kuwasilisha tikiti',
+    ticketPrefix: '[SUPPORT]',
   },
 
   reports: {
@@ -1710,6 +1868,43 @@ export const sw: Translations = {
     noPredictions: 'Bado hakuna utabiri',
     failedToLoadFarmData: 'Imeshindwa kupakia data ya shamba',
     failedToSavePrediction: 'Imeshindwa kuhifadhi utabiri',
+    factors: {
+      maize: {
+        soilFertility: 'Alama ya utajiri wa udongo',
+        rainfall: 'Mifumo ya mvua',
+        temperature: 'Kiwango cha joto',
+        plantingDensity: 'Uwingaji wa mazao',
+        pestPressure: 'Shida ya wadudu',
+      },
+      wheat: {
+        soilNitrogen: 'Kiwango cha nitrojeni katika udongo',
+        growingDegree: 'Siku za ukuaji',
+        waterAvailability: 'Upatikanaji wa maji',
+        varietyGenetics: 'Jeni za aina',
+        diseaseHistory: 'Historia ya magonjwa',
+      },
+      rice: {
+        waterManagement: 'Usimamizi wa maji',
+        nitrogenApplication: 'Matumizi ya nitrojeni',
+        transplantingTiming: 'Muda wa kupandikiza',
+        weedControl: 'Udhibiti wa magugu',
+        solarRadiation: 'Mwanga wa jua',
+      },
+      cassava: {
+        soilOrganic: 'Viumbe vya kikaboni katika udongo',
+        rainfallDistribution: 'Usambazaji wa mvua',
+        cuttingQuality: 'Ubora wa vichwa',
+        harvestTiming: 'Muda wa kuvuna',
+        intercropping: 'Athari ya mazao mchanganyiko',
+      },
+      beans: {
+        soilPhosphorus: 'Fosforasi katika udongo',
+        rhizobia: 'Chanjo ya rhizobia',
+        rainfallIntensity: 'Ukubwa wa mvua',
+        shadeManagement: 'Usimamizi wa vivuli',
+        rotationHistory: 'Historia ya mzunguko',
+      },
+    },
   },
 
   sustainability: {
@@ -1836,6 +2031,7 @@ export const sw: Translations = {
       system: 'Mfumo',
       reminder: 'Tahadhari',
     },
+    locale: 'en-US',
   },
 
   security: {
@@ -1880,6 +2076,7 @@ export const sw: Translations = {
     dangerZone: 'Eneo la Hatari',
     dangerZoneDesc: 'Vitendo visivyoweza kutenguliwa kwa usalama wa akaunti yako',
     deleteAccount: 'Futa Akaunti',
+    sessionOn: ' kwenye ',
   },
 
   onboarding: {
@@ -1957,19 +2154,61 @@ export const sw: Translations = {
     stepIndicator: 'Hatua {current}/{total}',
     continue: 'Endelea',
     completeSetup: 'Kamilisha Usanidi',
+    farmSizePlaceholder: '2.5',
   },
 
   governance: {
     title: 'Kituo cha Utawala wa AI',
     subtitle: 'AI ya uwazi, inayowajibika, na yenye maadili kwa kilimo',
     frameworks: {
-      aim: 'Uwajibikaji na Athari',
-      map: 'Itifaki ya Ufuatiliaji na Urekebishaji',
-      rank: 'Zana ya Tathmini na Urambazaji wa Hatari',
-      trail: 'Uwazi na Ukaguzi',
-      oasis: 'Mfumo wa Uangalizi na Uhakikisho',
-      track: 'Mfumo wa Uaminifu na Ufuasi',
-      horizon: 'Tathmini ya Athari ya Jumla',
+      aim: {
+        name: 'Uwajibikaji katika Usimamizi wa Modeli za AI',
+        description: 'Hakikisha kila modeli ya AI iliyowekwa kwenye jukwaa inafuatiliwa kwenye data yake ya mafunzo, imeorodheshwa, na inawajibika kwa msimamizi wa kibinadamu.',
+        implementation: 'Wakala wote wa AI wanarejesta toleo la modeli yao na kiwango cha uongozi. Kila utabiri una INCLUDED hash ya modeli na alama ya ujasiri.',
+        principles: ['Uorodheshaji wa Modeli', 'Uangalizi wa Kibinadamu', 'Fuatiliaji ya Mafunzo', 'Viwango vya Ujasiri'],
+      },
+      map: {
+        name: 'Itifaki ya Ukaguzi wa Modeli',
+        description: 'Inatoa ukaguzi wa mfumo wa modeli za AI kwa upendeleo, usahihi, na haki katika maeneo tofauti na aina za mazao.',
+        implementation: 'Ukaguzi wa kila mwezi wa modeli unalinganisha utabiri dhidi ya matokeo yaliyothibitishwa.',
+        principles: ['Ukaguzi wa Kawaida', 'Utambuzi wa Upendeleo', 'Viwango vya Haki', 'Usanidi wa Kikanda'],
+      },
+      '4d': {
+        name: 'Vipengele Vinne vya Uaminifu',
+        description: 'Inakadiria matokeo ya AI katika vipengele vinne muhimu: usahihi, wakati, umuhimu, na uwezo wa kueleza.',
+        implementation: 'Kila matokeo ya AI yanakadiriwa katika vipengele vyote vinne.',
+        principles: ['Ukadiriaji wa Usahihi', 'Kaguzi za Wakati', 'Kulinganisha Umuhimu', 'Ripoti za Uwezo wa Kueleza'],
+      },
+      track: {
+        name: 'Uwazi na Uwajibikaji katika Ujuzi wa AI',
+        description: 'Hakikisha uwazi kamili katika jinsi maamuzi ya AI yanavyotolewa na kutoa uwajibikaji kwa kila pendekezo.',
+        implementation: 'Kila maamuzi ya AI yanaelekwa na mnyororo kamili wa busara.',
+        principles: ['Kukataa Maamuzi', 'Mnyororo wa Busara', 'Msingi wa Ushahidi', 'Uwazi kwa Mtumiaji'],
+      },
+      oasis: {
+        name: 'Umiliki na Usalama wa Miundombinu ya AI',
+        description: 'Inalinda umiliki wa data ya mkulima na kuhakikisha miundombinu imara ya usalama kwa operesheni zote za AI.',
+        implementation: 'Data ya shamba imesimbwa na kuhifadhiwa na mtumiaji.',
+        principles: ['Usimbaji wa Data', 'Umiliki wa Mkulima', 'Usimamizi wa Ridhaa', 'Miundombinu Salama'],
+      },
+      rank: {
+        name: 'Upatikanaji Kulingana na Jukumu na Ujuzi wa Mtandao',
+        description: 'Inadhibiti upatikanaji wa vipengele vya AI na data kulingana na majukumu na majukumu ya mtumiaji.',
+        implementation: 'Kila jukumu la mtumiaji lina ruhusa zilizobainishwa.',
+        principles: ['Ruhusa za Jukumu', 'Kutengana kwa Data', 'Kujifunza kwa Mtandao', 'Vidhibiti vya Upatikanaji'],
+      },
+      trail: {
+        name: 'Rekodi inayofuatika ya mantiki ya AI',
+        description: 'Inadumisha karatasi kamili ya ukaguzi kwa kila mwingiliano wa AI.',
+        implementation: 'Kila mwingiliano wa AI unaunda rekodi inayofuatika.',
+        principles: ['Kumbukumbu Zisizobadilika', 'Fuatilia za Maamuzi', 'Ripoti za Ukaguzi', 'Kufuata Sheria'],
+      },
+      horizon: {
+        name: 'Uangalizi Jumuishi kwa AI ya Kuwajibika',
+        description: 'Inatoa uangalizi kamili wa mifumo ya AI.',
+        implementation: 'Ufuatiliaji wa kila wakati wa afya ya mfumo, haki, na athari.',
+        principles: ['Ufuatiliaji wa Mfumo', 'Tathmini ya Athari', 'Ufuatiliaji wa Haki', 'Uboreshaji wa Kila Wakati'],
+      },
     },
     principles: {
       fairness: 'Haki',
@@ -2007,6 +2246,28 @@ export const sw: Translations = {
     confidence: 'Uhakika',
     responsibleAgent: 'Wakala Anayewajibika',
     frameworksLabel: 'Mifumo',
+    demoDecisions: {
+      sourceData: {
+        maizeImage: 'Picha ya jani la mahindi - Shamba KAL-042',
+        weatherFeed: 'Mlipuko wa hali ya Hewa - Mkoa wa Magharibi',
+        soilSample: 'Mfano wa udongo S-8821 - pH & NPK',
+        pesticideRequest: 'Ombi la mapendekezo ya dawa ya wadudu - Shamba MAC-019',
+        consentRenewal: 'Upya wa ridhaa - Mkulima J. Mwangi',
+        satelliteImagery: 'Picha za satelaiti - Mkoa wa Bonde la Rift',
+        yieldPrediction: 'Taarifa ya utabiri wa mavuno - Shamba NAK-107',
+        irrigationSchedule: 'Ratiba ya umwagiliaji - Shamba KSM-203',
+      },
+      agents: {
+        cropDisease: 'Wakala wa Magonjwa ya Mazao (v2.4)',
+        weatherIntelligence: 'Wakala wa Ujuzi wa Hali ya Hewa',
+        soilHealth: 'Wakala wa Afya ya Udongo (v3.1)',
+        cropAdvisory: 'Wakala wa Ushauri wa Mazao',
+        consentManagement: 'Huduma ya Usimamizi wa Ridhaa',
+        diseaseSurveillance: 'Wakala wa Ufuatiliaji wa Magonjwa',
+        yieldPrediction: 'Wakala wa Utabiri wa Mavuno',
+        irrigation: 'Wakala wa Umwagiliaji (v1.2)',
+      },
+    },
   },
 
   tickets: {
@@ -2038,6 +2299,12 @@ export const sw: Translations = {
     type: {
       data_collection: 'Ukusanyaji Data',
       ai_processing: 'Uchakataji wa AI',
+      disease_diagnosis: 'Utambuzi wa Magonjwa',
+      weather_monitoring: 'Ufuatiliaji wa Hali ya Hewa',
+    },
+    types: {
+      data_collection: 'Ukusanyaji wa Data',
+      ai_processing: 'Usindikaji wa AI',
       disease_diagnosis: 'Utambuzi wa Magonjwa',
       weather_monitoring: 'Ufuatiliaji wa Hali ya Hewa',
     },
@@ -2160,6 +2427,11 @@ export const sw: Translations = {
     toastRequired: 'Jina na shuhuda vinahitajika',
     toastSubmitted: 'Ushuhuda umewasilishwa kwa ukaguzi!',
     toastFailed: 'Imeshindwa kuwasilisha',
+    placeholders: {
+      name: 'Edwin Musau',
+      location: 'Nairobi, Kenya',
+      farmType: 'Mkulima wa Mahindi',
+    },
   },
 
   errors: {
@@ -2201,6 +2473,7 @@ export const sw: Translations = {
     loading: 'Inapakia Athari za Horizon...',
     title: 'Dashibodi ya Athari za HORIZON',
     subtitle: 'Athari zinazotarajiwa kwa wakulima, jamii, na mazingira',
+    sdgPrefix: 'SDG ',
     sdg: {
       zeroHunger: 'Kukomesha Njaa',
       climateAction: 'Hatua za Hali ya Hewa',
@@ -2541,6 +2814,7 @@ export const sw: Translations = {
     sustainabilityFair: 'Wastani (0.4–0.7)',
     sustainabilityPoor: 'Duni (<0.4)',
     percentOfFarms: '{percent}% ya mashamba',
+    chartReports: 'Ripoti',
   },
 
   passwordStrength: {
@@ -2559,6 +2833,7 @@ export const sw: Translations = {
     avoidSequentialNumbers: 'Epuka nambari zinazofuatana kama "123"',
     avoidSequentialLetters: 'Epuka herufi zinazofuatana kama "abc"',
     avoidLongRepeated: 'Epuka herufi nyingi zinazojirudia',
+    scoreSuffix: '/100',
   },
 
   email: {
@@ -2582,5 +2857,772 @@ export const sw: Translations = {
     adminName: 'Mtumiaji wa Admin',
     officerName: 'Jane Extension',
     farmerDemoName: 'John Farmer',
+  },
+
+  validation: {
+    messageRequired: 'Ujumbe unahitajika',
+    cropTypeRequired: 'Aina ya mazao inahitajika',
+    symptomsRequired: 'Dalili zinahitajika',
+    nameRequired: 'Jina linahitajika',
+    subjectRequired: 'Somo linahitajika',
+    invalidEmail: 'Barua pepe si sahihi',
+    userIdRequired: 'Kitambulisho cha mtumiaji kinahitajika',
+    validEmailRequired: 'Barua pepe sahihi inahitajika',
+    testimonialContentRequired: 'Maudhui ya ushuhuda unahitajika',
+  },
+
+  chat: {
+    fallbackResponse: 'Mimi ni msaidizi wako wa AI wa AgriPride kwa kilimo cha Kenya. Ninaweza kusaidia na ushauri wa upandaji, mapendekezo ya mbolea, udhibiti wa wadudu na magonjwa, taarifa za hali ya hewa, na mazoea ya uendelevu kwa mazao yote yanayolimwa Kenya. Ungependa kujua nini?',
+    errorProcessing: 'Pole, kumetokea hitilafu wakati wa kuchakata ombi lako. Tafadhali jaribu tena.',
+    errorBusy: 'Huduma ya AI ni busy kwa muda. Tafadhali subiri kidogo na jaribu tena.',
+    errorMisconfigured: 'Huduma ya AI haijausanidiwa viziri. Tafadhali wasiliana na usaidizi.',
+    errorTimeout: 'Huduma ya AI ilichukua muda mrefu kujibu. Tafadhali jaribu tena.',
+  },
+
+  diagnosis: {
+    categoryDetected: '{name} imetambuliwa katika jamii ya {type}.',
+    treatmentRecommended: 'Matibabu yanapendekezwa.',
+    monitorClosely: 'Fuatilia kwa karibu.',
+    primaryFallback: 'Utambuzi wa msingi: {name}. {treatment}',
+    consultOfficer: 'Shauriana na ofisa wa ugani wa kilimo kwa chaguzi za matibabu.',
+    analysisCompleted: 'Uchambuzi umekamilika.',
+    noImageFallback: '{name} imetambuliwa kulingana na dalili zilizoripotiwa. Picha haikutoa kwa uthibitisho wa kuona.',
+    textBasedDiagnosis: 'Utambuzi kulingana na dalili zilizoripotiwa: {name}. Fikiria kupakia picha ya mmea kwa uchambuzi sahihi zaidi.',
+    errorBusy: 'Huduma ya AI ni busy kwa muda. Tafadhali jaribu tena hivi karibuni.',
+    errorAuthFailed: 'Uthibitishaji wa huduma ya AI umeshindikana. Tafadhali wasiliana na usaidizi.',
+    errorModelUnavailable: 'Modeli ya AI haipatikani. Tafadhali wasiliana na usaidizi.',
+    errorTimeout: 'Huduma ya AI imeisha muda. Tafadhali jaribu tena.',
+    errorGeneric: 'Utambuzi wa AI umeshindikana. Tafadhali jaribu tena.',
+    treatmentLabel: 'Matibabu:',
+    preventionLabel: 'Kuzuia:',
+    typeLabel: 'Aina:',
+    confidenceLabel: 'Ujasiri:',
+    uncertaintyLabel: 'Uhusiano:',
+    reasoningLabel: 'Sababu:',
+    possibleCausesLabel: 'Sababu zinazoweza kutokea:',
+    analysisFor: 'Uchambuzi wa',
+    uncertaintyLevel: 'Kiwango cha Uhakika:',
+    diagnosisFor: 'Utambuzi wa',
+    otherCauses: 'Sababu zingine zinazoweza kutokea:',
+    recommendedTreatment: 'Matibabu Yanayopendekezwa',
+    suggestedTreatment: 'Matibabu Yanapendekezwa',
+  },
+
+  diagnoseImage: {
+    rateLimit: 'Huduma yetu ya AI ni busy kwa muda. Tafadhali subiri kidogo na jaribu tena.',
+    serviceUnavailable: 'Huduma ya AI haipatikani kwa muda. Tafadhali jaribu tena hivi karibuni.',
+    connectionError: 'Hatukuweza kufikia huduma ya AI. Tafadhali angalia muunganisho wako na jaribu tena.',
+    unexpectedError: 'Kumetokea hitilafu wakati wa kuchambua picha. Tafadhali jaribu tena.',
+    safetyBlocked: 'Picha imezuiliwa na vichujio vya maudhui. Tafadhali picha tofauti.',
+    invalidKey: 'Huduma ya AI haijausanidiwa viziri. Tafadhali wasiliana na usaidizi.',
+    permissionDenied: 'Huduma ya AI haina ruhusa ya kuchakata ombi hili. Tafadhali wasiliana na usaidizi.',
+    invalidModel: 'Modeli ya AI haipatikani. Tafadhali wasiliana na usaidizi.',
+    timeout: 'Huduma ya AI ilichukua muda mrefu kujibu. Tafadhali jaribu tena.',
+    authError: 'Uthibitishaji umeshindikana na huduma ya AI. Tafadhali wasiliana na usaidizi.',
+    freeTierLimit: 'Kiwango cha bure kimefikiwa. Umetumia {used} kati ya {limit} uchambuzi wiki hii.',
+    pleaseUpload: 'Tafadhali pakia picha kwa utambuzi.',
+    invalidImageType: 'Aina ya picha si sahihi: {type}. Tafadhali pakia JPG, PNG, au WebP.',
+    imageTooLarge: 'Picha ni kubwa mno: {size}MB. Kiwango cha juu ni 10MB.',
+    emptyResponse: 'AI imerudisha jibu tupu. Tafadhali jaribu kupakia picha bay zaidi.',
+    invalidFormat: 'AI imerudisha muundo usio sahihi. Tafadhali jaribu tena.',
+    unknownCondition: 'Hali Isiyojulikana',
+    fallbackTreatment: 'Shauriana na ofisa wa ugani wa kilimo kwa mapendekezo ya matibabu.',
+    fallbackPrevention: 'Fuatilia mimea mara kwa mara kwa dalili za mapema za ugonjwa.',
+    analysisCompletedFor: 'Uchambuzi umekamilika kwa {disease}.',
+  },
+
+  disclaimer: {
+    aiDiagnosis: 'Hii ni utambuzi unaosaidiwa na AI. Matokeo yanapaswa kuthibitishwa na ofisa wa ugani wa kilimo.',
+    demoDiagnosis: 'Hii ni utambuzi wa onyesho. Matokeo ni ya kufananisha. Daima shauriana na ofisa wa ugani wa kilimo kabla ya kutumia matibabu.',
+  },
+
+  agent: {
+    aiDiagnosis: 'Wakala wa Utambuzi wa Magonjwa wa AI',
+    cropDiagnosis: 'Wakala wa Utambuzi wa Magonjwa ya Mazao',
+  },
+
+  frameworks: {
+    aimMapTrack: 'MFUMU ya AIM, MFUMU ya MAP, MFUMU ya TRACK',
+  },
+
+  payments: {
+    notConfigured: 'Huduma ya malipo imesanidiwa',
+    planNotFound: 'Mpango haupatikani',
+    initFailed: 'Imeshindikana kuanzisha malipo',
+    paystackNotConfigured: 'Malipo ya Paystack yamesanidiwa. Tafadhali wasiliana na usaidizi.',
+  },
+
+  subscribe: {
+    freePlanActivated: 'Mpango wa bure umechaguliwa. Akaunti imewashwa.',
+    redirectingToPayment: 'Inaelekeza kwenye ukurasa wa malipo...',
+  },
+
+  contact: {
+    badge: 'Wasiliana',
+    messageTooLarge: 'Ujumbe ni mkubwa mno',
+    successMessage: 'Asante kwa kuwasiliana nasi. Tutajibu ndani ya masaa 24.',
+    failedToSend: 'Imeshindikana kutuma',
+    failedToSendMessage: 'Imeshindikana kutuma ujumbe',
+  },
+
+  upload: {
+    noFile: 'Hakuna faili iliyotolewa',
+    invalidFileType: 'Aina ya faili si sahihi: {types}',
+    fileTooLarge: 'Faili ni kubwa mno. Ukubwa wa juu: {size}MB',
+    fileEmpty: 'Faili ni tupu',
+    fileTooSmall: 'Faili ni ndogo au imeharibika',
+    contentMismatch: 'Maudhui ya faili hayalingani na aina iliyotangazwa',
+    uploadFailed: 'Imeshindikana kupakia faili',
+  },
+
+  webhook: {
+    invalidSignature: 'Sahihi si sahihi',
+    invalidJson: 'JSON si sahihi',
+    eventNotHandled: 'Tukio halijashughulikiwa',
+    missingReference: 'Rejea inakosekana',
+    unknownTransaction: 'Miamala isiyojulikana',
+    alreadyProcessed: 'Tayari imeshachakatwa',
+    verificationFailed: 'Uthibitishaji umeshindikana',
+    processed: 'Webhook imeshachakatwa',
+  },
+
+  market: {
+    allRegions: 'Mikoa Yote',
+    regions: {
+      riftValley: 'Rift Valley',
+      central: 'Kati',
+      coastal: 'Pwani',
+      eastern: 'Mashariki',
+      western: 'Magharibi',
+      nyanza: 'Nyanza',
+      northEastern: 'Kaskazini Mashariki',
+    },
+  },
+
+  meta: {
+    title: 'AgriPride AI — Akili ya Kilimo kwa Afrika',
+    description: 'Utambuzi wa magonjwa ya mazao unaotegemea AI, akili ya hali ya hewa, na zana za kilimo endelevu zilizojengwa kwa wakulima wa Afrika.',
+    keywords: 'kilimo, AI, kilimo, magonjwa ya mazao, hali ya hewa, Afrika, uendelevu',
+  },
+
+  authExtra: {
+    brandTagline: 'Kua kwa busara, msimu baada ya msimu.',
+    trustedBy: 'Inaaminiwa na',
+    socialProof: 'Wakulima 15,000+ katika nchi 47 za Kenya',
+    defaultUserName: 'Mtumiaji',
+    mfaDownloadHeader: 'AgriPride AI - Msimbo wa Kurejesha',
+    mfaDownloadInstructions: 'Hifadhi msimbo huu kwenye sehemu salama. Kila msimbo unaweza kutumika mara moja tu.',
+  },
+
+  horizon: {
+    sdgLabel: 'SDG {number}: {label}',
+    sdgNumber: 'SDG {number}',
+    sdg2: 'SDG 2',
+    sdg13Label: 'SDG 13 ({description})',
+    sdg15Label: 'SDG 15 ({description})',
+    unitReduction: ' mapunguziko',
+    unitSavings: ' akiba',
+    unitImprovement: ' uboreshaji',
+    unitAvgScore: ' alama ya wastani',
+  },
+
+  units: {
+    windSpeed: 'km/saa',
+    rainfall: 'mm',
+    kilograms: 'kg',
+    megabytes: 'MB',
+    percent: '%',
+    perKg: '/ kg',
+    currency: 'KES',
+    currencyWithSpace: 'KES ',
+    on: 'kwenye',
+  },
+
+  premium: {
+    subscriptionRequired: 'Usajili wa Premium unahitajika. Jiandikishe kwenye /pricing.',
+    authRequired: 'Uthibitisho unahitajika',
+    premiumRequired: 'Usajili wa Premium unahitajika',
+    paymentMethod: 'Paystack',
+  },
+
+  tts: {
+    locale: 'sw-KE',
+  },
+
+  aiChat: {
+    agentNames: {
+      cropDisease: 'Wakala wa Utambuzi wa Magonjwa ya Mazao',
+      cropAdvisor: 'Wakala wa Ushauri wa Mazao',
+      weatherIntelligence: 'Wakala wa Ujuzi wa Hali ya Hewa',
+      generalAssistant: 'Msaidizi wa Jumla wa AI',
+      poultrySpecialist: 'Wakala wa Mtaalamu wa Kuku',
+      aquacultureSpecialist: 'Wakala wa Mtaalamu wa Uvuaji',
+      beekeepingSpecialist: 'Wakala wa Mtaalamu wa Nyuki',
+      irrigationSpecialist: 'Wakala wa Mtaalamu wa Umwagiliaji',
+      postHarvestSpecialist: 'Wakala wa Mtaalamu wa Baada ya Kuvuna',
+      farmEconomicsSpecialist: 'Wakala wa Mtaalamu wa Uchumi wa Shamba',
+      greenhouseSpecialist: 'Wakala wa Mtaalamu wa Ghala',
+      sustainabilitySpecialist: 'Wakala wa Mtaalamu wa Ustahimilivu na Udongo',
+    },
+    weatherAdvisories: {
+      normal: 'Hali ya hewa ya kawaida inatarajiwa. Endelea na shughuli za kawaida za shamba.',
+      heavyRain: 'Mvua kubwa inatarajika. Hakikisha miundo ya mtiririko imefunguliwa. Chelewesha shughuli za kupanda au kuvuna.',
+      highTemp: 'Joto kubwa linatabiriwa. Ongeza mara za umwagiliaji. Toa vivuli kwa miche nyeti.',
+      dry: 'Hali ya ukame inatabiriwa. Okoa maji. Kipa kipaumbele umwagiliaji kwa mazao ya thamani.',
+    },
+    currentConditionsOnly: 'Hali ya sasa tu',
+    fallbackAdvice: 'Kwa {crop}, tunapendekeza kushauriana na huduma za upanuzi wa kilimo za eneo lako kwa mwongozo mahususi unaoendana na mazingira yako.',
+    welcome: 'Habari! Mimi ni msaidizi wako wa AI wa kilimo wa AgriPride. Ninawezaje kukusaidia leo?\n\nNinaweza kukusaidia na:\n- Utambuzi na matibabu ya magonjwa ya mazao\n- Ushauri wa kilimo kulingana na hali ya hewa\n- Ratiba za upendaji na mapendekezo ya mazao\n- Udhibiti wa wadudu na magonjwa\n- Usimamizi wa udongo na mbolea\n- Ratiba za umwagiliaji\n- Taarifa za bei za soko\n- Mazoea ya kilimo endelevu\n\nUngependa kujua nini?',
+    crops: {
+      maize: {
+        planting: 'Panda mahindi mwanzoni mwa mvua joto la udongo linapofikia 18-22\u00B0C. Tumia aina za mbegu zilizothibitishwa kama H614 au Kalro OPV kwa eneo lako. Weka nafasi ya cm 30 kati ya mistari na cm 10 kati ya mimea kwa nafasi bora.',
+        fertilizer: 'Tumia DAP kg 40/ha wakati wa kupanda. Ongeza CAN kg 80/ha wiki 6 baada ya kuchipua. Kwa udongo wenye asidi, weka chokaa tani 2/ha kabla ya kupanda ili kuboresha pH.',
+        pest: 'Fuatilia Wadudu wa Usiku wa Mahindi kwa kutumia mazingira ya feromoni. Tumia dawa zilizoidhinishwa mwanzoni mwa dalili ya maambukizi. Badilisha madawa ya kemikali ili kuzuia upinzani. Kagua mashamba kila wiki wakati wa msimu wa ukuaji.',
+      },
+      wheat: {
+        planting: 'Panda ngano wakati wa mvua ndefu (Machi-Mei) kwa kiwango cha mbegu kg 40-48/ha. Tumia aina zilizothibitishwa kama Kenya Fahari au Eagle 10. Hakikisha mashamba yenye mtiririko mzuri na pH 6.0-7.5.',
+        fertilizer: 'Tumia DAP msingi na ongeza urea kg 60/ha. Ngano inaendelea vizuri na sulfuri \u2014 fikiria kutumia gypsum kg 80/ha kwenye udongo wenye upungufu.',
+        pest: 'Angalia kutu ya shina la ngano na mlipuko wa ngano. Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua. Tumia aina zenye upinzani na hudumisha usafi wa shamba kwa kuondoa mabaki ya mazao.',
+      },
+      rice: {
+        planting: 'Kwa mchele wa mpira, andaa mashamba yaliyo sawizishwa vizuri na mabamba kwa usimamizi wa maji. Ondoa miche ya siku 21 kwa nafasi ya cm 20\u00D715. Weka kiwango cha maji cha sm 5 wakati wa hatua ya ukuaji wa majani.',
+        fertilizer: 'Tumia dozi ya msingi ya DAP na ongeza urea katika mgawanyiko 3 \u2014 wakati wa kuondoa, wakati wa kuchanua, na mwanzoni mwa panicle. Mahitaji ya N jumla ni kg 120-150/ha.',
+        pest: 'Dhibiti wadudu wa shina la mchele kwa mazingira ya feromoni na matumizi ya wakati wa bidhaa za neem. Dhibiti usimamizi wa maji ili kupunguza uwezekano wa wadudu. Angalia mlipuko wa mchele wakati wa hali ya unyevu.',
+      },
+      sorghum: {
+        planting: 'Panda sorghum mwanzoni mwa mvua kwa kg 5-8/ha. Tumia aina zilizoboreshwa kama Gadam au Serena. Weka nafasi ya cm 24 kati ya mistari na cm 6 kati ya mimea.',
+        fertilizer: 'Tumia mifuko 2 ya DAP kwa ekari wakati wa kupanda. Ongeza mifuko 1 ya CAN wiki 4-6 baada ya kuchipua. Sorghum ni nzuri katika kunyonya virutubisho kwenye udongo wenye rutuba kidogo.',
+        pest: 'Angalia nzi wa shina la sorghum na mdudu wa shina. Tumia aina zenye upinzani na fanya mzunguko wa mazao. Tumia matibabu ya mbegu kwa imidacloprid kwa ulinzi wa mapema wa msimu.',
+      },
+      millet: {
+        planting: 'Panda mtama wa kidole kwa kg 5-6/ha mwanzoni mwa mvua. Weka nafasi ya cm 12 kati ya mistari na cm 4 kati ya mimea. Mtama ni endelevu ukame lakini inaendelea vizuri na upandaji wa mapema.',
+        fertilizer: 'Tumia DAP wakati wa kupanda na ongeza CAN kg 40/ha. Mtama inaendelea vizuri na vitu vya organiki \u2014changanya komposti tani 2/ha.',
+        pest: 'Fuatilia mdudu wa kichwa cha mtama na ugonjwa wa mlipuko. Fanya mzunguko wa mazao na tumia aina zenye upinzani. Ondoa na uharibu sehemu zilizoathiriwa mara moja.',
+      },
+      cassava: {
+        planting: 'Panda vifaa vya muhogo kwa urefu wa sm 15, kwa nafasi ya 1m \u00D7 1m. Tumia vifaa bila ugonjwa kutoka kwa mimea mama yenye afya. Panda mwanzoni mwa mvua ndefu kwa uanzishaji bora.',
+        fertilizer: 'Muhogo inahitaji mbolea kidogo. Tumia mifuko 2 ya DAP kwa ekari wakati wa kupanda. Potasiamu ni muhimu \u2014 tumia muriate ya potash kg 40/ha ikiwa udongo una upungufu.',
+        pest: 'Fuatilia ugonjwa wa kuambukiza muhogo na virusi ya ukahawia ya muhogo. Tumia aina zenye upinzani na oondoa mimea iliyoambukizwa. Fanya mzunguko wa miaka 2+ na mimea isiyokuwa muhogo.',
+      },
+      beans: {
+        planting: 'Panda maharagwe kwa kg 20-32/ha kulingana na aina. Weka nafasi ya cm 18 kati ya mistari na cm 4 kati ya mimea. Chemsha mbegu na rhizobia kwa kufunga nitrojeni.',
+        fertilizer: 'Tumia mifuko 1 ya DAP kwa ekari wakati wa kupanda. Epuka nitrojeni nyingi kwa sababu maharagwe hufunga nitrojeni yao. Tumia mbolea yenye fosforasi kwa bora kufunga.',
+        pest: 'Angalia mdudu wa shina la maharagwe na ugonjwa wa majani ya pembe. Tumia mbegu zilizothibitishwa na fanya mzunguko wa mazao. Tumia dawa za fungicide za shaba kwa udhibiti wa ugonjwa wa bakteria.',
+      },
+      sweetPotato: {
+        planting: 'Panda vifaa vya mizizi kwa urefu wa sm 30, kwa nafasi ya 1m \u00D7 0.3m. Panda juu ya mabamba kwa maendeleo bora ya mizizi. Tumia mizizi kutoka kwa mimea mama yenye afya.',
+        fertilizer: 'Tumia mifuko 2 ya DAP kwa ekari wakati wa kupanda. viazi vya tamu vinaendelea vizuri na potasiamu \u2014 tumia muriate ya potash kg 20/ha. Epuka nitrojeni nyingi inayopendeleza ukuaji wa mizizi kuliko viazi.',
+        pest: 'Fuatilia panzi wa viazi vya tamu na ugonjwa wa virusi wa viazi vya tamu. Tumia aina zenye upinzani, fanya mzunguko wa mazao, na ondoa mabaki ya mazao baada ya kuvuna.',
+      },
+      potato: {
+        planting: 'Panda viazi vya mbegu kwa nafasi ya sm 12 juu ya mabamba. Tumia viazi vya mbegu vilivyothibitishwa na kata viazi vikubwa kuwa sehemu zenye jicho 2-3. Panda kwa kina cha sm 4-6.',
+        fertilizer: 'Tumia mifuko 3 ya DAP kwa ekari wakati wa kupanda na ongeza CAN kg 40/ha. Potasiamu ni muhimu kwa ubora wa viazi \u2014 tumia muriate ya potash kg 60/ha.',
+        pest: 'Fuatilia mlipuko wa hatari \u2014 tumia dawa za kuzuia magonjwa wakati wa hali ya hewa ya mvua. Tumia aina zenye upinzani na fanya mzunguko na mimea si Solanaceae.',
+      },
+      banana: {
+        planting: 'Panda miche ya kitissue kwa nafasi ya 3m \u00D7 2m. Hakikisha udongo wenye mtiririko mzuri na vitu vya organiki vya kutosha. Ficha mizizi kuzidi kuokoa unyevu.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 200 kwa mmea kila miezi 3. Potasiamu ni virutubisho muhimu zaidi kwa ndizi \u2014 tumia muriate ya potash gramu 200 kwa mmea kila robo mwaka.',
+        pest: 'Fuatilia panzi wa ndizi na black sigatoka. Ondoa na uharibu majani yaliyoathiriwa. Fanya usafi mzuri na tumia bidhaa za neem kwa udhibiti wa kikabila.',
+      },
+      coffee: {
+        planting: 'Panda kahawa kwa nafasi ya 2m \u00D7 2m. Tumia miche iliyothibitishwa kutoka kwa mizizi iliyoidhinishwa. Zuia miche mipaka kwa miti ya asili kwa miaka 2 ya kwanza.',
+        fertilizer: 'Tumia NPK 50:50:50 kwa gramu 100 kwa mti kila miezi 6. Ongeza CAN gramu 20 wakati wa mvua. Kulia majani kwa virutubisho vidogo viongeza mavuno.',
+        pest: 'Fuatilia mdudu wa kahawa na kutu ya majani ya kahawa. Fanya uvunaji wa kawaida na uharibu kahawa iliyoanguka. Tumia dawa zilizoidhinishwa kulingana na ratiba.',
+      },
+      tea: {
+        planting: 'Panda chai kwa nafasi ya sm 48\u00D724 kwenye udongo wenye asidi (pH 4.5-5.5). Tumia vifaa vya kloni kutoka kwa mizizi iliyoidhinishwa.anzisha vizuizi vya upepo kwenye maeneo yaliyofichuliwa.',
+        fertilizer: 'Tumia NPK 26:5:5 kwa gramu 120 kwa kichaka kila miezi 6. Chai inaendelea vizuri na nitrojeni \u2014 ongeza CAN gramu 60 kwa kichaka wakati wa kipindi kikuu cha ukuaji.',
+        pest: 'Fuatilia mdudu wa chai na mlipuko wa majani ya chai. Dhibiti meza ya kunyua kupitia uvunaji wa kawaida. Tumia dawa za shaba wakati wa misimu ya mvua kwa udhibiti wa mlipuko.',
+      },
+      sugarcane: {
+        planting: 'Panda seti kwa nafasi ya mistari ya m 1.5 na budi 3-4 kwa kila sett. Panda mwanzoni mwa mvua ndefu. Hakikisha unyevu wa kutosha wakati wa awamu ya uanzishaji.',
+        fertilizer: 'Tumia NPK 17:17:17 kg 200/ha wakati wa kupanda. Ongeza urea kg 80/ha baada ya miezi 3. Nitrojeni ni muhimu wakati wa awamu ya kuchanua.',
+        pest: 'Fuatilia ukungu wa miwa na mdudu wa shina. Tumia aina zenye upinzani na fanya mzunguko wa mazao. Ondoa na uharibu shina zilizoathiriwa mara moja.',
+      },
+      cotton: {
+        planting: 'Panda pamba kwa nafasi ya sm 36\u00D712. Tumia aina zilizothibitishwa kama H662 au BP 51. Panda mwanzoni mwa mvua joto la udongo linapozidi 18\u00B0C.',
+        fertilizer: 'Tumia DAP kg 80/ha wakati wa kupanda na ongeza urea kg 40/ha wiki 4-6. Lishe iliyo sawa ni muhimu kwa ubora wa nyuzi.',
+        pest: 'Fuatilia mdudu wa pamba na ugonjwa wa bakteria. Fanya udhibiti wa wadudu uliojumuishwa. Tumia bidhaa za Bt kwa udhibiti wa mdudu na shaba kwa magonjwa ya bakteria.',
+      },
+      tomato: {
+        planting: 'Ondoa miche ya siku 25-30 kwa nafasi ya sm 24\u00D718. Weka msaada kwa miti au trellis. Dhibiti umwagiliaji wa kawaida kwa ukuaji wa tunda.',
+        fertilizer: 'Tumia NPK 17:17:17 wakati wa kupanda na ongeza calcium nitrate kg 80/ha wakati wa kuzaa matunda. Upungufu wa kalsiamu husababisha kuoza kwa ufufaa.',
+        pest: 'Fuatilia mlipuko wa hatari ya nyanya na mlipuko wa mapema. Tumia dawa za shaba kwa kuzuia. Fanya mzunguko wa mazao na ondoa mabaki ya mimea baada ya kuvuna.',
+      },
+      onion: {
+        planting: 'Ondoa miche ya siku 35-42 kwa nafasi ya sm 6\u00D74 juu ya mabamba. Hakikisha udongo wenye mtiririko mzuri na pH 6.0-7.0.',
+        fertilizer: 'Tumia DAP wakati wa kupanda na ongeza urea kg 40/ha wakati wa kuchanua na kuunda vitungi. Sulfuri ni muhimu kwa ubora wa vitungi.',
+        pest: 'Fuatilia thrips ya kitunguu na ukungu wa chini. Tumia mulchi za kuakisi ili kuzuia thrips. Tumia dawa za kuzuia magonjwa wakati wa hali ya mvua na hakikisha mtiririko mzuri wa hewa.',
+      },
+      kale: {
+        planting: 'Panda mbegu za sukuma wiki katika mabamba ya miche na ondoa baada ya wiki 4-6. Weka nafasi ya sm 18\u00D718. Sukuma wiki inaendelea vizuri katika hali ya baridi na inaweza kupandwa mwaka mzima.',
+        fertilizer: 'Tumia DAP wakati wa kupanda na ongeza CAN kila wiki 3-4 wakati wa ukuaji. Sukuma wiki inaendelea vizuri na vitu vya organiki \u2014 changanya komposti mara kwa mara.',
+        pest: 'Angalia kipepeo wa chembe na ugonjwa mweupe. Tumia matandiko ya shamba kwa miche mipaka. Tumia dawa za Bt kwa udhibiti wa caterpillar na shaba kwa magonjwa ya bakteria.',
+      },
+      mango: {
+        planting: 'Panda miche ya embe iliyokatwa kwa nafasi ya 10m \u00D7 10m. Hakikisha mwanga kamili na udongo wenye mtiririko mzuri. Lindua miti mipaka dhidi ya upepo.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 200 kwa mti kila mwaka mwanzoni mwa mvua. Embe inaendelea vizuri na potasiamu wakati wa ukuaji wa tunda \u2014 tumia muriate ya potash.',
+        pest: 'Fuatilia anthracnose ya embe na mdudu wa tunda. Fanya usafi mzuri wa bustani kwa kuondoa matunda yaliyoanguka. Tumia mazingira ya feromoni kwa ufuatiliaji wa mdudu wa tunda.',
+      },
+      avocado: {
+        planting: 'Panda miche ya alvokado iliyokatwa kwa nafasi ya 8m \u00D7 8m. Tumia udongo wenye mtiririko mzuri na vitu vya organiki vya kutosha. Zuia upepo mkali.',
+        fertilizer: 'Tumia NPK iliyosawa kwa gramu 200 kwa mti kila miezi 6. Alvokado ni nyeti kwa maji mengi \u2014 hakikisha mtiririko mzuri. Ficha mizizi kuzidi.',
+        pest: 'Fuatilia ugonjwa wa mizizi (Phytophthora) na thrips. Hakikisha mtiririko mzuri wa maji ili kuzuia ugonjwa wa mizizi. Tumia dawa za shaba na mafuta ya neem kwa udhibiti wa wadudu.',
+      },
+      groundnut: {
+        planting: 'Panda karanga kwa kg 20/ha katika mistari yenye nafasi ya sm 20 na sm 6 kati ya mimea. Chemsha mbegu na rhizobia kwa ufungaji bora wa nitrojeni.',
+        fertilizer: 'Tumia mifuko 2 ya DAP kwa ekari wakati wa kupanda. Karanga hufunga nitrojeni yao lakini zinaitikia fosforasi. Epuka mbolea nyingi ya nitrojeni.',
+        pest: 'Fuatilia ugonjwa wa virusi wa rosette na ukangaji wa majani. Tumia aina zenye upinzani na fanya mzunguko wa mazao. Ondoa mimea iliyoambukizwa mara moja ili kuzuia kuenea.',
+      },
+      sunflower: {
+        planting: 'Panda alizeti kwa kg 5-8/ha kwa nafasi ya sm 24\u00D712. Panda mwanzoni mwa mvua. Tumia aina zilizochanganywa zilizothibitishwa kwa mafuta bora.',
+        fertilizer: 'Tumia mifuko 2 ya DAP kwa ekari wakati wa kupanda. Alizeti ni endelevu ukama lakini inaitikia kutumia fosforasi kwa maendeleo bora ya mizizi.',
+        pest: 'Fuatilia ukungu wa chini na ugonjwa wa kichwa. Tumia aina zenye upinzani na fanya mzunguko wa mazao. Hakikisha mtiririko mzuri wa hewa shambani.',
+      },
+      cowpea: {
+        planting: 'Panda kunde kwa kg 10-10/ha kwa nafasi ya sm 24\u00D78. Panda mwanzoni mwa mvua. Kunde ni endelevu ukama na hufunga nitrojeni.',
+        fertilizer: 'Tumia mifuko 1 ya DAP kwa ekari wakati wa kupanda. Kunde hufunga nitrojeni na rhizobia \u2014 epuka mbolea nyingi ya nitrojeni.',
+        pest: 'Fuatilia nzi na wadudu wa kunde. Tumia bidhaa za neem kwa udhibiti wa kikabila. Fanya mzunguko wa mazao na tumia aina zenye upinzani.',
+      },
+      pineapple: {
+        planting: 'Panda vichwa au vijana kwa nafasi ya sm 24\u00D736 juu ya mabamba. Tumia vifaa vya kupanda bila ugonjwa. Ficha mimea kuzidi kuokoa unyevu.',
+        fertilizer: 'Tumia NPK 15:15:15 kwa gramu 120 kwa mmea wakati wa kupanda. Ongeza urea gramu 40 kwa mmea baada ya miezi 3. Nanas inahitaji mtiririko mzuri wa maji.',
+        pest: 'Fuatilia ugonjwa wa nzi na Fusarium. Tumia vifaa vya kupanda bila ugonjwa. Fanya mzunguko wa mazao na udumishe usafi mzuri wa shamba.',
+      },
+      passionFruit: {
+        planting: 'Panda mizizi ya passion fruit kwa nafasi ya 3m \u00D7 2m juu ya trellis. Tumia miche iliyothibitishwa. Hakikisha udongo wenye mtiririko mzuri na vitu vya organiki vya kutosha.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 80 kwa mmea kila miezi 3. Potasiamu ni muhimu kwa ubora wa tunda. Kulia majani kwa virutubisho vidogo wakati wa kuchanua.',
+        pest: 'Fuatilia virusi wa ukahawia na mdudu wa tunda. Tumia miche ya kupanda bila virusi. Fanya usafi mzuri wa bustani na tumia mazingira ya feromoni.',
+      },
+      orange: {
+        planting: 'Panda miti ya machungwa iliyokatwa kwa nafasi ya 6m \u00D7 6m. Hakikisha mwanga kamili na udongo wenye mtiririko mzuri. Lindua miti mipaka dhidi ya baridi na upepo.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 200 kwa mti kila miezi 6. Machungwa yanahitaji lishe iliyo sawa na msisitizo wa nitrojeni wakati wa ukuaji.',
+        pest: 'Fuatilia ugonjwa wa machungwa (HLB) na kankari ya machungwa. Ondoa na uharibu miti iliyoambukizwa. Tumia miche ya kupanda bila ugonjwa iliyothibitishwa.',
+      },
+      coconut: {
+        planting: 'Panda miche ya nazi kwa nafasi ya 9m \u00D7 9m. Hakikisha udongo wa mchanga wenye mtiririko mzuri karibu na vyanzo vya maji. Ficha mizizi kuzidi wakati wa uanzishaji.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 200 kwa mtende kila mwaka. Nazi inahitaji potasiamu nyingi \u2014 tumia muriate ya potash gramu 200 kwa mtende.',
+        pest: 'Fuatilia ugonjwa wa njano ya kufa na chunuzi ya nazi. Ondoa na uharibu mitende iliyoambukizwa. Tumia aina zenye upinzani pale inapatikana.',
+      },
+      cashew: {
+        planting: 'Panda miche ya cashew iliyokatwa kwa nafasi ya 10m \u00D7 10m. Tumia udongo wa mchanga wenye mtiririko mzuri. Lindua miche mipaka dhidi ya upepo na wanyama wanaojauliza.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 200 kwa mti mwanzoni mwa mvua. Cashew inaendelea vizuri na kulia majani kwa virutubisho vidogo wakati wa kuchanua.',
+        pest: 'Fuatilia ukungu na mdudu wa mbu. Tumia dawa za sulfuri kwa ukungu. Fanya usafi mzuri wa bustani.',
+      },
+      macadamia: {
+        planting: 'Panda miche ya macadamia iliyokatwa kwa nafasi ya 8m \u00D7 8m. Tumia udongo wenye mtiririko mzuri na asidi kidogo. Zuia upepo mkali na baridi.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 200 kwa mti kila miezi 6. Macadamia inahitaji lishe ya kawaida mwaka mzima.',
+        pest: 'Fuatilia ukangaji wa ganda na mdudu wa koroso. Fanya usafi mzuri wa bustani. Tumia dawa za shaba wakati wa misimu ya mvua.',
+      },
+      sesame: {
+        planting: 'Panda ufuta kwa kg 5-8/ha kwa nafasi ya sm 18\u00D76. Panda mwanzoni mwa mvua kwenye udongo wenye mtiririko mzuri.',
+        fertilizer: 'Tumia mifuko 2 ya DAP kwa ekari wakati wa kupanda. Ufuta ni endelevu ukama lakini inaitikia kutumia fosforasi.',
+        pest: 'Fuatilia ugonjwa wa bakteria wa majani na phyllody. Tumia mbegu zilizothibitishwa na fanya mzunguko wa mazao. Ondoa mimea iliyoambukizwa mara moja.',
+      },
+      greenGrams: {
+        planting: 'Panda mahuni kwa kg 10-10/ha kwa nafasi ya sm 24\u00D78. Panda mwanzoni mwa mvua. Mahuni ni endelevu ukama na ni ya muda mfupi.',
+        fertilizer: 'Tumia mifuko 1 ya DAP kwa ekari wakati wa kupanda. Mahuni hufunga nitrojeni \u2014 epuka mbolea nyingi ya nitrojeni.',
+        pest: 'Fuatilia nzi na wadudu wa mahuni. Tumia bidhaa za neem kwa udhibiti wa kikabila. Fanya mzunguko na nafaka.',
+      },
+      pigeonPeas: {
+        planting: 'Panda njugu huruma kwa kg 10-15/ha kwa nafasi ya 1m \u00D7 0.5m. Panda mwanzoni mwa mvua. Njugu huruma ni endelevu ukama na hufunga nitrojeni.',
+        fertilizer: 'Tumia mifuko 1 ya DAP kwa ekari wakati wa kupanda. Njugu huruma hufunga nitrojeni \u2014 epuka nitrojeni nyingi. Tumia fosforasi kwa kufunga bora.',
+        pest: 'Fuatilia mdudu wa kunde na ugonjwa wa Fusarium. Tumia aina zenye upinzani na fanya mzunguko wa mazao. Ondoa mimea iliyoambukizwa mara moja.',
+      },
+      cabbage: {
+        planting: 'Ondoa miche ya siku 28-42 kwa nafasi ya sm 24\u00D718 juu ya mabamba. Hakikisha unyevu wa kawaida kwa ukuaji wa kichwa.',
+        fertilizer: 'Tumia NPK 17:17:17 wakati wa kupanda na ongeza calcium nitrate kg 80/ha. Upungufu wa boroni husababisha shina tupu.',
+        pest: 'Fuatilia kipepeo wa chembe na nzi. Tumia matandiko ya shamba kwa miche mipaka. Tumia dawa za Bt kwa udhibiti wa caterpillar.',
+      },
+      spinach: {
+        planting: 'Panda mbegu za spinachi moja kwa moja kwa nafasi ya sm 6\u00D74. Spinachi inakua haraka na inaweza kuvunwa wiki 4-6. Panda maeneo baridi, yenye kivuli.',
+        fertilizer: 'Tumia DAP wakati wa kupanda na ongeza CAN kila wiki 2-3. Spinachi inaendelea vizuri na nitrojeni kwa ukuaji bora wa majani.',
+        pest: 'Fuatilia mdibu wa majani na ukungu wa chini. Tumia matandiko ya shamba ili kuzuia uharibifu wa mdibu. Tumia dawa za shaba kwa udhibiti wa ukungu.',
+      },
+      carrot: {
+        planting: 'Tanda mbegu za karoti moja kwa moja kwa nafasi ya sm 6\u00D72 kwenye udongo laini, wa mchanga. Punguza miche kwa sm 2 baada ya kuchipua.',
+        fertilizer: 'Tumia DAP wakati wa kupanda. Karoti zinahitaji potasiamu kwa maendeleo ya mizizi \u2014 tumia muriate ya potash kg 40/ha.',
+        pest: 'Fuatilia blight ya alternaria na minyoo za mizizi. Fanya mzunguko wa mazao na tumia udongo bila minyoo.',
+      },
+      watermelon: {
+        planting: 'Panda mbegu za tiki kwa nafasi ya 2m \u00D7 1m kwenye udongo wenye mtiririko mzuri. Tumia mabamba juu ya udongo mzito. Hakikisha mwanga kamili.',
+        fertilizer: 'Tumia NPK 17:17:17 wakati wa kupanda na ongeza calcium nitrate wakati wa ukuaji wa tunda. Potasiamu ni muhimu kwa utamu.',
+        pest: 'Fuatilia anthracnose na ukungu wa chini. Fanya mzunguko wa mazao. Tumia dawa za kuzuia magonjwa wakati wa hali ya mvua.',
+      },
+      pawpaw: {
+        planting: 'Panda miche ya papaya kwa nafasi ya 2.5m \u00D7 2.5m. Tumia aina za hermaphrodite kwa uzalishaji wa biashara. Hakikisha udongo wenye mtiririko mzuri.',
+        fertilizer: 'Tumia NPK 17:17:17 kwa gramu 80 kwa mmea kila miezi 3. Papaya inahitaji unyevu wa kawaida na lishe wakati wa kuzaa matunda.',
+        pest: 'Fuatilia virusi wa ringspot na anthracnose. Tumia miche ya kupanda bila virusi. Fanya usafi mzuri wa bustani na ondoa matunda yaliyoambukizwa.',
+      },
+    },
+    poultry: {
+      layer: 'Kwa ufugaji wa kuku wa mayai Kenya, dhibiti joto la kioo kwa 18-24\u00B0C. Toa saa 16 za mwanga kwa siku kwa uzalishaji bora wa mayai. Tumia chakula cha mayai kilichotengenezwa kwa protini 16-18%. Hakikisha maji safi yanapatikana daima. Chanjo dhidi ya ugonjwa wa Newcastle, ukimwi wa kuku, na ugonjwa wa Marek. Vuta mayai angalau mara mbili kwa siku. Dhibiti mtiririko mzuri wa hewa ili kuzuia magonjwa ya kupumua. Uzalishaji unaotarajiwa: mayai 250-300 kwa kuku mmoja kwa mwaka.',
+      broiler: 'Kwa uzalishaji wa broiler, dhibiti joto la brooder kwa 33-35\u00B0C kwa wiki ya kwanza, kupungua kwa 2\u00B0C kwa wiki. Tumia chakula cha kuanzisha chenye protini 20-22% kwa wiki 3 za kwanza, kisha chakula cha kukuza (18-20%) hadi uzito wa soko. Weka ndege 10-12/m\u00B2. Hakikisha mtiririko mzuri wa hewa na maji safi. Uzito wa soko (kg 2) unafikiwa wiki 6-8. Angalia coccidiosis na ugonjwa wa Newcastle.',
+    },
+    aquaculture: 'Kwa uvuaji wa samaki Kenya, uvuaji wa tilapia unafaa zaidi. Weka samaki wadogo 5-10 kwa m\u00B2 katika mabwaji yaliyojengwa vizuri. Lishe na chakula kilichotengenezwa kwa samaki kwa 3-5% ya uzito wa mwili kwa siku. Dhibiti ubora wa maji: pH 6.5-8.5, oksijeni iliyoyeyushwa zaidi ya mg/L 5. Vuna baada ya miezi 6-8 samaki wanapofikia gramu 300-500. Tumia mifumo ya hewa wakati wa misimu ya ukame. Fuatilia vimelea na maambukizi ya bakteria.',
+    beekeeping: 'Kwa ufugaji wa nyuki Kenya, tumia KTBH (Kenya Top Bar Hive) au viamba vya Langstroth. Weka viamba maeneo yenye kivuli vinaangazia mashariki. Kila kamba lina baa 10-15 zenye msingi wa asali. Vuta asali baada ya miezi 3-4 ya uanzishaji wa koloni. Tumia nguo ya nyuki na moshi kwa usalama. Uzalishaji unaotarajiwa: asali kg 20-30 kwa kamba kwa kila uvunaji. Dhibiti wadudu kama beetle ndogo ya kamba na nzi wa asali.',
+    irrigation: 'Kwa umwagiliaji wa mdogo Kenya: umwagiliaji wa matone ni bora zaidi (ufanisi wa maji 90%). Weka mistari ya matone kwa mboga kwa nafasi ya sm 12 ya atomizer. Kwa mashamba makubwa, fikiria mifumo ya pivot au sprinker. Osh maji asubuhi (6-9 AM) ili kupunguza uvukizaji. Fuatilia unyevu wa udongo kwa tensiometer. Uvukizaji wa maji ya mvua kupitia mabwaji ya shamba ni wa bei nafuu. Bajeti: KES 50,000-100,000 kwa ekari kwa usakinishaji wa matone.',
+    postHarvest: 'Usimamizi wa baada ya kuvuna kwa wakulima wa Kenya: Kausha nafaka hadi kiwango cha unyevu 12-13% kabla ya kuhifadhi. Tumia mifuko ya kuhifadhi ya hermetik (mifuko ya PICS) kwa nafaka ili kuzuia uharibifu wa viweo. Hifadhi viazi maeneo baridi, giza, yenye mtiririko wa hewa. Kwa matunda, dhibiti mnyororo wa baridi kutoka shamba hadi soko. Panga na kadiria bidhaa kabla ya kuuza. Tumia ufungaji wa viwango ili kufikia soko. Kuongeza muda wa kuhifadhi unaotarajiwa: miezi 3-6 kwa uhifadhi bora.',
+    farmEconomics: 'Misingi ya uchumi wa shamba kwa wakulima wa Kenya: Fuatilia viingilio vyote (mbegu, mbolea, kazi, usafirishaji) dhidi ya mtoko. Kadiria gharama ya uzalishaji kwa kg kwa kila mazao. Uchambuzi wa kuvunja bei husaidia kubaini mazao yanayofaa. Tofautisha mapato kupitia ongezeko la thamani. Jiunge na vyama vya ushirika kwa ununuzi wa wingi na uuzaji wa pamoja. Pata ruzuku za serikali kupitia NARIGP na programu nyingine. Margini za faida za kawaida: 20-40% kwa mboga, 15-25% kwa nafaka.',
+    greenhouse: 'Kilimo cha greenhousi Kenya: Tumia greenhousi za aina ya tunnel (8m \u00D7 30m za kawaida). Weka umwagiliaji wa matone na mifumo ya mbolea. Limaa mazao ya thamani: nyanya, capsicum, kilichua. Dhibiti joto kwa 20-28\u00B0C kupitia mtiririko wa hewa. Tumia udhibiti wa kikabila wa wadudu (wadudu wanaosaidia). Mavuno ya kawaida: mara 3-5 ya uzalishaji wa shamba la wazi. Uwekezaji wa awali: KES 500,000-1,000,000 kwa greenhousi. ROI ndani ya misimu 1-2.',
+    sustainabilityTips: [
+      'Fanya mzunguko wa mazao ili kudumisha rutuba ya udongo na kuvunja mizunguko ya wadudu',
+      'Tumia komposti ya asili na mbolea ya wanyama ili kupunguza utegemezi wa mbolea za kemikali',
+      'Tekeleza uvukizaji wa maji na umwagiliaji wa matone kwa matumizi bora ya maji',
+      'Panda mazao ya kuficha ili kuzuia mmomonyoko wa udongo na kufunga nitrojeni',
+      'Tumia udhibiti wa wadudu uliojumuishwa (IPM) ili kupunguza matumizi ya dawa za wadudu',
+      'Dhibiti utofautishaji wa kibiolojia kwa kupanda vizuizi na vikwazo vya upepo',
+      'Fanya kilimo endelevu kwa matumizi ya chini ya kulima',
+      'Tumia mulching ili kuokoa unyevu na kudhibiti magugu',
+      'Fikiria kilimo cha miti kwa mapato ya ziada na afya ya udongo',
+      'Fuatilia afya ya udongo mara kwa mara na uboreshe mazoea ipasavyo',
+    ],
+  },
+
+  diagnosisEngine: {
+    growthStages: {
+      seedling: 'Mche',
+      vegetative: 'Ukuaji wa Majani',
+      flowering: 'Uanzaji wa Ua',
+      fruiting: 'Uanzaji wa Tunda',
+    },
+    insufficientSymptoms: 'Dalili hazitoshi kwa utambuzi wa msingi. Sababu nyingi zinazoweza kutokea zimegunduliwa kwa ujasiri mdogo. Fikiria kutoa maelezo zaidi.',
+    mostLikelyCause: '{name} ndiyo sababu inayoweza zaidi kulingana na dalili zilizoelezwa, kwa ujasiri wa {confidence}%.',
+    possibleConditions: 'Hali {count} zinazoweza kutokea zimegunduliwa. Dalili hazijitoshi kwa utambuzi wa msingi.',
+    conditions: {
+      northernLeafBlight: {
+        name: 'Northern Leaf Blight',
+        treatment: 'Tumia dawa ya kuzuia magonjwa yenye triazole au strobilurini mwanzoni mwa alama. Rudisha matumizi baada ya siku 14 ikiwa hali bado ni nzuri kwa ugonjwa.',
+        prevention: 'Panda aina zilizopinga zilizochanganywa. Zungusha mazao kila misimu 2-3. Dhibiti nafasi sahihi ya mimea kwa mtiririko wa hewa. Ondoa mabaki ya mazao baada ya kuvuna.',
+      },
+      maizeStreakVirus: {
+        name: 'Maize Streak Virus',
+        treatment: 'Hakuna tiba ya MSV. Ondoa na uharibu mimea iliyoambukizwa ili kupunguza kuenea. Dhibiti vinaa vya leafhopper kwa dawa za ndani.',
+        prevention: 'Panda mbegu zilizothibitishwa bila virusi. Tumia aina zenye upinzani kama KH600-23A. Dhibiti vinaa vya leafhopper mapema msimu. Ondoa mizizi mbadala ya nyasi karibu na mashamba ya mahindi.',
+      },
+      heatDroughtStress: {
+        name: 'Heat & Drought Stress',
+        treatment: 'Ongeza mara za umwagiliaji wakati wa mawimbi ya joto. Tumia mulchi ili kuokoa unyevu wa udongo. Toa vivuli kwa miche nyeti kwa kutumia matandiko ya vivuli.',
+        prevention: 'Chagua aina endelevu ukame. Sakinisha mifumo ya umwagiliaji wa matone. Tumia mulchi ya asili ili kudumisha unyevu. Fuatilia utabiri wa hali ya hewa kwa onyo la mawimbi ya joto.',
+      },
+      nitrogenDeficiency: {
+        name: 'Nitrogen Deficiency',
+        treatment: 'Tumia mbolea yenye nitrojeni (CAN au urea) kwa kg 100-150/ha. Matumizi ya majani ya suluhisho la urea (2%) kwa upatikanaji wa haraka.',
+        prevention: 'Changanya vitu vya organiki mara kwa mara. Fanya mzunguko wa mazao na mazao ya kufunga nitrojeni. Tumia mazao ya kuficha nitrojeni. Tumia lishe iliyo sawa kulingana na vipimo vya udongo.',
+      },
+      wheatStemRust: {
+        name: 'Wheat Stem Rust',
+        treatment: 'Tumia dawa ya kuzuia magonjwa yenye propiconazole au tebuconazole mwanzoni mwa vifua. Ondoa na uharibu mimea iliyoambukizwa sana.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Ondoa mimea ya ngano iliyosalia. Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua.',
+      },
+      wheatPowderyMildew: {
+        name: 'Wheat Powdery Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya sulfuri au dawa ya ndani mwanzoni mwa nafaka nyeupe. Hakikisha mtiririko mzuri wa hewa shambani.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti msongamano sahihi wa mimea. Epuka mbolea nyingi ya nitrojeni. Tumia dawa za kuzuia magonjwa wakati wa unyevu.',
+      },
+      droughtStress: {
+        name: 'Drought Stress',
+        treatment: 'Ongeza umwagiliaji mara moja. Tumia tabaka la mulchi zuri kuzunguka mimea. Tumia matumizi ya majani ya potasiamu ili kuboresha ustahimilivu wa ukame.',
+        prevention: 'Panda aina endelevu ukame. Sakinisha mifumo bora ya umwagiliaji. Tumia mulchi ya asili ili kuokoa unyevu. Fanya uvukizaji wa maji.',
+      },
+      riceBlast: {
+        name: 'Rice Blast',
+        treatment: 'Tumia tricyclazole au isoprothiolane mwanzoni mwa alama za almasi. Dhibiti usimamizi mzuri wa maji \u2014 epuka kufunga kwa muda mrefu.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti matumizi ya nitrojeni yaliyosawa. Hakikisha usimamizi mzuri wa maji. Epuka viwango vya kupanda vya kupita kiasi.',
+      },
+      riceYellowMottleVirus: {
+        name: 'Rice Yellow Mottle Virus',
+        treatment: 'Hakuna tiba ya RYMV. Ondoa na uharibu mimea iliyoambukizwa. Dhibiti vinaa vya kibuyu kwa dawa. Panda upya kwa aina zenye upinzani.',
+        prevention: 'Tumia aina zenye upinzani dhidi ya RYMV. Dhibiti kibuyu wa majani mapema. Epuka stress ya maji. Fanya mzunguko wa mazao na mazao si mchele.',
+      },
+      cassavaMosaicVirus: {
+        name: 'Cassava Mosaic Virus',
+        treatment: 'Hakuna tiba ya CMV. Ondoa na uharibu mimea iliyoambukizwa mara moja. Dhibiti vinaa vya whitefly kwa dawa.',
+        prevention: 'Tumia aina zenye upinzani dhidi ya CMV kama NAROCASS 1. Panda vifaa bila ugonjwa. Dhibiti vinaa vya whitefly. Ondoa mimea iliyoambukizwa haraka.',
+      },
+      cassavaBrownStreakVirus: {
+        name: 'Cassava Brown Streak Virus',
+        treatment: 'Hakuna tiba ya CBSV. Ondoa na uharibu mimea iliyoambukizwa. Dhibiti vinaa vya whitefly. Vuna mimea iliyoambukizwa mara moja kwa yale yote ya mizizi yaliyobaki.',
+        prevention: 'Tumia aina zenye upinzani dhidi ya CBSV. Panda vifaa bila ugonjwa. Fanya mzunguko wa mazao. Dhibiti vinaa vya whitefly kwa bidhaa za neem.',
+      },
+      angularLeafSpot: {
+        name: 'Angular Leaf Spot',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba au mancozeb. Ondoa na uharibu mabaki ya mimea iliyoambukizwa. Hakikisha mtiririko mzuri wa hewa.',
+        prevention: 'Tumia mbegu zilizothibitishwa bila ugonjwa. Fanya mzunguko wa mazao. Dhibiti nafasi sahihi ya mimea. Epuka umwagiliaji wa juu.',
+      },
+      beanCommonMosaicVirus: {
+        name: 'Bean Common Mosaic Virus',
+        treatment: 'Hakuna tiba ya BCMV. Ondoa na uharibu mimea iliyoambukizwa. Dhibiti vinaa vya aphid kwa dawa.',
+        prevention: 'Tumia aina zenye upinzani dhidi ya BCMV. Panda mbegu zilizothibitishwa bila virusi. Dhibiti vinaa vya aphid mapema msimu.',
+      },
+      flowerDrop: {
+        name: 'Flower Drop (Physiological)',
+        treatment: 'Hakikisha maji ya kawaida. Tumia kalsiamu na boroni kwa majani. Epuka mabadiliko makubwa ya joto.',
+        prevention: 'Dhibiti umwagiliaji wa kawaida. Hakikisha lishe iliyo sawa. Epuka stress wakati wa kuchanua. Toa vivuli wakati wa joto kali.',
+      },
+      sorghumAnthracnose: {
+        name: 'Sorghum Anthracnose',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba. Ondoa na uharibu vifaa vya mimea iliyoambukizwa. Hakikisha mtiririko mzuri wa hewa.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Dhibiti nafasi sahihi ya mimea. Epuka umwagiliaji wa juu.',
+      },
+      sorghumDownyMildew: {
+        name: 'Sorghum Downy Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya metalaxyl kama matibabu ya mbegu. Piga dawa ya ndani mwanzoni mwa maambukizi.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Hakikisha mtiririko mzuri wa maji. Epuka kujaa maji.',
+      },
+      milletDownyMildew: {
+        name: 'Millet Downy Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya metalaxyl. Ondoa na uharibu mimea iliyoambukizwa. Hakikisha mtiririko mzuri wa maji.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Dhibiti usafi wa shamba. Epuka kujaa maji.',
+      },
+      milletBlast: {
+        name: 'Millet Blast',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya tricyclazole mwanzoni mwa alama. Dhibiti usimamizi mzuri wa maji.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti lishe iliyo sawa. Hakikisha usimamizi mzuri wa maji. Fanya mzunguko wa mazao.',
+      },
+      sweetPotatoVirusDisease: {
+        name: 'Sweet Potato Virus Disease',
+        treatment: 'Hakuna tiba. Ondoa na uharibu mimea iliyoambukizwa. Tumia vifaa vya kupanda bila virusi.',
+        prevention: 'Tumia mizizi bila virusi. Dhibiti vinaa vya aphid. Fanya mzunguko wa mazao. Ondoa mimea iliyoambukizwa haraka.',
+      },
+      sweetPotatoWeevil: {
+        name: 'Sweet Potato Weevil Damage',
+        treatment: 'Tumia dawa ya wadudu ya imidacloprid. Vuna mizizi iliyoathiriwa mara moja. Uharibu mabaki ya mazao baada ya kuvuna.',
+        prevention: 'Fanya mzunguko wa mazao na mimea si mizizi. Tumia vifaa safi vya kupanda. Chongea udongo kuzunguka mizizi. Vuna kabla ya uharibifu mkubwa wa panzi.',
+      },
+      potatoLateBlight: {
+        name: 'Potato Late Blight',
+        treatment: 'Tumia metalaxyl-mancozeb au chlorothalonil mwanzoni mwa alama zilizojaa maji. Rudisha kila siku 7-10 wakati wa hali ya mvua.',
+        prevention: 'Tumia viazi vya mbegu vilivyothibitishwa. Panda aina zenye upinzani. Hakikisha mtiririko mzuri wa maji. Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua.',
+      },
+      potatoEarlyBlight: {
+        name: 'Potato Early Blight',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya mancozeb au chlorothalonil. Ondoa na uharibu majani yaliyoambukizwa. Hakikisha lishe ya kutosha.',
+        prevention: 'Fanya mzunguko wa mazao. Dhibiti lishe sahihi ya mimea. Epuka stress ya maji. Ondoa mabaki ya mazao baada ya kuvuna.',
+      },
+      fusariumWilt: {
+        name: 'Fusarium Wilt (Panama Disease)',
+        treatment: 'Hakuna udhibiti mzuri wa kemikali. Ondoa na uharibu mimea iliyoambukizwa. Shika udongo kwa chokaa ili kupandisha pH juu ya 6.5.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko mrefu wa mazao (miaka 3+). Boresha mtiririko wa maji. Tumia vifaa vya kupanda bila ugonjwa.',
+      },
+      blackSigatoka: {
+        name: 'Black Sigatoka',
+        treatment: 'Tumia dawa ya ndani (propiconazole au mancozeb). Ondoa na uharibu majani yaliyoathiriwa. Boresha mtiririko wa maji.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti nafasi sahihi. Ondoa majani yaliyoambukizwa mara kwa mara. Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua.',
+      },
+      coffeeLeafRust: {
+        name: 'Coffee Leaf Rust',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba au dawa ya ndani. Ondoa na uharibu majani yaliyoambukizwa sana. Kata miti iliyojaa.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti kata sahihi. Hakikisha mtiririko mzuri wa hewa. Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua.',
+      },
+      coffeeBerryBorer: {
+        name: 'Coffee Berry Borer',
+        treatment: 'Tumia dawa ya wadudu iliyoidhinishwa kwenye kahawa. Tumia mazingira ya feromoni. Vuta na uharibu kahawa iliyoathiriwa.',
+        prevention: 'Fanya uvunaji wa kawaida. Uharibu kahawa iliyoanguka. Tumia mazingira ya feromoni kwa ufuatiliaji. Tumia matibabu ya kuzuia kabla ya msimu wa nzi.',
+      },
+      teaBlisterBlight: {
+        name: 'Tea Blister Blight',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba. Boresha mtiririko wa maji. Kata ili kuboresha mtiririko wa hewa.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti meza ya kunyua vizuri. Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua. Hakikisha mtiririko mzuri wa maji.',
+      },
+      teaMosquitoBug: {
+        name: 'Tea Mosquito Bug',
+        treatment: 'Tumia dawa ya wadudu ya neem. Kata kichaka kilichojaa. Ondoa mimea mbadala inayohudumia.',
+        prevention: 'Dhibiti meza ya kunyua vizuri. Tumia dawa za kuzuia wakati wa misimu ya juu. Ondoa mimea mbadala karibu na mashamba ya chai.',
+      },
+      sugarcaneSmut: {
+        name: 'Sugarcane Smut',
+        treatment: 'Ondoa na uharibu shina zilizoambukizwa. Shika seti kwa dawa kabla ya kupanda.',
+        prevention: 'Tumia aina zenye upinzani. Shika seti kwa maji ya joto (52\u00B0C kwa dakika 30). Ondoa shina zilizoambukizwa haraka.',
+      },
+      sugarcaneRedRot: {
+        name: 'Sugarcane Red Rot',
+        treatment: 'Ondoa na uharibu shina zilizoathiriwa. Shika seti kwa dawa. Boresha mtiririko wa maji.',
+        prevention: 'Tumia aina zenye upinzani. Shika seti kabla ya kupanda. Fanya mzunguko wa mazao. Dhibiti mtiririko mzuri wa maji.',
+      },
+      cottonBacterialBlight: {
+        name: 'Cotton Bacterial Blight',
+        treatment: 'Hakuna udhibiti wa kemikali. Ondoa na uharibu mimea iliyoambukizwa. Tumia bidhaa za shaba kwa maambukizi ya pili.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Tumia mbegu zilizothibitishwa. Epuka umwagiliaji wa juu.',
+      },
+      cottonBollworm: {
+        name: 'Cotton Bollworm',
+        treatment: 'Tumia dawa ya wadudu ya Bt au chlorantraniliprole. Tumia mazingira ya feromoni kwa ufuatiliaji. Fanya uvutaji na uharibu wa bolls zilizoathiriwa.',
+        prevention: 'Panda mapema ili kuepuka kilele cha msimu wa mdudu. Tumia aina za Bp pale zinapatikana. Fanya mzunguko wa mazao. Fuatilia mashamba kila wiki.',
+      },
+      tomatoLateBlight: {
+        name: 'Tomato Late Blight',
+        treatment: 'Tumia metalaxyl-mancozeb au chlorothalonil mwanzoni mwa alama. Ondoa na uharibu mimea iliyoambukizwa. Epuka umwagiliaji wa juu.',
+        prevention: 'Tumia aina zenye upinzani. Hakikisha nafasi sahihi. Tumia dawa za kuzuia magonjwa wakati wa hali ya mvua. Fanya mzunguko wa mazao.',
+      },
+      tomatoEarlyBlight: {
+        name: 'Tomato Early Blight',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya mancozeb au shaba. Ondoa majani ya chini yaliyoambukizwa. Ficha mulchi ili kuzuia kunyunyizia udongo.',
+        prevention: 'Fanya mzunguko wa mazao. Dhibiti lishe sahihi ya mimea. Epuka umwagiliaji wa juu. Ondoa mabaki ya mazao baada ya kuvuna.',
+      },
+      blossomEndRot: {
+        name: 'Blossom End Rot',
+        treatment: 'Tumia kalsiamu kwa majani. Hakikisha maji ya kawaida. Ficha mulchi ili kudumisha unyevu sawa wa udongo.',
+        prevention: 'Dhibiti umwagiliaji wa kawaida. Hakikisha kalsiamu ya kutosha udongoni. Epuka nitrojeni nyingi. Ficha mulchi ili kudhibiti unyevu.',
+      },
+      onionDownyMildew: {
+        name: 'Onion Downy Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya metalaxyl. Ondoa na uharibu mimea iliyoambukizwa. Boresha mtiririko wa hewa.',
+        prevention: 'Tumia aina zenye upinzani. Hakikisha nafasi sahihi. Epuka umwagiliaji wa juu. Tumia dawa za kuzuia magonjwa wakati wa hali ya mvua.',
+      },
+      onionThrips: {
+        name: 'Onion Thrips',
+        treatment: 'Tumia spinosad au dawa ya wadudu ya neem. Tumia mulchi za kuakisi. Umwagiliaji wa juu ili kuondoa thrips.',
+        prevention: 'Tumia mulchi za kuakisi. Panda mapema. Hakikisha lishe sahihi. Fuatilia kwa mazingira ya kileo cha bluu.',
+      },
+      blackRot: {
+        name: 'Black Rot',
+        treatment: 'Ondoa na uharibu mimea iliyoambukizwa. Tumia dawa ya kuzuia magonjwa ya shaba. Hakikisha mzunguko mzuri wa mazao.',
+        prevention: 'Tumia mbegu zilizothibitishwa bila ugonjwa. Fanya mzunguko wa mazao. Epuka umwagiliaji wa juu. Ondoa mabaki ya mazao.',
+      },
+      diamondbackMoth: {
+        name: 'Diamondback Moth',
+        treatment: 'Tumia dawa ya wadudu ya Bt au spinosad. Tumia matandiko ya shamba kwa miche mipaka.',
+        prevention: 'Tumia matandiko ya shamba. Tumia Bt kwa kuzuia. Fanya mzunguko wa mazao. Dhibiti usafi wa shamba.',
+      },
+      mangoAnthracnose: {
+        name: 'Mango Anthracnose',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba wakati wa kuchanua. Ondoa na uharibu matunda yaliyoambukizwa. Kata ili kuboresha mtiririko wa hewa.',
+        prevention: 'Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua. Dhibiti usafi mzuri wa bustani. Kata ili kuboresha mtiririko wa hewa.',
+      },
+      mangoFruitFly: {
+        name: 'Mango Fruit Fly',
+        treatment: 'Tumia mazingira ya methyl eugenol. Vuna kwa ukomavu sahihi. Fungasha matunda binafsi.',
+        prevention: 'Tumia mazingira ya feromoni. Fanya usafi mzuri wa bustani. Ondoa matunda yaliyoanguka. Vuna kwa ukomavu sahihi.',
+      },
+      avocadoRootRot: {
+        name: 'Avocado Root Rot',
+        treatment: 'Boresha mtiririko wa maji. Tumia dawa ya kuzuia magonjwa ya phosphorous acid. Punguza mara za umwagiliaji.',
+        prevention: 'Hakikisha mtiririko mzuri wa maji. Epuka kumwagilia kupita kiasi. Panda juu ya mabamba. Tumia mizizi iliyo na upinzani.',
+      },
+      groundnutRosetteVirus: {
+        name: 'Groundnut Rosette Virus',
+        treatment: 'Hakuna tiba. Ondoa na uharibu mimea iliyoambukizwa. Dhibiti vinaa vya aphid.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti aphid mapema. Panda mapema ili kuepuka kilele cha msimu wa aphid.',
+      },
+      groundnutLeafSpot: {
+        name: 'Groundnut Leaf Spot',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba au chlorothalonil. Ondoa na uharibu majani yaliyoambukizwa.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Dhibiti nafasi sahihi ya mimea.',
+      },
+      sunflowerDownyMildew: {
+        name: 'Sunflower Downy Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya metalaxyl. Ondoa na uharibu mimea iliyoambukizwa.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Hakikisha mtiririko mzuri wa maji.',
+      },
+      cowpeaAphidBorneMosaicVirus: {
+        name: 'Cowpea Aphid-Borne Mosaic Virus',
+        treatment: 'Hakuna tiba. Ondoa na uharibu mimea iliyoambukizwa. Dhibiti vinaa vya aphid.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti aphid mapema. Panda mbegu zilizothibitishwa bila virusi.',
+      },
+      pineappleFusariosis: {
+        name: 'Pineapple Fusariosis',
+        treatment: 'Ondoa na uharibu mimea iliyoambukizwa. Shika vifaa vya kupanda kwa dawa.',
+        prevention: 'Tumia vifaa vya kupanda bila ugonjwa. Fanya mzunguko wa mazao. Dhibiti usafi wa shamba.',
+      },
+      passionFruitWoodinessVirus: {
+        name: 'Passion Fruit Woodiness Virus',
+        treatment: 'Hakuna tiba. Ondoa na uharibu mizizi iliyochipuliwa. Dhibiti vinaa vya aphid.',
+        prevention: 'Tumia miche ya kupanda bila virusi. Dhibiti aphid. Fanya mzunguko wa mazao.',
+      },
+      citrusGreening: {
+        name: 'Citrus Greening (Huanglongbing)',
+        treatment: 'Hakuna tiba. Ondoa na uharibu miti iliyoambukizwa. Dhibiti vinaa vya psyllid kwa dawa.',
+        prevention: 'Tumia miche iliyothibitishwa bila ugonjwa. Dhibiti vinaa vya psyllid. Fuatilia bustani mara kwa mara.',
+      },
+      citrusCanker: {
+        name: 'Citrus Canker',
+        treatment: 'Ondoa na uharibu sehemu za mimea iliyoambukizwa. Tumia dawa ya kuzuia magonjwa ya shaba. Dhibiti kunyunyizia maji ya upepo.',
+        prevention: 'Tumia miche iliyothibitishwa bila ugonjwa. Anzisha vizuizi vya upepo. Tumia dawa za kuzuia za shaba za kuzuia.',
+      },
+      coconutLethalYellowing: {
+        name: 'Coconut Lethal Yellowing',
+        treatment: 'Hakuna tiba. Ondoa na uharibu mitende iliyoambukizwa. Dhibiti vinaa vya planthopper.',
+        prevention: 'Tumia miche iliyothibitishwa bila ugonjwa. Dhibiti vinaa vya planthopper. Ondoa mitende iliyoambukizwa haraka.',
+      },
+      cashewPowderyMildew: {
+        name: 'Cashew PowderyMildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya sulfuri. Ondoa na uharibu sehemu zilizoambukizwa. Kata ili kuboresha mtiririko wa hewa.',
+        prevention: 'Tumia dawa za kuzuia za sulfuri za kuzuia wakati wa misimu ya ukame. Dhibiti usafi mzuri wa bustani. Kata mara kwa mara.',
+      },
+      macadamiaHuskSpot: {
+        name: 'Macadamia Husk Spot',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba. Ondoa na uharibu maganda yaliyoambukizwa.',
+        prevention: 'Tumia dawa za kuzuia magonjwa wakati wa misimu ya mvua. Dhibiti usafi wa bustani. Kata ili kuboresha mtiririko wa hewa.',
+      },
+      sesameBacterialLeafSpot: {
+        name: 'Sesame Bacterial Leaf Spot',
+        treatment: 'Hakuna udhibiti wa kemikali. Ondoa na uharibu mimea iliyoambukizwa. Hakikisha mtiririko mzuri wa maji.',
+        prevention: 'Tumia mbegu zilizothibitishwa. Fanya mzunguko wa mazao. Epuka umwagiliaji wa juu. Dhibiti usafi wa shamba.',
+      },
+      cabbageBlackRot: {
+        name: 'Cabbage Black Rot',
+        treatment: 'Ondoa na uharibu mimea iliyoambukizwa. Tumia dawa ya kuzuia magonjwa ya shaba. Hakikisha mzunguko mzuri wa mazao.',
+        prevention: 'Tumia mbegu zilizothibitishwa bila ugonjwa. Fanya mzunguko wa mazao. Epuka umwagiliaji wa juu.',
+      },
+      spinachDownyMildew: {
+        name: 'Spinach Downy Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya metalaxyl. Hakikisha mtiririko mzuri wa hewa.',
+        prevention: 'Tumia aina zenye upinzani. Hakikisha nafasi sahihi. Epuka umwagiliaji wa juu.',
+      },
+      carrotAlternariaLeafBlight: {
+        name: 'Carrot Alternaria Leaf Blight',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya mancozeb au chlorothalonil. Ondoa majani yaliyoambukizwa.',
+        prevention: 'Fanya mzunguko wa mazao. Tumia mbegu zilizothibitishwa. Hakikisha lishe sahihi.',
+      },
+      watermelonAnthracnose: {
+        name: 'Watermelon Anthracnose',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya shaba. Ondoa na uharibu mimea iliyoambukizwa.',
+        prevention: 'Tumia aina zenye upinzani. Fanya mzunguko wa mazao. Hakikisha mtiririko mzuri wa maji.',
+      },
+      watermelonPowderyMildew: {
+        name: 'Watermelon Powdery Mildew',
+        treatment: 'Tumia dawa ya kuzuia magonjwa ya sulfuri. Hakikisha mtiririko mzuri wa hewa.',
+        prevention: 'Tumia aina zenye upinzani. Dhibiti nafasi sahihi. Tumia dawa za kuzuia magonjwa.',
+      },
+      papayaRingspotVirus: {
+        name: 'Papaya Ringspot Virus',
+        treatment: 'Hakuna tiba. Ondoa na uharibu mimea iliyoambukizwa. Dhibiti vinaa vya aphid.',
+        prevention: 'Tumia miche ya kupanda bila virusi. Dhibiti aphid. Fanya mzunguko wa mazao.',
+      },
+      waterStress: {
+        name: 'Water Stress (Drought/Overwatering)',
+        treatment: 'Rekebisha ratiba ya umwagiliaji. Kwa stress ya ukame, ongeza maji. Kwa maji mengi, punguza mara na boresha mtiririko wa maji.',
+        prevention: 'Sakinisha umwagiliaaji wa matone kwa mtiririko wa kawaida wa maji. Fuatilia unyevu wa udongo mara kwa mara. Ficha mulchi ili kuokoa unyevu.',
+      },
+      heatStress: {
+        name: 'Heat Stress',
+        treatment: 'Toa vivuli kwa mazao nyeti. Ongeza mara za umwagiliaji wakati wa mawimbi ya joto. Tumia mulchi ili kupoza udongo.',
+        prevention: 'Panda aina endelevu joto. Anzisha miundo ya vivuli. Umwagiliaji wakati wa sehemu za baridi za siku.',
+      },
+      nutrientDeficiencyGeneral: {
+        name: 'Nutrient Deficiency (General)',
+        treatment: 'Fanya kipimo cha udongo ili kubaini upungufu maalum. Tumia mbolea iliyo sawa kulingana na matokeo. Kulia majani kwa upatikanaji wa haraka.',
+        prevention: 'Vipimo vya kawaida vya udongo. Dhibiti lishe iliyo sawa. Changanya vitu vya organiki. Fanya mzunguko wa mazao.',
+      },
+    },
+    missingInfo: {
+      growthStage: 'Hatua ya ukuaji wa mazao',
+      specificSymptoms: 'Maelezo zaidi ya dalili maalum',
+    },
+    reasoning: {
+      vagueSymptoms: 'Dalili ni nyembamba sana kwa utambuzi wa ujasiri',
+      unknownGrowthStage: 'Hatua ya ukuaji haijulikani, ambayo inaathiri usahihi wa utambuzi',
+      moreSymptomsNeeded: 'Dalili zaidi zinaweza kuboresha ujasiri wa utambuzi',
+      multipleSimilar: 'Hali nyingi zina wasifu sawa wa dalili (tofauti ya ujasiri: {gap}%)',
+      stressAndDisease: 'Dalili za stress na ugonjwa zote zimegunduliwa \u2014 zinahitaji uainishaji makini',
+      growthStageNote: 'Utambuzi unazingatia hatua ya ukuaji ya {stage}',
+      lessLikelyAtStage: 'Baadhi ya hali hazifai katika hatua hii',
+    },
+    summary: {
+      lowConfidence: 'Dalili hazitoshi kwa utambuzi wa msingi. Sababu nyingi zinazoweza kutokea zimegunduliwa kwa ujasiri mdogo. Fikiria kutoa maelezo zaidi.',
+      highConfidence: '{name} ndiyo sababu inayoweza zaidi kulingana na dalili zilizoelezwa, kwa ujasiri wa {confidence}%.',
+      multipleCauses: 'Hali {count} zinazoweza kutokea zimegunduliwa. Dalili hazijitoshi kwa utambuzi wa msingi.',
+    },
   },
 };

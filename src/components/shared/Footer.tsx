@@ -74,7 +74,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a href="https://whatsapp.com/dl/" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 text-white/60 transition-colors hover:text-white font-body">
-                    <FaWhatsapp className="h-3.5 w-3.5 text-[#c4704b]" /> WhatsApp
+                    <FaWhatsapp className="h-3.5 w-3.5 text-[#c4704b]" /> {t('footer.whatsapp')}
                   </a>
                 </li>
               </ul>

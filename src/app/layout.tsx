@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { I18nProvider } from '@/lib/i18n';
+import { serverT } from '@/lib/i18n/server';
 import { Navbar } from '@/components/shared/Navbar';
 import { Footer } from '@/components/shared/Footer';
 import { CookieConsent } from '@/components/shared/CookieConsent';
@@ -23,11 +24,13 @@ const dmSerif = DM_Serif_Display({
   weight: ['400'],
 });
 
-export const metadata: Metadata = {
-  title: 'AgriPride AI — Intelligence for African Agriculture',
-  description: 'AI-powered crop disease diagnosis, weather intelligence, and sustainable farming tools built for African farmers.',
-  keywords: 'agriculture, AI, farming, crop disease, weather, Africa, sustainability',
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: serverT('en', 'meta.title'),
+    description: serverT('en', 'meta.description'),
+    keywords: serverT('en', 'meta.keywords'),
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

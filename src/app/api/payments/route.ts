@@ -10,12 +10,13 @@ import {
   paystackTransactionService,
 } from '@/lib/paystack';
 import { logger } from '@/lib/logger';
+import { serverT } from '@/lib/i18n/server';
 
 const InitPaymentSchema = z.object({
   tier: z.enum(['premium', 'cooperative', 'enterprise']),
-  userId: z.string().min(1, 'User ID is required'),
-  email: z.string().email('Valid email required'),
-  name: z.string().min(1, 'Name is required'),
+  userId: z.string().min(1, serverT('en', 'validation.userIdRequired')),
+  email: z.string().email(serverT('en', 'validation.validEmailRequired')),
+  name: z.string().min(1, serverT('en', 'validation.nameRequired')),
 });
 
 async function handler(req: NextRequest) {
@@ -27,12 +28,12 @@ async function handler(req: NextRequest) {
 
   const { configured } = paystackConfig();
   if (!configured) {
-    return apiError(503, 'Payment service is not configured');
+    return apiError(503, serverT('en', 'payments.notConfigured'));
   }
 
   const plan = await subscriptionService.getByTier(tier);
   if (!plan) {
-    return apiError(404, 'Plan not found');
+    return apiError(404, serverT('en', 'payments.planNotFound'));
   }
 
   const reference = generateReference(tier, userId);
@@ -52,7 +53,7 @@ async function handler(req: NextRequest) {
   });
 
   if (!result.success) {
-    return apiError(502, result.error || 'Failed to initialize payment');
+    return apiError(502, result.error || serverT('en', 'payments.initFailed'));
   }
 
   await paystackTransactionService.create({

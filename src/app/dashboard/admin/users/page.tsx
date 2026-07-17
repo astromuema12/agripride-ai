@@ -211,7 +211,7 @@ export default function UsersPage() {
                   <div key={user.id} className="py-3 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-900">{user.name}</span>
-                      <Badge variant={roleColors[user.role]} className="capitalize text-[10px]">{user.role}</Badge>
+                      <Badge variant={roleColors[user.role]} className="capitalize text-[10px]">{t(`dashboard.admin.userRoles.${user.role}`) || user.role}</Badge>
                     </div>
                     <div className="text-xs text-gray-600 truncate">{user.email}</div>
                     <div className="flex items-center justify-between text-xs">
@@ -263,7 +263,7 @@ export default function UsersPage() {
                         <td className="py-3 pr-4 text-gray-600">{user.email}</td>
                         <td className="py-3 pr-4">
                           <Badge variant={roleColors[user.role]} className="capitalize">
-                            {user.role}
+                            {t(`dashboard.admin.userRoles.${user.role}`) || user.role}
                           </Badge>
                         </td>
                         <td className="py-3 pr-4">

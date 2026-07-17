@@ -58,7 +58,7 @@ export default function ExportPage() {
         filename = 'yield-records-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
       case 'prices':
-        data = prices.map((p) => ({ [t('export.colCrop')]: p.crop, [t('export.colRegion')]: p.region, [t('export.colPricePerKg')]: 'KES ' + p.price_per_kg.toFixed(2), [t('export.colTrend')]: p.trend }));
+        data = prices.map((p) => ({ [t('export.colCrop')]: p.crop, [t('export.colRegion')]: p.region, [t('export.colPricePerKg')]: t('common.currency') + ' ' + p.price_per_kg.toFixed(2), [t('export.colTrend')]: p.trend }));
         filename = 'market-prices-' + formatDate(new Date()).replace(/\s/g, '-') + '.' + format;
         break;
     }

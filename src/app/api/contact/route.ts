@@ -6,13 +6,14 @@ import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-ut
 import { sanitizeObject } from '@/middleware/security';
 import { sendContactNotification } from '@/lib/email';
 import { logger } from '@/lib/logger';
+import { serverT } from '@/lib/i18n/server';
 
 const ContactSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
-  email: z.string().email('Invalid email address'),
+  name: z.string().min(1, serverT('en', 'validation.nameRequired')).max(255),
+  email: z.string().email(serverT('en', 'validation.invalidEmail')),
   phone: z.string().max(50).optional(),
-  subject: z.string().min(1, 'Subject is required').max(255),
-  message: z.string().min(1, 'Message is required').max(5000),
+  subject: z.string().min(1, serverT('en', 'validation.subjectRequired')).max(255),
+  message: z.string().min(1, serverT('en', 'validation.messageRequired')).max(5000),
 });
 
 async function handler(req: NextRequest) {
@@ -21,7 +22,7 @@ async function handler(req: NextRequest) {
 
   const bodyStr = JSON.stringify(parsed.data);
   if (bodyStr.length > 10000) {
-    return apiError(400, 'Message too large');
+    return apiError(400, serverT('en', 'contact.messageTooLarge'));
   }
 
   const sanitized = sanitizeObject(parsed.data);
@@ -50,7 +51,7 @@ async function handler(req: NextRequest) {
   });
 
   return apiSuccess({
-    message: 'Thank you for contacting us. We will respond within 24 hours.',
+    message: serverT('en', 'contact.successMessage'),
   });
 }
 

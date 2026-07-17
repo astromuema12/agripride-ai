@@ -716,7 +716,7 @@ export function AiDemo() {
                   <div className="flex items-center justify-between p-3">
                     <div className="min-w-0">
                       <p className="text-xs font-medium text-[var(--foreground)] truncate font-body">{imageFile?.name}</p>
-                      <p className="text-[10px] text-[var(--muted-foreground)] font-body">{imageFile ? `${(imageFile.size / 1024 / 1024).toFixed(1)} MB` : ''}</p>
+                      <p className="text-[10px] text-[var(--muted-foreground)] font-body">{imageFile ? `${(imageFile.size / 1024 / 1024).toFixed(1)} ${t('units.megabytes')}` : ''}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <button

@@ -143,7 +143,7 @@ export default function RegionalAnalyticsPage() {
 
   const chartData = regionData.map((r) => ({
     region: r.region,
-    Reports: r.diseaseReports,
+    [t('analyticsPage.chartReports')]: r.diseaseReports,
   }));
 
   if (loading) {
@@ -256,7 +256,7 @@ export default function RegionalAnalyticsPage() {
                     }}
                     cursor={{ fill: 'rgba(15, 118, 110, 0.08)' }}
                   />
-                  <Bar dataKey="Reports" fill="#0f766e" radius={[4, 4, 0, 0]} maxBarSize={60} />
+                  <Bar dataKey={t('analyticsPage.chartReports')} fill="#0f766e" radius={[4, 4, 0, 0]} maxBarSize={60} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

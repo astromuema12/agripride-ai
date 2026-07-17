@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">{t('adminAnalytics.totalYield')}</p>
-                  <p className="mt-1 text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
+                  <p className="mt-1 text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} {t('common.units.kg')}</p>
                   <p className="mt-1 text-xs text-gray-400">{t('adminAnalytics.avgPerRecord', { avg: avgYield.toFixed(1) })}</p>
                 </div>
                 <div className="rounded-lg bg-[#e2f0ee] p-3">
@@ -243,7 +243,7 @@ export default function AnalyticsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} kg</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalYield.toLocaleString()} {t('common.units.kg')}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-[#0f766e]">
                     <TrendingUp className="h-3 w-3" />
                     {t('analyticsPage.acrossAllRecords')}
@@ -258,7 +258,7 @@ export default function AnalyticsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold text-gray-900">{avgYield.toFixed(1)} kg</p>
+                  <p className="text-2xl font-bold text-gray-900">{avgYield.toFixed(1)} {t('common.units.kg')}</p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-gray-400">
                     {t('analyticsPage.perHarvestRecord')}
                   </div>

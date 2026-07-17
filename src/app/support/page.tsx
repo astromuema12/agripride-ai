@@ -50,12 +50,12 @@ export default function SupportPage() {
         body: JSON.stringify({
           name: t('support.supportUser'),
           email: t('support.supportEmail'),
-          subject: `[SUPPORT] ${ticketForm.subject}`,
+          subject: `${t('support.ticketPrefix')} ${ticketForm.subject}`,
           message: ticketForm.message,
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to submit');
+      if (!res.ok) throw new Error(data.error || t('support.failedToSubmit'));
       toast.success(t('support.ticketCreated'));
       setTicketForm({ subject: '', message: '' });
     } catch (err) {

@@ -225,7 +225,7 @@ export default function ConsentPage() {
                       </div>
                       <div className="flex items-center justify-between text-xs">
                         <Badge variant="secondary" className="capitalize text-[10px]">
-                          {record.type.replace(/_/g, ' ')}
+                          {t(`consent.types.${record.type}`) || record.type.replace(/_/g, ' ')}
                         </Badge>
                         <div className="flex items-center gap-3 text-gray-500">
                           <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{new Date(record.granted_at).toLocaleDateString()}</span>
@@ -270,7 +270,7 @@ export default function ConsentPage() {
                           </td>
                           <td className="py-3 pr-4">
                             <Badge variant="secondary" className="capitalize">
-                              {record.type.replace(/_/g, ' ')}
+                              {t(`consent.types.${record.type}`) || record.type.replace(/_/g, ' ')}
                             </Badge>
                           </td>
                           <td className="py-3 pr-4">

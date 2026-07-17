@@ -5,6 +5,7 @@ import { withErrorHandling, parseBody, apiError, apiSuccess } from '@/lib/api-ut
 import { sanitizeObject } from '@/middleware/security';
 import { generateReference, initializePaystackPayment, paystackTransactionService } from '@/lib/paystack';
 import { logger } from '@/lib/logger';
+import { serverT } from '@/lib/i18n/server';
 
 const SubscribeSchema = z.object({
   tier: z.enum(['free', 'premium', 'cooperative', 'enterprise']),
@@ -24,7 +25,7 @@ async function handler(req: NextRequest) {
 
   const plan = await subscriptionService.getByTier(tier);
   if (!plan) {
-    return apiError(404, 'Plan not found');
+    return apiError(404, serverT('en', 'payments.planNotFound'));
   }
 
   if (plan.price_kes === 0) {
@@ -45,7 +46,7 @@ async function handler(req: NextRequest) {
         price_kes: plan.price_kes,
         features: plan.features,
       },
-      message: 'Free plan selected. Account activated.',
+      message: serverT('en', 'subscribe.freePlanActivated'),
     });
   }
 
@@ -55,7 +56,7 @@ async function handler(req: NextRequest) {
   );
 
   if (!pstkConfigured) {
-    return apiError(503, 'Paystack payment is not configured. Please contact support.');
+    return apiError(503, serverT('en', 'payments.paystackNotConfigured'));
   }
 
   const reference = generateReference(tier, userId || 'guest');
@@ -70,7 +71,7 @@ async function handler(req: NextRequest) {
   });
 
   if (!result.success) {
-    return apiError(502, result.error || 'Failed to initialize payment');
+    return apiError(502, result.error || serverT('en', 'payments.initFailed'));
   }
 
   paystackTransactionService.create({
@@ -106,7 +107,7 @@ async function handler(req: NextRequest) {
     },
     authorization_url: result.data!.authorization_url,
     reference,
-    message: 'Redirecting to payment page...',
+    message: serverT('en', 'subscribe.redirectingToPayment'),
   });
 }
 

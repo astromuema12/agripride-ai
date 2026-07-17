@@ -93,7 +93,7 @@ export default function ReportsPage() {
               </div>
             </div>
             <Badge variant={formatBadgeVariant[report.format] ?? 'default'} className="shrink-0">
-              {report.format}
+              {report.format === 'PDF' ? t('reports.pdf') : report.format === 'CSV' ? t('reports.csv') : t('reports.json')}
             </Badge>
           </div>
         </CardHeader>

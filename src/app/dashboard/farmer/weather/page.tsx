@@ -139,7 +139,7 @@ export default function WeatherPage() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{t('weather.windSpeed')}</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.wind_speed} km/h</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.wind_speed} {t('common.units.kmPerHour')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
@@ -148,7 +148,7 @@ export default function WeatherPage() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{t('weather.rainfall')}</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.rainfall_mm} mm</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{currentWeather.rainfall_mm} {t('common.units.mm')}</p>
                   </div>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function WeatherPage() {
                       className="flex flex-col items-center rounded-lg bg-gray-50 p-4 text-center transition-colors hover:bg-gray-100 dark:bg-[var(--muted)] dark:hover:bg-[var(--border)]"
                     >
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
+                        {new Date(day.date).toLocaleDateString(t('weather.locale'), { weekday: 'short' })}
                       </span>
                       <span className="my-2 text-2xl">
                         <ConditionIcon condition={day.condition} />

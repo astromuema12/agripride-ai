@@ -108,7 +108,7 @@ export default function NotificationsPage() {
                       </div>
                       <p className="text-[10px] sm:text-sm text-gray-500 truncate">{n.message}</p>
                       <p className="mt-0.5 text-[8px] sm:text-xs text-gray-400">
-                        {new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {new Date(n.created_at).toLocaleDateString(t('notifications.locale'), { month: 'short', day: 'numeric' })}
                       </p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">

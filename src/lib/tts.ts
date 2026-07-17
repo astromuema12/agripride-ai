@@ -1,12 +1,17 @@
 'use client';
 
-export function speakText(text: string, onEnd?: () => void) {
+const localeToLang: Record<string, string> = {
+  en: 'en-US',
+  sw: 'sw-KE',
+};
+
+export function speakText(text: string, onEnd?: () => void, locale?: string) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
 
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
+  utterance.lang = localeToLang[locale || 'en'] || 'en-US';
   utterance.rate = 0.9;
   utterance.pitch = 1;
   utterance.onend = () => onEnd?.();

@@ -44,11 +44,11 @@ export default function ContactPage() {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send');
+      if (!res.ok) throw new Error(data.error || t('contact.failedToSend'));
       setSubmitted(true);
-      toast.success(t('contact.success'));
+      toast.success(t('contact.successMessage'));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to send message');
+      toast.error(err instanceof Error ? err.message : t('contact.failedToSendMessage'));
     } finally { setLoading(false); }
   };
 
@@ -60,7 +60,7 @@ export default function ContactPage() {
           <RevealSection className="lg:col-span-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-8 bg-[#c4704b]" />
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Contact</span>
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('contact.badge')}</span>
             </div>
             <h1 className="display-lg text-[var(--foreground)] mb-4">{t('contact.title')}</h1>
             <p className="text-base text-[var(--muted-foreground)] font-body leading-relaxed mb-10">
@@ -103,8 +103,12 @@ export default function ContactPage() {
             <div className="mt-10 pt-8 border-t border-[var(--border)]">
               <div className="text-xs text-[var(--muted-foreground)] font-body mb-3">{t('footer.followUs')}</div>
               <div className="flex gap-2">
-                {['LinkedIn', 'Facebook', 'Instagram'].map(s => (
-                  <span key={s} className="rounded-md bg-[var(--muted)] px-3 py-1.5 text-xs font-medium text-[var(--muted-foreground)] font-body">{s}</span>
+                {[
+                  { key: 'linkedin', label: t('contact.socialPlatforms.linkedin') },
+                  { key: 'facebook', label: t('contact.socialPlatforms.facebook') },
+                  { key: 'instagram', label: t('contact.socialPlatforms.instagram') },
+                ].map(s => (
+                  <span key={s.key} className="rounded-md bg-[var(--muted)] px-3 py-1.5 text-xs font-medium text-[var(--muted-foreground)] font-body">{s.label}</span>
                 ))}
               </div>
             </div>
@@ -117,7 +121,7 @@ export default function ContactPage() {
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#f0f5f1] dark:bg-[#1a2e20]">
                   <CheckCircle className="h-7 w-7 text-[#2d6a4f] dark:text-[#5e9a6b]" />
                 </div>
-                <h3 className="font-display text-xl text-[var(--foreground)]">{t('contact.success')}</h3>
+                <h3 className="font-display text-xl text-[var(--foreground)]">{t('contact.successMessage')}</h3>
                 <p className="mt-2 max-w-md text-sm text-[var(--muted-foreground)] font-body">{t('contact.successDesc')}</p>
                 <Button variant="outline" className="mt-6" onClick={() => setSubmitted(false)}>{t('contact.sendAnother')}</Button>
               </div>

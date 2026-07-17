@@ -94,7 +94,7 @@ export default function AdminDashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-[var(--foreground)]">{t('dashboard.admin.title')}</h1>
           <p className="text-sm text-[var(--muted-foreground)]">
-            {t('common.welcomeMessage')}, {user?.name || 'Admin'}
+            {t('common.welcomeMessage')}, {user?.name || t('dashboard.admin.fallbackName')}
           </p>
         </div>
         <Badge variant="primary" className="w-fit">
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
                       <Shield className="h-3 w-3 text-amber-600 dark:text-amber-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-[var(--foreground)] capitalize">{log.action.replace(/_/g, ' ')}</p>
+                      <p className="font-medium text-[var(--foreground)] capitalize">{t(`dashboard.admin.auditActions.${log.action}`) || log.action.replace(/_/g, ' ')}</p>
                       <p className="truncate text-xs text-[var(--muted-foreground)]">{log.resource}</p>
                     </div>
                     <div className="flex items-center gap-1 whitespace-nowrap text-xs text-[var(--muted-foreground)]">

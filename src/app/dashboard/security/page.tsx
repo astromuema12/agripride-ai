@@ -99,7 +99,7 @@ export default function SecurityPage() {
     if (diffMin < 60) return t('common.minutesAgo', { minutes: diffMin });
     if (diffHr < 24) return t('common.hoursAgo', { hours: diffHr });
     if (diffDays < 7) return t('common.daysAgo', { days: diffDays });
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return d.toLocaleDateString(t('weather.locale'), { month: 'short', day: 'numeric' });
   };
 
   return (
@@ -223,7 +223,7 @@ export default function SecurityPage() {
                         {session.browser && (
                           <span className="flex items-center gap-1">
                             <Globe className="h-3 w-3" />
-                            {session.browser}{session.os ? ` on ${session.os}` : ''}
+                            {session.browser}{session.os ? t('security.sessionOn') + session.os : ''}
                           </span>
                         )}
                         <span className="flex items-center gap-1">

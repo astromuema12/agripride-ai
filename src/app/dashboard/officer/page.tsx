@@ -277,7 +277,7 @@ export default function OfficerDashboard() {
                       {report.risk_level || t('common.unknown')}
                         </Badge>
                         <Badge className={statusBadgeClass(report.status)}>
-                          {report.status === 'submitted' ? t('dashboard.farmer.submitted') : report.status === 'reviewed' ? t('dashboard.farmer.reviewed') : report.status === 'resolved' ? t('dashboard.farmer.resolved') : report.status}
+                          {report.status === 'submitted' ? t('dashboard.farmer.submitted') : report.status === 'reviewed' ? t('dashboard.farmer.reviewed') : report.status === 'resolved' ? t('dashboard.farmer.resolved') : t(`dashboard.farmer.${report.status}`) || report.status}
                         </Badge>
                       </div>
                     </div>

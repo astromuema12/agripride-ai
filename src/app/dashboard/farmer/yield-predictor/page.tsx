@@ -17,11 +17,11 @@ import { toast } from 'sonner';
 import { useI18n } from '@/lib/i18n';
 
 const YIELD_FACTORS: Record<string, { base: number; factors: string[] }> = {
-  Maize: { base: 2500, factors: ['Soil fertility score', 'Rainfall patterns', 'Temperature range', 'Planting density', 'Pest pressure'] },
-  Wheat: { base: 2200, factors: ['Soil nitrogen levels', 'Growing degree days', 'Water availability', 'Variety genetics', 'Disease history'] },
-  Rice: { base: 3500, factors: ['Water management', 'Nitrogen application', 'Transplanting timing', 'Weed control', 'Solar radiation'] },
-  Cassava: { base: 8000, factors: ['Soil organic matter', 'Rainfall distribution', 'Cutting quality', 'Harvest timing', 'Intercropping effect'] },
-  Beans: { base: 1200, factors: ['Soil phosphorus', 'Rhizobia inoculation', 'Rainfall intensity', 'Shade management', 'Rotation history'] },
+  Maize: { base: 2500, factors: ['yield.factors.maize.soilFertility', 'yield.factors.maize.rainfall', 'yield.factors.maize.temperature', 'yield.factors.maize.plantingDensity', 'yield.factors.maize.pestPressure'] },
+  Wheat: { base: 2200, factors: ['yield.factors.wheat.soilNitrogen', 'yield.factors.wheat.growingDegree', 'yield.factors.wheat.waterAvailability', 'yield.factors.wheat.varietyGenetics', 'yield.factors.wheat.diseaseHistory'] },
+  Rice: { base: 3500, factors: ['yield.factors.rice.waterManagement', 'yield.factors.rice.nitrogenApplication', 'yield.factors.rice.transplantingTiming', 'yield.factors.rice.weedControl', 'yield.factors.rice.solarRadiation'] },
+  Cassava: { base: 8000, factors: ['yield.factors.cassava.soilOrganic', 'yield.factors.cassava.rainfallDistribution', 'yield.factors.cassava.cuttingQuality', 'yield.factors.cassava.harvestTiming', 'yield.factors.cassava.intercropping'] },
+  Beans: { base: 1200, factors: ['yield.factors.beans.soilPhosphorus', 'yield.factors.beans.rhizobia', 'yield.factors.beans.rainfallIntensity', 'yield.factors.beans.shadeManagement', 'yield.factors.beans.rotationHistory'] },
 };
 
 export default function YieldPredictor() {
@@ -164,7 +164,7 @@ export default function YieldPredictor() {
               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 sm:p-4 space-y-2 sm:space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs sm:text-sm font-medium text-emerald-800">{t('yield.predicted')}</span>
-                  <span className="text-lg sm:text-2xl font-bold text-emerald-700">{result.yield.toLocaleString()} kg</span>
+                  <span className="text-lg sm:text-2xl font-bold text-emerald-700">{result.yield.toLocaleString()} {t('common.units.kg')}</span>
                 </div>
                 <div className="space-y-0.5 sm:space-y-1">
                   <div className="flex justify-between text-[10px] sm:text-xs text-emerald-700">
@@ -178,7 +178,7 @@ export default function YieldPredictor() {
                   <ul className="mt-1 space-y-0.5 sm:space-y-1">
                     {result.factors.map((f, i) => (
                       <li key={i} className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs text-emerald-600">
-                        <Sprout className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />{f}
+                        <Sprout className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />{t(f as any)}
                       </li>
                     ))}
                   </ul>
@@ -217,7 +217,7 @@ export default function YieldPredictor() {
                       </div>
                       <p className="text-[10px] sm:text-xs text-gray-500">{new Date(p.created_at).toLocaleDateString()}</p>
                     </div>
-                    <span className="text-sm sm:text-lg font-bold text-emerald-600 shrink-0">{p.predicted_yield_kg.toLocaleString()} kg</span>
+                    <span className="text-sm sm:text-lg font-bold text-emerald-600 shrink-0">{p.predicted_yield_kg.toLocaleString()} {t('common.units.kg')}</span>
                   </div>
                 ))}
               </div>

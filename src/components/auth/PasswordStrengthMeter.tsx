@@ -47,7 +47,7 @@ export function PasswordStrengthMeter({ password, showSuggestions = true }: Pass
         <span className={`text-xs font-medium ${result.color}`}>
           {labelMap[result.label]}
         </span>
-        <span className="text-xs text-gray-400">{result.score}/100</span>
+        <span className="text-xs text-gray-400">{result.score}{t('passwordStrength.scoreSuffix')}</span>
       </div>
       <Progress
         value={progressMap[result.label]}

@@ -49,25 +49,25 @@ export default function HomePage() {
   }, []);
 
   const problems = [
-    { stat: '65%', label: 'of crop losses are preventable with early diagnosis' },
-    { stat: '3x', label: 'higher yields with data-driven farming decisions' },
-    { stat: '40%', label: 'of African farmers lack access to extension services' },
+    { stat: '65%', label: t('landing.problemStatCropLosses') },
+    { stat: '3x', label: t('landing.problemStatHigherYields') },
+    { stat: '40%', label: t('landing.problemStatNoExtension') },
   ];
 
-  const steps = [
-    { num: '01', title: 'Connect your farm', desc: 'Register your crops, soil type, and location. Our system builds a profile of your unique growing conditions.' },
-    { num: '02', title: 'Get intelligent guidance', desc: 'AI agents monitor your crops, analyze disease symptoms, and deliver weather-aware recommendations in real time.' },
-    { num: '03', title: 'Grow with confidence', desc: 'Make informed decisions backed by data. Track your progress, optimize inputs, and increase your harvest season over season.' },
-  ];
+    const steps = [
+      { num: '01', title: t('landing.howItWorksStep1Title'), desc: t('landing.howItWorksStep1Desc') },
+      { num: '02', title: t('landing.howItWorksStep2Title'), desc: t('landing.howItWorksStep2Desc') },
+      { num: '03', title: t('landing.howItWorksStep3Title'), desc: t('landing.howItWorksStep3Desc') },
+    ];
 
-  const features = [
-    { icon: FileSearch, title: 'Disease Diagnosis', desc: 'Photograph a sick plant and get a diagnosis in seconds. Our AI identifies diseases with 98.5% accuracy across 50+ crop types.', accent: true },
-    { icon: CloudSun, title: 'Weather Intelligence', desc: 'Hyper-local forecasts combined with crop-specific alerts. Know exactly when to plant, irrigate, and harvest.', accent: false },
-    { icon: ScrollText, title: 'AI Farm Assistant', desc: 'Ask questions in plain language. Get advice on planting schedules, pest control, and soil management tailored to your region.', accent: false },
-    { icon: BarChart3, title: 'Yield Analytics', desc: 'Track farm performance over seasons. Identify patterns, predict yields, and optimize your resource allocation.', accent: true },
-    { icon: Globe, title: 'Market Intelligence', desc: 'Real-time commodity prices from markets across Kenya. Know when to sell and where to get the best margins.', accent: false },
-    { icon: Shield, title: 'Sustainability Scoring', desc: 'Measure your environmental impact. Get actionable steps to improve soil health and reduce chemical inputs.', accent: false },
-  ];
+    const features = [
+      { icon: FileSearch, title: t('landing.rootFeaturesDiseaseDiagnosis'), desc: t('landing.rootFeaturesDiseaseDiagnosisDesc'), accent: true },
+      { icon: CloudSun, title: t('landing.rootFeaturesWeatherIntelligence'), desc: t('landing.rootFeaturesWeatherIntelligenceDesc'), accent: false },
+      { icon: ScrollText, title: t('landing.rootFeaturesAiFarmAssistant'), desc: t('landing.rootFeaturesAiFarmAssistantDesc'), accent: false },
+      { icon: BarChart3, title: t('landing.rootFeaturesYieldAnalytics'), desc: t('landing.rootFeaturesYieldAnalyticsDesc'), accent: true },
+      { icon: Globe, title: t('landing.rootFeaturesMarketIntelligence'), desc: t('landing.rootFeaturesMarketIntelligenceDesc'), accent: false },
+      { icon: Shield, title: t('landing.rootFeaturesSustainabilityScoring'), desc: t('landing.rootFeaturesSustainabilityScoringDesc'), accent: false },
+    ];
 
   const pricingPlans = [
     { name: t('pricing.free'), monthly: 0, annual: 0, desc: t('pricing.freePlan.description'), features: [t('landing.features.diseaseDetection'), t('landing.features.weatherMonitoring'), t('landing.features.marketPrices'), t('dashboard.farmer.myFarms'), t('common.community')], cta: t('landing.hero.cta') },
@@ -104,7 +104,7 @@ export default function HomePage() {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-px w-8 bg-[#c4704b]" />
-                  <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Intelligence for African Agriculture</span>
+                  <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('landing.heroBadge')}</span>
                 </div>
               </motion.div>
 
@@ -114,12 +114,12 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 className="display-xl text-[var(--foreground)]"
               >
-                Your crops deserve{' '}
+                {t('landing.heroHeadline').split('{highlight}')[0]}
                 <span className="relative inline-block">
-                  <span className="relative z-10">smarter</span>
+                  <span className="relative z-10">{' '}smarter</span>
                   <span className="absolute bottom-1 left-0 right-0 h-3 bg-[#c4704b]/15 -rotate-1" />
-                </span>{' '}
-                care.
+                </span>
+                {t('landing.heroHeadline').split('{highlight}')[1]}
               </motion.h1>
 
               <motion.p
@@ -138,11 +138,11 @@ export default function HomePage() {
                 className="mt-8 sm:mt-10 flex flex-wrap items-center gap-4"
               >
                 <Button size="lg" className="group" onClick={() => router.push('/auth?tab=register')}>
-                  Start growing smarter
+                  {t('landing.heroCtaStart')}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button size="lg" variant="ghost" className="text-[var(--muted-foreground)]" onClick={() => router.push('/governance')}>
-                  See how it works
+                  {t('landing.heroCtaLearn')}
                   <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" />
                 </Button>
               </motion.div>
@@ -173,7 +173,7 @@ export default function HomePage() {
                       className="absolute -top-2 -right-8 sm:-right-12 bg-[var(--card)] rounded-lg px-3 py-2 shadow-lg border border-[var(--border)]"
                     >
                       <div className="text-xs font-semibold text-[#2d6a4f] font-body">98.5%</div>
-                      <div className="text-[10px] text-[var(--muted-foreground)] font-body">Accuracy</div>
+                      <div className="text-[10px] text-[var(--muted-foreground)] font-body">{t('landing.heroStatAccuracy')}</div>
                     </motion.div>
                     <motion.div
                       animate={{ y: [0, 8, 0] }}
@@ -181,7 +181,7 @@ export default function HomePage() {
                       className="absolute -bottom-4 -left-6 sm:-left-10 bg-[var(--card)] rounded-lg px-3 py-2 shadow-lg border border-[var(--border)]"
                     >
                       <div className="text-xs font-semibold text-[#c4704b] font-body">47</div>
-                      <div className="text-[10px] text-[var(--muted-foreground)] font-body">Counties</div>
+                      <div className="text-[10px] text-[var(--muted-foreground)] font-body">{t('landing.heroStatCounties')}</div>
                     </motion.div>
 
                   </div>
@@ -199,13 +199,13 @@ export default function HomePage() {
             <RevealSection>
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-px w-8 bg-[#c4704b]" />
-                <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">The challenge</span>
+                <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('landing.problemBadge')}</span>
               </div>
               <h2 className="display-lg text-[var(--foreground)]">
-                African agriculture loses billions every year.
+                {t('landing.problemHeadline')}
               </h2>
               <p className="mt-4 sm:mt-6 text-base sm:text-lg leading-relaxed text-[var(--muted-foreground)] font-body max-w-lg">
-                Smallholder farmers feed the continent, yet they operate without the tools that large-scale operations take for granted. Late diagnosis, unpredictable weather, and volatile markets compound into preventable losses.
+                {t('landing.problemDescription')}
               </p>
             </RevealSection>
 
@@ -231,10 +231,10 @@ export default function HomePage() {
           <RevealSection className="max-w-2xl mb-12 sm:mb-16">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-8 bg-[#c4704b]" />
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">How it works</span>
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('landing.howItWorksBadge')}</span>
             </div>
             <h2 className="display-lg text-[var(--foreground)]">
-              Three steps to smarter farming.
+              {t('landing.howItWorksHeadline')}
             </h2>
           </RevealSection>
 
@@ -261,10 +261,10 @@ export default function HomePage() {
           <RevealSection className="max-w-2xl mb-12 sm:mb-16">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-8 bg-[#c4704b]" />
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Features</span>
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('landing.rootFeaturesBadge')}</span>
             </div>
             <h2 className="display-lg text-[var(--foreground)]">
-              Everything your farm needs, nothing it doesn&apos;t.
+              {t('landing.rootFeaturesHeadline')}
             </h2>
           </RevealSection>
 
@@ -292,14 +292,14 @@ export default function HomePage() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-[#c4704b]" />
-                  <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">From the field</span>
+                  <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('landing.rootTestimonialsBadge')}</span>
                 </div>
                 <h2 className="display-lg text-[var(--foreground)]">
-                  Real farmers, real results.
+                  {t('landing.rootTestimonialsHeadline')}
                 </h2>
               </div>
               <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] font-body">
-                <span>{testimonials.length}+ reviews</span>
+                <span>{t('landing.rootTestimonialsReviewCount', { count: testimonials.length })}</span>
                 <div className="flex gap-0.5">
                   {[1,2,3,4,5].map(i => <Star key={i} className="h-3 w-3 fill-[#c4704b] text-[#c4704b]" />)}
                 </div>
@@ -343,10 +343,10 @@ export default function HomePage() {
           <RevealSection className="max-w-2xl mb-12 sm:mb-16">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-8 bg-[#c4704b]" />
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">Pricing</span>
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#c4704b] font-body">{t('landing.rootPricingBadge')}</span>
             </div>
             <h2 className="display-lg text-[var(--foreground)]">
-              Simple plans for every scale.
+              {t('landing.rootPricingHeadline')}
             </h2>
             <p className="mt-4 text-base text-[var(--muted-foreground)] font-body">
               {t('landing.hero.pricingSubtitle')}
@@ -383,7 +383,7 @@ export default function HomePage() {
                     <p className="mt-1 text-sm text-[var(--muted-foreground)] font-body">{plan.desc}</p>
                     <div className="mt-4 flex items-baseline gap-1">
                       <span className="text-3xl sm:text-4xl font-display text-[var(--foreground)]">
-                        {plan.monthly === 0 ? t('pricing.free') : `KES ${billing === 'monthly' ? plan.monthly.toLocaleString() : plan.annual.toLocaleString()}`}
+                        {plan.monthly === 0 ? t('pricing.free') : t('landing.currencyKes', { value: billing === 'monthly' ? plan.monthly.toLocaleString() : plan.annual.toLocaleString() })}
                       </span>
                       <span className="text-sm text-[var(--muted-foreground)] font-body">{billing === 'monthly' ? t('landing.hero.perMo') : t('landing.hero.perYr')}</span>
                     </div>
@@ -416,7 +416,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-3xl px-5 sm:px-8 lg:px-10">
           <RevealSection className="mb-12 sm:mb-16">
             <h2 className="display-lg text-[var(--foreground)]">
-              Common questions.
+              {t('landing.rootFaqHeadline')}
             </h2>
           </RevealSection>
 
@@ -448,18 +448,18 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
           <RevealSection>
             <h2 className="display-lg text-white">
-              Ready to grow differently?
+              {t('landing.ctaHeadline')}
             </h2>
             <p className="mt-4 sm:mt-6 text-base sm:text-lg text-white/50 font-body max-w-xl mx-auto">
-              Join 15,000+ farmers across 47 counties who are already using AgriPride to make smarter decisions, every season.
+              {t('landing.ctaDescription')}
             </p>
             <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-4">
               <Button size="lg" className="bg-white text-[#1a3a2a] hover:bg-white/90" onClick={() => router.push('/auth?tab=register')}>
-                Get started for free
+                {t('landing.ctaGetStartedFree')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button size="lg" variant="ghost" className="text-white/60 hover:text-white hover:bg-white/5" onClick={() => router.push('/contact')}>
-                Talk to our team
+                {t('landing.ctaTalkToTeam')}
               </Button>
             </div>
           </RevealSection>

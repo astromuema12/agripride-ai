@@ -1,6 +1,7 @@
 import { userSubscriptionService, subscriptionService } from '@/services/subscription.service';
 import { serverSupabase } from '@/lib/server-auth';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { serverT } from '@/lib/i18n/server';
 
 export interface PremiumStatus {
   isPremium: boolean;
@@ -57,7 +58,7 @@ export async function getUserPremiumStatus(userId: string): Promise<PremiumStatu
   }
 }
 
-export async function requirePremium(userId: string): Promise<{
+export async function requirePremium(userId: string, locale: string = 'en'): Promise<{
   allowed: boolean;
   reason?: string;
 }> {
@@ -65,7 +66,7 @@ export async function requirePremium(userId: string): Promise<{
   if (!status.isPremium) {
     return {
       allowed: false,
-      reason: 'Premium subscription required. Subscribe at /pricing.',
+      reason: serverT(locale, 'premium.subscriptionRequired'),
     };
   }
   return { allowed: true };
@@ -89,14 +90,15 @@ export async function getUserSubscriptionFromSession(): Promise<PremiumStatus> {
 
 export async function checkPremiumAccess(
   userId: string,
+  locale: string = 'en',
 ): Promise<{ data: PremiumStatus | null; error: string | null }> {
   if (!userId) {
-    return { data: null, error: 'Authentication required' };
+    return { data: null, error: serverT(locale, 'premium.authRequired') };
   }
 
   const status = await getUserPremiumStatus(userId);
   if (!status.isPremium) {
-    return { data: status, error: 'Premium subscription required' };
+    return { data: status, error: serverT(locale, 'premium.premiumRequired') };
   }
 
   return { data: status, error: null };

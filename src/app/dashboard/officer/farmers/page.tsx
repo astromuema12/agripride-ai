@@ -212,7 +212,7 @@ export default function FarmersPage() {
                                 </div>
                               </div>
                               <Badge variant={farm.status === 'active' ? 'primary' : 'default'} className="shrink-0 ml-2">
-                                {farm.status}
+                                {t(`farms.status.${farm.status}`) || farm.status}
                               </Badge>
                             </div>
                           ))}

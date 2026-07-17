@@ -112,7 +112,7 @@ export default function HorizonImpactPage() {
           {sdgGoals.map((g) => (
             <Badge key={g.number} className={`flex items-center gap-1 border ${g.color}`}>
               <Target className="h-3 w-3" />
-              SDG {g.number}: {g.label}
+              {t('horizon.sdgLabel', { number: g.number, label: g.label })}
             </Badge>
           ))}
         </div>
@@ -221,7 +221,7 @@ export default function HorizonImpactPage() {
             <div className="flex gap-2">
               {sdgGoals.map((g) => (
                 <Badge key={g.number} className={`flex items-center gap-1 border px-3 py-1 text-xs ${g.color}`}>
-                  SDG {g.number}
+                  {t('horizon.sdgNumber', { number: g.number })}
                 </Badge>
               ))}
             </div>
@@ -502,11 +502,11 @@ export default function HorizonImpactPage() {
                 <div className="flex shrink-0 items-center gap-4">
                   <Badge variant="primary" className="flex items-center gap-1 px-3 py-1.5 text-sm">
                     <Target className="h-3.5 w-3.5" />
-                    SDG 2
+                    {t('horizon.sdg2')}
                   </Badge>
                   <Badge variant="default" className="flex items-center gap-1 bg-earth-100 px-3 py-1.5 text-sm text-earth-800">
                     <Target className="h-3.5 w-3.5" />
-                    SDG 15
+                    {t('horizon.sdgNumber', { number: 15 })}
                   </Badge>
                 </div>
               </CardContent>
@@ -638,10 +638,10 @@ export default function HorizonImpactPage() {
                 </CardHeader>
                 <CardContent className="space-y-5">
                   {[
-                    { label: t('horizon.environment.goalCarbonNeutral'), current: carbonReduction, target: 60, unit: '% reduction' },
-                    { label: t('horizon.environment.goalWaterConservation'), current: waterSavings, target: 50, unit: '% savings' },
-                    { label: t('horizon.environment.goalBiodiversity'), current: biodiversityGain, target: 40, unit: '% improvement' },
-                    { label: t('horizon.environment.goalSustainableFarms'), current: avgScore, target: 85, unit: '% avg score' },
+                    { label: t('horizon.environment.goalCarbonNeutral'), current: carbonReduction, target: 60, unit: t('horizon.unitReduction') },
+                    { label: t('horizon.environment.goalWaterConservation'), current: waterSavings, target: 50, unit: t('horizon.unitSavings') },
+                    { label: t('horizon.environment.goalBiodiversity'), current: biodiversityGain, target: 40, unit: t('horizon.unitImprovement') },
+                    { label: t('horizon.environment.goalSustainableFarms'), current: avgScore, target: 85, unit: t('horizon.unitAvgScore') },
                   ].map((g) => (
                     <div key={g.label}>
                       <div className="mb-1 flex items-center justify-between text-sm">
@@ -673,8 +673,8 @@ export default function HorizonImpactPage() {
                          water: `<strong>${waterSavings}</strong>`,
                          biodiversity: `<strong>${biodiversityGain}</strong>`,
                          regions: regions.length,
-                         sdg13: `<strong>SDG 13 (${t('horizon.sdg.climateAction')})</strong>`,
-                         sdg15: `<strong>SDG 15 (${t('horizon.sdg.lifeOnLand')})</strong>`,
+                          sdg13: `<strong>${t('horizon.sdg13Label', { description: t('horizon.sdg.climateAction') })}</strong>`,
+                          sdg15: `<strong>${t('horizon.sdg15Label', { description: t('horizon.sdg.lifeOnLand') })}</strong>`,
                        })
                      }}
                   />
