@@ -1407,11 +1407,6 @@ export const sw: Translations = {
   contact: {
     title: 'Wasiliana Nasi',
     subtitle: 'Tungependa kusikia kutoka kwako. Tuma ujumbe na tutajibu haraka iwezekanavyo.',
-    badge: 'Wasiliana',
-    messageTooLarge: 'Ujumbe ni mkubwa sana',
-    successMessage: 'Asante kwa kuwasiliana nasi. Tutakujibu ndani ya saa 24.',
-    failedToSend: 'Imeshindwa kutuma',
-    failedToSendMessage: 'Imeshindwa kutuma ujumbe',
     name: 'Jina Lako',
     email: 'Barua Pepe Yako',
     subject: 'Mada',
@@ -1445,6 +1440,11 @@ export const sw: Translations = {
       facebook: 'Facebook',
       instagram: 'Instagram',
     },
+    badge: 'Wasiliana',
+    messageTooLarge: 'Ujumbe ni mkubwa sana',
+    successMessage: 'Asante kwa kuwasiliana nasi. Tutakujibu ndani ya saa 24.',
+    failedToSend: 'Imeshindwa kutuma',
+    failedToSendMessage: 'Imeshindwa kutuma ujumbe',
   },
 
   support: {
