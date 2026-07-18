@@ -229,22 +229,23 @@ Respond ONLY with valid JSON in this exact format:
       }
 
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+        const response = await Promise.race([
+          ai.models.generateContent({
+            model: GEMINI_MODEL,
+            contents: [
+              { text: prompt },
+              { inlineData: { mimeType, data: base64 } },
+            ],
+            config: {
+              temperature: 0.3,
+              maxOutputTokens: 1024,
+            },
+          }),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('Gemini API timeout')), GEMINI_TIMEOUT_MS)
+          ),
+        ]);
 
-        const response = await ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents: [
-            { text: prompt },
-            { inlineData: { mimeType, data: base64 } },
-          ],
-          config: {
-            temperature: 0.3,
-            maxOutputTokens: 1024,
-          },
-        });
-
-        clearTimeout(timeoutId);
         rawContent = response.text ?? '';
         lastError = null;
         break;

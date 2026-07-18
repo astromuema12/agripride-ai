@@ -135,7 +135,7 @@ function PricingPageContent() {
           body: JSON.stringify({ tier, userId: user?.id }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || t('pricing.subscriptionActivated'));
+        if (!res.ok) throw new Error(data.error || t('errors.paymentFailed'));
         toast.success(data.data?.message || t('pricing.subscriptionActivated'));
         router.push('/auth');
         return;

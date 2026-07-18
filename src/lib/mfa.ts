@@ -30,13 +30,15 @@ function base32ToBytes(s: string): Uint8Array {
   for (const c of cleaned) {
     const val = chars.indexOf(c);
     if (val === -1) continue;
-    bits.push(val);
+    for (let b = 4; b >= 0; b--) {
+      bits.push((val >> b) & 1);
+    }
   }
   const bytes: number[] = [];
-  for (let i = 0; i + 4 < bits.length; i += 8) {
+  for (let i = 0; i + 7 < bits.length; i += 8) {
     let byte = 0;
-    for (let j = 0; j < 8 && i + j < bits.length; j++) {
-      byte = (byte << 1) | ((bits[i + j] >> (7 - j)) & 1);
+    for (let j = 0; j < 8; j++) {
+      byte = (byte << 1) | bits[i + j];
     }
     bytes.push(byte);
   }

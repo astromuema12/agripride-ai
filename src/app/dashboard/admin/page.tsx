@@ -30,8 +30,8 @@ export default function AdminDashboardPage() {
   const statCards: { key: string; label: string; icon: React.ComponentType<{ className?: string }>; color: string; suffix?: string }[] = [
     { key: 'total_users', label: t('dashboard.admin.totalUsers'), icon: Users, color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400' },
     { key: 'total_farms', label: t('dashboard.admin.totalFarms'), icon: Building2, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400' },
-    { key: 'total_crops', label: t('dashboard.admin.totalFarms'), icon: Sprout, color: 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400' },
-    { key: 'total_disease_reports', label: t('dashboard.admin.totalFarms'), icon: FileSearch, color: 'text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400' },
+    { key: 'total_crops', label: t('dashboard.admin.totalCrops'), icon: Sprout, color: 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400' },
+    { key: 'total_disease_reports', label: t('dashboard.admin.totalDiseaseReports'), icon: FileSearch, color: 'text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400' },
     { key: 'weather_alerts', label: t('common.notifications'), icon: CloudSun, color: 'text-cyan-600 bg-cyan-50 dark:bg-cyan-900/30 dark:text-cyan-400' },
     { key: 'ai_requests', label: t('dashboard.aiInsights'), icon: ScrollText, color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-400' },
     { key: 'audit_events', label: t('dashboard.admin.auditLog'), icon: Shield, color: 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400' },
@@ -57,7 +57,7 @@ export default function AdminDashboardPage() {
           getAuditLogs(),
         ]);
         setStats(s);
-        setAuditLogs(logs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+        if (logs) setAuditLogs(logs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
       } catch {
         toast.error(t('common.somethingWentWrong'));
       } finally {

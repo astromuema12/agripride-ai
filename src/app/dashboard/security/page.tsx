@@ -30,16 +30,21 @@ export default function SecurityPage() {
     const currentUser = user;
 
     async function load() {
-      const [sessionsResult, mfaStatus, emailResult] = await Promise.all([
-        getUserSessions(currentUser.id),
-        getUserMfaStatus(currentUser.id),
-        checkEmailVerified(currentUser.id),
-      ]);
+      try {
+        const [sessionsResult, mfaStatus, emailResult] = await Promise.all([
+          getUserSessions(currentUser.id),
+          getUserMfaStatus(currentUser.id),
+          checkEmailVerified(currentUser.id),
+        ]);
 
-      setSessions(sessionsResult.data);
-      setMfaEnabled(mfaStatus.enabled);
-      setEmailVerified(emailResult.verified);
-      setSessionsLoading(false);
+        setSessions(sessionsResult.data);
+        setMfaEnabled(mfaStatus.enabled);
+        setEmailVerified(emailResult.verified);
+      } catch {
+        toast.error(t('common.somethingWentWrong'));
+      } finally {
+        setSessionsLoading(false);
+      }
     }
 
     load();

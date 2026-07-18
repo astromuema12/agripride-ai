@@ -1055,6 +1055,8 @@ export const sw: Translations = {
       totalUsers: 'Jumla ya Watumiaji',
       activeUsers: 'Watumiaji Hai',
       totalFarms: 'Jumla ya Mashamba',
+      totalCrops: 'Jumla ya Mazao',
+      totalDiseaseReports: 'Ripoti za Magonjwa',
       activeSubscriptions: 'Usajili Hai',
       monthlyRevenue: 'Mapato ya Kila Mwezi',
       growthRate: 'Kiwango cha Ukuaji',

@@ -198,15 +198,22 @@ export abstract class BaseService<T extends { id: string }> {
   async delete(id: string): Promise<void> {
     if (!id) return;
     if (isSupabaseConfigured) {
-      const { error } = await supabase!.from(this.table).delete().eq('id', id);
-      if (!error) {
-        await deleteItem(this.storeName, id).catch(() => {});
-        return;
+      try {
+        const { error } = await supabase!.from(this.table).delete().eq('id', id);
+        if (!error) {
+          await deleteItem(this.storeName, id).catch(() => {});
+          return;
+        }
+        logger.error(`Failed to delete in ${this.table}:${id}`, {
+          component: 'base-service',
+          error: error.message,
+        });
+      } catch (err) {
+        logger.error(`Exception deleting in ${this.table}:${id}`, {
+          component: 'base-service',
+          error: err,
+        });
       }
-      logger.error(`Failed to delete in ${this.table}:${id}`, {
-        component: 'base-service',
-        error: error.message,
-      });
     }
     await deleteItem(this.storeName, id);
   }

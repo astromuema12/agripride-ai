@@ -1054,6 +1054,8 @@ export const en = {
       totalUsers: 'Total Users',
       activeUsers: 'Active Users',
       totalFarms: 'Total Farms',
+      totalCrops: 'Total Crops',
+      totalDiseaseReports: 'Disease Reports',
       activeSubscriptions: 'Active Subscriptions',
       monthlyRevenue: 'Monthly Revenue',
       growthRate: 'Growth Rate',

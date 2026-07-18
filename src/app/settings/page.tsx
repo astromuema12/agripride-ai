@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -84,15 +85,26 @@ export default function SettingsPage() {
       toast.error(t('settings.passwordMinLength'));
       return;
     }
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    toast.success(t('settings.passwordUpdated'));
-    writeAuditLog({
-      user_id: user.id,
-      action: 'change_password',
-      resource: 'settings',
-    }).catch(() => {});
+    try {
+      if (isSupabaseConfigured && supabase) {
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        if (error) {
+          toast.error(error.message || t('settings.failedToSaveProfile'));
+          return;
+        }
+      }
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success(t('settings.passwordUpdated'));
+      writeAuditLog({
+        user_id: user.id,
+        action: 'change_password',
+        resource: 'settings',
+      }).catch(() => {});
+    } catch {
+      toast.error(t('settings.failedToSaveProfile'));
+    }
   }
 
   async function handleConsentChange(type: string, granted: boolean) {

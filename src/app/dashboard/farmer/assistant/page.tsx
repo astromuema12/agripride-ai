@@ -101,7 +101,7 @@ export default function AIAssistant() {
     };
     setMessages((prev) => [...prev, placeholder]);
 
-    const historyMessages = messages
+    const historyMessages = [...messages, userMsg]
       .filter((m) => m.content && !m.id.startsWith('stream-') && m.id !== 'welcome')
       .slice(-20)
       .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }));

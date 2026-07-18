@@ -51,7 +51,7 @@ export default function WeatherPage() {
         setLoading(false);
       }
     })();
-  }, [selectedLocation]);
+  }, []);
 
   if (!user) return null;
 

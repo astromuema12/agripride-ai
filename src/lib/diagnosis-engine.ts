@@ -1543,19 +1543,19 @@ export function diagnose(options: {
 
   const topScore = scored[0]?.score ?? 0;
   const topMatched = scored[0]?.matchedSymptoms.length ?? 0;
-  const totalCondSymptoms = scored[0]?.condition
-    ? Object.values(scored[0].condition.symptoms).reduce((sum, arr) => sum + (arr?.length ?? 0), 0)
-    : 0;
 
-  const possibleCauses: PossibleCause[] = scored.slice(0, 5).map(s => ({
-    name: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.name`) || s.condition.name,
-    type: s.condition.type,
-    pathogen: s.condition.pathogen,
-    likelihood: confidenceLevel(s.score, totalCondSymptoms, s.matchedSymptoms.length),
-    confidence: Math.round(s.score * 1000) / 1000,
-    treatment: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.treatment`) || s.condition.treatment,
-    prevention: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.prevention`) || s.condition.prevention,
-  }));
+  const possibleCauses: PossibleCause[] = scored.slice(0, 5).map(s => {
+    const condTotalSymptoms = Object.values(s.condition.symptoms).reduce((sum, arr) => sum + (arr?.length ?? 0), 0);
+    return {
+      name: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.name`) || s.condition.name,
+      type: s.condition.type,
+      pathogen: s.condition.pathogen,
+      likelihood: confidenceLevel(s.score, condTotalSymptoms, s.matchedSymptoms.length),
+      confidence: Math.round(s.score * 1000) / 1000,
+      treatment: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.treatment`) || s.condition.treatment,
+      prevention: serverT(locale, `diagnosisEngineData.conditions.${s.condition.translationKey}.prevention`) || s.condition.prevention,
+    };
+  });
 
   let primaryDiagnosis: PossibleCause | undefined;
   if (possibleCauses.length > 0 && possibleCauses[0].confidence >= 0.20) {
@@ -1581,13 +1581,22 @@ export function diagnose(options: {
   if (primaryDiagnosis) {
     const capped = capConfidence(primaryDiagnosis.confidence, topMatched);
     primaryDiagnosis.confidence = capped;
-    primaryDiagnosis.likelihood = confidenceLevel(capped, totalCondSymptoms, topMatched);
+    const primaryCond = scored.find(s => s.condition.name === primaryDiagnosis?.name);
+    const primaryTotalSymptoms = primaryCond?.condition
+      ? Object.values(primaryCond.condition.symptoms).reduce((sum, arr) => sum + (arr?.length ?? 0), 0)
+      : 0;
+    primaryDiagnosis.likelihood = confidenceLevel(capped, primaryTotalSymptoms, topMatched);
   }
 
   for (const pc of possibleCauses) {
-    const capped = capConfidence(pc.confidence, scored.find(s => s.condition.name === pc.name)?.matchedSymptoms.length ?? 0);
+    const matched = scored.find(s => s.condition.name === pc.name);
+    const matchedLen = matched?.matchedSymptoms.length ?? 0;
+    const condTotalSymptoms = matched?.condition
+      ? Object.values(matched.condition.symptoms).reduce((sum, arr) => sum + (arr?.length ?? 0), 0)
+      : 0;
+    const capped = capConfidence(pc.confidence, matchedLen);
     pc.confidence = capped;
-    pc.likelihood = confidenceLevel(capped, totalCondSymptoms, scored.find(s => s.condition.name === pc.name)?.matchedSymptoms.length ?? 0);
+    pc.likelihood = confidenceLevel(capped, condTotalSymptoms, matchedLen);
   }
 
   const confidenceRange: { min: number; max: number } = {

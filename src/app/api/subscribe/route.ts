@@ -74,7 +74,7 @@ async function handler(req: NextRequest) {
     return apiError(502, result.error || serverT('en', 'payments.initFailed'));
   }
 
-  paystackTransactionService.create({
+  await paystackTransactionService.create({
     user_id: userId || 'guest',
     reference,
     paystack_id: 0,

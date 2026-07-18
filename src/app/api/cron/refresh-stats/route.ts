@@ -1,16 +1,19 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getAdminClient } from '@/lib/server-auth';
 import { logger } from '@/lib/logger';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   if (process.env.VERCEL_ENV !== 'production' && process.env.VERCEL_ENV !== 'preview') {
     return NextResponse.json({ error: 'Not available' }, { status: 404 });
   }
 
   const authHeader = process.env.CRON_SECRET;
   if (authHeader) {
-    const { searchParams } = new URL(process.env.VERCEL_URL || 'http://localhost:3000');
-    searchParams.get('secret');
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+    if (secret !== authHeader) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
   }
 
   try {

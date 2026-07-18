@@ -16,14 +16,14 @@ export async function checkEmailVerified(userId: string): Promise<{
   return { verified: data?.email_verified ?? false };
 }
 
-export async function resendVerificationEmail(): Promise<{ error?: string }> {
+export async function resendVerificationEmail(email: string): Promise<{ error?: string }> {
   if (!isSupabaseConfigured || !supabase) {
     return { error: 'Email verification not available in demo mode' };
   }
 
   const { error } = await supabase.auth.resend({
     type: 'signup',
-    email: '',
+    email,
   });
 
   if (error) return { error: error.message };

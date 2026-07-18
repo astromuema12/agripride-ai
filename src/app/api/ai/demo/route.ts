@@ -235,19 +235,20 @@ Respond in JSON format with:
               ]
             : prompt;
 
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+          const response = await Promise.race([
+            ai.models.generateContent({
+              model: GEMINI_MODEL,
+              contents,
+              config: {
+                temperature: 0.3,
+                maxOutputTokens: 2048,
+              },
+            }),
+            new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error('Gemini API timeout')), GEMINI_TIMEOUT_MS)
+            ),
+          ]);
 
-          const response = await ai.models.generateContent({
-            model: GEMINI_MODEL,
-            contents,
-            config: {
-              temperature: 0.3,
-              maxOutputTokens: 2048,
-            },
-          });
-
-          clearTimeout(timeoutId);
           const rawText = response.text ?? '';
           const jsonMatch = rawText.match(/\{[\s\S]*\}/);
           if (!jsonMatch) {

@@ -45,11 +45,11 @@ export default function FarmFinancePage() {
     (async () => {
       try {
         const { data: userFarms } = await getFarms(user.id);
-        setFarms(userFarms);
+        setFarms(userFarms || []);
         const [allExpenses, allRevenues] = await Promise.all([
           getFarmExpenses(), getFarmRevenues(),
         ]);
-        const farmIds = userFarms.map((f) => f.id);
+        const farmIds = (userFarms || []).map((f) => f.id);
         setExpenses(allExpenses.filter((e) => farmIds.includes(e.farm_id)));
         setRevenues(allRevenues.filter((r) => farmIds.includes(r.farm_id)));
       } catch {
