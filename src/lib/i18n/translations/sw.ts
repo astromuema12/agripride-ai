@@ -1849,7 +1849,7 @@ export const sw: Translations = {
     soilType: 'Aina ya Udongo',
     predicted: 'Mavuno Yanayotabiriwa',
     confidence: 'Uhakika',
-    factors: 'Sababu Zinazochangia',
+    contributingFactorsLabel: 'Sababu Zinazochangia',
     weatherImpact: 'Athari ya Hali ya Hewa',
     soilImpact: 'Athari ya Afya ya Udongo',
     pestImpact: 'Hatari ya Wadudu na Magonjwa',
@@ -2583,6 +2583,15 @@ export const sw: Translations = {
       subtitle: 'Kutoka kwa maisha ya wakulima hadi afya ya sayari \u2014 AgriPride AI inajenga mustakabali endelevu, wenye usalama wa chakula.',
       viewFullReport: 'Angalia Ripoti Kamili',
     },
+    sdgLabel: 'SDG {number}: {label}',
+    sdgNumber: 'SDG {number}',
+    sdg2: 'SDG 2',
+    sdg13Label: 'SDG 13 ({description})',
+    sdg15Label: 'SDG 15 ({description})',
+    unitReduction: ' mapunguziko',
+    unitSavings: ' akiba',
+    unitImprovement: ' uboreshaji',
+    unitAvgScore: ' alama ya wastani',
   },
 
   accessibility: {
@@ -2985,19 +2994,6 @@ export const sw: Translations = {
     processed: 'Webhook imeshachakatwa',
   },
 
-  market: {
-    allRegions: 'Mikoa Yote',
-    regions: {
-      riftValley: 'Rift Valley',
-      central: 'Kati',
-      coastal: 'Pwani',
-      eastern: 'Mashariki',
-      western: 'Magharibi',
-      nyanza: 'Nyanza',
-      northEastern: 'Kaskazini Mashariki',
-    },
-  },
-
   meta: {
     title: 'AgriPride AI — Akili ya Kilimo kwa Afrika',
     description: 'Utambuzi wa magonjwa ya mazao unaotegemea AI, akili ya hali ya hewa, na zana za kilimo endelevu zilizojengwa kwa wakulima wa Afrika.',
@@ -3011,18 +3007,6 @@ export const sw: Translations = {
     defaultUserName: 'Mtumiaji',
     mfaDownloadHeader: 'AgriPride AI - Msimbo wa Kurejesha',
     mfaDownloadInstructions: 'Hifadhi msimbo huu kwenye sehemu salama. Kila msimbo unaweza kutumika mara moja tu.',
-  },
-
-  horizon: {
-    sdgLabel: 'SDG {number}: {label}',
-    sdgNumber: 'SDG {number}',
-    sdg2: 'SDG 2',
-    sdg13Label: 'SDG 13 ({description})',
-    sdg15Label: 'SDG 15 ({description})',
-    unitReduction: ' mapunguziko',
-    unitSavings: ' akiba',
-    unitImprovement: ' uboreshaji',
-    unitAvgScore: ' alama ya wastani',
   },
 
   units: {
