@@ -2964,14 +2964,6 @@ export const sw: Translations = {
     redirectingToPayment: 'Inaelekeza kwenye ukurasa wa malipo...',
   },
 
-  contact: {
-    badge: 'Wasiliana',
-    messageTooLarge: 'Ujumbe ni mkubwa mno',
-    successMessage: 'Asante kwa kuwasiliana nasi. Tutajibu ndani ya masaa 24.',
-    failedToSend: 'Imeshindikana kutuma',
-    failedToSendMessage: 'Imeshindikana kutuma ujumbe',
-  },
-
   upload: {
     noFile: 'Hakuna faili iliyotolewa',
     invalidFileType: 'Aina ya faili si sahihi: {types}',
