@@ -1,17 +1,13 @@
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
-import { serverT } from './i18n/server';
-import { logger } from './logger';
-import { reportError, trackApiCall } from './monitoring';
-import { getRequestId, setRequestId } from './request-id';
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { serverT } from "./i18n/server";
+import { logger } from "./logger";
+import { reportError, trackApiCall } from "./monitoring";
+import { getRequestId, setRequestId } from "./request-id";
 
 export interface ApiHandlerOptions {
   parseJson?: boolean;
   requireAuth?: boolean;
-  rateLimit?: {
-    limit: number;
-    windowMs: number;
-  };
 }
 
 export function apiError(status: number, message: string, details?: Record<string, unknown>): NextResponse {
@@ -37,34 +33,27 @@ export function apiSuccess<T>(data: T, status = 200): NextResponse {
   );
 }
 
-export async function parseBody<T>(
-  request: Request,
-  schema: z.ZodType<T>,
-): Promise<{ success: true; data: T } | { success: false; response: NextResponse }> {
+export async function parseBody<T>(request: Request, schema: z.ZodType<T>): Promise<{ success: true; data: T } | { success: false; response: NextResponse }> {
   try {
     const body = await request.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
       return {
         success: false,
-        response: apiError(
-          400,
-          parsed.error.issues.map((e) => e.message).join(', '),
-        ),
+        response: apiError(400, parsed.error.issues.map((e) => e.message).join(", ")),
       };
     }
     return { success: true, data: parsed.data };
   } catch {
     return {
       success: false,
-      response: apiError(400, serverT('en', 'api.invalidJsonBody')),
+      response: apiError(400, serverT("en", "api.invalidJsonBody")),
     };
   }
 }
 
-export function withErrorHandling<T extends (...args: any[]) => Promise<Response>>(
-  handler: T,
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function withErrorHandling<T extends (...args: any[]) => Promise<Response>>(handler: T) {
   return async (request: Request, ...args: unknown[]): Promise<Response> => {
     const requestId = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
     setRequestId(requestId);
@@ -74,7 +63,7 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<Response
     try {
       logger.info(`${request.method} ${url.pathname}`, {
         requestId,
-        component: 'api',
+        component: "api",
       });
 
       const response = await handler(request, ...args);
@@ -82,8 +71,8 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<Response
       const duration = Date.now() - startTime;
       trackApiCall(url.pathname, duration, response.status);
 
-      response.headers.set('X-Request-Id', requestId);
-      response.headers.set('X-Response-Time', `${duration}ms`);
+      response.headers.set("X-Request-Id", requestId);
+      response.headers.set("X-Response-Time", `${duration}ms`);
 
       return response;
     } catch (error) {
@@ -97,7 +86,7 @@ export function withErrorHandling<T extends (...args: any[]) => Promise<Response
 
       trackApiCall(url.pathname, duration, 500);
 
-      return apiError(500, serverT('en', 'api.internalServerError'));
+      return apiError(500, serverT("en", "api.internalServerError"));
     }
   };
 }
