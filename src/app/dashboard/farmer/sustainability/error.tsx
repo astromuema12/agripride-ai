@@ -2,6 +2,6 @@
 
 import { RouteError } from "@/components/dashboard/RouteError";
 
-export default function DashboardError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function FarmerSustainabilityError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return <RouteError error={error} reset={reset} />;
 }
